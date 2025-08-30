@@ -259,4 +259,4 @@ at your option.
 
 **Status**: 🚧 In Development | **Version**: Pre-alpha | **Last Updated**: 2024
 
-For questions, feedback, or contributions, please [open an issue](https://github.com/cloudshuttle/leptos-motion/issues) or join our community discussions.
+For questions, feedback, or contributions, please [open an issue](https://github.com/cloud-shuttle/leptos-motion/issues) or join our community discussions.

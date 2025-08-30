@@ -22,7 +22,7 @@ npm install -g playwright @percy/cli backstopjs
 
 ```bash
 # Clone the repository
-git clone https://github.com/cloudshuttle/leptos-motion.git
+git clone https://github.com/cloud-shuttle/leptos-motion.git
 cd leptos-motion
 
 # Install dependencies and build

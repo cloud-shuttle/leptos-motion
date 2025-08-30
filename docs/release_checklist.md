@@ -143,15 +143,15 @@ fn App() -> impl IntoView {
 ## 📚 Documentation
 
 - [API Reference](https://docs.rs/leptos-motion)
-- [Getting Started Guide](https://leptos-motion.dev/guide)
-- [Examples](https://leptos-motion.dev/examples)
-- [Performance Guide](https://leptos-motion.dev/performance)
+- [Getting Started Guide](https://github.com/cloud-shuttle/leptos-motion/tree/main/docs/getting_started.md)
+- [Examples](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples)
+- [Performance Guide](https://github.com/cloud-shuttle/leptos-motion/tree/main/docs/performance.md)
 
 ## 🎯 Examples
 
-- [Basic Showcase](https://leptos-motion.dev/examples/showcase)
-- [E-commerce Gallery](https://leptos-motion.dev/examples/e-commerce)
-- [Dashboard App](https://leptos-motion.dev/examples/dashboard)
+- [Basic Showcase](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples/showcase)
+- [E-commerce Gallery](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples/e-commerce-gallery)
+- [Dashboard App](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples/dashboard-app)
 
 ## 🔧 Breaking Changes
 

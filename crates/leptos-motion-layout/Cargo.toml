@@ -1,0 +1,45 @@
+[package]
+name = "leptos-motion-layout"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Layout animations and FLIP transitions for Leptos Motion"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+# Core motion
+leptos-motion-core = { path = "../leptos-motion-core" }
+
+# Web APIs
+web-sys = { workspace = true, features = [
+    "Element",
+    "HtmlElement",
+    "DomRect",
+    "CssStyleDeclaration",
+    "Window",
+    "Document",
+    "ResizeObserver",
+    "ResizeObserverEntry",
+    "MutationObserver",
+    "MutationObserverInit",
+    "MutationRecord",
+] }
+wasm-bindgen.workspace = true
+js-sys.workspace = true
+
+# Utilities
+serde.workspace = true
+thiserror.workspace = true
+num-traits.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]

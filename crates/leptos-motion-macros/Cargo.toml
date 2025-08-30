@@ -1,0 +1,29 @@
+[package]
+name = "leptos-motion-macros"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Procedural macros for Leptos Motion component generation"
+keywords.workspace = true
+categories.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+# Proc macro dependencies
+proc-macro2 = "1.0"
+quote = "1.0" 
+syn = { version = "2.0", features = ["full"] }
+
+# Utilities
+paste.workspace = true
+
+[dev-dependencies]
+# Testing macros requires special setup
+trybuild = "1.0"

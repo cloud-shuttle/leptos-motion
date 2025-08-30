@@ -1,0 +1,48 @@
+[package]
+name = "leptos-motion" 
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+default = ["raf", "waapi", "gestures", "layout", "scroll"]
+raf = ["leptos-motion-core/raf"]
+waapi = ["leptos-motion-core/waapi"] 
+spring = ["leptos-motion-core/spring"]
+easing = ["leptos-motion-core/easing"]
+gestures = ["leptos-motion-gestures"]
+layout = ["leptos-motion-layout"]
+scroll = ["leptos-motion-scroll"]
+ssr = ["leptos-motion-dom/ssr"]
+hydrate = ["leptos-motion-dom/hydrate"]
+csr = ["leptos-motion-dom/csr"]
+
+[dependencies]
+# All motion crates
+leptos-motion-core = { path = "../leptos-motion-core" }
+leptos-motion-dom = { path = "../leptos-motion-dom" }
+leptos-motion-gestures = { path = "../leptos-motion-gestures", optional = true }
+leptos-motion-layout = { path = "../leptos-motion-layout", optional = true }
+leptos-motion-scroll = { path = "../leptos-motion-scroll", optional = true }
+leptos-motion-macros = { path = "../leptos-motion-macros" }
+
+# Re-export core dependencies
+leptos.workspace = true
+web-sys.workspace = true
+wasm-bindgen.workspace = true
+serde.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+criterion.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]

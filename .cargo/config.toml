@@ -1,0 +1,30 @@
+[alias]
+# Development shortcuts
+dev = "watch -x 'test --lib' -x 'clippy -- -D warnings'"
+quick-test = "nextest run --lib"
+wasm-test = "test --target wasm32-unknown-unknown"
+bench-all = "bench --all-features"
+
+# Build shortcuts  
+build-examples = "build --examples --target wasm32-unknown-unknown"
+build-release = "build --release --all-features"
+
+# Linting
+lint = "clippy --all-targets --all-features -- -D warnings"
+format = "fmt --all"
+check-format = "fmt --all -- --check"
+
+[build]
+target = "wasm32-unknown-unknown"
+
+[target.wasm32-unknown-unknown]
+runner = 'wasm-bindgen-test-runner'
+rustflags = [
+    "-C", "target-feature=+crt-static",
+    "-C", "link-arg=--import-memory",
+]
+
+[env]
+RUST_BACKTRACE = "1"
+RUST_LOG = "debug"
+RUSTFLAGS = "--cfg target_arch=\"wasm32\""

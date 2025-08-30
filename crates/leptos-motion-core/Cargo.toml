@@ -1,0 +1,68 @@
+[package]
+name = "leptos-motion-core"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Core animation engine for Leptos Motion"
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+default = ["raf", "waapi"]
+raf = []
+waapi = ["web-sys/Animation", "web-sys/KeyframeEffect"]
+spring = []
+easing = []
+
+[dependencies]
+# Math and calculations
+num-traits.workspace = true
+approx.workspace = true
+
+# Web APIs
+web-sys = { workspace = true, features = [
+    "console",
+    "Window",
+    "Document", 
+    "Element",
+    "HtmlElement",
+    "CssStyleDeclaration",
+    "DomRect",
+    "Performance",
+    "AnimationEvent",
+    "TransitionEvent",
+    "Animation",
+    "KeyframeEffect",
+] }
+js-sys.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+
+# Async
+futures.workspace = true
+
+# Leptos (for motion values)
+leptos.workspace = true
+
+# Utilities
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+once_cell.workspace = true
+log.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+criterion.workspace = true
+proptest.workspace = true
+pretty_assertions.workspace = true
+
+# Benchmarks will be added later
+
+[lib]
+crate-type = ["cdylib", "rlib"]

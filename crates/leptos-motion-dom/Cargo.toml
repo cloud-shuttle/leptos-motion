@@ -1,0 +1,54 @@
+[package]
+name = "leptos-motion-dom"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "DOM integration and components for Leptos Motion"
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+default = []
+ssr = ["leptos/ssr"]
+hydrate = ["leptos/hydrate"]
+csr = ["leptos/csr"]
+
+[dependencies]
+# Core motion
+leptos-motion-core = { path = "../leptos-motion-core" }
+
+# Leptos
+leptos.workspace = true
+
+# Web APIs
+web-sys = { workspace = true, features = [
+    "Element",
+    "HtmlElement",
+    "Node",
+    "EventTarget",
+    "Event",
+    "MouseEvent",
+    "TouchEvent", 
+    "PointerEvent",
+    "CssStyleDeclaration",
+    "DomRect",
+    "DomTokenList",
+] }
+wasm-bindgen.workspace = true
+js-sys.workspace = true
+
+# Utilities
+serde.workspace = true
+thiserror.workspace = true
+paste.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]

@@ -1,0 +1,47 @@
+[package]
+name = "leptos-motion-scroll"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Scroll-triggered animations and parallax effects for Leptos Motion"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+# Core motion
+leptos-motion-core = { path = "../leptos-motion-core" }
+
+# Leptos
+leptos.workspace = true
+
+# Web APIs
+web-sys = { workspace = true, features = [
+    "Element",
+    "Window", 
+    "Document",
+    "EventTarget",
+    "Event",
+    "IntersectionObserver",
+    "IntersectionObserverInit",
+    "IntersectionObserverEntry",
+    "DomRect",
+] }
+wasm-bindgen.workspace = true
+js-sys.workspace = true
+wasm-bindgen-futures.workspace = true
+
+# Utilities
+serde.workspace = true
+thiserror.workspace = true
+num-traits.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]

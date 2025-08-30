@@ -1,0 +1,257 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Unit and integration tests
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [stable, beta, nightly]
+        include:
+          - rust: stable
+            cache-key: stable
+          - rust: beta
+            cache-key: beta
+          - rust: nightly
+            cache-key: nightly
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        override: true
+        components: rustfmt, clippy
+
+    - name: Cache Rust dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ matrix.cache-key }}-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install wasm-pack
+      run: cargo install wasm-pack
+
+    - name: Install cargo-nextest
+      run: cargo install cargo-nextest
+
+    - name: Check code formatting
+      run: cargo fmt --all -- --check
+
+    - name: Run clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+
+    - name: Run unit tests
+      run: cargo test --all-features
+
+    - name: Run WASM tests
+      run: wasm-pack test --headless --chrome
+
+    - name: Check workspace compilation
+      run: cargo check --workspace
+
+    - name: Build examples
+      run: cargo build --examples
+
+  # Performance benchmarks
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Cache Rust dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-stable-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Run benchmarks
+      run: cargo bench --no-run
+
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-results
+        path: target/criterion
+
+  # Cross-platform testing
+  cross-platform:
+    name: Cross-platform
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Cache Rust dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-stable-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Run tests
+      run: cargo test --all-features
+
+    - name: Check compilation
+      run: cargo check --workspace
+
+  # Documentation
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Cache Rust dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-stable-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Check documentation
+      run: cargo doc --no-deps --all-features
+
+    - name: Check documentation tests
+      run: cargo test --doc --all-features
+
+  # Security audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install cargo-audit
+      run: cargo install cargo-audit
+
+    - name: Run security audit
+      run: cargo audit
+
+  # Bundle size check
+  bundle-size:
+    name: Bundle Size
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install wasm-pack
+      run: cargo install wasm-pack
+
+    - name: Build for production
+      run: |
+        cd examples/basic-animations
+        wasm-pack build --release --target web
+
+    - name: Check bundle size
+      run: |
+        cd examples/basic-animations/pkg
+        BUNDLE_SIZE=$(stat -f%z basic_animations_bg.wasm 2>/dev/null || stat -c%s basic_animations_bg.wasm 2>/dev/null || echo "0")
+        echo "Bundle size: $BUNDLE_SIZE bytes"
+        if [ "$BUNDLE_SIZE" -gt 51200 ]; then
+          echo "Error: Bundle size exceeds 50KB limit"
+          exit 1
+        fi
+
+  # Browser compatibility (placeholder for future implementation)
+  browser-compatibility:
+    name: Browser Compatibility
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install wasm-pack
+      run: cargo install wasm-pack
+
+    - name: Test in Chrome
+      run: wasm-pack test --headless --chrome
+
+    - name: Test in Firefox
+      run: wasm-pack test --headless --firefox
+
+    - name: Test in Safari (macOS only)
+      if: runner.os == 'macOS'
+      run: wasm-pack test --headless --safari
+
+  # Notify on failure
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: [test, benchmark, cross-platform, docs, security, bundle-size, browser-compatibility]
+
+    steps:
+    - name: Notify failure
+      run: |
+        echo "One or more CI jobs failed!"
+        echo "Please check the logs for details."

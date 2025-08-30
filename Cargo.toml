@@ -1,0 +1,78 @@
+[workspace]
+members = [
+    "crates/leptos-motion-core",
+    "crates/leptos-motion-dom", 
+    "crates/leptos-motion-gestures",
+    "crates/leptos-motion-layout",
+    "crates/leptos-motion-scroll",
+    "crates/leptos-motion-macros",
+    "crates/leptos-motion",
+    "examples/basic-animations",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0-alpha"
+authors = ["CloudShuttle Team <team@cloudshuttle.io>"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+rust-version = "1.70"
+repository = "https://github.com/cloudshuttle/leptos-motion"
+homepage = "https://leptos-motion.dev"
+documentation = "https://docs.rs/leptos-motion"
+keywords = ["animation", "leptos", "wasm", "web", "ui"]
+categories = ["gui", "wasm", "web-programming"]
+description = "A comprehensive animation library for Leptos with Motion-inspired API"
+
+[workspace.dependencies]
+# Core Leptos dependencies
+leptos = { version = "0.7", features = ["csr", "hydrate", "ssr"] }
+leptos_meta = "0.7"
+leptos_router = "0.7"
+
+# Web APIs
+web-sys = "0.3"
+js-sys = "0.3"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+
+# Utility crates
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+anyhow = "1.0"
+once_cell = "1.19"
+paste = "1.0"
+
+# Math and interpolation
+num-traits = "0.2"
+approx = "0.5"
+
+# Async and futures
+futures = "0.3"
+tokio = { version = "1.0", features = ["time"] }
+
+# Logging and debugging
+log = "0.4"
+console_log = "1.0"
+console_error_panic_hook = "0.1"
+
+# Development and testing dependencies
+wasm-bindgen-test = "0.3"
+criterion = "0.5"
+proptest = "1.4"
+pretty_assertions = "1.4"
+test-case = "3.1"
+divan = "0.1"
+leptos_testing = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true
+split-debuginfo = "unpacked"

@@ -20,7 +20,7 @@ csr = ["leptos/csr"]
 
 [dependencies]
 # Core motion
-leptos-motion-core = { path = "../leptos-motion-core" }
+leptos-motion-core = "0.1.0-alpha"
 
 # Leptos
 leptos.workspace = true

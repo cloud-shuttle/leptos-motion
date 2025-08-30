@@ -14,7 +14,7 @@ categories.workspace = true
 
 [dependencies]
 # Core motion
-leptos-motion-core = { path = "../leptos-motion-core" }
+leptos-motion-core = "0.1.0-alpha"
 
 # Web APIs
 web-sys = { workspace = true, features = [

@@ -2,7 +2,7 @@
 
 ## 🎉 Initial Alpha Release
 
-**Release Date**: August 2024  
+**Release Date**: August 30th, 2025
 **Version**: 0.1.0-alpha  
 **Git Tag**: v0.1.0-alpha  
 

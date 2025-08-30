@@ -2,6 +2,8 @@
 
 ## 🎉 Initial Alpha Release
 
+**Release Date**: August 30th, 2025
+
 This is the first alpha release of Leptos Motion, a comprehensive animation library for Leptos that brings Motion-inspired animations to Rust and WebAssembly.
 
 ## ✨ What's New

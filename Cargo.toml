@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "crates/leptos-motion-core",
-    "crates/leptos-motion-dom", 
+    "crates/leptos-motion-dom",
     "crates/leptos-motion-gestures",
     "crates/leptos-motion-layout",
     "crates/leptos-motion-scroll",
@@ -29,6 +29,9 @@ description = "A comprehensive animation library for Leptos with Motion-inspired
 leptos = { version = "0.7", features = ["csr", "hydrate", "ssr"] }
 leptos_meta = "0.7"
 leptos_router = "0.7"
+
+# WASM-specific dependencies
+getrandom = { version = "0.3", features = ["wasm_js"] }
 
 # Web APIs
 web-sys = "0.3"
@@ -59,12 +62,8 @@ console_error_panic_hook = "0.1"
 
 # Development and testing dependencies
 wasm-bindgen-test = "0.3"
-criterion = "0.5"
-proptest = "1.4"
 pretty_assertions = "1.4"
 test-case = "3.1"
-divan = "0.1"
-leptos_testing = "0.1"
 
 [profile.release]
 opt-level = 3

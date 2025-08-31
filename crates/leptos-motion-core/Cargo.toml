@@ -58,8 +58,6 @@ log.workspace = true
 
 [dev-dependencies]
 wasm-bindgen-test.workspace = true
-criterion.workspace = true
-proptest.workspace = true
 pretty_assertions.workspace = true
 
 # Benchmarks will be added later

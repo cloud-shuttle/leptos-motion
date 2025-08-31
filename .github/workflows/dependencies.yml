@@ -1,0 +1,144 @@
+name: Dependencies
+
+on:
+  schedule:
+    # Run weekly on Mondays
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+
+jobs:
+  # Check for outdated dependencies
+  outdated:
+    name: Check Outdated Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-outdated
+        run: cargo install cargo-outdated
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "Checking for outdated dependencies..."
+          cargo outdated --exit-code 1 || {
+            echo "Found outdated dependencies:"
+            cargo outdated
+            echo "Consider updating dependencies for security and features"
+          }
+
+  # Security audit
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run security audit
+        run: cargo audit
+
+  # Update dependencies (manual trigger only)
+  update:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-edit
+        run: cargo install cargo-edit
+
+      - name: Update dependencies
+        run: |
+          echo "Updating dependencies..."
+          
+          # Update all workspace dependencies
+          cargo update
+          
+          # Check for major version updates
+          echo "Checking for major version updates..."
+          cargo outdated --aggressive
+          
+          echo "Dependencies updated. Please review changes and test thoroughly."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update dependencies"
+          title: "chore: update dependencies"
+          body: |
+            ## Dependency Updates
+            
+            This PR updates project dependencies to their latest versions.
+            
+            ### Changes
+            - Updated all dependencies to latest compatible versions
+            - Security patches applied
+            - Performance improvements
+            
+            ### Testing Required
+            - [ ] All tests pass
+            - [ ] Examples build and run correctly
+            - [ ] Documentation builds without errors
+            - [ ] No breaking changes introduced
+            
+            ### Notes
+            - Review the changes carefully
+            - Test thoroughly before merging
+            - Consider any breaking changes
+          branch: update-dependencies
+          delete-branch: true
+
+  # License compliance
+  licenses:
+    name: Check Licenses
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny
+
+      - name: Check licenses
+        run: cargo deny check licenses
+
+      - name: Check bans
+        run: cargo deny check bans
+
+      - name: Check sources
+        run: cargo deny check sources

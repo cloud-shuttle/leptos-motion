@@ -186,12 +186,9 @@ impl Default for MotionValues {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use leptos::create_runtime;
     
     #[test]
     fn test_motion_value() {
-        let rt = create_runtime();
-        
         let motion_value = MotionValue::new(42.0);
         assert_eq!(motion_value.get(), 42.0);
         
@@ -200,14 +197,10 @@ mod tests {
         
         motion_value.update(|v| *v *= 2.0);
         assert_eq!(motion_value.get(), 200.0);
-        
-        rt.dispose();
     }
     
     #[test]
     fn test_motion_number() {
-        let rt = create_runtime();
-        
         let motion_num = MotionNumber::zero();
         assert_eq!(motion_num.get(), 0.0);
         
@@ -216,14 +209,10 @@ mod tests {
         
         motion_num.decrement(2.0);
         assert_eq!(motion_num.get(), 3.0);
-        
-        rt.dispose();
     }
     
     #[test]
     fn test_motion_transform() {
-        let rt = create_runtime();
-        
         let motion_transform = MotionTransform::identity();
         assert!(motion_transform.get().is_identity());
         
@@ -231,14 +220,10 @@ mod tests {
         let transform = motion_transform.get();
         assert_eq!(transform.x, Some(10.0));
         assert_eq!(transform.y, Some(20.0));
-        
-        rt.dispose();
     }
     
     #[test]
     fn test_motion_values_collection() {
-        let rt = create_runtime();
-        
         let mut values = MotionValues::new();
         values.add("opacity", AnimationValue::Number(0.5));
         values.add("x", AnimationValue::Pixels(100.0));
@@ -254,7 +239,5 @@ mod tests {
         
         let all_values = values.get_all();
         assert_eq!(all_values.len(), 2);
-        
-        rt.dispose();
     }
 }

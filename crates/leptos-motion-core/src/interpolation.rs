@@ -101,13 +101,18 @@ pub mod color {
     /// RGBA color representation
     #[derive(Debug, Clone, Copy, PartialEq)]
     pub struct Rgba {
+        /// Red component (0.0 - 1.0)
         pub r: f64,
+        /// Green component (0.0 - 1.0)
         pub g: f64,
+        /// Blue component (0.0 - 1.0)
         pub b: f64,
+        /// Alpha component (0.0 - 1.0)
         pub a: f64,
     }
     
     impl Rgba {
+        /// Create a new RGBA color
         pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
             Self {
                 r: r.clamp(0.0, 255.0),
@@ -117,6 +122,7 @@ pub mod color {
             }
         }
         
+        /// Interpolate between two colors
         pub fn interpolate(&self, to: &Self, progress: f64) -> Self {
             Self {
                 r: lerp(self.r, to.r, progress),
@@ -126,6 +132,7 @@ pub mod color {
             }
         }
         
+        /// Convert to CSS rgba() string
         pub fn to_css(&self) -> String {
             if self.a < 1.0 {
                 format!("rgba({}, {}, {}, {})", self.r, self.g, self.b, self.a)
@@ -134,6 +141,7 @@ pub mod color {
             }
         }
         
+        /// Parse color from hex string
         pub fn from_hex(hex: &str) -> Option<Self> {
             let hex = hex.trim_start_matches('#');
             if hex.len() == 6 {

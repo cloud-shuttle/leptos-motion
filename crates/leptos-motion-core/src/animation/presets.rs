@@ -264,7 +264,9 @@ impl AnimationPresets {
 /// Slide direction for page transitions
 #[derive(Debug, Clone, Copy)]
 pub enum SlideDirection {
+    /// Slide from left to right
     Left,
+    /// Slide from right to left
     Right,
 }
 
@@ -385,7 +387,7 @@ mod tests {
     fn test_slide_up_preset() {
         let config = AnimationPresets::slide_up(50.0);
         assert_eq!(config.initial.get("y"), Some(&AnimationValue::Pixels(50.0)));
-        assert_eq!(config.animate.get("y"), Some(&AnimationValue::Number(0.0)));
+        assert_eq!(config.animate.get("y"), Some(&AnimationValue::Pixels(0.0)));
     }
     
     #[test]

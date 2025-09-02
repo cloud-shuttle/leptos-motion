@@ -278,7 +278,7 @@ mod tests {
     #[test]
     fn test_back_easing_overshoot() {
         // Back easing should overshoot (go beyond 1.0 before settling)
-        let mut max = 0.0;
+        let mut max: f64 = 0.0;
         for i in 0..=100 {
             let t = i as f64 / 100.0;
             let value = back_out(t);

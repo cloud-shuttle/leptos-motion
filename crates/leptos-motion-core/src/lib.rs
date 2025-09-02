@@ -45,9 +45,13 @@ pub type Result<T> = std::result::Result<T, AnimationError>;
 /// Error context for better debugging
 #[derive(Debug, Clone)]
 pub struct ErrorContext {
+    /// The operation that was performed
     pub operation: String,
+    /// The component where the operation occurred
     pub component: Option<String>,
+    /// When the operation occurred
     pub timestamp: std::time::Instant,
+    /// Additional context information
     pub additional_info: std::collections::HashMap<String, String>,
 }
 
@@ -103,7 +107,9 @@ pub trait ErrorHandler {
 /// Default error handler implementation
 #[derive(Debug, Clone)]
 pub struct DefaultErrorHandler {
+    /// Whether to log errors to console
     pub log_errors: bool,
+    /// Whether to show user-friendly error messages
     pub show_user_messages: bool,
 }
 

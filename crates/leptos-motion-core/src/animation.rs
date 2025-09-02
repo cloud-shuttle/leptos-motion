@@ -2,7 +2,7 @@
 
 use crate::{
     AnimationTarget, Transition, AnimationValue, Easing,
-    SpringConfig, StaggerConfig, Interpolate
+    Interpolate
 };
 use std::collections::HashMap;
 
@@ -287,6 +287,7 @@ impl Default for Keyframes {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::AnimationPresets;
     
     #[test]
     fn test_animation_builder() {
@@ -336,21 +337,21 @@ mod tests {
     
     #[test]
     fn test_presets() {
-        let fade_in = presets::fade_in();
+        let fade_in = AnimationPresets::fade_in();
         assert!(fade_in.initial.contains_key("opacity"));
         assert!(fade_in.animate.contains_key("opacity"));
         
-        let slide_up = presets::slide_up(50.0);
+        let slide_up = AnimationPresets::slide_up(50.0);
         assert!(slide_up.initial.contains_key("y"));
         
-        let bounce = presets::bounce();
+        let bounce = AnimationPresets::bounce();
         assert_eq!(bounce.times.len(), 3);
         assert_eq!(bounce.values.len(), 3);
     }
     
     #[test]
     fn test_animate_macro() {
-        let target = animate!(
+        let target: HashMap<String, AnimationValue> = animate!(
             "opacity" => AnimationValue::Number(0.5),
             "x" => AnimationValue::Pixels(100.0)
         );

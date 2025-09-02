@@ -14,6 +14,18 @@ lint = "clippy --all-targets --all-features -- -D warnings"
 format = "fmt --all"
 check-format = "fmt --all -- --check"
 
+# Testing shortcuts
+test-all = "test --workspace --all-features"
+test-unit = "test --lib --all-features"
+test-integration = "test --test '*' --all-features"
+test-wasm = "test --target wasm32-unknown-unknown --all-features"
+test-performance = "bench --all-features"
+test-coverage = "llvm-cov --all-features --workspace --lcov --output-path coverage/llvm-cov.info"
+
+# Quality checks
+quality = "run --package leptos-motion --bin quality-check"
+audit-all = "audit --deny warnings"
+
 [build]
 target = "wasm32-unknown-unknown"
 
@@ -28,3 +40,58 @@ rustflags = [
 RUST_BACKTRACE = "1"
 RUST_LOG = "debug"
 RUSTFLAGS = "--cfg target_arch=\"wasm32\""
+
+# Test configuration
+[test]
+# Enable parallel test execution
+harness = false
+
+# Performance test configuration
+[bench]
+# Enable parallel benchmark execution
+harness = false
+
+# Coverage configuration
+[llvm-cov]
+# Generate HTML coverage reports
+html = true
+# Include all dependencies in coverage
+all-features = true
+# Output directory for coverage reports
+output-path = "coverage/llvm-cov"
+
+# Tarpaulin configuration
+[tarpaulin]
+# Generate HTML coverage reports
+out = ["Html", "Xml"]
+# Output directory for coverage reports
+output-dir = "coverage/tarpaulin"
+# Include all dependencies in coverage
+all-features = true
+# Exclude test files from coverage
+exclude-files = ["tests/", "examples/", "benches/"]
+# Minimum coverage threshold
+fail-under = 80
+
+# Nextest configuration
+[profile.test]
+# Enable parallel test execution
+nextest = true
+
+[profile.bench]
+# Enable parallel benchmark execution
+nextest = true
+
+# WASM-specific configuration
+[target.'cfg(target_arch = "wasm32")']
+# Enable WASM-specific optimizations
+rustflags = [
+    "-C", "target-feature=+crt-static",
+    "-C", "link-arg=--import-memory",
+    "-C", "link-arg=--export-table",
+]
+
+# Browser-specific configuration
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# Enable browser-specific features
+web-sys = { version = "0.3", features = ["console"] }

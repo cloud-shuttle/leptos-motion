@@ -1,16 +1,20 @@
 # Performance Optimization Guide
 
-This guide covers best practices for optimizing performance when using Leptos Motion in your applications.
+This guide covers comprehensive performance optimization techniques for Leptos Motion applications, including best practices, engine optimizations, and monitoring.
 
 ## Table of Contents
 
 - [Performance Fundamentals](#performance-fundamentals)
 - [Animation Optimization](#animation-optimization)
+- [Animation Engine Optimizations](#animation-engine-optimizations)
+- [DOM Performance](#dom-performance)
 - [Memory Management](#memory-management)
+- [GPU Acceleration](#gpu-acceleration)
 - [Bundle Size Optimization](#bundle-size-optimization)
 - [Rendering Performance](#rendering-performance)
-- [Profiling and Monitoring](#profiling-and-monitoring)
+- [Monitoring and Profiling](#monitoring-and-profiling)
 - [Performance Benchmarks](#performance-benchmarks)
+- [Best Practices](#best-practices)
 
 ## Performance Fundamentals
 
@@ -207,6 +211,169 @@ fn WeakReferenceExample() -> impl IntoView {
         </div>
     }
 }
+```
+
+## Animation Engine Optimizations
+
+### 1. Optimized Hybrid Engine
+
+The `OptimizedHybridEngine` automatically selects the best animation method:
+
+```rust
+use leptos_motion_core::engine::OptimizedHybridEngine;
+
+let mut engine = OptimizedHybridEngine::new();
+
+// Automatically chooses WAAPI or RAF based on capabilities
+let handle = engine.animate(config)?;
+
+// Get performance metrics
+if let Some(report) = engine.get_performance_metrics() {
+    println!("FPS: {:.1}", report.fps);
+    println!("Frame drop rate: {:.2}%", report.frame_drop_rate * 100.0);
+}
+```
+
+### 2. Performance Monitoring
+
+Monitor animation performance in real-time:
+
+```rust
+use leptos_motion_core::performance::*;
+
+let budget = PerformanceBudget::default();
+let mut monitor = PerformanceMonitor::new(budget)?;
+
+// Start monitoring a frame
+monitor.start_frame();
+
+// Perform animations
+// ... animation work ...
+
+// End monitoring and get metrics
+let metrics = monitor.end_frame(animations_updated, memory_usage);
+println!("Frame duration: {:.2}ms", metrics.duration);
+
+// Get performance report
+let report = monitor.get_report();
+if !report.within_budget {
+    println!("Performance warning: Frame drops detected");
+}
+```
+
+### 3. Animation Scheduling
+
+Batch animations for optimal performance:
+
+```rust
+use leptos_motion_core::performance::AnimationScheduler;
+
+let frame_budget = Duration::from_millis(16);
+let mut scheduler = AnimationScheduler::new(frame_budget);
+
+// Schedule animations with priorities
+let handle1 = scheduler.schedule(config1, AnimationPriority::High);
+let handle2 = scheduler.schedule(config2, AnimationPriority::Normal);
+
+// Process within frame budget
+scheduler.process_pending(&mut engine)?;
+```
+
+## DOM Performance
+
+### 1. Layout Thrashing Prevention
+
+Avoid triggering multiple layout calculations:
+
+```rust
+// ✅ Good - Batch DOM reads and writes
+let rect = element.get_bounding_client_rect();
+let width = rect.width();
+let height = rect.height();
+
+// Apply all changes at once
+element.style().set_property("width", &format!("{}px", width * 2)).unwrap();
+element.style().set_property("height", &format!("{}px", height * 2)).unwrap();
+
+// ❌ Bad - Alternating reads and writes
+let rect = element.get_bounding_client_rect();
+element.style().set_property("width", &format!("{}px", rect.width() * 2)).unwrap();
+let rect = element.get_bounding_client_rect(); // Triggers another layout
+element.style().set_property("height", &format!("{}px", rect.height() * 2)).unwrap();
+```
+
+### 2. Event Delegation
+
+Use event delegation for better performance with many elements:
+
+```rust
+#[component]
+fn OptimizedList(items: Vec<String>) -> impl IntoView {
+    let container_ref = create_node_ref::<html::Div>();
+    
+    let on_click = move |event: web_sys::MouseEvent| {
+        if let Some(target) = event.target() {
+            if let Some(element) = target.dyn_ref::<web_sys::Element>() {
+                if element.class_name().contains("list-item") {
+                    // Handle click on list item
+                    let index = element.get_attribute("data-index").unwrap_or_default();
+                    println!("Clicked item at index: {}", index);
+                }
+            }
+        }
+    };
+    
+    view! {
+        <div node_ref=container_ref on:click=on_click>
+            {items.iter().enumerate().map(|(i, item)| {
+                view! {
+                    <div class="list-item" data-index={i.to_string()}>
+                        {item}
+                    </div>
+                }
+            }).collect::<Vec<_>>()}
+        </div>
+    }
+}
+```
+
+## GPU Acceleration
+
+### 1. Transform Properties
+
+Use GPU-accelerated properties for best performance:
+
+```rust
+// ✅ GPU accelerated - no layout recalculation
+animate=motion_target!(
+    "transform" => AnimationValue::Transform(TransformValue::Translate3d(100.0, 0.0, 0.0)),
+    "scale" => AnimationValue::Number(1.5),
+    "rotate" => AnimationValue::Degrees(45.0)
+)
+
+// ❌ Layout-triggering - causes reflow
+animate=motion_target!(
+    "width" => AnimationValue::Pixels(200.0),
+    "height" => AnimationValue::Pixels(200.0),
+    "top" => AnimationValue::Pixels(100.0),
+    "left" => AnimationValue::Pixels(100.0)
+)
+```
+
+### 2. Will-Change Property
+
+Hint to the browser about upcoming changes:
+
+```rust
+// Set will-change for elements that will animate
+element.style().set_property("will-change", "transform, opacity").unwrap();
+
+// Remove after animation completes
+motion_value.subscribe(move |_| {
+    if animation_completed {
+        element.style().remove_property("will-change").unwrap();
+    }
+});
 ```
 
 ## Bundle Size Optimization
@@ -530,6 +697,64 @@ fn PerformanceBenchmark() -> impl IntoView {
             
             <div class="results">
                 <h3>"Benchmark Results"</h3>
+                
+                {move || {
+                    test_results.get().iter().map(|(test_name, duration)| {
+                        view! {
+                            <div class="test-result">
+                                <span class="test-name">{test_name}</span>
+                                <span class="test-duration">{format!("{:.2}ms", duration)}</span>
+                            </div>
+                        }
+                    }).collect::<Vec<_>>()
+                }}
+            </div>
+        </div>
+    }
+}
+```
+
+## Best Practices
+
+### 1. Performance-First Development
+
+- **Start with performance in mind**: Design animations to be performant from the beginning
+- **Measure early and often**: Use performance monitoring tools during development
+- **Set performance budgets**: Define acceptable performance limits for your application
+- **Test on target devices**: Ensure performance on the devices your users actually use
+
+### 2. Animation Design Principles
+
+- **Keep animations short**: Aim for 200-500ms duration for most interactions
+- **Use easing appropriately**: Choose easing functions that feel natural
+- **Avoid over-animation**: Don't animate everything - use animation to enhance, not distract
+- **Consider accessibility**: Respect `prefers-reduced-motion` user preference
+
+### 3. Code Organization
+
+- **Separate concerns**: Keep animation logic separate from business logic
+- **Reuse animations**: Create reusable animation configurations
+- **Lazy load**: Only load animations when they're needed
+- **Profile regularly**: Include performance testing in your CI/CD pipeline
+
+### 4. Monitoring and Maintenance
+
+- **Real-time monitoring**: Monitor performance in production
+- **Performance budgets**: Set and enforce performance budgets
+- **Regular audits**: Schedule regular performance reviews
+- **User feedback**: Collect performance feedback from real users
+
+### 5. Optimization Checklist
+
+Before deploying animations to production:
+
+- [ ] Animation runs at 60fps on target devices
+- [ ] Memory usage stays within budget
+- [ ] Bundle size impact is acceptable
+- [ ] Accessibility features are implemented
+- [ ] Performance monitoring is in place
+- [ ] Fallbacks are provided for older browsers
+- [ ] Tests cover performance edge cases
                 {move || {
                     test_results.get().iter().map(|(name, duration)| {
                         view! {

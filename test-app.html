@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion Test App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        .test-element {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 8px;
+            margin: 10px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .test-element:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .test-element:active {
+            transform: scale(0.95);
+        }
+        .draggable {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            cursor: grab;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+        .drop-zone {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: #e8f0fe;
+        }
+        .animation-trigger {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .animation-trigger:hover {
+            background: #45a049;
+        }
+        .animated-box {
+            width: 80px;
+            height: 80px;
+            background: #FF9800;
+            border-radius: 5px;
+            margin: 10px;
+            transition: all 0.5s ease;
+        }
+        .animated-box.animate {
+            transform: translateX(100px) rotate(360deg) scale(1.5);
+            background: #E91E63;
+        }
+        .performance-test {
+            background: #9C27B0;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border-radius: 4px;
+            border-left: 4px solid #ddd;
+        }
+        .list-item:hover {
+            background: #e0e0e0;
+            border-left-color: #667eea;
+        }
+        .layout-trigger {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .layout-box {
+            width: 150px;
+            height: 100px;
+            background: #FFC107;
+            border-radius: 5px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .layout-box.expanded {
+            width: 300px;
+            height: 150px;
+            background: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leptos Motion Test App</h1>
+        
+        <div class="test-section">
+            <h2>Basic Animations</h2>
+            <div class="test-element" data-testid="hover-animation"></div>
+            <div class="test-element" data-testid="click-animation"></div>
+            <div class="test-element" data-testid="animated"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Gesture Interactions</h2>
+            <div class="test-element draggable" data-testid="draggable"></div>
+            <div class="drop-zone" data-testid="drop-zone">Drop Zone</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Layout Animations</h2>
+            <button class="layout-trigger" data-testid="layout-trigger">Toggle Layout</button>
+            <div class="layout-box" data-testid="layout-box"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Animation Triggers</h2>
+            <button class="animation-trigger" data-testid="animation-trigger">Animate Box</button>
+            <div class="animated-box" data-testid="animated-box"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Performance Tests</h2>
+            <button class="performance-test" data-testid="performance-test">Test 1</button>
+            <button class="performance-test" data-testid="performance-test">Test 2</button>
+            <button class="performance-test" data-testid="performance-test">Test 3</button>
+            <button class="performance-test" data-testid="performance-test">Test 4</button>
+            <button class="performance-test" data-testid="performance-test">Test 5</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>List Items</h2>
+            <div class="list-item" data-testid="list-item" data-index="0">Item 1</div>
+            <div class="list-item" data-testid="list-item" data-index="1">Item 2</div>
+            <div class="list-item" data-testid="list-item" data-index="2">Item 3</div>
+            <div class="list-item" data-testid="list-item" data-index="3">Item 4</div>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript for basic interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation trigger
+            const animationTrigger = document.querySelector('[data-testid="animation-trigger"]');
+            const animatedBox = document.querySelector('[data-testid="animated-box"]');
+            
+            if (animationTrigger && animatedBox) {
+                animationTrigger.addEventListener('click', function() {
+                    animatedBox.classList.toggle('animate');
+                });
+            }
+            
+            // Layout trigger
+            const layoutTrigger = document.querySelector('[data-testid="layout-trigger"]');
+            const layoutBox = document.querySelector('[data-testid="layout-box"]');
+            
+            if (layoutTrigger && layoutBox) {
+                layoutTrigger.addEventListener('click', function() {
+                    layoutBox.classList.toggle('expanded');
+                });
+            }
+            
+            // Drag and drop simulation
+            const draggable = document.querySelector('[data-testid="draggable"]');
+            const dropZone = document.querySelector('[data-testid="drop-zone"]');
+            
+            if (draggable && dropZone) {
+                let isDragging = false;
+                let startX, startY;
+                
+                draggable.addEventListener('mousedown', function(e) {
+                    isDragging = true;
+                    startX = e.clientX - draggable.offsetLeft;
+                    startY = e.clientY - draggable.offsetTop;
+                    draggable.style.position = 'absolute';
+                    draggable.style.zIndex = 1000;
+                });
+                
+                document.addEventListener('mousemove', function(e) {
+                    if (isDragging) {
+                        draggable.style.left = (e.clientX - startX) + 'px';
+                        draggable.style.top = (e.clientY - startY) + 'px';
+                    }
+                });
+                
+                document.addEventListener('mouseup', function() {
+                    isDragging = false;
+                });
+                
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                });
+                
+                dropZone.addEventListener('dragleave', function() {
+                    dropZone.classList.remove('drag-over');
+                });
+            }
+            
+            // Performance monitoring
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            function countFrames(currentTime) {
+                frameCount++;
+                if (currentTime - lastTime >= 1000) {
+                    console.log(`FPS: ${frameCount}`);
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+                requestAnimationFrame(countFrames);
+            }
+            
+            requestAnimationFrame(countFrames);
+        });
+    </script>
+</body>
+</html>

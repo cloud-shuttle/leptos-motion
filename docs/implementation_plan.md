@@ -271,9 +271,9 @@ impl ExitAnimationCoordinator {
 ```
 
 **Examples to Create:**
-- Todo list with enter/exit animations
-- Tab switcher with mode="wait"
-- Gallery with layout preservation
+- Todo list with enter/exit animations ✅
+- Tab switcher with mode="wait" ✅
+- Gallery with layout preservation ✅
 
 ## Phase 4: Gestures (Weeks 8-9)
 

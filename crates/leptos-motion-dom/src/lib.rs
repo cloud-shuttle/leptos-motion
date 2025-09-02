@@ -8,6 +8,7 @@
 pub mod components;
 pub mod elements;
 pub mod hooks;
+pub mod performance;
 pub mod presence;
 pub mod utils;
 

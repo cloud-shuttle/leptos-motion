@@ -1,0 +1,36 @@
+[package]
+name = "leptos-motion-advanced-features"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.7", features = ["csr", "hydrate", "ssr"] }
+leptos_meta = "0.7"
+leptos_router = "0.7"
+leptos_motion = { path = "../../crates/leptos-motion" }
+leptos_motion_core = { path = "../../crates/leptos-motion-core" }
+leptos_motion_gestures = { path = "../../crates/leptos-motion-gestures" }
+leptos_motion_dom = { path = "../../crates/leptos-motion-dom" }
+
+# Web APIs
+web-sys = { version = "0.3", features = ["Window", "Document", "Element", "HtmlElement", "CssStyleDeclaration", "MouseEvent", "TouchEvent", "PointerEvent", "KeyboardEvent", "Animation", "AnimationEvent", "IntersectionObserver", "IntersectionObserverEntry", "Node", "Event", "Headers", "Request", "Response", "console", "Performance", "DomRect", "ScrollToOptions", "ResizeObserver", "ResizeObserverEntry"] }
+js-sys = "0.3"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+gloo-utils = "0.2"
+gloo-net = "0.6"
+any_spawner = "0.2"
+console_error_panic_hook = "0.1"
+console_log = "1.0"
+log = "0.4"
+once_cell = "1.19"
+cfg-if = "1.0"
+paste = "1.0"
+smallvec = "1.13"
+slotmap = "1.0"
+linear-map = "1.2"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+pretty_assertions = "1.4"
+test-case = "3.1"

@@ -91,6 +91,14 @@ tests/visual/test/
 tests/visual/report/
 backstop_data/
 percy_data/
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Nix
+result/
+.direnv/
+.envrc
 
 # Build outputs
 examples/*/pkg/

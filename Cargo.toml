@@ -8,6 +8,7 @@ members = [
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
     "examples/basic-animations",
+    "examples/showcase",
 ]
 resolver = "2"
 

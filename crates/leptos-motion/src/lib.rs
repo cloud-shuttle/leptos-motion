@@ -117,10 +117,10 @@ pub use leptos_motion_macros::*;
 
 /// Animation presets and common patterns
 pub mod presets {
+    // Core animation presets
     pub use leptos_motion_core::animation::presets::*;
     pub use leptos_motion_core::spring::presets::*;
     pub use leptos_motion_core::easing::presets::*;
-    pub use leptos_motion_dom::components::helpers::*;
 }
 
 /// Re-export commonly used external types

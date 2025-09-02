@@ -115,23 +115,66 @@ impl Default for DragConfig {
     }
 }
 
-/// Core motion div component
+/// Core motion div component that provides animation capabilities to div elements.
+/// 
+/// This component supports various animation types including:
+/// - Initial animations when the component mounts
+/// - Animate state changes
+/// - Exit animations when the component unmounts
+/// - Gesture-based animations (hover, tap, drag, focus)
+/// - Layout animations for position/size changes
+/// - Variant-based animation states
+/// 
+/// # Example
+/// ```rust
+/// use leptos::*;
+/// use leptos_motion::*;
+/// 
+/// #[component]
+/// pub fn AnimatedBox() -> impl IntoView {
+///     view! {
+///         <MotionDiv
+///             initial=Some(motion_target!("opacity" => AnimationValue::Number(0.0)))
+///             animate=Some(motion_target!("opacity" => AnimationValue::Number(1.0)))
+///             transition=Some(Transition::spring().stiffness(100.0))
+///             class="animated-box"
+///         >
+///             "Animated content"
+///         </MotionDiv>
+///     }
+/// }
+/// ```
 #[component]
 pub fn MotionDiv(
+    /// Initial animation state when the component mounts
     #[prop(optional)] initial: Option<AnimationTarget>,
+    /// Target animation state to animate towards
     #[prop(optional)] animate: Option<AnimationTarget>, 
+    /// Exit animation state when the component unmounts
     #[prop(optional)] exit: Option<AnimationTarget>,
+    /// Animation transition configuration (timing, easing, etc.)
     #[prop(optional)] transition: Option<Transition>,
+    /// Named animation states for complex animations
     #[prop(optional)] variants: Option<Variants>,
+    /// Whether to animate layout changes (position, size)
     #[prop(optional)] layout: Option<bool>,
+    /// Drag gesture configuration
     #[prop(optional)] drag: Option<DragConfig>,
+    /// Animation to play while hovering
     #[prop(optional)] while_hover: Option<AnimationTarget>,
+    /// Animation to play while tapping
     #[prop(optional)] while_tap: Option<AnimationTarget>,
+    /// Animation to play while focused
     #[prop(optional)] while_focus: Option<AnimationTarget>,
+    /// Animation to play while in viewport
     #[prop(optional)] while_in_view: Option<AnimationTarget>,
+    /// CSS class names
     #[prop(optional)] class: Option<String>,
+    /// Inline CSS styles
     #[prop(optional)] style: Option<String>,
+    /// HTML element ID
     #[prop(optional)] id: Option<String>,
+    /// Child elements to render
     children: Children,
 ) -> impl IntoView {
     let motion_props = MotionProps {
@@ -151,23 +194,61 @@ pub fn MotionDiv(
     create_motion_div(motion_props, class, style, id, children)
 }
 
-/// Core motion span component
+/// Core motion span component that provides animation capabilities to span elements.
+/// 
+/// Similar to MotionDiv but for inline text elements. Supports all the same
+/// animation features including initial, animate, exit, gesture, and layout animations.
+/// 
+/// # Example
+/// ```rust
+/// use leptos::*;
+/// use leptos_motion::*;
+/// 
+/// #[component]
+/// pub fn AnimatedText() -> impl IntoView {
+///     view! {
+///         <MotionSpan
+///             initial=Some(motion_target!("opacity" => AnimationValue::Number(0.0)))
+///             animate=Some(motion_target!("opacity" => AnimationValue::Number(1.0)))
+///             transition=Some(Transition::tween().duration(0.5))
+///             class="animated-text"
+///         >
+///             "Animated text content"
+///         </MotionSpan>
+///     }
+/// }
+/// ```
 #[component]
 pub fn MotionSpan(
+    /// Initial animation state when the component mounts
     #[prop(optional)] initial: Option<AnimationTarget>,
+    /// Target animation state to animate towards
     #[prop(optional)] animate: Option<AnimationTarget>,
+    /// Exit animation state when the component unmounts
     #[prop(optional)] exit: Option<AnimationTarget>,
+    /// Animation transition configuration (timing, easing, etc.)
     #[prop(optional)] transition: Option<Transition>,
+    /// Named animation states for complex animations
     #[prop(optional)] variants: Option<Variants>,
+    /// Whether to animate layout changes (position, size)
     #[prop(optional)] layout: Option<bool>,
+    /// Drag gesture configuration
     #[prop(optional)] drag: Option<DragConfig>,
+    /// Animation to play while hovering
     #[prop(optional)] while_hover: Option<AnimationTarget>,
+    /// Animation to play while tapping
     #[prop(optional)] while_tap: Option<AnimationTarget>,
+    /// Animation to play while focused
     #[prop(optional)] while_focus: Option<AnimationTarget>,
+    /// Animation to play while in viewport
     #[prop(optional)] while_in_view: Option<AnimationTarget>,
+    /// CSS class names
     #[prop(optional)] class: Option<String>,
+    /// Inline CSS styles
     #[prop(optional)] style: Option<String>,
+    /// HTML element ID
     #[prop(optional)] id: Option<String>,
+    /// Child elements to render
     children: Children,
 ) -> impl IntoView {
     let motion_props = MotionProps {
@@ -271,9 +352,7 @@ fn create_motion_span(
 /// Internal motion state
 #[derive(Clone, Debug)]
 struct MotionState {
-    props: MotionProps,
     current_values: AnimationTarget,
-    is_animating: bool,
 }
 
 impl MotionState {
@@ -281,9 +360,7 @@ impl MotionState {
         let current_values = props.initial.clone().unwrap_or_default();
         
         Self {
-            props,
             current_values,
-            is_animating: false,
         }
     }
 }

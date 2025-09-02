@@ -11,15 +11,22 @@ pub mod easing;
 pub mod engine;
 pub mod interpolation;
 pub mod math;
+pub mod performance;
 pub mod spring;
 pub mod time;
 pub mod types;
 pub mod values;
 
+// Re-export animation presets
+pub use animation::presets::AnimationPresets;
+pub use animation::presets::SlideDirection;
+pub use animation::presets::springs;
+pub use animation::presets::easings;
+
 // Re-export core types
 pub use animation::{AnimationBuilder, AnimationConfig, Variants};
 pub use easing::EasingFn;
-pub use engine::{AnimationEngine, HybridEngine, WaapiEngine, RafEngine, PlaybackState};
+pub use engine::{AnimationEngine, OptimizedHybridEngine, WaapiEngine, RafEngine, PlaybackState};
 pub use interpolation::Interpolate;
 pub use math::{clamp, map_range, distance_2d, smooth_step, smoother_step};
 pub use spring::{SpringSimulator, SpringState};

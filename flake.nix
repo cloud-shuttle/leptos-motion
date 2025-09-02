@@ -28,7 +28,7 @@
         # Development tools
         devTools = with pkgs; [
           # Build tools
-          make
+          gnumake
           gcc
           pkg-config
           
@@ -53,7 +53,6 @@
           ripgrep
           fd
           bat
-          exa
           
           # Development utilities
           direnv
@@ -73,9 +72,12 @@
         devShells.default = pkgs.mkShell {
           buildInputs = devTools;
           
-          inherit envVars;
-          
           shellHook = ''
+            export RUST_BACKTRACE="1"
+            export RUST_LOG="info"
+            export CARGO_INCREMENTAL="1"
+            export RUSTFLAGS="-C target-cpu=native"
+            
             echo "🚀 Welcome to Leptos Motion development environment!"
             echo ""
             echo "Available tools:"

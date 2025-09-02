@@ -251,81 +251,8 @@ macro_rules! animate {
 }
 
 /// Convenience functions for common animations
-pub mod presets {
-    use super::*;
-    
-    /// Fade in animation
-    pub fn fade_in() -> AnimationConfig {
-        AnimationBuilder::new()
-            .initial(animate!("opacity" => AnimationValue::Number(0.0)))
-            .animate(animate!("opacity" => AnimationValue::Number(1.0)))
-            .transition(Transition {
-                duration: Some(0.3),
-                ease: Easing::EaseOut,
-                ..Default::default()
-            })
-            .build()
-    }
-    
-    /// Slide up animation
-    pub fn slide_up(distance: f64) -> AnimationConfig {
-        AnimationBuilder::new()
-            .initial(animate!(
-                "opacity" => AnimationValue::Number(0.0),
-                "y" => AnimationValue::Pixels(distance)
-            ))
-            .animate(animate!(
-                "opacity" => AnimationValue::Number(1.0),
-                "y" => AnimationValue::Pixels(0.0)
-            ))
-            .transition(Transition {
-                duration: Some(0.5),
-                ease: Easing::Spring(SpringConfig::default()),
-                ..Default::default()
-            })
-            .build()
-    }
-    
-    /// Scale animation
-    pub fn scale_in() -> AnimationConfig {
-        AnimationBuilder::new()
-            .initial(animate!(
-                "opacity" => AnimationValue::Number(0.0),
-                "scale" => AnimationValue::Number(0.8)
-            ))
-            .animate(animate!(
-                "opacity" => AnimationValue::Number(1.0),
-                "scale" => AnimationValue::Number(1.0)
-            ))
-            .transition(Transition {
-                duration: Some(0.3),
-                ease: Easing::BackOut,
-                ..Default::default()
-            })
-            .build()
-    }
-    
-    /// Bounce animation
-    pub fn bounce() -> Keyframes {
-        Keyframes::new()
-            .add(0.0, animate!("scale" => AnimationValue::Number(1.0)), Some(Easing::EaseOut))
-            .add(0.5, animate!("scale" => AnimationValue::Number(1.25)), Some(Easing::EaseIn))
-            .add(1.0, animate!("scale" => AnimationValue::Number(1.0)), None)
-    }
-    
-    /// Stagger children animation
-    pub fn stagger_children(delay: f64) -> Transition {
-        Transition {
-            duration: Some(0.4),
-            ease: Easing::EaseOut,
-            stagger: Some(StaggerConfig {
-                delay,
-                from: crate::StaggerFrom::First,
-            }),
-            ..Default::default()
-        }
-    }
-}
+// Animation presets are now in a separate file
+pub mod presets;
 
 impl Default for AnimationBuilder {
     fn default() -> Self {

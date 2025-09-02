@@ -177,7 +177,8 @@ pub struct AnimationScheduler {
     pending_animations: Vec<PendingAnimation>,
     active_animations: Vec<ActiveAnimation>,
     frame_budget: Duration,
-    last_frame_time: Instant,
+    batch_size: usize,
+    max_concurrent: usize,
 }
 
 /// Pending animation waiting to be started
@@ -206,6 +207,27 @@ pub enum AnimationPriority {
     Critical = 3,
 }
 
+/// Performance statistics for the animation scheduler
+#[derive(Debug, Clone)]
+pub struct SchedulerStats {
+    pub pending_count: usize,
+    pub active_count: usize,
+    pub batch_size: usize,
+    pub max_concurrent: usize,
+    pub frame_budget_ms: u64,
+}
+
+/// Pool statistics for memory optimization
+#[derive(Debug, Clone)]
+pub struct PoolStats {
+    pub available: usize,
+    pub active: usize,
+    pub max_pool_size: usize,
+    pub total_allocations: usize,
+    pub total_reuses: usize,
+    pub reuse_rate: f64,
+}
+
 impl AnimationScheduler {
     /// Create a new animation scheduler
     pub fn new(frame_budget: Duration) -> Self {
@@ -213,8 +235,21 @@ impl AnimationScheduler {
             pending_animations: Vec::new(),
             active_animations: Vec::new(),
             frame_budget,
-            last_frame_time: Instant::now(),
+            batch_size: 10, // Process up to 10 animations per frame
+            max_concurrent: 100, // Allow up to 100 concurrent animations
         }
+    }
+    
+    /// Set batch size for processing animations
+    pub fn with_batch_size(mut self, batch_size: usize) -> Self {
+        self.batch_size = batch_size;
+        self
+    }
+    
+    /// Set maximum concurrent animations
+    pub fn with_max_concurrent(mut self, max_concurrent: usize) -> Self {
+        self.max_concurrent = max_concurrent;
+        self
     }
     
     /// Schedule an animation
@@ -235,28 +270,40 @@ impl AnimationScheduler {
         let frame_start = Instant::now();
         let mut processed = 0;
         
+        // Check if we can process more animations
+        if self.active_animations.len() >= self.max_concurrent {
+            return Ok(()); // Skip processing if at capacity
+        }
+        
         // Sort by priority (highest first)
         self.pending_animations.sort_by(|a, b| b.priority.cmp(&a.priority));
         
-        while let Some(pending) = self.pending_animations.pop() {
+        // Process animations in batches
+        let mut to_process = std::cmp::min(
+            self.batch_size,
+            self.pending_animations.len()
+        );
+        
+        while to_process > 0 && !self.pending_animations.is_empty() {
             // Check if we're still within frame budget
             if frame_start.elapsed() > self.frame_budget {
-                // Put back the animation we couldn't process
-                self.pending_animations.push(pending);
                 break;
             }
             
-            // Start the animation
-            let handle = engine.animate(&pending.config)?;
-            
-            self.active_animations.push(ActiveAnimation {
-                handle,
-                config: pending.config,
-                start_time: Instant::now(),
-                priority: pending.priority,
-            });
-            
-            processed += 1;
+            if let Some(pending) = self.pending_animations.pop() {
+                // Start the animation
+                let handle = engine.animate(&pending.config)?;
+                
+                self.active_animations.push(ActiveAnimation {
+                    handle,
+                    config: pending.config,
+                    start_time: Instant::now(),
+                    priority: pending.priority,
+                });
+                
+                processed += 1;
+                to_process -= 1;
+            }
         }
         
         Ok(())
@@ -267,6 +314,26 @@ impl AnimationScheduler {
         self.active_animations.retain(|animation| {
             engine.is_running(animation.handle)
         });
+    }
+    
+    /// Get current performance statistics
+    pub fn get_stats(&self) -> SchedulerStats {
+        SchedulerStats {
+            pending_count: self.pending_animations.len(),
+            active_count: self.active_animations.len(),
+            batch_size: self.batch_size,
+            max_concurrent: self.max_concurrent,
+            frame_budget_ms: self.frame_budget.as_millis() as u64,
+        }
+    }
+    
+    /// Get memory usage estimate
+    pub fn estimate_memory_usage(&self) -> usize {
+        let pending_memory = self.pending_animations.len() * std::mem::size_of::<PendingAnimation>();
+        let active_memory = self.active_animations.len() * std::mem::size_of::<ActiveAnimation>();
+        let struct_memory = std::mem::size_of::<Self>();
+        
+        pending_memory + active_memory + struct_memory
     }
 }
 
@@ -322,10 +389,13 @@ impl GPULayerManager {
     }
 }
 
-/// Memory pool for reusing animation objects
+/// Memory pool for reusing animation objects to reduce allocations
 pub struct AnimationPool<T> {
     available: Vec<T>,
     active: std::collections::HashMap<AnimationHandle, T>,
+    max_pool_size: usize,
+    total_allocations: usize,
+    total_reuses: usize,
 }
 
 impl<T> AnimationPool<T> {
@@ -334,21 +404,45 @@ impl<T> AnimationPool<T> {
         Self {
             available: Vec::new(),
             active: std::collections::HashMap::new(),
+            max_pool_size: 1000, // Default max pool size
+            total_allocations: 0,
+            total_reuses: 0,
+        }
+    }
+    
+    /// Create a new animation pool with custom max size
+    pub fn with_max_size(max_size: usize) -> Self {
+        Self {
+            available: Vec::new(),
+            active: std::collections::HashMap::new(),
+            max_pool_size: max_size,
+            total_allocations: 0,
+            total_reuses: 0,
         }
     }
     
     /// Get an animation from the pool
     pub fn acquire(&mut self, handle: AnimationHandle, create: impl FnOnce() -> T) -> &mut T {
-        let animation = self.available.pop().unwrap_or_else(create);
-        self.active.insert(handle, animation);
+        if let Some(animation) = self.available.pop() {
+            self.total_reuses += 1;
+            self.active.insert(handle, animation);
+        } else {
+            self.total_allocations += 1;
+            let animation = create();
+            self.active.insert(handle, animation);
+        }
         self.active.get_mut(&handle).unwrap()
     }
     
     /// Return an animation to the pool
     pub fn release(&mut self, handle: AnimationHandle) -> Option<T> {
         if let Some(animation) = self.active.remove(&handle) {
-            self.available.push(animation);
-            None
+            if self.available.len() < self.max_pool_size {
+                self.available.push(animation);
+                None
+            } else {
+                Some(animation)
+            }
         } else {
             None
         }
@@ -362,6 +456,42 @@ impl<T> AnimationPool<T> {
     /// Get the number of available animations
     pub fn available_count(&self) -> usize {
         self.available.len()
+    }
+    
+    /// Get pool statistics
+    pub fn stats(&self) -> PoolStats {
+        PoolStats {
+            available: self.available.len(),
+            active: self.active.len(),
+            max_pool_size: self.max_pool_size,
+            total_allocations: self.total_allocations,
+            total_reuses: self.total_reuses,
+            reuse_rate: if self.total_allocations > 0 {
+                self.total_reuses as f64 / (self.total_allocations + self.total_reuses) as f64
+            } else {
+                0.0
+            },
+        }
+    }
+    
+    /// Optimize pool memory usage
+    pub fn optimize(&mut self) {
+        // Shrink available pool if it's too large
+        if self.available.len() > self.max_pool_size / 2 {
+            self.available.truncate(self.max_pool_size / 2);
+        }
+        
+        // Clear active animations that are no longer needed
+        self.active.clear();
+    }
+    
+    /// Get memory usage estimate
+    pub fn estimate_memory_usage(&self) -> usize {
+        let available_memory = self.available.len() * std::mem::size_of::<T>();
+        let active_memory = self.active.len() * std::mem::size_of::<T>();
+        let struct_memory = std::mem::size_of::<Self>();
+        
+        available_memory + active_memory + struct_memory
     }
 }
 

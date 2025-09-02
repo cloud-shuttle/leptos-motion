@@ -1,0 +1,6 @@
+# pnpm configuration for Leptos Motion
+auto-install-peers=true
+strict-peer-dependencies=false
+shamefully-hoist=false
+prefer-frozen-lockfile=true
+save-exact=true

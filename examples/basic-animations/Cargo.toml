@@ -3,6 +3,7 @@ name = "basic-animations"
 version.workspace = true
 edition.workspace = true
 description = "Basic animations example for Leptos Motion"
+license = "MIT"
 
 [dependencies]
 leptos-motion = { path = "../../crates/leptos-motion", features = ["csr"] }

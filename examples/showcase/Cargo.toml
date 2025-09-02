@@ -3,6 +3,7 @@ name = "showcase"
 version.workspace = true
 edition.workspace = true
 description = "Comprehensive showcase of Leptos Motion features"
+license = "MIT"
 
 [dependencies]
 leptos-motion = { path = "../../crates/leptos-motion", features = ["csr"] }

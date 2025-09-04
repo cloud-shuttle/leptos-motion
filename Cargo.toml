@@ -28,10 +28,10 @@ categories = ["gui", "wasm", "web-programming"]
 description = "A comprehensive animation library for Leptos with Motion-inspired API"
 
 [workspace.dependencies]
-# Core Leptos dependencies (Latest stable versions)
-leptos = { version = "0.8.5", features = ["csr", "hydrate", "ssr"] }
+# Core Leptos dependencies (Latest stable versions as of September 2025)
+leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
 leptos_meta = "0.8.5"
-leptos_router = "0.8.5"
+leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
 leptos-motion = { path = "crates/leptos-motion" }

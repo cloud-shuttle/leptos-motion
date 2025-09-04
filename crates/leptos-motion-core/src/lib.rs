@@ -176,17 +176,24 @@ pub enum AnimationError {
     #[error("Animation engine not available: {0}")]
     EngineUnavailable(String),
     
-    /// Invalid animation property
+    /// Invalid property error
     #[error("Invalid animation property: {property}")]
-    InvalidProperty { property: String },
-    
-    /// Animation already running
+    InvalidProperty { 
+        /// The name of the invalid property
+        property: String 
+    },
+    /// Animation already running error
     #[error("Animation already running with handle: {handle:?}")]
-    AlreadyRunning { handle: AnimationHandle },
-    
-    /// Animation not found
+    AlreadyRunning { 
+        /// The handle of the already running animation
+        handle: AnimationHandle 
+    },
+    /// Animation not found error
     #[error("Animation not found: {handle:?}")]
-    NotFound { handle: AnimationHandle },
+    NotFound { 
+        /// The handle of the animation that was not found
+        handle: AnimationHandle 
+    },
     
     /// DOM operation failed
     #[error("DOM operation failed: {0}")]

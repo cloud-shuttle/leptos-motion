@@ -19,7 +19,7 @@ use leptos_motion_gestures::{
 
 #[component]
 pub fn AdvancedFeaturesApp() -> impl IntoView {
-    let (current_section, set_current_section) = create_signal("presets".to_string());
+    let (current_section, set_current_section) = signal("presets".to_string());
     
     view! {
         <div class="advanced-features-app">
@@ -76,8 +76,8 @@ pub fn AdvancedFeaturesApp() -> impl IntoView {
 /// Animation Presets Showcase
 #[component]
 fn AnimationPresetsShowcase() -> impl IntoView {
-    let (selected_preset, set_selected_preset) = create_signal("fade_in".to_string());
-    let (is_playing, set_is_playing) = create_signal(false);
+    let (selected_preset, set_selected_preset) = signal("fade_in".to_string());
+    let (is_playing, set_is_playing) = signal(false);
     
     let presets = vec![
         ("fade_in", "Fade In", "Simple opacity animation"),
@@ -92,7 +92,7 @@ fn AnimationPresetsShowcase() -> impl IntoView {
         ("spin", "Spin", "Continuous rotation"),
     ];
     
-    let animation_config = create_memo(move |_| {
+    let animation_config = memo(move |_| {
         match selected_preset.get().as_str() {
             "fade_in" => AnimationPresets::fade_in(),
             "slide_up" => AnimationPresets::slide_up(50.0),
@@ -153,7 +153,7 @@ fn AnimationPresetsShowcase() -> impl IntoView {
                     <h3>"Choose a Preset"</h3>
                     <div class="preset-grid">
                         {presets.into_iter().map(|(key, name, description)| {
-                            let is_selected = create_memo(move |_| selected_preset.get() == key);
+                            let is_selected = memo(move |_| selected_preset.get() == key);
                             view! {
                                 <div
                                     class=move || if is_selected.get() { "preset-card selected" } else { "preset-card" }
@@ -249,8 +249,8 @@ let animation = AnimationPresets::{}();
 /// Advanced Gestures Showcase
 #[component]
 fn AdvancedGesturesShowcase() -> impl IntoView {
-    let (gesture_events, set_gesture_events) = create_signal(Vec::new());
-    let (is_dragging, set_is_dragging) = create_signal(false);
+    let (gesture_events, set_gesture_events) = signal(Vec::new());
+    let (is_dragging, set_is_dragging) = signal(false);
     
     view! {
         <div class="gestures-showcase">
@@ -361,13 +361,13 @@ for event in events {
 /// Performance Showcase
 #[component]
 fn PerformanceShowcase() -> impl IntoView {
-    let (element_count, set_element_count) = create_signal(10);
-    let (is_running, set_is_running) = create_signal(false);
-    let (fps, set_fps) = create_signal(60.0);
-    let (memory_usage, set_memory_usage) = create_signal(0.0);
+    let (element_count, set_element_count) = signal(10);
+    let (is_running, set_is_running) = signal(false);
+    let (fps, set_fps) = signal(60.0);
+    let (memory_usage, set_memory_usage) = signal(0.0);
     
     // Generate animated elements
-    let animated_elements = create_memo(move |_| {
+    let animated_elements = memo(move |_| {
         let count = element_count.get();
         (0..count).map(|i| {
             let delay = i as f64 * 0.1;

@@ -1,0 +1,42 @@
+[package]
+name = "advanced-gestures"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Advanced gesture recognition demonstration for Leptos Motion"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+# Leptos
+leptos = { workspace = true, features = ["csr"] }
+
+# Web APIs
+web-sys = { workspace = true, features = [
+    "Element",
+    "EventTarget",
+    "Event",
+    "MouseEvent",
+    "WheelEvent",
+    "KeyboardEvent",
+    "DomRect",
+] }
+wasm-bindgen.workspace = true
+js-sys.workspace = true
+
+# Utilities
+console_log.workspace = true
+console_error_panic_hook.workspace = true
+log.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "advanced-gestures"
+path = "src/main.rs"

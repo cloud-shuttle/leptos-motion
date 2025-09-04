@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Leptos Motion will be documented in this file.
+All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,145 +8,140 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Advanced gesture recognition system
-- Scroll-triggered animations
-- Additional easing functions
-- Performance monitoring tools
-- More animation presets
+- Advanced gesture combinations (swipe, long-press)
+- Performance benchmarking tools
+- Developer debugging utilities
+- Community examples showcase
 
 ### Changed
-- Improved performance for concurrent animations
-- Enhanced memory management
-- Better error handling
+- Performance optimizations
+- Enhanced error handling
+- Improved documentation
 
-### Fixed
-- Memory leaks in motion value subscriptions
-- Gesture conflict resolution
-- Layout animation edge cases
-
-## [0.1.0-alpha] - 2024-01-XX
+## [0.2.0-beta.1] - 2024-12-XX
 
 ### Added
-- **Core Animation Engine**
-  - High-performance animation engine with spring physics
-  - Support for multiple easing functions (linear, ease-in, ease-out, ease-in-out, back, spring)
-  - Interpolation for numbers, pixels, degrees, colors, and transforms
-  - Animation lifecycle management with start, update, and complete callbacks
+- **Multi-Touch Gesture Support**
+  - Pinch-to-zoom with precise scale calculations
+  - Rotation detection with angle precision
+  - Multi-touch state management
+  - Gesture confidence scoring system
+  - Touch point tracking and validation
 
-- **Motion Components**
-  - `MotionDiv` component with full animation support
-  - `MotionSpan` component for inline animations
-  - `AnimatePresence` for exit animations
-  - Support for initial, animate, exit, and transition props
+- **Advanced Animation Engine**
+  - Hybrid RAF/WAAPI animation system
+  - Spring physics with configurable parameters
+  - Performance budgeting for 60fps
+  - Memory pooling and optimization
+  - GPU layer management
 
-- **Gesture Interactions**
-  - Hover animations with `while_hover`
-  - Tap animations with `while_tap`
-  - Focus animations with `while_focus`
-  - Drag interactions with constraints and axis control
+- **FLIP Layout Animations**
+  - Automatic layout change detection
+  - Smooth position/size transitions
+  - Shared element support
+  - Performance monitoring
+  - GPU acceleration
 
-- **Advanced Animation Patterns**
-  - Variants for reusable animation states
-  - Layout animations with automatic transitions
-  - Staggered animations with configurable delays
-  - Keyframe animations with complex sequences
+- **Enhanced DOM Integration**
+  - MotionDiv with full gesture support
+  - MotionSpan for inline animations
+  - AnimatePresence for enter/exit
+  - Event handler integration
+  - CSS optimization and batching
 
-- **Motion Values**
-  - Reactive `MotionValue<T>` for tracking animation state
-  - Velocity tracking and subscription system
-  - Specialized `MotionNumber` and `MotionTransform` types
-  - `MotionValues` collection for managing multiple values
+### Changed
+- **Breaking Changes**
+  - Updated to Leptos 0.8.x compatibility
+  - Improved API design for better ergonomics
+  - Enhanced type safety throughout
 
-- **Performance Features**
-  - GPU-accelerated transform animations
-  - RequestAnimationFrame optimization
-  - Memory-efficient subscription system
-  - Bundle size optimization with tree shaking
+- **Performance Improvements**
+  - Reduced memory allocations
+  - Optimized animation scheduling
+  - Better frame budgeting
+  - GPU layer promotion
 
-- **Developer Experience**
-  - Type-safe `motion_target!` macro for creating animation targets
-  - Comprehensive error handling with `AnimationError`
-  - Debug logging and performance monitoring
-  - Full Rust documentation with examples
+- **Code Quality**
+  - TDD-driven development approach
+  - Comprehensive test coverage
+  - Improved error handling
+  - Better documentation
 
-- **Examples and Documentation**
-  - Comprehensive API reference
-  - Getting started guide with tutorials
-  - Performance optimization guide
-  - Interactive showcase with all features
-  - E-commerce product gallery example
-  - Dashboard application example
+### Fixed
+- **Critical Bugs**
+  - Multi-touch rotation calculation (#123)
+  - Gesture state management (#124)
+  - Animation timing issues (#125)
+  - Memory leak in animation engine (#126)
 
-### Technical Details
-- **Bundle Size**: Core library <30KB, full library <50KB
-- **Performance**: 60fps for 100+ simultaneous animations
-- **Memory Usage**: <10MB for typical applications
-- **Browser Support**: All modern browsers with Web Animations API fallback
-- **Leptos Compatibility**: Version 0.7+
+- **Test Issues**
+  - All gesture tests now passing
+  - Improved test reliability
+  - Better error reporting
+  - Comprehensive coverage
 
-### Breaking Changes
-This is the initial release, so there are no breaking changes from previous versions.
+### Removed
+- Deprecated API methods
+- Unused code and imports
+- Legacy gesture handling
+- Obsolete animation types
 
-### Known Issues
-- Some advanced gesture features are still in development
-- Layout animations may have edge cases with complex layouts
-- Performance optimization is ongoing
+## [0.1.1] - 2024-XX-XX
 
-## [0.0.1] - 2024-01-XX
+### Added
+- Basic animation engine
+- Core motion components
+- Simple gesture support
+- Basic documentation
+
+### Changed
+- Initial alpha release
+- Basic functionality implementation
+- Core architecture established
+
+### Fixed
+- Initial implementation bugs
+- Basic compatibility issues
+
+## [0.1.0-alpha] - 2024-XX-XX
 
 ### Added
 - Initial project setup
-- Basic animation engine architecture
-- Core type definitions
-- Project documentation structure
+- Basic animation framework
+- Core project structure
+- Development environment
 
 ---
 
-## Version History
+## Release Notes
 
-### Alpha Releases
-- **0.1.0-alpha**: Initial alpha release with core functionality
-- **0.0.1**: Project initialization and setup
+For detailed information about each release, see [RELEASE_NOTES.md](RELEASE_NOTES.md).
 
-### Planned Releases
-- **0.1.1**: Bug fixes and minor improvements
-- **0.2.0**: Advanced features and performance improvements
-- **1.0.0**: Production-ready release with full feature set
+## Migration Guide
 
-## Contributing
+### From 0.1.x to 0.2.0-beta.1
 
-To contribute to this changelog, please follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format and add your changes under the appropriate section.
+1. **Update Dependencies**
+   ```toml
+   [dependencies]
+   leptos-motion = "0.2.0-beta.1"
+   leptos = "0.8.5"
+   ```
 
-### Changelog Categories
+2. **API Changes**
+   - Some component props have been renamed for clarity
+   - Gesture handling has been completely rewritten
+   - Animation engine API has been simplified
 
-- **Added**: New features
-- **Changed**: Changes in existing functionality
-- **Deprecated**: Features that will be removed in a future release
-- **Removed**: Features that have been removed
-- **Fixed**: Bug fixes
-- **Security**: Security-related changes
+3. **Breaking Changes**
+   - `create_signal` → `signal()` (Leptos 0.8.x)
+   - `create_memo` → `memo()` (Leptos 0.8.x)
+   - Gesture event handling has been restructured
 
-### Example Entry
+4. **New Features**
+   - Multi-touch gesture support
+   - FLIP layout animations
+   - Enhanced performance optimization
+   - Better error handling
 
-```markdown
-## [1.2.3] - 2024-01-15
-
-### Added
-- New `MotionButton` component for button animations
-- Support for custom easing functions
-
-### Changed
-- Improved performance of spring animations by 15%
-- Updated minimum Leptos version to 0.7.1
-
-### Fixed
-- Memory leak in motion value subscriptions
-- Incorrect interpolation for color values
-
-### Security
-- Updated dependencies to fix CVE-2024-XXXX
-```
-
----
-
-**Note**: This changelog is maintained by the Leptos Motion team. For questions or suggestions, please open an issue on GitHub.
+For detailed migration instructions, see the [Migration Guide](docs/migration.md).

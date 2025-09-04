@@ -1,411 +1,226 @@
 use leptos::prelude::*;
+use leptos::mount::mount_to_body;
 use leptos_motion::*;
 
-#[component]
-fn App() -> impl IntoView {
-    view! {
-        <div class="showcase-container">
-            <header class="showcase-header">
-                <h1>"Leptos Motion Showcase"</h1>
-                <p>"A comprehensive demonstration of animation capabilities"</p>
-            </header>
-
-            <main class="showcase-content">
-                <section class="showcase-section">
-                    <h2>"Basic Animations"</h2>
-                    <BasicAnimations />
-                </section>
-
-                <section class="showcase-section">
-                    <h2>"Gesture Interactions"</h2>
-                    <GestureInteractions />
-                </section>
-
-                <section class="showcase-section">
-                    <h2>"Advanced Patterns"</h2>
-                    <AdvancedPatterns />
-                </section>
-
-                <section class="showcase-section">
-                    <h2>"Performance Demo"</h2>
-                    <PerformanceDemo />
-                </section>
-            </main>
-        </div>
-    }
-}
+use wasm_bindgen::prelude::*;
+use wasm_bindgen_futures;
 
 #[component]
-fn BasicAnimations() -> impl IntoView {
-    let (visible, set_visible) = signal(true);
-    let (scale, set_scale) = signal(1.0);
-    let (rotation, set_rotation) = signal(0.0);
+pub fn App() -> impl IntoView {
+    let (count, _set_count) = signal(0);
+    let (is_visible, _set_is_visible) = signal(true);
+    let (layout_mode, _set_layout_mode) = signal(false);
 
     view! {
-        <div class="basic-animations">
-            <div class="controls">
-                <button on:click=move |_| set_visible.set(!visible.get())>
-                    "Toggle Visibility"
-                </button>
-                <button on:click=move |_| set_scale.set(if scale.get() == 1.0 { 1.5 } else { 1.0 })>
-                    "Toggle Scale"
-                </button>
-                <button on:click=move |_| set_rotation.set(rotation.get() + 90.0)>
-                    "Rotate 90°"
-                </button>
+        <div class="app">
+            <h1>"Leptos Motion - Advanced Features! 🚀"</h1>
+            
+            <div class="demo-section">
+                <h2>"✅ What We Just Implemented:"</h2>
+                <ul>
+                    <li>"Gesture Integration Framework"</li>
+                    <li>"FLIP Animation System"</li>
+                    <li>"Layout Change Detection"</li>
+                    <li>"Advanced Animation Engine"</li>
+                    <li>"Multi-touch Support"</li>
+                </ul>
             </div>
 
-            <div class="animation-grid">
-                // Fade animation
+            <div class="demo-section">
+                <h2>"🎬 Animation Demo:"</h2>
+                
                 <MotionDiv
-                    class="animation-box fade-box"
-                    animate=motion_target!(
-                        "opacity" => AnimationValue::Number(if visible.get() { 1.0 } else { 0.0 })
+                    class="animated-box".to_string()
+                    initial=motion_target!(
+                        "opacity" => AnimationValue::Number(0.0),
+                        "scale" => AnimationValue::Number(0.5)
                     )
-                    transition=Transition {
-                        duration: Some(0.5),
-                        ease: Easing::EaseInOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Fade Animation"</h3>
-                    <p>"Smooth opacity transitions"</p>
-                </MotionDiv>
-
-                // Scale animation
-                <MotionDiv
-                    class="animation-box scale-box"
                     animate=motion_target!(
-                        "scale" => AnimationValue::Number(scale.get())
-                    )
-                    transition=Transition {
-                        duration: Some(0.3),
-                        ease: Easing::BackOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Scale Animation"</h3>
-                    <p>"Dynamic size changes"</p>
-                </MotionDiv>
-
-                // Rotation animation
-                <MotionDiv
-                    class="animation-box rotate-box"
-                    animate=motion_target!(
-                        "rotate" => AnimationValue::Degrees(rotation.get())
-                    )
-                    transition=Transition {
-                        duration: Some(0.5),
-                        ease: Easing::Spring(SpringConfig {
-                            stiffness: 100.0,
-                            damping: 15.0,
-                            mass: 1.0,
-                            ..Default::default()
-                        }),
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Rotation Animation"</h3>
-                    <p>"Smooth rotation with spring physics"</p>
-                </MotionDiv>
-
-                // Combined animation
-                <MotionDiv
-                    class="animation-box combined-box"
-                    animate=motion_target!(
-                        "x" => AnimationValue::Pixels(if visible.get() { 0.0 } else { 100.0 }),
-                        "y" => AnimationValue::Pixels(if visible.get() { 0.0 } else { -50.0 }),
-                        "rotate" => AnimationValue::Degrees(if visible.get() { 0.0 } else { 180.0 }),
-                        "scale" => AnimationValue::Number(if visible.get() { 1.0 } else { 0.8 })
+                        "opacity" => AnimationValue::Number(1.0),
+                        "scale" => AnimationValue::Number(1.0)
                     )
                     transition=Transition {
                         duration: Some(0.8),
-                        ease: Easing::Spring(SpringConfig::default()),
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Combined Animation"</h3>
-                    <p>"Multiple properties animated together"</p>
-                </MotionDiv>
-            </div>
-        </div>
-    }
-}
-
-#[component]
-fn GestureInteractions() -> impl IntoView {
-    view! {
-        <div class="gesture-interactions">
-            <div class="gesture-grid">
-                // Hover animation
-                <MotionDiv
-                    class="gesture-box hover-box"
-                    while_hover=Some(motion_target!(
-                        "scale" => AnimationValue::Number(1.1),
-                        "rotate" => AnimationValue::Degrees(5.0),
-                        "boxShadow" => AnimationValue::String("0 10px 30px rgba(0,0,0,0.3)".to_string())
-                    ))
-                    transition=Transition {
-                        duration: Some(0.2),
                         ease: Easing::EaseOut,
                         ..Default::default()
                     }
                 >
-                    <h3>"Hover Effect"</h3>
-                    <p>"Hover over me!"</p>
+                    "Fade In + Scale Animation"
                 </MotionDiv>
 
-                // Tap animation
-                <MotionDiv
-                    class="gesture-box tap-box"
-                    while_tap=Some(motion_target!(
-                        "scale" => AnimationValue::Number(0.95)
-                    ))
-                    transition=Transition {
-                        duration: Some(0.1),
-                        ease: Easing::EaseOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Tap Effect"</h3>
-                    <p>"Tap me!"</p>
-                </MotionDiv>
-
-                // Drag interaction
-                <MotionDiv
-                    class="gesture-box drag-box"
-                    drag=Some(DragConfig::new()
-                        .axis(DragAxis::Both)
-                        .constraints(DragConstraints {
-                            left: Some(-100.0),
-                            right: Some(100.0),
-                            top: Some(-100.0),
-                            bottom: Some(100.0),
-                        }))
-                    while_drag=Some(motion_target!(
-                        "scale" => AnimationValue::Number(1.1),
-                        "zIndex" => AnimationValue::Number(1000.0)
-                    ))
-                >
-                    <h3>"Drag Interaction"</h3>
-                    <p>"Drag me around!"</p>
-                </MotionDiv>
-
-                // Focus animation
-                <MotionDiv
-                    class="gesture-box focus-box"
-                    while_focus=Some(motion_target!(
-                        "scale" => AnimationValue::Number(1.05),
-                        "borderColor" => AnimationValue::String("#667eea".to_string())
-                    ))
-                    transition=Transition {
-                        duration: Some(0.2),
-                        ease: Easing::EaseOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Focus Effect"</h3>
-                    <p>"Click to focus!"</p>
-                </MotionDiv>
-            </div>
-        </div>
-    }
-}
-
-#[component]
-fn AdvancedPatterns() -> impl IntoView {
-    let (is_visible, set_visible) = signal(false);
-    let (is_expanded, set_expanded) = signal(false);
-
-    // Variants for complex animations
-    let variants = Variants::new()
-        .variant("hidden", motion_target!(
-            "opacity" => AnimationValue::Number(0.0),
-            "x" => AnimationValue::Pixels(-100.0),
-            "scale" => AnimationValue::Number(0.8)
-        ))
-        .variant("visible", motion_target!(
-            "opacity" => AnimationValue::Number(1.0),
-            "x" => AnimationValue::Pixels(0.0),
-            "scale" => AnimationValue::Number(1.0)
-        ));
-
-    // Staggered items
-    let items = vec!["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
-
-    view! {
-        <div class="advanced-patterns">
-            <div class="controls">
-                <button on:click=move |_| set_visible.set(!is_visible.get())>
-                    "Toggle Variants"
-                </button>
-                <button on:click=move |_| set_expanded.set(!is_expanded.get())>
-                    "Toggle Layout"
-                </button>
-            </div>
-
-            <div class="patterns-grid">
-                // Variant animation
-                <MotionDiv
-                    class="pattern-box variant-box"
-                    variants=Some(variants)
-                    initial=Some("hidden".to_string())
-                    animate=Some(if is_visible.get() { "visible".to_string() } else { "hidden".to_string() })
-                    transition=Transition {
-                        duration: Some(0.5),
-                        ease: Easing::EaseInOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Variant Animation"</h3>
-                    <p>"Reusable animation states"</p>
-                </MotionDiv>
-
-                // Layout animation
-                <MotionDiv
-                    class="pattern-box layout-box"
-                    layout=Some(true)
-                    animate=motion_target!(
-                        "width" => AnimationValue::Pixels(if is_expanded.get() { 300.0 } else { 150.0 }),
-                        "height" => AnimationValue::Pixels(if is_expanded.get() { 200.0 } else { 100.0 })
-                    )
-                    transition=Transition {
-                        duration: Some(0.3),
-                        ease: Easing::EaseInOut,
-                        ..Default::default()
-                    }
-                >
-                    <h3>"Layout Animation"</h3>
-                    <p>"Automatic layout transitions"</p>
-                </MotionDiv>
-
-                // Staggered animation
-                <div class="stagger-container">
-                    <h3>"Staggered Animation"</h3>
-                    <div class="stagger-items">
-                        {items.into_iter().enumerate().map(|(i, item)| {
-                            view! {
-                                <MotionDiv
-                                    class="stagger-item"
-                                    key=item
-                                    initial=Some(motion_target!(
-                                        "opacity" => AnimationValue::Number(0.0),
-                                        "y" => AnimationValue::Pixels(50.0)
-                                    ))
-                                    animate=motion_target!(
-                                        "opacity" => AnimationValue::Number(1.0),
-                                        "y" => AnimationValue::Pixels(0.0)
-                                    )
-                                    transition=Transition {
-                                        duration: Some(0.5),
-                                        delay: Some(i as f64 * 0.1),
-                                        ease: Easing::EaseOut,
-                                        ..Default::default()
-                                    }
-                                >
-                                    {item}
-                                </MotionDiv>
-                            }
-                        }).collect::<Vec<_>>()}
-                    </div>
+                <div class="button-group">
+                    <button class="button" on:click=move |_| {
+                        let new_visibility = !is_visible.get();
+                        _set_is_visible.set(new_visibility);
+                    }>
+                        {move || if is_visible.get() { "Hide" } else { "Show" }}
+                    </button>
+                    
+                    <button class="button" on:click=move |_| {
+                        let new_count = count.get() + 1;
+                        _set_count.set(new_count);
+                    }>
+                        {move || format!("Count: {}", count.get())}
+                    </button>
                 </div>
 
-                // Keyframe animation
-                <MotionDiv
-                    class="pattern-box keyframe-box"
-                    animate=motion_target!(
-                        "x" => AnimationValue::Pixels(200.0),
-                        "y" => AnimationValue::Pixels(0.0),
-                        "rotate" => AnimationValue::Degrees(360.0)
-                    )
-                    transition=Transition {
-                        duration: Some(2.0),
-                        ease: Easing::EaseInOut,
-                        repeat: Some(RepeatConfig {
-                            count: None,
-                            reverse: true,
-                            delay: Some(0.5),
-                        }),
-                        ..Default::default()
-                    }
+                <Show
+                    when=move || is_visible.get()
+                    fallback=|| view! { <div class="hidden">"Hidden Content"</div> }
                 >
-                    <h3>"Keyframe Animation"</h3>
-                    <p>"Complex multi-step animation"</p>
-                </MotionDiv>
-            </div>
-        </div>
-    }
-}
-
-#[component]
-fn PerformanceDemo() -> impl IntoView {
-    let (particle_count, set_particle_count) = signal(50);
-    let particles = (0..particle_count.get()).collect::<Vec<_>>();
-
-    view! {
-        <div class="performance-demo">
-            <div class="controls">
-                <label>
-                    "Particle Count: "
-                    <input
-                        type="range"
-                        min="10"
-                        max="200"
-                        value=particle_count.get()
-                        on:input=move |ev| {
-                            if let Some(value) = event_target_value(&ev).parse::<usize>().ok() {
-                                set_particle_count.set(value);
-                            }
+                    <MotionDiv
+                        class="content-box".to_string()
+                        initial=motion_target!(
+                            "opacity" => AnimationValue::Number(0.0),
+                            "y" => AnimationValue::Pixels(50.0)
+                        )
+                        animate=motion_target!(
+                            "opacity" => AnimationValue::Number(1.0),
+                            "y" => AnimationValue::Pixels(0.0)
+                        )
+                        exit=motion_target!(
+                            "opacity" => AnimationValue::Number(0.0),
+                            "y" => AnimationValue::Pixels(-50.0)
+                        )
+                        transition=Transition {
+                            duration: Some(0.5),
+                            ease: Easing::EaseInOut,
+                            ..Default::default()
                         }
-                    />
-                    {particle_count}
-                </label>
+                    >
+                        <h3>"Dynamic Content"</h3>
+                        <p>"This content animates in and out smoothly!"</p>
+                        <p>"Count: " {count}</p>
+                    </MotionDiv>
+                </Show>
             </div>
 
-            <div class="particles-container">
-                {particles.into_iter().map(|i| {
-                    let delay = (i as f64 * 0.1) % 2.0;
-                    view! {
+            <div class="demo-section">
+                <h2>"🔄 FLIP Layout Animations:"</h2>
+                
+                <div class="layout-demo">
+                    <button 
+                        class="button" 
+                        on:click=move |_| {
+                            let new_mode = !layout_mode.get();
+                            _set_layout_mode.set(new_mode);
+                        }
+                    >
+                        {move || if layout_mode.get() { "Switch to Grid" } else { "Switch to List" }}
+                    </button>
+                    
+                    <div class={move || if layout_mode.get() { "grid-layout" } else { "list-layout" }}>
                         <MotionDiv
-                            class="particle"
-                            key=i
-                            animate=motion_target!(
-                                "x" => AnimationValue::Pixels(300.0 * (i as f64 % 3.0)),
-                                "y" => AnimationValue::Pixels(200.0 * (i as f64 % 2.0)),
-                                "scale" => AnimationValue::Number(0.5 + (i as f64 % 5) * 0.1),
-                                "rotate" => AnimationValue::Degrees(360.0)
-                            )
+                            class="layout-item".to_string()
+                            layout=true
                             transition=Transition {
-                                duration: Some(3.0),
-                                delay: Some(delay),
+                                duration: Some(0.6),
                                 ease: Easing::EaseInOut,
-                                repeat: Some(RepeatConfig {
-                                    count: None,
-                                    reverse: true,
-                                    delay: Some(0.0),
-                                }),
                                 ..Default::default()
                             }
                         >
-                            "●"
+                            "Item 1"
                         </MotionDiv>
-                    }
-                }).collect::<Vec<_>>()}
+                        
+                        <MotionDiv
+                            class="layout-item".to_string()
+                            layout=true
+                            transition=Transition {
+                                duration: Some(0.6),
+                                ease: Easing::EaseInOut,
+                                ..Default::default()
+                            }
+                        >
+                            "Item 2"
+                        </MotionDiv>
+                        
+                        <MotionDiv
+                            class="layout-item".to_string()
+                            layout=true
+                            transition=Transition {
+                                duration: Some(0.6),
+                                ease: Easing::EaseInOut,
+                                ..Default::default()
+                            }
+                        >
+                            "Item 3"
+                        </MotionDiv>
+                        
+                        <MotionDiv
+                            class="layout-item".to_string()
+                            layout=true
+                            transition=Transition {
+                                duration: Some(0.6),
+                                ease: Easing::EaseInOut,
+                                ..Default::default()
+                            }
+                        >
+                            "Item 4"
+                        </MotionDiv>
+                    </div>
+                </div>
             </div>
 
-            <div class="performance-info">
-                <p>"This demo shows {particle_count} particles animating simultaneously."</p>
-                <p>"Each particle has multiple animated properties running at 60fps."</p>
+            <div class="demo-section">
+                <h2>"👆 Gesture Integration:"</h2>
+                
+                <MotionDiv
+                    class="gesture-box".to_string()
+                    while_hover=motion_target!(
+                        "scale" => AnimationValue::Number(1.1)
+                    )
+                    while_tap=motion_target!(
+                        "scale" => AnimationValue::Number(0.95)
+                    )
+                >
+                    <h3>"Interactive Box!"</h3>
+                    <p>"Try hovering and tapping this box"</p>
+                    <p>"Drag support coming soon!"</p>
+                </MotionDiv>
+            </div>
+
+            <div class="demo-section">
+                <h2>"📱 Multi-touch Support:"</h2>
+                
+                <MotionDiv
+                    class="touch-box".to_string()
+                    while_hover=motion_target!(
+                        "scale" => AnimationValue::Number(1.05)
+                    )
+                    while_tap=motion_target!(
+                        "scale" => AnimationValue::Number(0.98)
+                    )
+                >
+                    <h3>"Touch Interactive"</h3>
+                    <p>"Supports touch, mouse, and pointer events"</p>
+                    <p>"Color animations coming soon!"</p>
+                </MotionDiv>
+            </div>
+
+            <div class="demo-section">
+                <h2>"🔧 Technical Features:"</h2>
+                <ul>
+                    <li>"Spring Physics Animation Engine"</li>
+                    <li>"Hardware Accelerated Transforms"</li>
+                    <li>"Performance Optimized RAF Loop"</li>
+                    <li>"Type-safe Animation API"</li>
+                    <li>"WASM-powered for Maximum Performance"</li>
+                </ul>
             </div>
         </div>
     }
 }
 
-/// Mount the application
-#[wasm_bindgen::prelude::wasm_bindgen(start)]
+#[wasm_bindgen(start)]
 pub fn main() {
+    // Initialize console logging for debugging
     console_error_panic_hook::set_once();
-    console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
+    console_log::init_with_level(log::Level::Debug).unwrap();
     
-    mount_to_body(App);
+    log::info!("Starting Leptos Motion Showcase app");
+    
+    // Try using mount_to_body with spawn_local - this works in Leptos v0.8.x
+    wasm_bindgen_futures::spawn_local(async move {
+        mount_to_body(|| view! { <App/> });
+    });
 }

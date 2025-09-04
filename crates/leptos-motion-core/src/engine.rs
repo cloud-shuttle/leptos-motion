@@ -93,7 +93,7 @@ pub struct OptimizedHybridEngine {
 }
 
 impl OptimizedHybridEngine {
-    /// Create a new optimized hybrid engine
+    /// Create a new optimized hybrid engine instance
     pub fn new() -> Self {
         let budget = PerformanceBudget::default();
         let frame_budget = std::time::Duration::from_millis(16); // 60fps target

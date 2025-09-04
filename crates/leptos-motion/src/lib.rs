@@ -83,26 +83,33 @@
 //! ```rust,no_run
 //! # use leptos::*;
 //! # use leptos_motion::*;
-//! view! {
+//! # fn main() {
+//! let _view = view! {
 //!     <MotionDiv
 //!         while_hover=motion_target!("scale" => AnimationValue::Number(1.1))
 //!         while_tap=motion_target!("scale" => AnimationValue::Number(0.9))
-//!         drag=Some(DragConfig::new().axis(DragAxis::Both))
+//!         drag=DragConfig::new().axis(DragAxis::Both)
 //!     >
 //!         "Interactive element"
 //!     </MotionDiv>
-//! }
+//! };
+//! # }
 //! ```
 
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
-// Re-export all core functionality
-pub use leptos_motion_core::*;
-pub use leptos_motion_dom::*;
+// Re-export core functionality
+pub use leptos_motion_core::{
+    animation, spring, easing, performance, AnimationEngine, AnimationHandle, AnimationConfig,
+    Transition, Easing, SpringConfig, AnimationValue, Result
+};
 
-// Re-export the motion_target macro
-pub use leptos_motion_dom::motion_target;
+// Re-export DOM functionality
+pub use leptos_motion_dom::{
+    MotionDiv, MotionSpan, AnimatePresence, PresenceMode, MotionProps,
+    DragConfig, DragAxis, DragConstraints, InteractiveState, motion_target
+};
 
 #[cfg(feature = "gestures")]
 pub use leptos_motion_gestures::*;

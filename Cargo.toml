@@ -9,11 +9,12 @@ members = [
     "crates/leptos-motion",
     "examples/basic-animations",
     "examples/showcase",
+    "examples/advanced-gestures",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.1.1"
+version = "0.2.0-beta.1"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
@@ -27,15 +28,48 @@ description = "A comprehensive animation library for Leptos with Motion-inspired
 
 [workspace.dependencies]
 # Core Leptos dependencies
-leptos = { version = "0.7", features = ["csr", "hydrate", "ssr"] }
-leptos_meta = "0.7"
-leptos_router = "0.7"
+leptos = { version = "0.8.5", features = ["csr", "hydrate", "ssr"] }
+leptos_meta = "0.8.5"
+leptos_router = "0.8.5"
+
+# Leptos Motion dependencies
+leptos-motion = { path = "crates/leptos-motion" }
+leptos-motion-core = { path = "crates/leptos-motion-core" }
+leptos-motion-dom = { path = "crates/leptos-motion-dom" }
+leptos-motion-gestures = { path = "crates/leptos-motion-gestures" }
+leptos-motion-layout = { path = "crates/leptos-motion-layout" }
+leptos-motion-scroll = { path = "crates/leptos-motion-scroll" }
+leptos-motion-macros = { path = "crates/leptos-motion-macros" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }
 
 # Web APIs
-web-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "console",
+    "Window",
+    "Document", 
+    "Element",
+    "HtmlElement",
+    "CssStyleDeclaration",
+    "DomRect",
+    "Performance",
+    "AnimationEvent",
+    "TransitionEvent",
+    "Animation",
+    "KeyframeEffect",
+    "EventTarget",
+    "Event",
+    "MouseEvent",
+    "TouchEvent",
+    "PointerEvent",
+    "Touch",
+    "TouchList",
+    "AddEventListenerOptions",
+    "Node",
+    "WheelEvent",
+    "KeyboardEvent",
+] }
 js-sys = "0.3"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
@@ -65,6 +99,18 @@ console_error_panic_hook = "0.1"
 wasm-bindgen-test = "0.3"
 pretty_assertions = "1.4"
 test-case = "3.1"
+
+[[workspace.metadata.leptos]]
+name = "showcase"
+path = "examples/showcase"
+target = "examples/showcase/index.html"
+dist = "examples/showcase/dist"
+bin-package = "showcase"
+lib-package = "showcase"
+# Additional required fields for Leptos apps
+client-package = "showcase"
+client-features = ["csr"]
+client-target = "wasm32-unknown-unknown"
 
 [profile.release]
 opt-level = 3

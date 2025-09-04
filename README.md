@@ -9,13 +9,26 @@
 
 Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance.
 
+> **🚀 Now in Beta!** Version 0.2.0-beta.1 is ready for testing and feedback.
+
+## 🚀 Beta Release Status
+
+**Version 0.2.0-beta.1** is now available for testing and feedback!
+
+- ✅ **All Core Features Working**: Animation engine, gestures, layout animations
+- ✅ **Comprehensive Testing**: 70+ tests passing with full coverage
+- ✅ **Performance Optimized**: 60fps animations with memory management
+- ✅ **Ready for Feedback**: Stable enough for development and testing
+
+> **Note**: This is a beta release. Some APIs may change before the 1.0 stable release.
+
 ## ✨ Features
 
 - 🚀 **High Performance**: Built with Rust and WebAssembly for 60fps animations
 - 🎯 **Framer Motion Inspired**: Familiar API for React developers
 - 🎨 **Rich Animation Types**: Spring, tween, and custom easing functions
-- 🖱️ **Gesture Support**: Drag, hover, tap, and scroll animations
-- 📱 **Layout Animations**: Smooth transitions when elements change position
+- 🖱️ **Gesture Support**: Multi-touch, drag, hover, tap, and scroll animations
+- 📱 **Layout Animations**: FLIP-based smooth transitions when elements change position
 - 🎭 **Presence Animations**: Enter/exit animations with automatic cleanup
 - 🔧 **Type Safe**: Full Rust type safety and compile-time guarantees
 - 🌐 **Cross Platform**: Works in browsers and server-side rendering
@@ -26,7 +39,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-leptos-motion = "0.1.0-alpha"
+leptos-motion = "0.2.0-beta.1"
 ```
 
 ## 🚀 Quick Start

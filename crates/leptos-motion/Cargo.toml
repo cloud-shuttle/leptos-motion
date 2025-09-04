@@ -27,12 +27,12 @@ csr = ["leptos-motion-dom/csr"]
 
 [dependencies]
 # All motion crates
-leptos-motion-core = "0.1.0-alpha"
-leptos-motion-dom = "0.1.0-alpha"
-leptos-motion-gestures = { version = "0.1.0-alpha", optional = true }
-leptos-motion-layout = { version = "0.1.0-alpha", optional = true }
-leptos-motion-scroll = { version = "0.1.0-alpha", optional = true }
-leptos-motion-macros = "0.1.0-alpha"
+leptos-motion-core.workspace = true
+leptos-motion-dom.workspace = true
+leptos-motion-gestures = { workspace = true, optional = true }
+leptos-motion-layout = { workspace = true, optional = true }
+leptos-motion-scroll = { workspace = true, optional = true }
+leptos-motion-macros.workspace = true
 
 # Re-export core dependencies
 leptos.workspace = true

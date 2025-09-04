@@ -92,7 +92,7 @@ tests/visual/report/
 backstop_data/
 percy_data/
 playwright-report/
-test-results/
+assets/test-results/
 playwright/.cache/
 
 # Nix

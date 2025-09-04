@@ -14,7 +14,7 @@ categories.workspace = true
 
 [dependencies]
 # Core motion
-leptos-motion-core = "0.1.0-alpha"
+leptos-motion-core.workspace = true
 
 # Web APIs
 web-sys = { workspace = true, features = [
@@ -37,6 +37,7 @@ js-sys.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 num-traits.workspace = true
+log.workspace = true
 
 [dev-dependencies]
 wasm-bindgen-test.workspace = true

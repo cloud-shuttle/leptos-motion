@@ -30,6 +30,61 @@ pub enum AnimationValue {
     Complex(ComplexValue),
 }
 
+impl AnimationValue {
+    /// Convert animation value to string representation
+    pub fn to_string(&self) -> String {
+        match self {
+            AnimationValue::Number(n) => n.to_string(),
+            AnimationValue::Pixels(p) => format!("{}px", p),
+            AnimationValue::Percentage(p) => format!("{}%", p),
+            AnimationValue::Degrees(d) => format!("{}deg", d),
+            AnimationValue::Radians(r) => format!("{}rad", r),
+            AnimationValue::Color(c) => c.clone(),
+            AnimationValue::Transform(t) => {
+                let mut transforms = Vec::new();
+                
+                if let Some(x) = t.x {
+                    transforms.push(format!("translateX({}px)", x));
+                }
+                if let Some(y) = t.y {
+                    transforms.push(format!("translateY({}px)", y));
+                }
+                if let Some(z) = t.z {
+                    transforms.push(format!("translateZ({}px)", z));
+                }
+                if let Some(rx) = t.rotate_x {
+                    transforms.push(format!("rotateX({}deg)", rx));
+                }
+                if let Some(ry) = t.rotate_y {
+                    transforms.push(format!("rotateY({}deg)", ry));
+                }
+                if let Some(rz) = t.rotate_z {
+                    transforms.push(format!("rotateZ({}deg)", rz));
+                }
+                if let Some(s) = t.scale {
+                    transforms.push(format!("scale({})", s));
+                }
+                if let Some(sx) = t.scale_x {
+                    transforms.push(format!("scaleX({})", sx));
+                }
+                if let Some(sy) = t.scale_y {
+                    transforms.push(format!("scaleY({})", sy));
+                }
+                if let Some(skew_x) = t.skew_x {
+                    transforms.push(format!("skewX({}deg)", skew_x));
+                }
+                if let Some(skew_y) = t.skew_y {
+                    transforms.push(format!("skewY({}deg)", skew_y));
+                }
+                
+                transforms.join(" ")
+            }
+            AnimationValue::String(s) => s.clone(),
+            AnimationValue::Complex(_) => "complex".to_string(),
+        }
+    }
+}
+
 /// 3D transform representation
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 pub struct Transform {

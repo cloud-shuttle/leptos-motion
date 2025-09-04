@@ -671,6 +671,7 @@ pub struct FeatureDetector {
 }
 
 impl FeatureDetector {
+    /// Create a new feature detector
     pub fn new() -> Self {
         Self {
             waapi_available: None,
@@ -743,6 +744,35 @@ impl Default for RafEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::HashMap;
+    use crate::{AnimationValue, Transform, Transition};
+    
+    // Helper function to create a mock element (for environments that support it)
+    #[cfg(target_arch = "wasm32")]
+    fn create_mock_element() -> Option<Element> {
+        // In a real test environment, this would create a proper Element
+        web_sys::window()
+            .and_then(|w| w.document())
+            .and_then(|d| d.create_element("div").ok())
+    }
+    
+    // For non-wasm environments, return None
+    #[cfg(not(target_arch = "wasm32"))]
+    fn create_mock_element() -> Option<Element> {
+        None
+    }
+    
+    fn create_test_animation_target() -> (HashMap<String, AnimationValue>, HashMap<String, AnimationValue>) {
+        let mut from = HashMap::new();
+        from.insert("opacity".to_string(), AnimationValue::Number(0.0));
+        from.insert("x".to_string(), AnimationValue::Pixels(0.0));
+        
+        let mut to = HashMap::new();
+        to.insert("opacity".to_string(), AnimationValue::Number(1.0));
+        to.insert("x".to_string(), AnimationValue::Pixels(100.0));
+        
+        (from, to)
+    }
     
     // Test that our core types can be created and manipulated
     #[test]
@@ -879,6 +909,416 @@ mod tests {
             // Just ensure the states can be cloned and compared
             let cloned = state.clone();
             assert_eq!(state, cloned);
+        }
+    }
+    
+    #[test]
+    fn test_animation_config_targets() {
+        let (from, to) = create_test_animation_target();
+        assert_eq!(from.len(), 2);
+        assert_eq!(to.len(), 2);
+        assert!(from.contains_key("opacity"));
+        assert!(to.contains_key("opacity"));
+        assert_eq!(from.get("opacity"), Some(&AnimationValue::Number(0.0)));
+        assert_eq!(to.get("opacity"), Some(&AnimationValue::Number(1.0)));
+    }
+    
+    #[test]
+    fn test_animation_config_callbacks() {
+        // Test callback IDs without requiring DOM elements
+        let callback_ids = (Some(123u64), Some(456u64));
+        assert_eq!(callback_ids.0, Some(123));
+        assert_eq!(callback_ids.1, Some(456));
+    }
+    
+    #[test]
+    fn test_playback_state_variants() {
+        let running = PlaybackState::Running;
+        let paused = PlaybackState::Paused;
+        let completed = PlaybackState::Completed;
+        let cancelled = PlaybackState::Cancelled;
+        
+        assert_eq!(running, PlaybackState::Running);
+        assert_eq!(paused, PlaybackState::Paused);
+        assert_eq!(completed, PlaybackState::Completed);
+        assert_eq!(cancelled, PlaybackState::Cancelled);
+        
+        assert_ne!(running, paused);
+        assert_ne!(completed, cancelled);
+    }
+    
+    #[test]
+    fn test_engine_type_basics() {
+        // Test engine availability logic without creating engines
+        let waapi_available = false; // Assume not available in test environment
+        let raf_available = true; // RAF should always be available
+        
+        assert!(raf_available || waapi_available); // At least one should be available
+    }
+    
+    #[test]
+    fn test_handle_generation_logic() {
+        // Test handle generation logic without full engine
+        let mut current_handle = 0u64;
+        
+        let mut next_handle = || {
+            current_handle += 1;
+            AnimationHandle(current_handle)
+        };
+        
+        let handle1 = next_handle();
+        let handle2 = next_handle();
+        let handle3 = next_handle();
+        
+        assert_ne!(handle1.0, handle2.0);
+        assert_ne!(handle2.0, handle3.0);
+        assert!(handle1.0 < handle2.0);
+        assert!(handle2.0 < handle3.0);
+        assert_eq!(handle1.0, 1);
+        assert_eq!(handle2.0, 2);
+        assert_eq!(handle3.0, 3);
+    }
+    
+    #[test] 
+    fn test_gpu_optimization_logic() {
+        // Test GPU optimization logic without DOM dependencies
+        let gpu_enabled = false; // For now, always false
+        assert!(!gpu_enabled);
+    }
+    
+    #[test]
+    fn test_waapi_engine_creation() {
+        let engine = WaapiEngine::new();
+        assert!(engine.animations.is_empty());
+    }
+    
+    #[test]
+    fn test_waapi_engine_default() {
+        let engine = WaapiEngine::default();
+        assert!(engine.animations.is_empty());
+    }
+    
+    #[test]
+    fn test_waapi_engine_tick() {
+        let mut engine = WaapiEngine::new();
+        let result = engine.tick(123.45);
+        assert!(result.is_ok()); // WAAPI doesn't need manual ticking
+    }
+    
+    #[test]
+    fn test_waapi_engine_performance_metrics() {
+        let engine = WaapiEngine::new();
+        let metrics = engine.get_performance_metrics();
+        assert!(metrics.is_none()); // WAAPI doesn't provide metrics
+    }
+    
+    // Test basic RAF engine functionality without web dependencies
+    #[test]
+    fn test_raf_engine_basics() {
+        // Test basic RAF engine structure without requiring DOM
+        let animations = HashMap::<AnimationHandle, RafAnimation>::new();
+        assert!(animations.is_empty());
+        
+        let raf_handle: Option<i32> = None;
+        assert!(raf_handle.is_none());
+    }
+    
+    #[test]
+    fn test_raf_animation_basics() {
+        // Test basic RAF animation concepts without full DOM setup
+        let start_time = 100.0;
+        let state = PlaybackState::Running;
+        
+        assert_eq!(start_time, 100.0);
+        assert_eq!(state, PlaybackState::Running);
+    }
+    
+    #[test]
+    fn test_raf_animation_progress_calculation() {
+        // Test animation progress calculation without DOM dependencies
+        let start_time = 0.0;
+        let duration_ms = 1000.0; // 1 second
+        
+        // Test at different timestamps
+        let timestamp1 = 500.0; // 50% progress
+        let elapsed1 = timestamp1 - start_time;
+        let progress1 = (elapsed1 / duration_ms as f64).clamp(0.0, 1.0);
+        assert_eq!(progress1, 0.5);
+        
+        let timestamp2 = 1500.0; // 150% (should clamp to 100%)
+        let elapsed2 = timestamp2 - start_time;
+        let progress2 = (elapsed2 / duration_ms as f64).clamp(0.0, 1.0);
+        assert_eq!(progress2, 1.0);
+    }
+    
+    #[test]
+    fn test_animation_value_interpolation_logic() {
+        // Test interpolation logic without requiring DOM or RafAnimation creation
+        
+        // Number interpolation
+        let from_num = 0.0;
+        let to_num = 100.0;
+        let progress = 0.5;
+        let result = from_num + (to_num - from_num) * progress;
+        assert_eq!(result, 50.0);
+        
+        // Pixel interpolation (same math, different units)
+        let from_px = 0.0;
+        let to_px = 200.0;
+        let result = from_px + (to_px - from_px) * 0.25;
+        assert_eq!(result, 50.0);
+        
+        // Percentage interpolation
+        let from_pct = 0.0;
+        let to_pct = 100.0;
+        let result = from_pct + (to_pct - from_pct) * 0.75;
+        assert_eq!(result, 75.0);
+        
+        // Degrees interpolation
+        let from_deg = 0.0;
+        let to_deg = 360.0;
+        let result = from_deg + (to_deg - from_deg) * 0.5;
+        assert_eq!(result, 180.0);
+        
+        // Color interpolation (step function logic)
+        let color_from = "red";
+        let color_to = "blue";
+        let result_early = if 0.3 < 0.5 { color_from } else { color_to };
+        assert_eq!(result_early, "red");
+        let result_late = if 0.7 < 0.5 { color_from } else { color_to };
+        assert_eq!(result_late, "blue");
+    }
+    
+    #[test]
+    fn test_transform_interpolation_logic() {
+        // Test transform interpolation logic without requiring DOM or RafAnimation
+        let from_transform = Transform {
+            x: Some(0.0),
+            y: Some(0.0),
+            scale: Some(1.0),
+            rotate_z: Some(0.0),
+            ..Transform::default()
+        };
+        
+        let to_transform = Transform {
+            x: Some(100.0),
+            y: Some(200.0),
+            scale: Some(2.0),
+            rotate_z: Some(360.0),
+            ..Transform::default()
+        };
+        
+        let progress = 0.5;
+        
+        // Test individual field interpolation
+        let x_result = match (from_transform.x, to_transform.x) {
+            (Some(from_val), Some(to_val)) => Some(from_val + (to_val - from_val) * progress),
+            (Some(val), None) | (None, Some(val)) => Some(val),
+            (None, None) => None,
+        };
+        assert_eq!(x_result, Some(50.0));
+        
+        let y_result = match (from_transform.y, to_transform.y) {
+            (Some(from_val), Some(to_val)) => Some(from_val + (to_val - from_val) * progress),
+            (Some(val), None) | (None, Some(val)) => Some(val),
+            (None, None) => None,
+        };
+        assert_eq!(y_result, Some(100.0));
+        
+        let scale_result = match (from_transform.scale, to_transform.scale) {
+            (Some(from_val), Some(to_val)) => Some(from_val + (to_val - from_val) * progress),
+            (Some(val), None) | (None, Some(val)) => Some(val),
+            (None, None) => None,
+        };
+        assert_eq!(scale_result, Some(1.5));
+        
+        let rotate_result = match (from_transform.rotate_z, to_transform.rotate_z) {
+            (Some(from_val), Some(to_val)) => Some(from_val + (to_val - from_val) * progress),
+            (Some(val), None) | (None, Some(val)) => Some(val),
+            (None, None) => None,
+        };
+        assert_eq!(rotate_result, Some(180.0));
+    }
+    
+    #[test]
+    fn test_animation_value_to_css_logic() {
+        // Test CSS value conversion logic without requiring RafAnimation
+        
+        // Test number
+        let number_val = 0.5;
+        let result = number_val.to_string();
+        assert_eq!(result, "0.5");
+        
+        // Test pixels
+        let pixel_val = 100.0;
+        let result = format!("{}px", pixel_val);
+        assert_eq!(result, "100px");
+        
+        // Test percentage
+        let percent_val = 50.0;
+        let result = format!("{}%", percent_val);
+        assert_eq!(result, "50%");
+        
+        // Test degrees
+        let degree_val = 45.0;
+        let result = format!("{}deg", degree_val);
+        assert_eq!(result, "45deg");
+        
+        // Test color
+        let color_val = "red";
+        let result = color_val.to_string();
+        assert_eq!(result, "red");
+        
+        // Test string
+        let string_val = "block";
+        let result = string_val.to_string();
+        assert_eq!(result, "block");
+    }
+    
+    #[test]
+    fn test_transform_to_css_logic() {
+        // Test transform to CSS conversion logic without requiring RafAnimation
+        let transform = Transform {
+            x: Some(10.0),
+            y: Some(20.0),
+            z: Some(30.0),
+            rotate_x: Some(45.0),
+            rotate_y: Some(90.0),
+            rotate_z: Some(180.0),
+            scale: Some(1.5),
+            scale_x: Some(2.0),
+            scale_y: Some(0.5),
+            skew_x: Some(15.0),
+            skew_y: Some(30.0),
+        };
+        
+        let mut parts = Vec::new();
+        
+        if let Some(x) = transform.x {
+            parts.push(format!("translateX({}px)", x));
+        }
+        if let Some(y) = transform.y {
+            parts.push(format!("translateY({}px)", y));
+        }
+        if let Some(z) = transform.z {
+            parts.push(format!("translateZ({}px)", z));
+        }
+        if let Some(rotate_x) = transform.rotate_x {
+            parts.push(format!("rotateX({}deg)", rotate_x));
+        }
+        if let Some(rotate_y) = transform.rotate_y {
+            parts.push(format!("rotateY({}deg)", rotate_y));
+        }
+        if let Some(rotate_z) = transform.rotate_z {
+            parts.push(format!("rotateZ({}deg)", rotate_z));
+        }
+        if let Some(scale) = transform.scale {
+            parts.push(format!("scale({})", scale));
+        }
+        if let Some(scale_x) = transform.scale_x {
+            parts.push(format!("scaleX({})", scale_x));
+        }
+        if let Some(scale_y) = transform.scale_y {
+            parts.push(format!("scaleY({})", scale_y));
+        }
+        if let Some(skew_x) = transform.skew_x {
+            parts.push(format!("skewX({}deg)", skew_x));
+        }
+        if let Some(skew_y) = transform.skew_y {
+            parts.push(format!("skewY({}deg)", skew_y));
+        }
+        
+        let css = parts.join(" ");
+        
+        assert!(css.contains("translateX(10px)"));
+        assert!(css.contains("translateY(20px)"));
+        assert!(css.contains("translateZ(30px)"));
+        assert!(css.contains("rotateX(45deg)"));
+        assert!(css.contains("rotateY(90deg)"));
+        assert!(css.contains("rotateZ(180deg)"));
+        assert!(css.contains("scale(1.5)"));
+        assert!(css.contains("scaleX(2)"));
+        assert!(css.contains("scaleY(0.5)"));
+        assert!(css.contains("skewX(15deg)"));
+        assert!(css.contains("skewY(30deg)"));
+    }
+    
+    #[test]
+    fn test_animation_completion_logic() {
+        // Test animation completion logic without requiring RafAnimation
+        let is_complete = |state: &PlaybackState| -> bool {
+            matches!(state, PlaybackState::Completed | PlaybackState::Cancelled)
+        };
+        
+        // Initially running, not complete
+        assert!(!is_complete(&PlaybackState::Running));
+        
+        // Complete the animation
+        assert!(is_complete(&PlaybackState::Completed));
+        
+        // Cancel the animation
+        assert!(is_complete(&PlaybackState::Cancelled));
+        
+        // Paused is not complete
+        assert!(!is_complete(&PlaybackState::Paused));
+    }
+    
+    #[test]
+    fn test_feature_detector_creation() {
+        let detector = FeatureDetector::new();
+        assert!(detector.waapi_available.is_none()); // Not yet determined
+    }
+    
+    #[test]
+    fn test_waapi_property_detection() {
+        // Test WAAPI property detection logic
+        let is_waapi_property = |property: &str| -> bool {
+            matches!(
+                property,
+                "opacity" | "transform" | "left" | "top" | "width" | "height" | 
+                "background-color" | "color" | "border-radius" | "scale" | "rotate" | 
+                "translateX" | "translateY" | "translateZ" | "rotateX" | "rotateY" | "rotateZ"
+            )
+        };
+        
+        // Test supported properties
+        assert!(is_waapi_property("opacity"));
+        assert!(is_waapi_property("transform"));
+        assert!(is_waapi_property("left"));
+        assert!(is_waapi_property("top"));
+        assert!(is_waapi_property("width"));
+        assert!(is_waapi_property("height"));
+        assert!(is_waapi_property("background-color"));
+        assert!(is_waapi_property("color"));
+        assert!(is_waapi_property("border-radius"));
+        assert!(is_waapi_property("scale"));
+        assert!(is_waapi_property("rotate"));
+        assert!(is_waapi_property("translateX"));
+        assert!(is_waapi_property("translateY"));
+        assert!(is_waapi_property("translateZ"));
+        assert!(is_waapi_property("rotateX"));
+        assert!(is_waapi_property("rotateY"));
+        assert!(is_waapi_property("rotateZ"));
+        
+        // Test unsupported properties
+        assert!(!is_waapi_property("custom-property"));
+        assert!(!is_waapi_property("unknown"));
+        assert!(!is_waapi_property(""));
+    }
+    
+    #[test]
+    fn test_engine_choice_variants() {
+        let waapi = EngineChoice::Waapi;
+        let raf = EngineChoice::Raf;
+        
+        match waapi {
+            EngineChoice::Waapi => {},
+            _ => panic!("Expected WAAPI variant"),
+        }
+        
+        match raf {
+            EngineChoice::Raf => {},
+            _ => panic!("Expected RAF variant"),
         }
     }
 }

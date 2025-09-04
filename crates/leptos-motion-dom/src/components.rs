@@ -8,6 +8,12 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use crate::motion_target;
 
+// Include modern TDD tests
+#[cfg(test)]
+mod tdd_tests {
+    include!("components_tdd_tests.rs");
+}
+
 /// Props for motion components
 #[derive(Clone, Debug)]
 pub struct MotionProps {
@@ -545,16 +551,17 @@ fn handle_layout_change(
         let _scale_x = current_layout.width / initial.width;
         let _scale_y = current_layout.height / initial.height;
         
-        // Create FLIP animation using the create_animation method
-        if let Err(e) = animator.create_animation(
-            element,
+        // Create FLIP animation using the animate method
+        if let Err(e) = animator.animate(
+            format!("flip_{}", element.id()),
+            element.clone(),
             web_sys::DomRect::new_with_x_and_y_and_width_and_height(
                 initial.x, initial.y, initial.width, initial.height
             ).unwrap(),
             web_sys::DomRect::new_with_x_and_y_and_width_and_height(
                 current_layout.x, current_layout.y, current_layout.width, current_layout.height
             ).unwrap(),
-            &leptos_motion_layout::LayoutAnimationConfig::default()
+            leptos_motion_layout::LayoutAnimationConfig::default()
         ) {
             log::warn!("Failed to create FLIP animation: {:?}", e);
         }
@@ -931,39 +938,399 @@ pub mod helpers {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use leptos_motion_core::AnimationValue;
     
     #[test]
     fn test_motion_props_default() {
         let props = MotionProps::default();
         assert!(props.initial.is_none());
         assert!(props.animate.is_none());
+        assert!(props.exit.is_none());
+        assert!(props.transition.is_none());
+        assert!(props.variants.is_none());
         assert!(props.layout.is_none());
+        assert!(props.drag.is_none());
+        assert!(props.while_hover.is_none());
+        assert!(props.while_tap.is_none());
+        assert!(props.while_focus.is_none());
+        assert!(props.while_in_view.is_none());
+        assert!(props.event_handlers.is_none());
+    }
+    
+    #[test]
+    fn test_motion_props_creation() {
+        let initial = motion_target!("opacity" => AnimationValue::Number(0.0));
+        let animate = motion_target!("opacity" => AnimationValue::Number(1.0));
+        
+        let props = MotionProps {
+            initial: Some(initial.clone()),
+            animate: Some(animate.clone()),
+            exit: None,
+            transition: None,
+            variants: None,
+            layout: Some(true),
+            drag: None,
+            while_hover: None,
+            while_tap: None,
+            while_focus: None,
+            while_in_view: None,
+            event_handlers: None,
+        };
+        
+        assert!(props.initial.is_some());
+        assert!(props.animate.is_some());
+        assert_eq!(props.layout, Some(true));
+    }
+    
+    #[test]
+    fn test_event_handlers_creation() {
+        let state = InteractiveState {
+            initial: "0".to_string(),
+            state_type: StateType::Counter,
+        };
+        
+        let handlers = EventHandlers {
+            on_click: Some(ClickHandler::Counter),
+            state: Some(state),
+        };
+        
+        assert!(handlers.on_click.is_some());
+        assert!(handlers.state.is_some());
+    }
+    
+    #[test]
+    fn test_click_handler_variants() {
+        let counter = ClickHandler::Counter;
+        let toggle = ClickHandler::Toggle;
+        let layout_toggle = ClickHandler::LayoutToggle;
+        let custom = ClickHandler::Custom("custom_action".to_string());
+        
+        match counter {
+            ClickHandler::Counter => {},
+            _ => panic!("Expected Counter variant"),
+        }
+        
+        match toggle {
+            ClickHandler::Toggle => {},
+            _ => panic!("Expected Toggle variant"),
+        }
+        
+        match layout_toggle {
+            ClickHandler::LayoutToggle => {},
+            _ => panic!("Expected LayoutToggle variant"),
+        }
+        
+        match custom {
+            ClickHandler::Custom(action) => assert_eq!(action, "custom_action"),
+            _ => panic!("Expected Custom variant"),
+        }
+    }
+    
+    #[test]
+    fn test_interactive_state_creation() {
+        let counter_state = InteractiveState {
+            initial: "5".to_string(),
+            state_type: StateType::Counter,
+        };
+        
+        assert_eq!(counter_state.initial, "5");
+        match counter_state.state_type {
+            StateType::Counter => {},
+            _ => panic!("Expected Counter state type"),
+        }
+        
+        let toggle_state = InteractiveState {
+            initial: "true".to_string(),
+            state_type: StateType::Toggle,
+        };
+        
+        assert_eq!(toggle_state.initial, "true");
+        match toggle_state.state_type {
+            StateType::Toggle => {},
+            _ => panic!("Expected Toggle state type"),
+        }
+        
+        let layout_state = InteractiveState {
+            initial: "grid".to_string(),
+            state_type: StateType::Layout,
+        };
+        
+        assert_eq!(layout_state.initial, "grid");
+        match layout_state.state_type {
+            StateType::Layout => {},
+            _ => panic!("Expected Layout state type"),
+        }
+    }
+    
+    #[test]
+    fn test_state_type_variants() {
+        let counter = StateType::Counter;
+        let toggle = StateType::Toggle;
+        let layout = StateType::Layout;
+        
+        match counter {
+            StateType::Counter => {},
+            _ => panic!("Expected Counter state type"),
+        }
+        
+        match toggle {
+            StateType::Toggle => {},
+            _ => panic!("Expected Toggle state type"),
+        }
+        
+        match layout {
+            StateType::Layout => {},
+            _ => panic!("Expected Layout state type"),
+        }
     }
     
     #[test] 
-    fn test_drag_config() {
+    fn test_drag_config_new() {
+        let drag = DragConfig::new();
+        assert_eq!(drag.axis, Some(DragAxis::Both));
+        assert!(drag.constraints.is_none());
+        assert_eq!(drag.elastic, 0.5);
+        assert!(drag.momentum);
+    }
+    
+    #[test]
+    fn test_drag_config_default() {
+        let drag = DragConfig::default();
+        assert_eq!(drag.axis, Some(DragAxis::Both));
+        assert!(drag.constraints.is_none());
+        assert_eq!(drag.elastic, 0.5);
+        assert!(drag.momentum);
+    }
+    
+    #[test] 
+    fn test_drag_config_builder() {
+        let constraints = DragConstraints {
+            left: Some(-100.0),
+            right: Some(100.0),
+            top: Some(-50.0),
+            bottom: Some(50.0),
+        };
+        
         let drag = DragConfig::new()
             .axis(DragAxis::X)
-            .constraints(DragConstraints {
-                left: Some(-100.0),
-                right: Some(100.0),
-                top: None,
-                bottom: None,
-            });
+            .constraints(constraints.clone());
             
         assert_eq!(drag.axis, Some(DragAxis::X));
         assert!(drag.constraints.is_some());
+        
+        let stored_constraints = drag.constraints.unwrap();
+        assert_eq!(stored_constraints.left, Some(-100.0));
+        assert_eq!(stored_constraints.right, Some(100.0));
+        assert_eq!(stored_constraints.top, Some(-50.0));
+        assert_eq!(stored_constraints.bottom, Some(50.0));
+    }
+    
+    #[test]
+    fn test_drag_axis_variants() {
+        let x_axis = DragAxis::X;
+        let y_axis = DragAxis::Y;
+        let both_axis = DragAxis::Both;
+        
+        assert_eq!(x_axis, DragAxis::X);
+        assert_eq!(y_axis, DragAxis::Y);
+        assert_eq!(both_axis, DragAxis::Both);
+        
+        assert_ne!(x_axis, y_axis);
+        assert_ne!(x_axis, both_axis);
+        assert_ne!(y_axis, both_axis);
+    }
+    
+    #[test]
+    fn test_drag_constraints_creation() {
+        let constraints = DragConstraints {
+            left: Some(-200.0),
+            right: Some(200.0),
+            top: Some(-100.0),
+            bottom: Some(100.0),
+        };
+        
+        assert_eq!(constraints.left, Some(-200.0));
+        assert_eq!(constraints.right, Some(200.0));
+        assert_eq!(constraints.top, Some(-100.0));
+        assert_eq!(constraints.bottom, Some(100.0));
+        
+        let partial_constraints = DragConstraints {
+            left: Some(0.0),
+            right: None,
+            top: None,
+            bottom: Some(50.0),
+        };
+        
+        assert_eq!(partial_constraints.left, Some(0.0));
+        assert!(partial_constraints.right.is_none());
+        assert!(partial_constraints.top.is_none());
+        assert_eq!(partial_constraints.bottom, Some(50.0));
+    }
+    
+    #[test]
+    fn test_apply_drag_constraints_axis_x() {
+        let config = DragConfig {
+            axis: Some(DragAxis::X),
+            constraints: None,
+            elastic: 0.5,
+            momentum: true,
+        };
+        
+        let (x, y) = apply_drag_constraints(100.0, 50.0, &config);
+        assert_eq!(x, 100.0);
+        assert_eq!(y, 0.0); // Y should be constrained to 0 for X-axis only
+    }
+    
+    #[test]
+    fn test_apply_drag_constraints_axis_y() {
+        let config = DragConfig {
+            axis: Some(DragAxis::Y),
+            constraints: None,
+            elastic: 0.5,
+            momentum: true,
+        };
+        
+        let (x, y) = apply_drag_constraints(100.0, 50.0, &config);
+        assert_eq!(x, 0.0); // X should be constrained to 0 for Y-axis only
+        assert_eq!(y, 50.0);
+    }
+    
+    #[test]
+    fn test_apply_drag_constraints_axis_both() {
+        let config = DragConfig {
+            axis: Some(DragAxis::Both),
+            constraints: None,
+            elastic: 0.5,
+            momentum: true,
+        };
+        
+        let (x, y) = apply_drag_constraints(100.0, 50.0, &config);
+        assert_eq!(x, 100.0);
+        assert_eq!(y, 50.0); // Both axes should be preserved
+    }
+    
+    #[test]
+    fn test_apply_drag_constraints_boundaries() {
+        let constraints = DragConstraints {
+            left: Some(-50.0),
+            right: Some(50.0),
+            top: Some(-25.0),
+            bottom: Some(25.0),
+        };
+        
+        let config = DragConfig {
+            axis: Some(DragAxis::Both),
+            constraints: Some(constraints),
+            elastic: 0.5,
+            momentum: true,
+        };
+        
+        // Test values within bounds
+        let (x1, y1) = apply_drag_constraints(30.0, 15.0, &config);
+        assert_eq!(x1, 30.0);
+        assert_eq!(y1, 15.0);
+        
+        // Test values outside bounds
+        let (x2, y2) = apply_drag_constraints(-100.0, 100.0, &config);
+        assert_eq!(x2, -50.0); // Clamped to left boundary
+        assert_eq!(y2, 25.0);   // Clamped to bottom boundary
+        
+        let (x3, y3) = apply_drag_constraints(100.0, -100.0, &config);
+        assert_eq!(x3, 50.0);  // Clamped to right boundary
+        assert_eq!(y3, -25.0); // Clamped to top boundary
+    }
+    
+    #[test]
+    fn test_motion_state_new() {
+        let props = MotionProps {
+            initial: Some(motion_target!("opacity" => AnimationValue::Number(0.5))),
+            animate: None,
+            exit: None,
+            transition: None,
+            variants: None,
+            layout: None,
+            drag: None,
+            while_hover: None,
+            while_tap: None,
+            while_focus: None,
+            while_in_view: None,
+            event_handlers: None,
+        };
+        
+        let state = MotionState::new(props);
+        assert_eq!(state.current_values.get("opacity"), Some(&AnimationValue::Number(0.5)));
+    }
+    
+    #[test]
+    fn test_motion_state_new_no_initial() {
+        let props = MotionProps::default();
+        let state = MotionState::new(props);
+        assert!(state.current_values.is_empty());
+    }
+    
+    #[test]
+    fn test_motion_target_macro() {
+        let target = motion_target!(
+            "opacity" => AnimationValue::Number(1.0),
+            "x" => AnimationValue::Pixels(100.0),
+            "rotate" => AnimationValue::Degrees(45.0)
+        );
+        
+        assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(1.0)));
+        assert_eq!(target.get("x"), Some(&AnimationValue::Pixels(100.0)));
+        assert_eq!(target.get("rotate"), Some(&AnimationValue::Degrees(45.0)));
+        assert_eq!(target.len(), 3);
+    }
+    
+    #[test]
+    fn test_motion_target_macro_empty() {
+        let target: std::collections::HashMap<String, AnimationValue> = motion_target!();
+        assert!(target.is_empty());
+    }
+    
+    #[test]
+    fn test_motion_target_macro_single() {
+        let target = motion_target!("scale" => AnimationValue::Number(2.0));
+        assert_eq!(target.get("scale"), Some(&AnimationValue::Number(2.0)));
+        assert_eq!(target.len(), 1);
     }
     
     #[test]
     fn test_helper_functions() {
-        let fade = helpers::fade_in();
-        assert_eq!(fade.get("opacity"), Some(&AnimationValue::Number(1.0)));
+        let fade_in = helpers::fade_in();
+        assert_eq!(fade_in.get("opacity"), Some(&AnimationValue::Number(1.0)));
+        assert_eq!(fade_in.len(), 1);
+        
+        let fade_out = helpers::fade_out();
+        assert_eq!(fade_out.get("opacity"), Some(&AnimationValue::Number(0.0)));
+        assert_eq!(fade_out.len(), 1);
         
         let slide = helpers::slide_up(20.0);
         assert_eq!(slide.get("y"), Some(&AnimationValue::Pixels(-20.0)));
+        assert_eq!(slide.get("opacity"), Some(&AnimationValue::Number(1.0)));
+        assert_eq!(slide.len(), 2);
         
         let scale = helpers::scale(2.0);
         assert_eq!(scale.get("scale"), Some(&AnimationValue::Number(2.0)));
+        assert_eq!(scale.len(), 1);
+        
+        let rotate = helpers::rotate(90.0);
+        assert_eq!(rotate.get("rotate"), Some(&AnimationValue::Degrees(90.0)));
+        assert_eq!(rotate.len(), 1);
+    }
+    
+    #[test]
+    fn test_helper_functions_edge_cases() {
+        let slide_zero = helpers::slide_up(0.0);
+        assert_eq!(slide_zero.get("y"), Some(&AnimationValue::Pixels(0.0)));
+        
+        let slide_negative = helpers::slide_up(-10.0);
+        assert_eq!(slide_negative.get("y"), Some(&AnimationValue::Pixels(10.0)));
+        
+        let scale_zero = helpers::scale(0.0);
+        assert_eq!(scale_zero.get("scale"), Some(&AnimationValue::Number(0.0)));
+        
+        let rotate_negative = helpers::rotate(-45.0);
+        assert_eq!(rotate_negative.get("rotate"), Some(&AnimationValue::Degrees(-45.0)));
     }
 }

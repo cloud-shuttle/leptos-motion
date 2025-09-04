@@ -23,7 +23,7 @@ impl<T: Clone + Send + Sync + 'static> MotionValue<T> {
     
     /// Get current value
     pub fn get(&self) -> T {
-        self.value.get()
+        self.value.get_untracked()
     }
     
     /// Set value (triggers subscribers)
@@ -35,13 +35,13 @@ impl<T: Clone + Send + Sync + 'static> MotionValue<T> {
     /// Update value with a function
     pub fn update(&self, f: impl FnOnce(&mut T)) {
         self.value.update(f);
-        let value = self.value.get();
+        let value = self.value.get_untracked();
         self.notify_subscribers(&value);
     }
     
     /// Get current velocity
     pub fn get_velocity(&self) -> f64 {
-        self.velocity.get()
+        self.velocity.get_untracked()
     }
     
     /// Set velocity
@@ -183,6 +183,12 @@ impl Default for MotionValues {
     }
 }
 
+// Include modern TDD tests
+#[cfg(test)]
+mod tdd_tests {
+    include!("values_tdd_tests.rs");
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -214,7 +220,13 @@ mod tests {
     #[test]
     fn test_motion_transform() {
         let motion_transform = MotionTransform::identity();
-        assert!(motion_transform.get().is_identity());
+        let transform = motion_transform.get();
+        
+        // Check identity properties
+        assert_eq!(transform.x, None);
+        assert_eq!(transform.y, None);
+        assert_eq!(transform.rotate_z, None);
+        assert_eq!(transform.scale, None);
         
         motion_transform.set_translate(10.0, 20.0);
         let transform = motion_transform.get();

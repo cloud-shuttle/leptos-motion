@@ -1,0 +1,22 @@
+[package]
+name = "leptos-motion-benchmarks"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "leptos_motion_benchmarks"
+path = "lib.rs"
+
+[[bench]]
+name = "performance_benchmarks"
+path = "performance_benchmarks/main.rs"
+harness = false
+
+[dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+leptos-motion-core = { path = "../crates/leptos-motion-core" }
+leptos-motion-gestures = { path = "../crates/leptos-motion-gestures" }
+leptos-motion-dom = { path = "../crates/leptos-motion-dom" }
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }

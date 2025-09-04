@@ -14,7 +14,9 @@ pub struct SharedElementConfig {
     /// Transition duration in seconds
     pub duration: f64,
     /// Easing function
-    pub easing: String,
+    pub easing: crate::flip::EasingFunction,
+    /// Whether to maintain aspect ratio
+    pub maintain_aspect_ratio: bool,
     /// Whether to use hardware acceleration
     pub hardware_accelerated: bool,
 }
@@ -23,7 +25,8 @@ impl Default for SharedElementConfig {
     fn default() -> Self {
         Self {
             duration: 0.3,
-            easing: "easeOut".to_string(),
+            easing: crate::flip::EasingFunction::EaseOut,
+            maintain_aspect_ratio: false,
             hardware_accelerated: true,
         }
     }
@@ -48,7 +51,7 @@ pub enum ZIndexStrategy {
 
 impl Default for ZIndexStrategy {
     fn default() -> Self {
-        ZIndexStrategy::Elevate
+        ZIndexStrategy::Fixed { base: 1000, increment: 1 }
     }
 }
 
@@ -268,6 +271,12 @@ impl SharedElementManager {
         }
     }
 
+    /// Cancel all active transitions
+    pub fn cancel_all_transitions(&mut self) {
+        self.active_transitions.clear();
+        self.transition_queue.clear();
+    }
+
     /// Process the transition queue
     fn process_transition_queue(&mut self) -> Result<(), String> {
         while let Some(queued) = self.transition_queue.pop_front() {
@@ -453,11 +462,165 @@ mod tests {
 
     wasm_bindgen_test_configure!(run_in_browser);
 
+    #[test]
+    fn test_shared_element_config_default() {
+        let config = SharedElementConfig::default();
+        assert_eq!(config.duration, 0.3);
+        assert!(matches!(config.easing, crate::flip::EasingFunction::EaseOut));
+        assert!(!config.maintain_aspect_ratio);
+        assert!(config.hardware_accelerated);
+    }
+
+    #[test]
+    fn test_z_index_strategy_fixed() {
+        let strategy = ZIndexStrategy::Fixed { base: 1000, increment: 10 };
+        match strategy {
+            ZIndexStrategy::Fixed { base, increment } => {
+                assert_eq!(base, 1000);
+                assert_eq!(increment, 10);
+            }
+            _ => panic!("Expected Fixed strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_dynamic() {
+        let strategy = ZIndexStrategy::Dynamic { base: 500, max: 2000 };
+        match strategy {
+            ZIndexStrategy::Dynamic { base, max } => {
+                assert_eq!(base, 500);
+                assert_eq!(max, 2000);
+            }
+            _ => panic!("Expected Dynamic strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_custom_property() {
+        let strategy = ZIndexStrategy::CustomProperty { property: "z-index".to_string() };
+        match strategy {
+            ZIndexStrategy::CustomProperty { property } => {
+                assert_eq!(property, "z-index");
+            }
+            _ => panic!("Expected CustomProperty strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_elevate() {
+        let strategy = ZIndexStrategy::Elevate;
+        match strategy {
+            ZIndexStrategy::Elevate => {},
+            _ => panic!("Expected Elevate strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_custom() {
+        let strategy = ZIndexStrategy::Custom(5000);
+        match strategy {
+            ZIndexStrategy::Custom(value) => assert_eq!(value, 5000),
+            _ => panic!("Expected Custom strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_maintain() {
+        let strategy = ZIndexStrategy::Maintain;
+        match strategy {
+            ZIndexStrategy::Maintain => {},
+            _ => panic!("Expected Maintain strategy"),
+        }
+    }
+
+    #[test]
+    fn test_z_index_strategy_default() {
+        let strategy = ZIndexStrategy::default();
+        match strategy {
+            ZIndexStrategy::Fixed { base, increment } => {
+                assert_eq!(base, 1000);
+                assert_eq!(increment, 1);
+            },
+            _ => panic!("Expected default Fixed strategy"),
+        }
+    }
+
+    #[test]
+    fn test_transition_priority_low() {
+        let priority = TransitionPriority::Low;
+        assert_eq!(priority as i32, 0);
+    }
+
+    #[test]
+    fn test_transition_priority_normal() {
+        let priority = TransitionPriority::Normal;
+        assert_eq!(priority as i32, 1);
+    }
+
+    #[test]
+    fn test_transition_priority_high() {
+        let priority = TransitionPriority::High;
+        assert_eq!(priority as i32, 2);
+    }
+
+    #[test]
+    fn test_transition_priority_critical() {
+        let priority = TransitionPriority::Critical;
+        assert_eq!(priority as i32, 3);
+    }
+
+    #[test]
+    fn test_transition_priority_default() {
+        let priority = TransitionPriority::default();
+        assert_eq!(priority, TransitionPriority::Normal);
+    }
+
+    #[test]
+    fn test_shared_element_metrics_default() {
+        let metrics = SharedElementMetrics::default();
+        assert_eq!(metrics.total_transitions, 0);
+        assert_eq!(metrics.successful_transitions, 0);
+        assert_eq!(metrics.average_duration, 0.0);
+        assert_eq!(metrics.frame_rate, 60.0);
+    }
+
+    #[test]
+    fn test_transition_record_creation() {
+        let record = TransitionRecord {
+            id: "test_trans_123".to_string(),
+            start_time: 1000.0,
+            end_time: Some(1300.0),
+            duration: 0.3,
+            success: true,
+            performance: SharedElementMetrics::default(),
+        };
+
+        assert_eq!(record.id, "test_trans_123");
+        assert_eq!(record.start_time, 1000.0);
+        assert_eq!(record.end_time, Some(1300.0));
+        assert_eq!(record.duration, 0.3);
+        assert!(record.success);
+    }
+
     #[wasm_bindgen_test]
     fn test_shared_element_manager_creation() {
         let manager = SharedElementManager::new(ZIndexStrategy::default());
         assert_eq!(manager.get_active_transition_count(), 0);
         assert_eq!(manager.get_queued_transition_count(), 0);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_shared_element_manager_with_fixed_strategy() {
+        let strategy = ZIndexStrategy::Fixed { base: 1000, increment: 10 };
+        let manager = SharedElementManager::new(strategy);
+        assert_eq!(manager.get_active_transition_count(), 0);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_shared_element_manager_with_dynamic_strategy() {
+        let strategy = ZIndexStrategy::Dynamic { base: 500, max: 2000 };
+        let manager = SharedElementManager::new(strategy);
+        assert_eq!(manager.get_active_transition_count(), 0);
     }
 
     #[wasm_bindgen_test]
@@ -476,5 +639,13 @@ mod tests {
         assert_ne!(id1, id2);
         assert!(id1.starts_with("shared_trans_"));
         assert!(id2.starts_with("shared_trans_"));
+    }
+
+    #[wasm_bindgen_test]
+    fn test_manager_cancel_all_transitions() {
+        let mut manager = SharedElementManager::new(ZIndexStrategy::default());
+        manager.cancel_all_transitions();
+        assert_eq!(manager.get_active_transition_count(), 0);
+        assert_eq!(manager.get_queued_transition_count(), 0);
     }
 }

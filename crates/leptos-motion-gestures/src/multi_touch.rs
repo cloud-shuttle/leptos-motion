@@ -499,3 +499,9 @@ mod tests {
         assert!(actual_rotation.abs() > 0.1, "Rotation should be significant, got: {}", actual_rotation);
     }
 }
+
+// Include modern TDD tests
+#[cfg(test)]
+mod tdd_tests {
+    include!("multi_touch_tdd_tests.rs");
+}

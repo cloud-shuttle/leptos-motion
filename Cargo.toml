@@ -10,6 +10,7 @@ members = [
     "examples/basic-animations",
     "examples/showcase",
     "examples/advanced-gestures",
+    "benches",
 ]
 resolver = "2"
 
@@ -17,8 +18,8 @@ resolver = "2"
 version = "0.2.0-beta.1"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
-edition = "2021"
-rust-version = "1.70"
+edition = "2024"  # Latest edition as of September 2025
+rust-version = "1.89"  # Latest stable
 repository = "https://github.com/cloud-shuttle/leptos-motion"
 homepage = "https://leptos-motion.dev"
 documentation = "https://docs.rs/leptos-motion"
@@ -27,7 +28,7 @@ categories = ["gui", "wasm", "web-programming"]
 description = "A comprehensive animation library for Leptos with Motion-inspired API"
 
 [workspace.dependencies]
-# Core Leptos dependencies
+# Core Leptos dependencies (Latest stable versions)
 leptos = { version = "0.8.5", features = ["csr", "hydrate", "ssr"] }
 leptos_meta = "0.8.5"
 leptos_router = "0.8.5"
@@ -44,7 +45,7 @@ leptos-motion-macros = { path = "crates/leptos-motion-macros" }
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }
 
-# Web APIs
+# Web APIs (Latest stable versions)
 web-sys = { version = "0.3", features = [
     "console",
     "Window",
@@ -74,7 +75,7 @@ js-sys = "0.3"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 
-# Utility crates
+# Utility crates (Latest stable versions)
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
@@ -86,7 +87,7 @@ paste = "1.0"
 num-traits = "0.2"
 approx = "0.5"
 
-# Async and futures
+# Async and futures (Latest stable versions)
 futures = "0.3"
 tokio = { version = "1.0", features = ["time"] }
 
@@ -95,10 +96,39 @@ log = "0.4"
 console_log = "1.0"
 console_error_panic_hook = "0.1"
 
-# Development and testing dependencies
+# Development and testing dependencies (Latest stable versions)
 wasm-bindgen-test = "0.3"
 pretty_assertions = "1.4"
 test-case = "3.1"
+
+# Modern TDD crates (Latest stable versions)
+rstest = "0.19"
+proptest = "1.4"
+quickcheck = "1.0"
+trybuild = "1.0"
+macrotest = "1.0"
+clitest = "0.1"
+
+# Performance testing
+criterion = { version = "0.5", features = ["html_reports"] }
+divan = "0.1"
+iai = "0.1"
+
+# Coverage and testing tools
+cargo-tarpaulin = "0.25"
+cargo-llvm-cov = "0.6"
+cargo-nextest = "0.14"
+
+# Concurrency
+rayon = "1.8"
+async-std = "1.12"
+
+# Development tools
+cargo-watch = "8.4"
+cargo-expand = "1.0"
+cargo-udeps = "0.1"
+cargo-audit = "0.18"
+cargo-deny = "0.14"
 
 [[workspace.metadata.leptos]]
 name = "showcase"

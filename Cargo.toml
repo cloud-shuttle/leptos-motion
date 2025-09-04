@@ -36,7 +36,7 @@ leptos_router = "0.8.5"
 # Leptos Motion dependencies
 leptos-motion = { path = "crates/leptos-motion" }
 leptos-motion-core = { version = "0.2.0-beta.2" }
-leptos-motion-dom = { path = "crates/leptos-motion-dom" }
+leptos-motion-dom = { version = "0.2.0-beta.2" }
 leptos-motion-gestures = { version = "0.2.0-beta.2" }
 leptos-motion-layout = { version = "0.2.0-beta.2" }
 leptos-motion-scroll = { version = "0.2.0-beta.2" }

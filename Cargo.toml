@@ -39,7 +39,7 @@ leptos-motion-core = { version = "0.2.0-beta.2" }
 leptos-motion-dom = { path = "crates/leptos-motion-dom" }
 leptos-motion-gestures = { version = "0.2.0-beta.2" }
 leptos-motion-layout = { version = "0.2.0-beta.2" }
-leptos-motion-scroll = { path = "crates/leptos-motion-scroll" }
+leptos-motion-scroll = { version = "0.2.0-beta.2" }
 leptos-motion-macros = { version = "0.2.0-beta.2" }
 
 # WASM-specific dependencies

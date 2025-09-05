@@ -9,6 +9,8 @@ members = [
     "crates/leptos-motion",
     "examples/basic-animations",
     "examples/showcase",
+    "examples/minimal-showcase",
+    "examples/ultra-minimal",
     "examples/advanced-gestures",
     "benches",
 ]
@@ -141,6 +143,7 @@ lib-package = "showcase"
 client-package = "showcase"
 client-features = ["csr"]
 client-target = "wasm32-unknown-unknown"
+
 
 [profile.release]
 opt-level = 3

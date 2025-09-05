@@ -13,16 +13,34 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = []
+default = ["core-components"]
+# Core features
+core-components = []
 ssr = ["leptos/ssr"]
 hydrate = ["leptos/hydrate"]
 csr = ["leptos/csr"]
 
+# Optional features for bundle size optimization
+motion-div = []
+motion-span = []
+motion-button = []
+motion-img = []
+motion-svg = []
+motion-input = []
+motion-textarea = []
+motion-select = []
+animate-presence = []
+drag-support = []
+hover-support = []
+tap-support = []
+simplified-events = []
+performance-monitoring = []
+
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.3.0-beta.1" }
-leptos-motion-gestures = { version = "0.3.0-beta.1" }
-leptos-motion-layout = { version = "0.3.0-beta.1" }
+leptos-motion-core.workspace = true
+leptos-motion-gestures.workspace = true
+leptos-motion-layout.workspace = true
 
 # Leptos
 leptos.workspace = true

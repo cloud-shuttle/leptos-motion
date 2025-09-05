@@ -1,20 +1,17 @@
 [package]
-name = "showcase"
+name = "ultra-minimal"
 version.workspace = true
 edition.workspace = true
-description = "Comprehensive showcase of Leptos Motion features"
+description = "Ultra minimal showcase with only essential types"
 license = "MIT"
 
 [dependencies]
-leptos-motion = { path = "../../crates/leptos-motion", features = ["csr", "minimal"], default-features = false }
 leptos = { workspace = true, features = ["csr"] }
 leptos_meta = { workspace = true }
-leptos_router = { workspace = true }
 log.workspace = true
 
 web-sys.workspace = true
 wasm-bindgen.workspace = true
-wasm-bindgen-futures.workspace = true
 console_log.workspace = true
 console_error_panic_hook.workspace = true
 

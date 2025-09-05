@@ -13,7 +13,8 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["raf", "waapi", "gestures", "layout", "scroll"]
+default = ["raf", "waapi", "gestures", "layout", "scroll", "dom"]
+# Core features
 raf = ["leptos-motion-core/raf"]
 waapi = ["leptos-motion-core/waapi"] 
 spring = ["leptos-motion-core/spring"]
@@ -21,18 +22,24 @@ easing = ["leptos-motion-core/easing"]
 gestures = ["leptos-motion-gestures"]
 layout = ["leptos-motion-layout"]
 scroll = ["leptos-motion-scroll"]
+dom = ["leptos-motion-dom"]
 ssr = ["leptos-motion-dom/ssr"]
 hydrate = ["leptos-motion-dom/hydrate"]
 csr = ["leptos-motion-dom/csr"]
 
+# Minimal bundle size features
+minimal = ["raf", "waapi"]
+core-only = ["raf", "waapi"]
+basic-components = ["raf", "waapi", "dom"]
+
 [dependencies]
 # All motion crates
-leptos-motion-core = { version = "0.3.0-beta.1" }
-leptos-motion-dom = { version = "0.3.0-beta.1" }
-leptos-motion-gestures = { version = "0.3.0-beta.1", optional = true }
-leptos-motion-layout = { version = "0.3.0-beta.1", optional = true }
-leptos-motion-scroll = { version = "0.3.0-beta.1", optional = true }
-leptos-motion-macros = { version = "0.3.0-beta.1" }
+leptos-motion-core.workspace = true
+leptos-motion-dom = { workspace = true, optional = true }
+leptos-motion-gestures = { workspace = true, optional = true }
+leptos-motion-layout = { workspace = true, optional = true }
+leptos-motion-scroll = { workspace = true, optional = true }
+leptos-motion-macros.workspace = true
 
 # Re-export core dependencies
 leptos.workspace = true

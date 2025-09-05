@@ -12,9 +12,22 @@ description = "Layout animations and FLIP transitions for Leptos Motion"
 keywords.workspace = true
 categories.workspace = true
 
+[features]
+default = ["core-layout"]
+# Core features
+core-layout = []
+
+# Optional features for bundle size optimization
+flip-animations = []
+shared-elements = []
+layout-tracking = []
+performance-monitoring = []
+simplified-layout = []
+advanced-layout = []
+
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.3.0-beta.1" }
+leptos-motion-core.workspace = true
 
 # Web APIs
 web-sys = { workspace = true, features = [

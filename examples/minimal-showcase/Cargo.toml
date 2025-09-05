@@ -1,15 +1,14 @@
 [package]
-name = "showcase"
+name = "minimal-showcase"
 version.workspace = true
 edition.workspace = true
-description = "Comprehensive showcase of Leptos Motion features"
+description = "Minimal showcase with only core animation features"
 license = "MIT"
 
 [dependencies]
-leptos-motion = { path = "../../crates/leptos-motion", features = ["csr", "minimal"], default-features = false }
+leptos-motion-core = { path = "../../crates/leptos-motion-core", features = ["raf", "waapi"], default-features = false }
 leptos = { workspace = true, features = ["csr"] }
 leptos_meta = { workspace = true }
-leptos_router = { workspace = true }
 log.workspace = true
 
 web-sys.workspace = true

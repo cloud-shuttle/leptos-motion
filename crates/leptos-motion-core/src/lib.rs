@@ -11,12 +11,14 @@ pub mod easing;
 pub mod engine;
 pub mod interpolation;
 pub mod math;
-pub mod performance;
-pub mod spring;
 pub mod time;
 pub mod types;
 pub mod values;
+
+pub mod performance;
+pub mod spring;
 pub mod simplified_engine;
+pub mod minimal_engine;
 
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
@@ -30,7 +32,6 @@ pub use easing::EasingFn;
 pub use engine::{AnimationEngine, OptimizedHybridEngine, WaapiEngine, RafEngine, PlaybackState};
 pub use interpolation::Interpolate;
 pub use math::{clamp, map_range, distance_2d, smooth_step, smoother_step};
-pub use spring::{SpringSimulator, SpringState};
 pub use time::Timer;
 pub use types::{
     AnimationHandle, AnimationValue, AnimationTarget, Transition,
@@ -38,8 +39,9 @@ pub use types::{
 };
 pub use values::{MotionValue, MotionNumber, MotionTransform, MotionValues};
 
-// Re-export simplified engine (new public API)
+pub use spring::{SpringSimulator, SpringState};
 pub use simplified_engine::SimplifiedAnimationEngine;
+pub use minimal_engine::MinimalEngine;
 
 // Note: Error handling types are defined in this file, not re-exported
 

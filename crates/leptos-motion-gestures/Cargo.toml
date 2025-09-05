@@ -12,9 +12,25 @@ description = "Gesture recognition and interaction handling for Leptos Motion"
 keywords.workspace = true
 categories.workspace = true
 
+[features]
+default = ["core-gestures"]
+# Core features
+core-gestures = []
+
+# Optional features for bundle size optimization
+multi-touch = []
+drag-gestures = []
+hover-gestures = []
+tap-gestures = []
+pinch-gestures = []
+rotation-gestures = []
+pan-gestures = []
+simplified-gestures = []
+advanced-gestures = []
+
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.3.0-beta.1" }
+leptos-motion-core.workspace = true
 
 # Web APIs
 web-sys = { workspace = true, features = [

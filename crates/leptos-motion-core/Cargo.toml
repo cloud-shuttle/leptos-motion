@@ -13,11 +13,20 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["raf", "waapi"]
+default = ["raf", "waapi", "core-animations"]
+# Core features
+core-animations = []
 raf = []
 waapi = ["web-sys/Animation", "web-sys/KeyframeEffect"]
 spring = []
 easing = []
+
+# Optional features for bundle size optimization
+advanced-easing = []
+performance-metrics = []
+simplified-engine = []
+full-engine = []
+spring-physics = []
 
 [dependencies]
 # Math and calculations

@@ -1,0 +1,29 @@
+[package]
+name = "css-class-showcase"
+version = "0.3.0-beta.1"
+edition = "2021"
+authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/cloud-shuttle/leptos-motion"
+homepage = "https://leptos-motion.dev"
+documentation = "https://docs.rs/leptos-motion"
+description = "CSS class-based animation showcase (leptos-animate style)"
+keywords = ["animation", "leptos", "wasm", "web", "ui", "css"]
+categories = ["gui", "wasm", "web-programming"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = { version = "0.8.8", features = ["csr"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["css-animations"] }
+console_error_panic_hook = "0.1.7"
+console_log = "1.0.0"
+wasm-bindgen = "0.2.100"
+log = "0.4"
+
+[features]
+default = ["csr"]
+csr = ["leptos/csr"]
+hydrate = ["leptos/hydrate"]
+ssr = ["leptos/ssr"]

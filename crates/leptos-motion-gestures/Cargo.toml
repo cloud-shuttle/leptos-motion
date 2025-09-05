@@ -30,7 +30,7 @@ advanced-gestures = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.3.0-beta.2" }
+leptos-motion-core.workspace = true
 
 # Web APIs
 web-sys = { workspace = true, features = [

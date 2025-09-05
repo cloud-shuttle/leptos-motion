@@ -12,12 +12,13 @@ members = [
     "examples/minimal-showcase",
     "examples/ultra-minimal",
     "examples/advanced-gestures",
+    "examples/css-class-showcase",
     "benches",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.3.0-beta.2"
+version = "0.3.0-beta.1"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2024"  # Latest edition as of September 2025
@@ -37,12 +38,12 @@ leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
 leptos-motion = { path = "crates/leptos-motion" }
-leptos-motion-core = { version = "0.3.0-beta.2" }
-leptos-motion-dom = { version = "0.3.0-beta.2" }
-leptos-motion-gestures = { version = "0.3.0-beta.2" }
-leptos-motion-layout = { version = "0.3.0-beta.2" }
-leptos-motion-scroll = { version = "0.3.0-beta.2" }
-leptos-motion-macros = { version = "0.3.0-beta.2" }
+leptos-motion-core = { version = "0.3.0-beta.1" }
+leptos-motion-dom = { version = "0.3.0-beta.1" }
+leptos-motion-gestures = { version = "0.3.0-beta.1" }
+leptos-motion-layout = { version = "0.3.0-beta.1" }
+leptos-motion-scroll = { version = "0.3.0-beta.1" }
+leptos-motion-macros = { version = "0.3.0-beta.1" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }

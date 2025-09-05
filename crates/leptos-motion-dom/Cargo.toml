@@ -35,12 +35,13 @@ hover-support = []
 tap-support = []
 simplified-events = []
 performance-monitoring = []
+css-animations = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.3.0-beta.2" }
-leptos-motion-gestures = { version = "0.3.0-beta.1" }
-leptos-motion-layout = { version = "0.3.0-beta.1" }
+leptos-motion-core.workspace = true
+leptos-motion-gestures.workspace = true
+leptos-motion-layout.workspace = true
 
 # Leptos
 leptos.workspace = true

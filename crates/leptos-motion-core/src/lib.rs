@@ -19,6 +19,7 @@ pub mod performance;
 pub mod spring;
 pub mod simplified_engine;
 pub mod minimal_engine;
+pub mod lazy_loading;
 
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
@@ -42,6 +43,10 @@ pub use values::{MotionValue, MotionNumber, MotionTransform, MotionValues};
 pub use spring::{SpringSimulator, SpringState};
 pub use simplified_engine::SimplifiedAnimationEngine;
 pub use minimal_engine::MinimalEngine;
+pub use lazy_loading::{
+    LazyModule, AnimationLazyLoader, FeatureModuleLoader, 
+    LazyLoadingConfig, get_lazy_loader
+};
 
 // Note: Error handling types are defined in this file, not re-exported
 

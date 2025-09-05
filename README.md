@@ -9,18 +9,21 @@
 
 Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance.
 
-> **🚀 Now in Beta!** Version 0.2.0-beta.1 is ready for testing and feedback.
+> **🚀 Now in Beta!** Version 0.3.0-beta.1 is ready for testing and feedback.
 
 ## 🚀 Beta Release Status
 
-**Version 0.2.0-beta.1** is now available for testing and feedback!
+**Version 0.3.0-beta.1** is now available for testing and feedback!
 
-- ✅ **All Core Features Working**: Animation engine, gestures, layout animations
+- ✅ **Solid Foundation**: Core animation engine, gestures, layout animations
 - ✅ **Comprehensive Testing**: 70+ tests passing with full coverage
-- ✅ **Performance Optimized**: 60fps animations with memory management
-- ✅ **Ready for Feedback**: Stable enough for development and testing
+- ✅ **Type Safety**: Full Rust compile-time guarantees
+- ✅ **Simplified APIs**: Clean, user-friendly interfaces
+- ⚠️ **Bundle Size**: Currently 410KB (target: <50KB) - optimization needed
+- ⚠️ **Limited Components**: Only MotionDiv, MotionSpan, AnimatePresence
+- ⚠️ **Missing Features**: Timeline, keyframes, scroll animations, SVG support
 
-> **Note**: This is a beta release. Some APIs may change before the 1.0 stable release.
+> **Note**: This is a beta release. Bundle size optimization and feature completion needed before v1.0.
 
 ## ✨ Features
 

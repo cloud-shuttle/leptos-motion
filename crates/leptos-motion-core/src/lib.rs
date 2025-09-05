@@ -16,6 +16,7 @@ pub mod spring;
 pub mod time;
 pub mod types;
 pub mod values;
+pub mod simplified_engine;
 
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
@@ -36,6 +37,9 @@ pub use types::{
     Transform, ComplexValue, SpringConfig, RepeatConfig, StaggerConfig, StaggerFrom, Easing
 };
 pub use values::{MotionValue, MotionNumber, MotionTransform, MotionValues};
+
+// Re-export simplified engine (new public API)
+pub use simplified_engine::SimplifiedAnimationEngine;
 
 // Note: Error handling types are defined in this file, not re-exported
 
@@ -218,4 +222,10 @@ pub enum AnimationError {
     /// Animation timing error
     #[error("Animation timing error: {0}")]
     TimingError(String),
+}
+
+// Include simplified engine tests
+#[cfg(test)]
+mod simplified_engine_tests {
+    include!("simplified_engine_tests.rs");
 }

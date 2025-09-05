@@ -9,11 +9,18 @@
 pub mod flip;
 pub mod shared_elements;
 pub mod layout_tracker;
+pub mod simplified_layout_api;
 
 // Re-export main types
 pub use flip::{FLIPAnimator, FLIPAnimation, FLIPState, TransformValues, EasingFunction};
 pub use shared_elements::{SharedElementManager, SharedElementConfig, ZIndexStrategy};
 pub use layout_tracker::{LayoutTracker, LayoutChange, LayoutChangeType, PerformanceImpact};
+
+// Re-export simplified layout API (new public API)
+pub use simplified_layout_api::{
+    SimplifiedLayoutManager, SimplifiedLayoutConfig, SimplifiedEasing,
+    SimplifiedAnimationStatus, SimplifiedPerformanceMetrics
+};
 
 /// Layout information for FLIP animations
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -233,4 +240,10 @@ mod tests {
             _ => panic!("Expected Linear easing function"),
         }
     }
+}
+
+// Include simplified layout tests
+#[cfg(test)]
+mod simplified_layout_tests {
+    include!("simplified_layout_tests.rs");
 }

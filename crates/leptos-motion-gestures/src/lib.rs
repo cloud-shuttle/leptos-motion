@@ -7,6 +7,7 @@ pub mod hover;
 pub mod tap;
 pub mod multi_touch;
 pub mod gesture_detector;
+pub mod simplified_gesture_api;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -240,3 +241,15 @@ pub trait GestureHandler {
 /// Re-export commonly used types
 pub use multi_touch::MultiTouchGestureDetector;
 pub use gesture_detector::GestureDetector;
+
+// Re-export simplified gesture API (new public API)
+pub use simplified_gesture_api::{
+    SimplifiedGestureDetector, SimplifiedGestureConfig, SimplifiedGestureResult,
+    SimplifiedGestureType, SimplifiedVector2D, SimplifiedGestureBounds, SimplifiedGestureData
+};
+
+// Include simplified gesture tests
+#[cfg(test)]
+mod simplified_gesture_tests {
+    include!("simplified_gesture_tests.rs");
+}

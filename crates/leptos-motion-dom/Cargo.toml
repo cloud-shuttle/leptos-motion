@@ -20,9 +20,9 @@ csr = ["leptos/csr"]
 
 [dependencies]
 # Core motion
-leptos-motion-core.workspace = true
-leptos-motion-gestures.workspace = true
-leptos-motion-layout.workspace = true
+leptos-motion-core = { version = "0.3.0-beta.1" }
+leptos-motion-gestures = { version = "0.3.0-beta.1" }
+leptos-motion-layout = { version = "0.3.0-beta.1" }
 
 # Leptos
 leptos.workspace = true

@@ -159,8 +159,10 @@ pub mod color {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "approx")]
     use approx::assert_relative_eq;
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_lerp() {
         assert_relative_eq!(lerp(0.0, 100.0, 0.0), 0.0);
@@ -213,6 +215,7 @@ mod tests {
         assert_eq!(interpolate_option(None, None, 0.5), None);
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_rgba_color() {
         use super::color::Rgba;

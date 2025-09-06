@@ -14,7 +14,7 @@ cargo build --release --target wasm32-unknown-unknown --no-default-features --fe
 if command -v wasm-opt &> /dev/null; then
     echo "🔧 Running wasm-opt optimizations..."
     wasm-opt -Os -o target/wasm32-unknown-unknown/release/leptos_motion_core_optimized.wasm target/wasm32-unknown-unknown/release/leptos_motion_core.wasm
-    
+
     # Show size comparison
     echo "📊 Size comparison:"
     echo "Original: $(ls -lh target/wasm32-unknown-unknown/release/leptos_motion_core.wasm | awk '{print $5}')"

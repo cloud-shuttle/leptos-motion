@@ -6,10 +6,14 @@
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
+#[cfg(feature = "approx")]
 pub mod animation;
+#[cfg(feature = "approx")]
 pub mod easing;
 pub mod engine;
+#[cfg(feature = "approx")]
 pub mod interpolation;
+#[cfg(feature = "approx")]
 pub mod math;
 pub mod time;
 pub mod types;
@@ -18,59 +22,95 @@ pub mod values;
 #[macro_use]
 pub mod macros;
 
+#[cfg(feature = "futures")]
 pub mod lazy_loading;
 pub mod memory_optimization;
 pub mod minimal_engine;
 pub mod performance;
 pub mod simplified_engine;
+#[cfg(feature = "approx")]
 pub mod spring;
 
 #[cfg(test)]
 mod memory_optimization_tests;
 
 #[cfg(test)]
-mod performance_tests;
-#[cfg(test)]
 mod bundle_size_tests;
+mod minimal_serialization;
 #[cfg(test)]
-mod web_sys_optimization_tests;
+mod performance_tests;
 #[cfg(test)]
 mod serde_replacement_tests;
 #[cfg(test)]
+mod tree_shaking_tests;
+#[cfg(test)]
+mod feature_flags_tests;
+#[cfg(test)]
+mod dependency_optimization_tests;
+#[cfg(test)]
+mod dependency_investigation_tests;
+#[cfg(test)]
 mod wasm_optimization_tests;
 #[cfg(test)]
-mod tree_shaking_tests;
-mod minimal_serialization;
+mod web_sys_optimization_tests;
 
 // Re-export animation presets
+#[cfg(feature = "approx")]
 pub use animation::presets::AnimationPresets;
+#[cfg(feature = "approx")]
 pub use animation::presets::SlideDirection;
+#[cfg(feature = "approx")]
 pub use animation::presets::easings;
+#[cfg(feature = "approx")]
 pub use animation::presets::springs;
 
 // Re-export core types
+#[cfg(feature = "approx")]
 pub use animation::{AnimationBuilder, AnimationConfig, Variants};
+#[cfg(feature = "approx")]
 pub use easing::EasingFn;
-pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine};
 #[cfg(feature = "web-sys")]
 pub use engine::WaapiEngine;
+pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine};
+#[cfg(feature = "approx")]
 pub use interpolation::Interpolate;
+#[cfg(feature = "approx")]
 pub use math::{clamp, distance_2d, map_range, smooth_step, smoother_step};
 #[cfg(feature = "web-sys")]
 pub use time::Timer;
 pub use types::{
     AnimationHandle, AnimationTarget, AnimationValue, ComplexValue, Easing, RepeatConfig,
-    SpringConfig, StaggerConfig, StaggerFrom, Transform, Transition,
+    StaggerConfig, StaggerFrom, Transform, Transition,
 };
+#[cfg(feature = "approx")]
+pub use types::SpringConfig;
 #[cfg(feature = "leptos-integration")]
 pub use values::{MotionNumber, MotionTransform, MotionValue, MotionValues};
 
+#[cfg(feature = "futures")]
 pub use lazy_loading::{
     AnimationLazyLoader, FeatureModuleLoader, LazyLoadingConfig, LazyModule, get_lazy_loader,
 };
 pub use minimal_engine::MinimalEngine;
 pub use simplified_engine::SimplifiedAnimationEngine;
+#[cfg(feature = "approx")]
 pub use spring::{SpringSimulator, SpringState};
+
+// Feature-specific re-exports
+#[cfg(feature = "performance-metrics")]
+pub use performance::*;
+
+#[cfg(feature = "memory-optimization")]
+pub use memory_optimization::*;
+
+#[cfg(feature = "lazy-loading")]
+pub use lazy_loading::*;
+
+#[cfg(feature = "simplified-engine")]
+pub use simplified_engine::*;
+
+#[cfg(feature = "minimal-serialization")]
+pub use minimal_serialization::*;
 
 // Note: Error handling types are defined in this file, not re-exported
 

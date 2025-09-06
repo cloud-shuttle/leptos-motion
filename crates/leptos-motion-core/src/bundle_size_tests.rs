@@ -1,5 +1,5 @@
 //! Bundle size optimization tests using TDD approach
-//! 
+//!
 //! These tests ensure that bundle size optimizations don't break functionality
 //! while achieving the target bundle size goals.
 
@@ -14,15 +14,15 @@ wasm_bindgen_test_configure!(run_in_browser);
 #[wasm_bindgen_test]
 fn test_core_animation_functionality_after_optimization() {
     use crate::*;
-    
+
     // Test that basic animation types still work
     let animation_value = AnimationValue::Number(1.0);
     assert_eq!(animation_value.to_string(), "1");
-    
+
     // Test that easing functions still work
     let easing = Easing::EaseInOut;
     assert_eq!(easing.evaluate(0.5), 0.5);
-    
+
     // Test that transition creation still works
     let transition = Transition {
         duration: Some(1.0),
@@ -37,7 +37,7 @@ fn test_core_animation_functionality_after_optimization() {
 #[wasm_bindgen_test]
 fn test_minimal_engine_after_optimization() {
     use crate::MinimalEngine;
-    
+
     let _engine = MinimalEngine::new();
     // Engine should be created successfully
     assert!(true); // Basic creation test
@@ -48,10 +48,10 @@ fn test_minimal_engine_after_optimization() {
 #[wasm_bindgen_test]
 fn test_performance_monitoring_after_optimization() {
     use crate::performance::*;
-    
+
     let budget = PerformanceBudget::default();
     assert_eq!(budget.target_fps, 60.0);
-    
+
     let monitor = PerformanceMonitor::new(budget);
     // Monitor should be created successfully
     assert!(true); // Basic creation test
@@ -62,15 +62,15 @@ fn test_performance_monitoring_after_optimization() {
 #[wasm_bindgen_test]
 fn test_animation_values_after_serde_replacement() {
     use crate::*;
-    
+
     // Test numeric values
     let num_value = AnimationValue::Number(42.0);
     assert_eq!(num_value.to_string(), "42");
-    
+
     // Test pixel values
     let pixel_value = AnimationValue::Pixels(100.0);
     assert_eq!(pixel_value.to_string(), "100px");
-    
+
     // Test transform values
     let transform_value = AnimationValue::Transform(Transform {
         x: Some(10.0),
@@ -107,11 +107,11 @@ fn test_layout_animations_after_optimization() {
 fn test_bundle_size_targets() {
     // This test documents our bundle size targets
     // Actual measurement will be done with external tools
-    
+
     // Target: <50KB total bundle size
     // Target: <20KB core library
     // Target: <15KB individual crates
-    
+
     // This test passes if the functionality tests pass
     // Bundle size measurement will be done separately
     assert!(true);

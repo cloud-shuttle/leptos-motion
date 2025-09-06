@@ -26,8 +26,14 @@ fn test_core_functionality_after_wasm_optimization() {
     target.insert("x".to_string(), AnimationValue::Pixels(100.0));
     let animation_target: AnimationTarget = target;
 
-    assert_eq!(animation_target.get("opacity"), Some(&AnimationValue::Number(0.5)));
-    assert_eq!(animation_target.get("x"), Some(&AnimationValue::Pixels(100.0)));
+    assert_eq!(
+        animation_target.get("opacity"),
+        Some(&AnimationValue::Number(0.5))
+    );
+    assert_eq!(
+        animation_target.get("x"),
+        Some(&AnimationValue::Pixels(100.0))
+    );
 }
 
 /// Test that engines still work after WASM optimization
@@ -38,7 +44,7 @@ fn test_engines_after_wasm_optimization() {
 
     // Test minimal engine creation
     let _minimal_engine = MinimalEngine::new();
-    
+
     // Test that we can create transition configurations
     let transition = Transition {
         duration: Some(0.5),
@@ -59,7 +65,7 @@ fn test_performance_monitoring_after_wasm_optimization() {
     // Test performance budget creation
     let budget = PerformanceBudget::default();
     assert_eq!(budget.target_fps, 60.0);
-    
+
     // Test performance monitor creation
     let _monitor = PerformanceMonitor::new(budget);
     // Monitor should be created successfully
@@ -216,20 +222,35 @@ fn test_complex_nested_types_after_wasm_optimization() {
     complex_target.insert("x".to_string(), AnimationValue::Pixels(100.0));
     complex_target.insert("y".to_string(), AnimationValue::Pixels(200.0));
     complex_target.insert("scale".to_string(), AnimationValue::Number(1.2));
-    complex_target.insert("transform".to_string(), AnimationValue::Transform(Transform {
-        rotate_z: Some(45.0),
-        scale_x: Some(1.5),
-        scale_y: Some(1.5),
-        ..Default::default()
-    }));
+    complex_target.insert(
+        "transform".to_string(),
+        AnimationValue::Transform(Transform {
+            rotate_z: Some(45.0),
+            scale_x: Some(1.5),
+            scale_y: Some(1.5),
+            ..Default::default()
+        }),
+    );
 
     let animation_target: AnimationTarget = complex_target;
 
     // Verify all values are accessible
-    assert_eq!(animation_target.get("opacity"), Some(&AnimationValue::Number(0.8)));
-    assert_eq!(animation_target.get("x"), Some(&AnimationValue::Pixels(100.0)));
-    assert_eq!(animation_target.get("y"), Some(&AnimationValue::Pixels(200.0)));
-    assert_eq!(animation_target.get("scale"), Some(&AnimationValue::Number(1.2)));
+    assert_eq!(
+        animation_target.get("opacity"),
+        Some(&AnimationValue::Number(0.8))
+    );
+    assert_eq!(
+        animation_target.get("x"),
+        Some(&AnimationValue::Pixels(100.0))
+    );
+    assert_eq!(
+        animation_target.get("y"),
+        Some(&AnimationValue::Pixels(200.0))
+    );
+    assert_eq!(
+        animation_target.get("scale"),
+        Some(&AnimationValue::Number(1.2))
+    );
 
     // Test nested transform
     if let Some(AnimationValue::Transform(transform)) = animation_target.get("transform") {
@@ -261,7 +282,7 @@ fn test_memory_optimization_after_wasm_optimization() {
 
     // Test memory profiler creation
     let _profiler = MemoryProfiler::new();
-    
+
     // Test memory optimization constants
     assert_eq!(TARGET_ANIMATION_MEMORY_KB, 50.0);
     assert_eq!(TARGET_ENGINE_MEMORY_KB, 100.0);
@@ -276,7 +297,7 @@ fn test_lazy_loading_after_wasm_optimization() {
 
     // Test lazy loader creation
     let _loader = get_lazy_loader();
-    
+
     // Test lazy loading configuration
     let config = LazyLoadingConfig::default();
     assert_eq!(config.max_loaded_modules, 10);

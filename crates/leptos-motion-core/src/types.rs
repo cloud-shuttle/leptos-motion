@@ -86,6 +86,100 @@ impl AnimationValue {
             AnimationValue::Complex(_) => "complex".to_string(),
         }
     }
+
+    /// Interpolate between two animation values
+    pub fn interpolate(&self, other: &AnimationValue, progress: f64) -> AnimationValue {
+        match (self, other) {
+            (AnimationValue::Number(a), AnimationValue::Number(b)) => {
+                AnimationValue::Number(a + (b - a) * progress)
+            }
+            (AnimationValue::Pixels(a), AnimationValue::Pixels(b)) => {
+                AnimationValue::Pixels(a + (b - a) * progress)
+            }
+            (AnimationValue::Percentage(a), AnimationValue::Percentage(b)) => {
+                AnimationValue::Percentage(a + (b - a) * progress)
+            }
+            (AnimationValue::Degrees(a), AnimationValue::Degrees(b)) => {
+                AnimationValue::Degrees(a + (b - a) * progress)
+            }
+            (AnimationValue::Radians(a), AnimationValue::Radians(b)) => {
+                AnimationValue::Radians(a + (b - a) * progress)
+            }
+            (AnimationValue::Transform(a), AnimationValue::Transform(b)) => {
+                AnimationValue::Transform(Transform {
+                    x: match (a.x, b.x) {
+                        (Some(x1), Some(x2)) => Some(x1 + (x2 - x1) * progress),
+                        (Some(x), None) => Some(x),
+                        (None, Some(x)) => Some(x),
+                        (None, None) => None,
+                    },
+                    y: match (a.y, b.y) {
+                        (Some(y1), Some(y2)) => Some(y1 + (y2 - y1) * progress),
+                        (Some(y), None) => Some(y),
+                        (None, Some(y)) => Some(y),
+                        (None, None) => None,
+                    },
+                    z: match (a.z, b.z) {
+                        (Some(z1), Some(z2)) => Some(z1 + (z2 - z1) * progress),
+                        (Some(z), None) => Some(z),
+                        (None, Some(z)) => Some(z),
+                        (None, None) => None,
+                    },
+                    rotate_x: match (a.rotate_x, b.rotate_x) {
+                        (Some(r1), Some(r2)) => Some(r1 + (r2 - r1) * progress),
+                        (Some(r), None) => Some(r),
+                        (None, Some(r)) => Some(r),
+                        (None, None) => None,
+                    },
+                    rotate_y: match (a.rotate_y, b.rotate_y) {
+                        (Some(r1), Some(r2)) => Some(r1 + (r2 - r1) * progress),
+                        (Some(r), None) => Some(r),
+                        (None, Some(r)) => Some(r),
+                        (None, None) => None,
+                    },
+                    rotate_z: match (a.rotate_z, b.rotate_z) {
+                        (Some(r1), Some(r2)) => Some(r1 + (r2 - r1) * progress),
+                        (Some(r), None) => Some(r),
+                        (None, Some(r)) => Some(r),
+                        (None, None) => None,
+                    },
+                    scale_x: match (a.scale_x, b.scale_x) {
+                        (Some(s1), Some(s2)) => Some(s1 + (s2 - s1) * progress),
+                        (Some(s), None) => Some(s),
+                        (None, Some(s)) => Some(s),
+                        (None, None) => None,
+                    },
+                    scale_y: match (a.scale_y, b.scale_y) {
+                        (Some(s1), Some(s2)) => Some(s1 + (s2 - s1) * progress),
+                        (Some(s), None) => Some(s),
+                        (None, Some(s)) => Some(s),
+                        (None, None) => None,
+                    },
+                    skew_x: match (a.skew_x, b.skew_x) {
+                        (Some(s1), Some(s2)) => Some(s1 + (s2 - s1) * progress),
+                        (Some(s), None) => Some(s),
+                        (None, Some(s)) => Some(s),
+                        (None, None) => None,
+                    },
+                    skew_y: match (a.skew_y, b.skew_y) {
+                        (Some(s1), Some(s2)) => Some(s1 + (s2 - s1) * progress),
+                        (Some(s), None) => Some(s),
+                        (None, Some(s)) => Some(s),
+                        (None, None) => None,
+                    },
+                    scale: match (a.scale, b.scale) {
+                        (Some(s1), Some(s2)) => Some(s1 + (s2 - s1) * progress),
+                        (Some(s), None) => Some(s),
+                        (None, Some(s)) => Some(s),
+                        (None, None) => None,
+                    },
+                })
+            }
+            // For other types, return the "from" value if progress < 0.5, otherwise return "to" value
+            (from, _) if progress < 0.5 => from.clone(),
+            (_, to) => to.clone(),
+        }
+    }
 }
 
 /// 3D transform representation
@@ -173,14 +267,79 @@ pub enum Easing {
     /// Back easing in and out (overshoot)
     BackInOut,
     /// Spring physics
+    #[cfg(feature = "approx")]
     Spring(SpringConfig),
     /// Cubic bezier curve
     Bezier(f64, f64, f64, f64),
 }
 
+impl Easing {
+    /// Evaluate the easing function at the given progress (0.0 to 1.0)
+    pub fn evaluate(&self, t: f64) -> f64 {
+        match self {
+            Easing::Linear => t,
+            Easing::EaseIn => t * t,
+            Easing::EaseOut => 1.0 - (1.0 - t) * (1.0 - t),
+            Easing::EaseInOut => {
+                if t < 0.5 {
+                    2.0 * t * t
+                } else {
+                    1.0 - 2.0 * (1.0 - t) * (1.0 - t)
+                }
+            }
+            Easing::CircIn => 1.0 - (1.0 - t * t).sqrt(),
+            Easing::CircOut => ((2.0 - t) * t).sqrt(),
+            Easing::CircInOut => {
+                if t < 0.5 {
+                    (1.0 - (1.0 - 4.0 * t * t).sqrt()) / 2.0
+                } else {
+                    (1.0 + (1.0 - 4.0 * (1.0 - t) * (1.0 - t)).sqrt()) / 2.0
+                }
+            }
+            Easing::BackIn => {
+                const C1: f64 = 1.70158;
+                const C3: f64 = C1 + 1.0;
+                C3 * t * t * t - C1 * t * t
+            }
+            Easing::BackOut => {
+                const C1: f64 = 1.70158;
+                const C3: f64 = C1 + 1.0;
+                1.0 + C3 * (t - 1.0).powi(3) + C1 * (t - 1.0).powi(2)
+            }
+            Easing::BackInOut => {
+                const C1: f64 = 1.70158;
+                const C2: f64 = C1 * 1.525;
+                if t < 0.5 {
+                    ((2.0 * t).powi(2) * ((C2 + 1.0) * 2.0 * t - C2)) / 2.0
+                } else {
+                    ((2.0 * t - 2.0).powi(2) * ((C2 + 1.0) * (t * 2.0 - 2.0) + C2) + 2.0) / 2.0
+                }
+            }
+            #[cfg(feature = "approx")]
+            Easing::Spring(_) => {
+                // For now, return linear interpolation for spring
+                // This should be replaced with proper spring physics when available
+                t
+            }
+            Easing::Bezier(x1, y1, x2, y2) => {
+                // Simple cubic bezier implementation
+                // This is a simplified version - for production use, consider a more robust implementation
+                let t2 = t * t;
+                let t3 = t2 * t;
+                let mt = 1.0 - t;
+                let mt2 = mt * mt;
+                let mt3 = mt2 * mt;
+                
+                3.0 * mt2 * t * y1 + 3.0 * mt * t2 * y2 + t3
+            }
+        }
+    }
+}
+
 /// Spring animation configuration
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
+#[cfg(feature = "approx")]
 pub struct SpringConfig {
     /// Spring stiffness (higher = faster)
     pub stiffness: f64,
@@ -248,6 +407,7 @@ impl Default for Transition {
     }
 }
 
+#[cfg(feature = "approx")]
 impl Default for SpringConfig {
     fn default() -> Self {
         Self {

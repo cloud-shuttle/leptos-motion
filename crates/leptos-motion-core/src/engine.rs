@@ -9,7 +9,7 @@ use crate::{
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 #[cfg(feature = "web-sys")]
-use web_sys::{Element, Performance, window};
+use web_sys::window;
 
 /// Core animation engine trait
 pub trait AnimationEngine {
@@ -121,7 +121,7 @@ impl OptimizedHybridEngine {
 
         Self {
             #[cfg(feature = "web-sys")]
-        waapi_engine: WaapiEngine::new(),
+            waapi_engine: WaapiEngine::new(),
             raf_engine: RafEngine::new(),
             feature_detector: FeatureDetector::new(),
             performance_monitor: Some(PerformanceMonitor::new(budget)),
@@ -207,11 +207,14 @@ impl AnimationEngine for OptimizedHybridEngine {
             EngineChoice::Waapi => {
                 #[cfg(feature = "web-sys")]
                 {
-                    self.waapi_engine.animate_with_handle(handle, config.clone())
+                    self.waapi_engine
+                        .animate_with_handle(handle, config.clone())
                 }
                 #[cfg(not(feature = "web-sys"))]
                 {
-                    Err(crate::AnimationError::EngineUnavailable("WAAPI not available".to_string()))
+                    Err(crate::AnimationError::EngineUnavailable(
+                        "WAAPI not available".to_string(),
+                    ))
                 }
             }
             EngineChoice::Raf => {
@@ -1446,7 +1449,11 @@ mod rand {
         #[cfg(feature = "web-sys")]
         web_sys::js_sys::Date::now().to_bits().hash(&mut hasher);
         #[cfg(not(feature = "web-sys"))]
-        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos().hash(&mut hasher);
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+            .hash(&mut hasher);
         T::from(hasher.finish())
     }
 }

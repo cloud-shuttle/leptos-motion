@@ -264,7 +264,7 @@ impl GPULayerManager {
             *count -= 1;
             if *count == 0 {
                 #[cfg(feature = "web-sys")]
-        self.layers.remove(layer_id);
+                self.layers.remove(layer_id);
                 self.usage_count.remove(layer_id);
             }
         }

@@ -147,8 +147,7 @@ impl SimplifiedAnimationEngine {
     /// * `Result<AnimationHandle>` - Handle to control the animation
     pub fn animate(
         &mut self,
-        #[cfg(feature = "web-sys")]
-        element: &web_sys::Element,
+        #[cfg(feature = "web-sys")] element: &web_sys::Element,
         target: &AnimationTarget,
         transition: &Transition,
     ) -> Result<AnimationHandle> {

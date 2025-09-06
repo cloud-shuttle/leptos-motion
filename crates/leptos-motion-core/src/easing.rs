@@ -236,6 +236,7 @@ pub mod presets {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "approx")]
     use approx::assert_relative_eq;
 
     #[test]
@@ -245,6 +246,7 @@ mod tests {
         assert_eq!(linear(1.0), 1.0);
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_ease_bounds() {
         let easings = vec![
@@ -287,6 +289,7 @@ mod tests {
         assert!(max > 1.0, "Back easing should overshoot");
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_cubic_bezier() {
         // Standard ease

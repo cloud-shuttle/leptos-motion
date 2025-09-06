@@ -13,33 +13,59 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["raf", "waapi", "core-animations", "leptos-integration", "web-sys", "serde-support"]
-# Core features
-core-animations = []
-raf = []
-waapi = ["web-sys/Animation", "web-sys/KeyframeEffect"]
-spring = []
-easing = []
-web-sys = []  # Full web-sys features (enables web-sys dependency)
+default = ["core-animations", "raf", "waapi", "leptos-integration", "web-sys", "serde-support", "futures", "num-traits", "approx"]
 
-# Bundle size optimization features
-minimal = []  # Minimal build without heavy dependencies
+# Core animation features
+core-animations = []  # Basic animation types and transitions
+raf = []  # RequestAnimationFrame engine
+waapi = ["web-sys/Animation", "web-sys/KeyframeEffect"]  # Web Animations API engine
+spring = []  # Spring physics animations
+easing = []  # Advanced easing functions
+
+# Web platform features
+web-sys = []  # Full web-sys features (enables web-sys dependency)
+minimal-web-sys = ["web-sys/console", "web-sys/Window", "web-sys/Document", "web-sys/Element", "web-sys/HtmlElement", "web-sys/CssStyleDeclaration"]  # Minimal web-sys features
+
+# Framework integration features
 leptos-integration = ["leptos"]  # Leptos integration (adds ICU dependencies)
 no-icu = []  # Avoid ICU dependencies
-minimal-web-sys = ["web-sys/console", "web-sys/Window", "web-sys/Document", "web-sys/Element", "web-sys/HtmlElement", "web-sys/CssStyleDeclaration"]  # Minimal web-sys features for smaller bundles
 
-# Optional features for bundle size optimization
-advanced-easing = []
-performance-metrics = []
-simplified-engine = []
-full-engine = []
-spring-physics = []
+# Serialization features
 serde-support = ["serde", "serde_json"]  # Optional serde support for serialization
+minimal-serialization = []  # Custom minimal serialization
+
+# Performance and optimization features
+performance-metrics = []  # Performance monitoring and metrics
+memory-optimization = []  # Memory usage optimization
+lazy-loading = []  # Lazy loading of animation modules
+gpu-acceleration = []  # GPU acceleration support
+
+# Engine variants
+simplified-engine = []  # Simplified animation engine
+full-engine = []  # Full-featured animation engine
+hybrid-engine = []  # Hybrid engine with automatic fallbacks
+
+# Advanced features
+advanced-easing = []  # Advanced easing functions (bezier, spring, etc.)
+spring-physics = []  # Spring physics simulation
+timeline-animations = []  # Timeline-based animations
+gesture-support = []  # Gesture recognition and handling
+layout-animations = []  # Layout animation support (FLIP)
+
+# Core dependency features
+futures = ["dep:futures", "dep:wasm-bindgen-futures"]  # Futures support for async operations
+num-traits = ["dep:num-traits"]  # Numeric traits support
+approx = ["dep:approx"]  # Approximation algorithms
+
+# Bundle size optimization presets
+minimal = ["core-animations", "raf", "minimal-serialization"]  # Minimal build
+standard = ["core-animations", "raf", "waapi", "leptos-integration", "web-sys", "serde-support", "futures", "num-traits", "approx"]  # Standard build
+full = ["core-animations", "raf", "waapi", "spring", "easing", "leptos-integration", "web-sys", "serde-support", "performance-metrics", "memory-optimization", "lazy-loading", "gpu-acceleration", "hybrid-engine", "advanced-easing", "spring-physics", "timeline-animations", "gesture-support", "layout-animations", "futures", "num-traits", "approx"]  # Full-featured build  # Full-featured build
 
 [dependencies]
-# Math and calculations
-num-traits.workspace = true
-approx.workspace = true
+# Math and calculations - now optional
+num-traits = { workspace = true, optional = true }
+approx = { workspace = true, optional = true }
 
 # Web APIs - conditional features for bundle size optimization
 web-sys = { workspace = true, features = [
@@ -58,10 +84,10 @@ web-sys = { workspace = true, features = [
 ], optional = true }
 js-sys.workspace = true
 wasm-bindgen.workspace = true
-wasm-bindgen-futures.workspace = true
+wasm-bindgen-futures = { workspace = true, optional = true }
 
-# Async
-futures.workspace = true
+# Async - now optional
+futures = { workspace = true, optional = true }
 
 # Leptos (for motion values) - optional to avoid ICU dependencies
 leptos = { workspace = true, optional = true }

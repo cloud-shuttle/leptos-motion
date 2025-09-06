@@ -301,8 +301,10 @@ pub mod presets {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "approx")]
     use approx::assert_relative_eq;
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_spring_creation() {
         let config = SpringConfig::default();
@@ -335,6 +337,7 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_spring_convergence() {
         let config = SpringConfig {
@@ -404,6 +407,7 @@ mod tests {
         assert!(end_pos <= 100.0 + 1.0);
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_underdamped_spring_oscillation() {
         let config = SpringConfig {
@@ -445,6 +449,7 @@ mod tests {
         assert!(end_pos > 0.0);
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_spring_trajectory() {
         let config = SpringConfig::default();
@@ -463,6 +468,7 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_spring_presets() {
         let presets = vec![

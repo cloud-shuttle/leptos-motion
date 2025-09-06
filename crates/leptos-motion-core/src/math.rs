@@ -43,6 +43,7 @@ pub fn smoother_step(t: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "approx")]
     use approx::assert_relative_eq;
 
     #[test]
@@ -52,6 +53,7 @@ mod tests {
         assert_eq!(clamp(15.0, 0.0, 10.0), 10.0);
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_map_range() {
         assert_relative_eq!(map_range(0.5, 0.0, 1.0, 0.0, 100.0), 50.0);
@@ -59,6 +61,7 @@ mod tests {
         assert_relative_eq!(map_range(0.0, 0.0, 0.0, 0.0, 100.0), 0.0); // Edge case
     }
 
+    #[cfg(feature = "approx")]
     #[test]
     fn test_distance_2d() {
         assert_relative_eq!(distance_2d(0.0, 0.0, 3.0, 4.0), 5.0);
@@ -69,6 +72,7 @@ mod tests {
     fn test_smooth_step() {
         assert_eq!(smooth_step(0.0), 0.0);
         assert_eq!(smooth_step(1.0), 1.0);
+        #[cfg(feature = "approx")]
         assert_relative_eq!(smooth_step(0.5), 0.5);
 
         // Should be smoother than linear
@@ -81,6 +85,7 @@ mod tests {
     fn test_smoother_step() {
         assert_eq!(smoother_step(0.0), 0.0);
         assert_eq!(smoother_step(1.0), 1.0);
+        #[cfg(feature = "approx")]
         assert_relative_eq!(smoother_step(0.5), 0.5);
     }
 }

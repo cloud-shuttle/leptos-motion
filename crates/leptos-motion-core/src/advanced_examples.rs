@@ -1,14 +1,14 @@
 //! Advanced Examples & Templates Implementation - Green Phase
-//! 
+//!
 //! Provides comprehensive example library and reusable animation templates:
-//! - Complex Animation Sequences with Timeline orchestration  
+//! - Complex Animation Sequences with Timeline orchestration
 //! - Interactive UI Pattern Library with customizable components
 //! - Performance-Optimized Templates for different device tiers
 //! - Real-world Use Case Examples with complete implementations
 
 use crate::{
-    TDDAnimationEngine, TDDAnimationHandle, TDDAnimationConfig,
-    AnimationValue, Transition, Easing, StaggerConfig, StaggerFrom
+    AnimationValue, Easing, StaggerConfig, StaggerFrom, TDDAnimationConfig, TDDAnimationEngine,
+    TDDAnimationHandle, Transition,
 };
 use std::collections::HashMap;
 use std::time::Duration;
@@ -117,7 +117,9 @@ impl AnimationSequenceBuilder {
 impl AnimationSequence {
     /// Calculate total duration of the sequence
     pub fn total_duration(&self) -> f64 {
-        let stage_duration: f64 = self.stages.iter()
+        let stage_duration: f64 = self
+            .stages
+            .iter()
             .map(|stage| stage.duration + stage.delay)
             .sum();
 
@@ -253,7 +255,8 @@ impl UIPatternLibrary {
     /// Get patterns by category
     pub fn get_patterns_by_category(&self, category: PatternCategory) -> Vec<&UIPattern> {
         if let Some(pattern_names) = self.categories.get(&category) {
-            pattern_names.iter()
+            pattern_names
+                .iter()
                 .filter_map(|name| self.patterns.get(name))
                 .collect()
         } else {
@@ -324,15 +327,13 @@ impl UIPatternLibrary {
         self.add_pattern(UIPattern {
             name: "skeleton-loading-wave".to_string(),
             category: PatternCategory::LoadingStates,
-            animations: vec![
-                AnimationTemplate {
-                    target: "skeleton".to_string(),
-                    property: "backgroundPositionX".to_string(),
-                    from_value: -200.0,
-                    to_value: 200.0,
-                    easing: Easing::Linear,
-                },
-            ],
+            animations: vec![AnimationTemplate {
+                target: "skeleton".to_string(),
+                property: "backgroundPositionX".to_string(),
+                from_value: -200.0,
+                to_value: 200.0,
+                easing: Easing::Linear,
+            }],
             trigger_type: TriggerType::Programmatic,
             supports_customization: true,
             is_looping: true,
@@ -344,9 +345,9 @@ impl UIPatternLibrary {
     fn add_pattern(&mut self, pattern: UIPattern) {
         let category = pattern.category.clone();
         let name = pattern.name.clone();
-        
+
         self.patterns.insert(name.clone(), pattern);
-        
+
         self.categories
             .entry(category)
             .or_insert_with(Vec::new)
@@ -402,7 +403,7 @@ pub struct OptimizedTemplateManager {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum PerformanceTier {
     High,    // Mobile, low-end devices - strict constraints
-    Medium,  // Desktop, tablets - moderate constraints  
+    Medium,  // Desktop, tablets - moderate constraints
     Premium, // High-end devices - flexible constraints
 }
 
@@ -447,9 +448,13 @@ impl OptimizedTemplateManager {
     }
 
     /// Get templates for a specific performance tier
-    pub fn get_performance_tier_templates(&self, tier: PerformanceTier) -> Vec<&PerformanceOptimizedTemplate> {
+    pub fn get_performance_tier_templates(
+        &self,
+        tier: PerformanceTier,
+    ) -> Vec<&PerformanceOptimizedTemplate> {
         if let Some(template_names) = self.tier_templates.get(&tier) {
-            template_names.iter()
+            template_names
+                .iter()
                 .filter_map(|name| self.templates.get(name))
                 .collect()
         } else {
@@ -463,7 +468,10 @@ impl OptimizedTemplateManager {
     }
 
     /// Analyze template performance characteristics
-    pub fn analyze_template_performance(&self, template: &PerformanceOptimizedTemplate) -> PerformanceAnalysis {
+    pub fn analyze_template_performance(
+        &self,
+        template: &PerformanceOptimizedTemplate,
+    ) -> PerformanceAnalysis {
         let estimated_fps = match template.performance_tier {
             PerformanceTier::High => 60.0,
             PerformanceTier::Medium => 50.0,
@@ -486,15 +494,20 @@ impl OptimizedTemplateManager {
     }
 
     /// Get optimization recommendations for a template
-    pub fn get_optimization_recommendations(&self, template: &PerformanceOptimizedTemplate) -> OptimizationReport {
+    pub fn get_optimization_recommendations(
+        &self,
+        template: &PerformanceOptimizedTemplate,
+    ) -> OptimizationReport {
         let mut recommendations = Vec::new();
 
         if template.memory_budget_kb > 100.0 {
-            recommendations.push("Consider reducing memory budget for better mobile performance".to_string());
+            recommendations
+                .push("Consider reducing memory budget for better mobile performance".to_string());
         }
 
         if !template.use_transform_optimizations {
-            recommendations.push("Enable transform optimizations for better GPU acceleration".to_string());
+            recommendations
+                .push("Enable transform optimizations for better GPU acceleration".to_string());
         }
 
         if !template.use_will_change && template.max_concurrent_animations > 5 {
@@ -537,9 +550,9 @@ impl OptimizedTemplateManager {
     fn add_template(&mut self, template: PerformanceOptimizedTemplate) {
         let tier = template.performance_tier.clone();
         let name = template.name.clone();
-        
+
         self.templates.insert(name.clone(), template);
-        
+
         self.tier_templates
             .entry(tier)
             .or_insert_with(Vec::new)
@@ -561,8 +574,8 @@ impl AdvancedExamplesExt for TDDAnimationEngine {
         }
 
         // Simplified implementation - in reality would orchestrate all stages
-        let handle = SequenceHandle { 
-            id: sequence.name.len() as u64 // Simple ID generation
+        let handle = SequenceHandle {
+            id: sequence.name.len() as u64, // Simple ID generation
         };
 
         Ok(handle)
@@ -573,8 +586,8 @@ impl AdvancedExamplesExt for TDDAnimationEngine {
         // Simplified implementation - return placeholder handles
         vec![
             TDDAnimationHandle(1),
-            TDDAnimationHandle(2), 
-            TDDAnimationHandle(3)
+            TDDAnimationHandle(2),
+            TDDAnimationHandle(3),
         ]
     }
 }
@@ -605,9 +618,9 @@ mod tests {
     #[test]
     fn test_ui_pattern_library() {
         let library = UIPatternLibrary::new();
-        
+
         assert!(library.pattern_count() > 0);
-        
+
         let button_patterns = library.get_patterns_by_category(PatternCategory::ButtonInteractions);
         assert!(!button_patterns.is_empty());
     }
@@ -615,13 +628,14 @@ mod tests {
     #[test]
     fn test_optimized_template_manager() {
         let manager = OptimizedTemplateManager::new();
-        
+
         let high_perf_templates = manager.get_performance_tier_templates(PerformanceTier::High);
         assert!(!high_perf_templates.is_empty());
-        
-        let mobile_template = manager.get_template("mobile-optimized-list-entry")
+
+        let mobile_template = manager
+            .get_template("mobile-optimized-list-entry")
             .expect("Should have mobile template");
-        
+
         assert_eq!(mobile_template.performance_tier, PerformanceTier::High);
     }
 }

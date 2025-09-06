@@ -1,10 +1,13 @@
 //! Improved MotionDiv implementation with proper animation support
-//! 
+//!
 //! This module provides a more complete MotionDiv implementation that can actually
 //! animate between states using the animation engine.
 
 use crate::{DragConfig, DragConstraints};
-use leptos::prelude::{Children, ClassAttribute, ElementChild, Get, Set, StyleAttribute, signal, ReadSignal, WriteSignal, NodeRef};
+use leptos::prelude::{
+    Children, ClassAttribute, ElementChild, Get, NodeRef, ReadSignal, Set, StyleAttribute,
+    WriteSignal, signal,
+};
 use leptos::*;
 use leptos_motion_core::*;
 use std::collections::HashMap;
@@ -60,7 +63,7 @@ pub fn ImprovedMotionDiv(
     // Handle animate prop with proper animation
     if let Some(animate_target) = animate {
         set_animating.set(true);
-        
+
         // Create transition
         let transition = transition.unwrap_or_else(|| Transition {
             duration: Some(0.3),
@@ -69,7 +72,7 @@ pub fn ImprovedMotionDiv(
             repeat: RepeatConfig::Never,
             stagger: None,
         });
-        
+
         // Start animation
         // Note: In a real implementation, we'd need to get the actual DOM element
         // For now, we'll simulate the animation by updating styles directly
@@ -94,7 +97,7 @@ pub fn ImprovedMotionDiv(
                 current_styles.get()
             }
         };
-        
+
         // Update styles when hover state changes
         // Note: In a real implementation, we'd use create_effect to reactively update styles
         // For now, we'll handle this in the event handlers
@@ -113,7 +116,7 @@ pub fn ImprovedMotionDiv(
                 current_styles.get()
             }
         };
-        
+
         // Update styles when tap state changes
         // Note: In a real implementation, we'd use create_effect to reactively update styles
         // For now, we'll handle this in the event handlers
@@ -147,11 +150,11 @@ pub fn use_animation_state() -> (ReadSignal<bool>, WriteSignal<bool>) {
 /// Hook for tracking element visibility
 pub fn use_in_view(element: NodeRef<leptos::html::Div>) -> ReadSignal<bool> {
     let (is_visible, set_visible) = signal(false);
-    
+
     // In a real implementation, we'd use Intersection Observer
     // For now, we'll just return true
     set_visible.set(true);
-    
+
     is_visible.into()
 }
 

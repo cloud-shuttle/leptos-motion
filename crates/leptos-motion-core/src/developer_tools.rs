@@ -1,5 +1,5 @@
 //! Developer Tools Implementation - Green Phase
-//! 
+//!
 //! Provides comprehensive developer tools for debugging and optimizing animations:
 //! - Animation Inspector for real-time state tracking
 //! - Performance Profiler with bottleneck detection
@@ -7,12 +7,12 @@
 //! - Debug Console with hierarchical state visualization
 
 use crate::{
-    TDDAnimationEngine, TDDAnimationHandle, TDDAnimationConfig, 
-    AnimationValue, Transition, Transform, SpringConfig, Easing
+    AnimationValue, Easing, SpringConfig, TDDAnimationConfig, TDDAnimationEngine,
+    TDDAnimationHandle, Transform, Transition,
 };
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
 use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 /// Animation Inspector for real-time debugging and state tracking
 pub struct AnimationInspector {
@@ -79,17 +79,17 @@ impl AnimationInspector {
     pub fn get_animation_state(&self, handle: &TDDAnimationHandle) -> Option<AnimationState> {
         let animations = self.tracked_animations.lock().ok()?;
         let tracked = animations.get(handle)?;
-        
+
         let elapsed = tracked.start_time.elapsed().as_secs_f64();
         let duration = tracked.config.duration.unwrap_or(1.0);
         let progress = (elapsed / duration).min(1.0);
-        
+
         Some(AnimationState {
             handle: *handle,
-            status: if progress >= 1.0 { 
-                AnimationStatus::Completed 
-            } else { 
-                AnimationStatus::Running 
+            status: if progress >= 1.0 {
+                AnimationStatus::Completed
+            } else {
+                AnimationStatus::Running
             },
             progress,
             properties: tracked.config.target.clone(),
@@ -97,16 +97,20 @@ impl AnimationInspector {
     }
 
     /// Get property-level debugging information
-    pub fn get_property_debug(&self, handle: &TDDAnimationHandle, property: &str) -> Option<PropertyDebugInfo> {
+    pub fn get_property_debug(
+        &self,
+        handle: &TDDAnimationHandle,
+        property: &str,
+    ) -> Option<PropertyDebugInfo> {
         let animations = self.tracked_animations.lock().ok()?;
         let tracked = animations.get(handle)?;
-        
+
         if let Some(target_value) = tracked.config.target.get(property) {
             let elapsed = tracked.start_time.elapsed().as_secs_f64();
             let duration = tracked.config.duration.unwrap_or(1.0);
-        let progress = (elapsed / duration).min(1.0);
+            let progress = (elapsed / duration).min(1.0);
             let eased_progress = tracked.config.ease.evaluate(progress);
-            
+
             Some(PropertyDebugInfo {
                 property_name: property.to_string(),
                 target_value: target_value.clone(),
@@ -184,7 +188,7 @@ impl PerformanceProfiler {
     pub fn end_frame(&mut self, frame_duration: Duration) {
         let frame_time_ms = frame_duration.as_secs_f64() * 1000.0;
         self.frame_times.push(frame_time_ms);
-        
+
         // Analyze for bottlenecks
         if frame_time_ms > self.frame_budget_ms * 1.5 {
             let severity = if frame_time_ms > self.frame_budget_ms * 3.0 {
@@ -198,15 +202,17 @@ impl PerformanceProfiler {
             let bottleneck = Bottleneck {
                 severity,
                 category: BottleneckCategory::Animation,
-                description: format!("Frame took {:.2}ms, exceeding budget of {:.2}ms", 
-                                   frame_time_ms, self.frame_budget_ms),
+                description: format!(
+                    "Frame took {:.2}ms, exceeding budget of {:.2}ms",
+                    frame_time_ms, self.frame_budget_ms
+                ),
                 suggestions: vec![
                     "Consider reducing animation complexity".to_string(),
                     "Implement animation culling for off-screen elements".to_string(),
                     "Use simpler easing functions".to_string(),
                 ],
             };
-            
+
             self.bottlenecks.push(bottleneck);
         }
     }
@@ -409,7 +415,7 @@ impl AnimationBuilder {
     /// Build the animation
     pub fn build(self) -> Result<Animation, String> {
         let element_id = self.element_id.ok_or("Element ID not specified")?;
-        
+
         Ok(Animation {
             element_id,
             duration: self.duration,
@@ -513,7 +519,7 @@ impl DebugConsole {
                 metrics
             },
         };
-        
+
         self.snapshots.push(snapshot.clone());
         snapshot
     }
@@ -524,33 +530,25 @@ impl DebugConsole {
             node_type: StateNodeType::Engine,
             handle: None,
             children: match self.filter {
-                StateFilter::All => vec![
-                    StateNode {
-                        node_type: StateNodeType::Animation,
-                        handle: Some(TDDAnimationHandle(1)),
-                        children: vec![
-                            StateNode {
-                                node_type: StateNodeType::Property,
-                                handle: None,
-                                children: Vec::new(),
-                            }
-                        ],
-                    }
-                ],
-                StateFilter::AnimationsOnly => vec![
-                    StateNode {
-                        node_type: StateNodeType::Animation,
-                        handle: Some(TDDAnimationHandle(1)),
-                        children: Vec::new(),
-                    }
-                ],
-                StateFilter::PropertiesOnly => vec![
-                    StateNode {
+                StateFilter::All => vec![StateNode {
+                    node_type: StateNodeType::Animation,
+                    handle: Some(TDDAnimationHandle(1)),
+                    children: vec![StateNode {
                         node_type: StateNodeType::Property,
                         handle: None,
                         children: Vec::new(),
-                    }
-                ],
+                    }],
+                }],
+                StateFilter::AnimationsOnly => vec![StateNode {
+                    node_type: StateNodeType::Animation,
+                    handle: Some(TDDAnimationHandle(1)),
+                    children: Vec::new(),
+                }],
+                StateFilter::PropertiesOnly => vec![StateNode {
+                    node_type: StateNodeType::Property,
+                    handle: None,
+                    children: Vec::new(),
+                }],
             },
         };
 
@@ -560,9 +558,10 @@ impl DebugConsole {
     /// Export current state
     pub fn export_state(&self, format: ExportFormat) -> Result<String, String> {
         match format {
-            ExportFormat::JSON => {
-                Ok(r#"{"active_animations":1,"engine_metrics":{"fps":60.0,"frame_time_ms":16.67}}"#.to_string())
-            }
+            ExportFormat::JSON => Ok(
+                r#"{"active_animations":1,"engine_metrics":{"fps":60.0,"frame_time_ms":16.67}}"#
+                    .to_string(),
+            ),
             ExportFormat::XML => {
                 Ok("<state><active_animations>1</active_animations></state>".to_string())
             }

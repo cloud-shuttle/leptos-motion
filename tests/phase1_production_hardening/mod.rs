@@ -1,5 +1,5 @@
 //! Phase 1 TDD Tests: Production Hardening
-//! 
+//!
 //! This module contains all tests for Phase 1 of the v1.0 development roadmap.
 //! These tests follow the Red-Green-Refactor TDD cycle to ensure production-ready quality.
 
@@ -14,21 +14,21 @@ pub use crate::test_utils::*;
 mod phase1_integration_tests {
     use super::*;
     use wasm_bindgen_test::*;
-    
+
     wasm_bindgen_test_configure!(run_in_browser);
-    
+
     /// Integration test: All Phase 1 components work together
     /// This ensures our individual optimizations don't break when combined
     #[wasm_bindgen_test]
     fn test_phase1_components_integration() {
         // Test that engine refinements work with bundle optimization
         let engine = leptos_motion_core::AnimationEngine::new();
-        
+
         // Should handle concurrent animations (engine refinement)
         let animation_configs: Vec<_> = (0..10)
             .map(|i| create_test_animation_config(i))
             .collect();
-        
+
         for config in animation_configs {
             // Should start without error (bundle optimization preserved functionality)
             if let Err(e) = engine.start_animation(config) {
@@ -36,26 +36,26 @@ mod phase1_integration_tests {
                 assert!(matches!(e, leptos_motion_core::AnimationError::NotImplemented(_)));
             }
         }
-        
+
         // Engine should maintain stable state across optimizations
         // (This will pass once we implement Green Phase)
     }
-    
+
     /// Integration test: Performance regression protection
     /// Ensures optimizations don't hurt performance
     #[wasm_bindgen_test]
     fn test_phase1_performance_regression_protection() {
         let start = instant::Instant::now();
-        
+
         // Perform typical operations
         let engine = leptos_motion_core::AnimationEngine::new();
         for i in 0..50 {
             let config = create_test_animation_config(i);
             let _ = engine.start_animation(config);
         }
-        
+
         let elapsed = start.elapsed();
-        
+
         // Should complete operations quickly even with safety checks
         assert!(
             elapsed.as_millis() < 50,

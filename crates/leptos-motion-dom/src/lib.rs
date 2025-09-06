@@ -37,7 +37,9 @@ pub use css_animations::*;
 
 // Re-export components
 pub use components::{MotionDiv, MotionSpan};
-pub use improved_motion_div::{ImprovedMotionDiv, use_animation_state, use_in_view, use_drag_state, use_layout_animation};
+pub use improved_motion_div::{
+    ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,
+};
 
 // Re-export simplified event handling (new public API)
 pub use simplified_event_handling::{

@@ -6,23 +6,23 @@
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
+pub mod advanced_examples;
 #[cfg(feature = "approx")]
 pub mod animation;
+pub mod developer_tools;
 #[cfg(feature = "approx")]
 pub mod easing;
+pub mod ecosystem_integration;
 pub mod engine;
 #[cfg(feature = "approx")]
 pub mod interpolation;
 #[cfg(feature = "approx")]
 pub mod math;
+pub mod tdd_engine;
 pub mod time;
+pub mod timeline;
 pub mod types;
 pub mod values;
-pub mod tdd_engine;
-pub mod timeline;
-pub mod developer_tools;
-pub mod advanced_examples;
-pub mod ecosystem_integration;
 
 #[macro_use]
 pub mod macros;
@@ -40,14 +40,20 @@ pub mod spring;
 mod memory_optimization_tests;
 
 #[cfg(test)]
+mod basic_functionality_tests;
+#[cfg(test)]
 mod bundle_size_tests;
 #[cfg(test)]
 mod dependency_investigation_tests;
 #[cfg(test)]
 mod dependency_optimization_tests;
 #[cfg(test)]
+mod error_handling_tdd_tests;
+#[cfg(test)]
 mod feature_flags_tests;
 mod minimal_serialization;
+#[cfg(test)]
+mod performance_optimization_tdd_tests;
 #[cfg(test)]
 mod performance_tests;
 #[cfg(test)]
@@ -55,17 +61,11 @@ mod serde_replacement_tests;
 #[cfg(test)]
 mod tree_shaking_tests;
 #[cfg(test)]
+mod wasm_browser_tdd_tests;
+#[cfg(test)]
 mod wasm_optimization_tests;
 #[cfg(test)]
 mod wasm_test_setup;
-#[cfg(test)]
-mod basic_functionality_tests;
-#[cfg(test)]
-mod error_handling_tdd_tests;
-#[cfg(test)]
-mod wasm_browser_tdd_tests;
-#[cfg(test)]
-mod performance_optimization_tdd_tests;
 #[cfg(test)]
 mod web_sys_optimization_tests;
 
@@ -128,7 +128,10 @@ pub use simplified_engine::*;
 pub use minimal_serialization::*;
 
 // TDD Engine exports for v1.0 development
-pub use tdd_engine::{AnimationEngine as TDDAnimationEngine, AnimationConfig as TDDAnimationConfig, TDDAnimationHandle, MemoryStats};
+pub use tdd_engine::{
+    AnimationConfig as TDDAnimationConfig, AnimationEngine as TDDAnimationEngine, MemoryStats,
+    TDDAnimationHandle,
+};
 
 // Timeline Animation exports for Phase 2
 pub use timeline::{Timeline, TimelineKeyframe, TimelinePerformanceMetrics};
@@ -335,11 +338,11 @@ pub enum AnimationError {
     /// Animation timing error
     #[error("Animation timing error: {0}")]
     TimingError(String),
-    
+
     /// Feature not yet implemented
     #[error("Feature not yet implemented: {0}")]
     NotImplemented(String),
-    
+
     /// Invalid animation value (NaN, Infinity, etc.)
     #[error("Invalid animation value: {0}")]
     InvalidValue(String),

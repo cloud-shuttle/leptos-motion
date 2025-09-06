@@ -18,12 +18,12 @@ mod tests {
     fn test_animation_inspector_tracks_state() {
         let inspector = AnimationInspector::new();
         let mut engine = TDDAnimationEngine::new();
-        
+
         // Attach inspector to engine
         engine.attach_inspector(&inspector);
-        
+
         let config = TDDAnimationConfig {
-            target: motion_target!{
+            target: motion_target! {
                 "opacity" => AnimationValue::Number(1.0),
                 "x" => AnimationValue::Pixels(100.0)
             },
@@ -37,23 +37,31 @@ mod tests {
             priority: 1,
         };
 
-        let handle = engine.start_animation(config).expect("Should start animation");
-        
+        let handle = engine
+            .start_animation(config)
+            .expect("Should start animation");
+
         // Inspector should track animation state
-        let state = inspector.get_animation_state(&handle).expect("Should find animation");
+        let state = inspector
+            .get_animation_state(&handle)
+            .expect("Should find animation");
         assert_eq!(state.handle, handle);
         assert_eq!(state.status, AnimationStatus::Running);
         assert!(state.properties.contains_key("opacity"));
         assert!(state.properties.contains_key("x"));
-        
+
         // Should track progress over time
         std::thread::sleep(Duration::from_millis(100));
-        let updated_state = inspector.get_animation_state(&handle).expect("Should still find animation");
+        let updated_state = inspector
+            .get_animation_state(&handle)
+            .expect("Should still find animation");
         assert!(updated_state.progress > 0.0);
         assert!(updated_state.progress < 1.0);
-        
+
         // Should provide property-level debugging info
-        let opacity_debug = inspector.get_property_debug(&handle, "opacity").expect("Should find property");
+        let opacity_debug = inspector
+            .get_property_debug(&handle, "opacity")
+            .expect("Should find property");
         assert_eq!(opacity_debug.property_name, "opacity");
         assert_eq!(opacity_debug.target_value, AnimationValue::Number(1.0));
         assert!(opacity_debug.current_value.is_some());
@@ -65,50 +73,54 @@ mod tests {
     fn test_performance_profiler_detects_bottlenecks() {
         let mut profiler = PerformanceProfiler::new();
         profiler.set_frame_budget(16.67); // 60 FPS budget
-        
+
         let mut engine = TDDAnimationEngine::new();
         engine.attach_profiler(&profiler);
-        
+
         // Create multiple animations to stress test
-        let handles: Vec<_> = (0..50).map(|i| {
-            let config = TDDAnimationConfig {
-                target: motion_target!{
-                    "x" => AnimationValue::Pixels(i as f64 * 10.0),
-                    "y" => AnimationValue::Pixels(i as f64 * 5.0),
-                    "rotation" => AnimationValue::Degrees(i as f64 * 2.0)
-                },
-                transition: Transition {
-                    duration: 2.0,
-                    delay: 0.0,
-                    ease: Easing::EaseInOut,
-                    repeat: RepeatConfig::Count(2),
-                    stagger: None,
-                },
-                priority: 1,
-            };
-            engine.start_animation(config).expect("Should start animation")
-        }).collect();
-        
+        let handles: Vec<_> = (0..50)
+            .map(|i| {
+                let config = TDDAnimationConfig {
+                    target: motion_target! {
+                        "x" => AnimationValue::Pixels(i as f64 * 10.0),
+                        "y" => AnimationValue::Pixels(i as f64 * 5.0),
+                        "rotation" => AnimationValue::Degrees(i as f64 * 2.0)
+                    },
+                    transition: Transition {
+                        duration: 2.0,
+                        delay: 0.0,
+                        ease: Easing::EaseInOut,
+                        repeat: RepeatConfig::Count(2),
+                        stagger: None,
+                    },
+                    priority: 1,
+                };
+                engine
+                    .start_animation(config)
+                    .expect("Should start animation")
+            })
+            .collect();
+
         // Simulate frame rendering
         for _ in 0..10 {
             let frame_start = Instant::now();
             profiler.start_frame();
-            
+
             // Simulate expensive animation calculations
             engine.update_all_animations(16.67);
-            
+
             profiler.end_frame(frame_start.elapsed());
         }
-        
+
         // Should detect performance issues
         let report = profiler.generate_report();
         assert!(report.total_frames >= 10);
         assert!(report.average_frame_time_ms > 0.0);
-        
+
         // Should identify bottlenecks
         let bottlenecks = profiler.detect_bottlenecks();
         assert!(!bottlenecks.is_empty());
-        
+
         let primary_bottleneck = &bottlenecks[0];
         assert!(primary_bottleneck.severity >= BottleneckSeverity::Medium);
         assert_eq!(primary_bottleneck.category, BottleneckCategory::Animation);
@@ -120,34 +132,44 @@ mod tests {
     #[test]
     fn test_interactive_animation_builder() {
         let mut builder = InteractiveAnimationBuilder::new();
-        
+
         // Should start with empty canvas
         assert_eq!(builder.element_count(), 0);
         assert_eq!(builder.animation_count(), 0);
-        
+
         // Add elements to animate
-        let element1 = builder.add_element("box1", ElementType::Rectangle { width: 100, height: 100 });
+        let element1 = builder.add_element(
+            "box1",
+            ElementType::Rectangle {
+                width: 100,
+                height: 100,
+            },
+        );
         let element2 = builder.add_element("circle1", ElementType::Circle { radius: 50 });
-        
+
         assert_eq!(builder.element_count(), 2);
-        
+
         // Create animation between elements
-        let animation = builder.create_animation()
+        let animation = builder
+            .create_animation()
             .target_element("box1")
             .from_property("x", 0.0)
             .to_property("x", 200.0)
             .with_duration(1.0)
             .with_easing(Easing::EaseInOut)
-            .build().expect("Should build animation");
-        
+            .build()
+            .expect("Should build animation");
+
         assert_eq!(builder.animation_count(), 1);
-        
+
         // Should provide preview functionality
-        let preview = builder.generate_preview(&animation).expect("Should generate preview");
+        let preview = builder
+            .generate_preview(&animation)
+            .expect("Should generate preview");
         assert_eq!(preview.element_id, "box1");
         assert_eq!(preview.duration, 1.0);
         assert!(!preview.keyframes.is_empty());
-        
+
         // Should validate animations
         let validation = builder.validate_animation(&animation);
         assert!(validation.is_valid);
@@ -160,13 +182,13 @@ mod tests {
     fn test_debug_console_state_visualization() {
         let mut console = DebugConsole::new();
         let mut engine = TDDAnimationEngine::new();
-        
+
         // Attach console to engine for state monitoring
         engine.attach_debug_console(&console);
         console.set_verbosity_level(DebugLevel::Detailed);
-        
+
         let config = TDDAnimationConfig {
-            target: motion_target!{
+            target: motion_target! {
                 "scale" => AnimationValue::Number(1.5),
                 "opacity" => AnimationValue::Number(0.8)
             },
@@ -180,35 +202,41 @@ mod tests {
             priority: 1,
         };
 
-        let handle = engine.start_animation(config).expect("Should start animation");
-        
+        let handle = engine
+            .start_animation(config)
+            .expect("Should start animation");
+
         // Should capture state snapshots
         let snapshot = console.capture_state_snapshot();
         assert_eq!(snapshot.active_animations, 1);
         assert!(snapshot.total_memory_usage_kb > 0.0);
         assert!(!snapshot.engine_metrics.is_empty());
-        
+
         // Should provide hierarchical state view
         let state_tree = console.get_state_tree();
         let root = &state_tree.root;
         assert_eq!(root.node_type, StateNodeType::Engine);
         assert!(!root.children.is_empty());
-        
-        let animation_node = root.children.iter()
+
+        let animation_node = root
+            .children
+            .iter()
             .find(|node| node.node_type == StateNodeType::Animation)
             .expect("Should find animation node");
         assert_eq!(animation_node.handle, Some(handle));
         assert!(!animation_node.children.is_empty()); // Should have property nodes
-        
+
         // Should support state filtering and search
         console.set_filter(StateFilter::AnimationsOnly);
         let filtered_tree = console.get_state_tree();
-        assert!(filtered_tree.root.children.iter().all(|node| 
-            matches!(node.node_type, StateNodeType::Animation | StateNodeType::Property)
-        ));
-        
+        assert!(filtered_tree.root.children.iter().all(|node| matches!(
+            node.node_type,
+            StateNodeType::Animation | StateNodeType::Property
+        )));
+
         // Should export state for external tools
-        let exported_state = console.export_state(ExportFormat::JSON)
+        let exported_state = console
+            .export_state(ExportFormat::JSON)
             .expect("Should export state");
         assert!(!exported_state.is_empty());
         assert!(exported_state.contains("active_animations"));
@@ -219,19 +247,19 @@ mod tests {
     #[test]
     fn test_developer_tools_integration() {
         let dev_tools = DeveloperTools::new();
-        
+
         // Should initialize all tool components
         assert!(dev_tools.has_inspector());
         assert!(dev_tools.has_profiler());
         assert!(dev_tools.has_builder());
         assert!(dev_tools.has_console());
-        
+
         let mut engine = TDDAnimationEngine::new();
         dev_tools.attach_to_engine(&mut engine);
-        
+
         // Should coordinate between tools
         let config = TDDAnimationConfig {
-            target: motion_target!{
+            target: motion_target! {
                 "transform" => AnimationValue::Transform(Transform {
                     x: Some(100.0),
                     y: Some(50.0),
@@ -254,16 +282,20 @@ mod tests {
             priority: 1,
         };
 
-        let handle = engine.start_animation(config).expect("Should start animation");
-        
+        let handle = engine
+            .start_animation(config)
+            .expect("Should start animation");
+
         // Tools should share data seamlessly
-        let inspector_state = dev_tools.get_inspector().get_animation_state(&handle)
+        let inspector_state = dev_tools
+            .get_inspector()
+            .get_animation_state(&handle)
             .expect("Should find animation in inspector");
         let console_snapshot = dev_tools.get_console().capture_state_snapshot();
-        
+
         assert_eq!(console_snapshot.active_animations, 1);
         assert_eq!(inspector_state.handle, handle);
-        
+
         // Should provide unified reporting
         let unified_report = dev_tools.generate_unified_report();
         assert!(!unified_report.performance_metrics.is_empty());

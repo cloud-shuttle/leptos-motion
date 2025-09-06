@@ -329,7 +329,7 @@ impl Easing {
                 let t3 = t2 * t;
                 let mt = 1.0 - t;
                 let mt2 = mt * mt;
-                
+
                 3.0 * mt2 * t * y1 + 3.0 * mt * t2 * y2 + t3
             }
         }

@@ -1,5 +1,5 @@
 //! Simple WASM test setup verification
-//! 
+//!
 //! This module contains basic tests to verify that the WASM testing environment
 //! is working correctly.
 
@@ -17,7 +17,7 @@ fn test_wasm_environment_basic() {
     // Test that we can create basic types
     let handle = crate::AnimationHandle(123);
     assert_eq!(handle.0, 123);
-    
+
     // Test that we can create animation values
     let value = crate::AnimationValue::Number(42.0);
     match value {
@@ -39,11 +39,11 @@ fn test_minimal_engine_creation() {
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_target_creation() {
     use std::collections::HashMap;
-    
+
     let mut target = HashMap::new();
     target.insert("opacity".to_string(), crate::AnimationValue::Number(1.0));
     target.insert("scale".to_string(), crate::AnimationValue::Number(1.2));
-    
+
     assert_eq!(target.len(), 2);
     assert!(target.contains_key("opacity"));
     assert!(target.contains_key("scale"));
@@ -59,7 +59,7 @@ fn test_transition_creation() {
         delay: Some(0.1),
         ..Default::default()
     };
-    
+
     assert_eq!(transition.duration, Some(1.0));
     assert_eq!(transition.delay, Some(0.1));
 }

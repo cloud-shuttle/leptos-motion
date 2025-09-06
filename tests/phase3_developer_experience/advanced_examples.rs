@@ -17,7 +17,7 @@ mod tests {
     #[test]
     fn test_complex_animation_sequences() {
         let sequence_builder = AnimationSequenceBuilder::new();
-        
+
         // Create a complex card reveal sequence
         let card_reveal_sequence = sequence_builder
             .name("card-reveal-sequence")
@@ -46,15 +46,13 @@ mod tests {
             .add_stage(AnimationStage {
                 name: "reveal-content".to_string(),
                 duration: 0.5,
-                animations: vec![
-                    AnimationTemplate {
-                        target: "card-header".to_string(),
-                        property: "opacity".to_string(),
-                        from_value: 0.0,
-                        to_value: 1.0,
-                        easing: Easing::EaseOut,
-                    },
-                ],
+                animations: vec![AnimationTemplate {
+                    target: "card-header".to_string(),
+                    property: "opacity".to_string(),
+                    from_value: 0.0,
+                    to_value: 1.0,
+                    easing: Easing::EaseOut,
+                }],
                 delay: 0.1,
             })
             .add_stage(AnimationStage {
@@ -75,20 +73,22 @@ mod tests {
         assert_eq!(card_reveal_sequence.name, "card-reveal-sequence");
         assert_eq!(card_reveal_sequence.stages.len(), 3);
         assert_eq!(card_reveal_sequence.total_duration(), 1.2); // 0.3 + 0.5 + 0.4
-        
+
         // Should provide timeline preview
-        let timeline_preview = card_reveal_sequence.generate_timeline_preview()
+        let timeline_preview = card_reveal_sequence
+            .generate_timeline_preview()
             .expect("Should generate timeline");
         assert!(!timeline_preview.keyframes.is_empty());
         assert!(timeline_preview.has_stagger);
-        
+
         // Should execute with engine integration
         let mut engine = TDDAnimationEngine::new();
-        let sequence_handle = engine.execute_sequence(&card_reveal_sequence)
+        let sequence_handle = engine
+            .execute_sequence(&card_reveal_sequence)
             .expect("Should execute sequence");
-        
+
         assert!(sequence_handle.is_active());
-        
+
         // Should track all stage handles
         let stage_handles = engine.get_sequence_stage_handles(&sequence_handle);
         assert_eq!(stage_handles.len(), 3);
@@ -98,22 +98,24 @@ mod tests {
     #[test]
     fn test_interactive_ui_pattern_library() {
         let pattern_library = UIPatternLibrary::new();
-        
+
         // Should have predefined patterns
         assert!(pattern_library.pattern_count() > 0);
-        
+
         // Test button interaction patterns
-        let button_patterns = pattern_library.get_patterns_by_category(PatternCategory::ButtonInteractions);
+        let button_patterns =
+            pattern_library.get_patterns_by_category(PatternCategory::ButtonInteractions);
         assert!(!button_patterns.is_empty());
-        
-        let hover_pattern = pattern_library.get_pattern("button-hover-lift")
+
+        let hover_pattern = pattern_library
+            .get_pattern("button-hover-lift")
             .expect("Should have button hover pattern");
-        
+
         assert_eq!(hover_pattern.name, "button-hover-lift");
         assert_eq!(hover_pattern.category, PatternCategory::ButtonInteractions);
         assert!(!hover_pattern.animations.is_empty());
         assert_eq!(hover_pattern.trigger_type, TriggerType::Hover);
-        
+
         // Should support pattern customization
         let customized_hover = hover_pattern
             .customize()
@@ -122,26 +124,30 @@ mod tests {
             .with_color_scheme(ColorScheme::Primary)
             .build()
             .expect("Should customize pattern");
-        
+
         assert_eq!(customized_hover.base_pattern, "button-hover-lift");
         assert_eq!(customized_hover.customizations.duration, Some(0.3));
         assert_eq!(customized_hover.customizations.intensity, Some(1.2));
-        
+
         // Test modal patterns
-        let modal_patterns = pattern_library.get_patterns_by_category(PatternCategory::ModalTransitions);
-        let slide_modal = modal_patterns.iter()
+        let modal_patterns =
+            pattern_library.get_patterns_by_category(PatternCategory::ModalTransitions);
+        let slide_modal = modal_patterns
+            .iter()
             .find(|p| p.name == "modal-slide-from-bottom")
             .expect("Should have modal slide pattern");
-            
+
         assert_eq!(slide_modal.category, PatternCategory::ModalTransitions);
         assert!(slide_modal.supports_customization);
-        
+
         // Test loading patterns
-        let loading_patterns = pattern_library.get_patterns_by_category(PatternCategory::LoadingStates);
-        let skeleton_pattern = loading_patterns.iter()
+        let loading_patterns =
+            pattern_library.get_patterns_by_category(PatternCategory::LoadingStates);
+        let skeleton_pattern = loading_patterns
+            .iter()
             .find(|p| p.name == "skeleton-loading-wave")
             .expect("Should have skeleton loading pattern");
-            
+
         assert!(skeleton_pattern.is_looping);
         assert_eq!(skeleton_pattern.trigger_type, TriggerType::Programmatic);
     }
@@ -150,37 +156,41 @@ mod tests {
     #[test]
     fn test_performance_optimized_templates() {
         let template_manager = OptimizedTemplateManager::new();
-        
+
         // Should load performance-focused templates
-        let performance_templates = template_manager.get_performance_tier_templates(PerformanceTier::High);
+        let performance_templates =
+            template_manager.get_performance_tier_templates(PerformanceTier::High);
         assert!(!performance_templates.is_empty());
-        
+
         // Test mobile-optimized templates
-        let mobile_template = template_manager.get_template("mobile-optimized-list-entry")
+        let mobile_template = template_manager
+            .get_template("mobile-optimized-list-entry")
             .expect("Should have mobile template");
-            
+
         assert_eq!(mobile_template.performance_tier, PerformanceTier::High);
         assert!(mobile_template.memory_budget_kb <= 50.0); // Strict mobile budget
         assert!(mobile_template.max_concurrent_animations <= 3);
         assert!(mobile_template.use_transform_optimizations);
         assert!(mobile_template.use_will_change);
-        
+
         // Should validate performance metrics
         let performance_analysis = template_manager.analyze_template_performance(&mobile_template);
         assert!(performance_analysis.estimated_fps >= 60.0);
         assert!(performance_analysis.memory_efficiency_score >= 0.8);
         assert!(performance_analysis.animation_complexity_score <= 0.6); // Simple for mobile
-        
+
         // Test desktop high-performance templates
-        let desktop_template = template_manager.get_template("desktop-complex-data-visualization")
+        let desktop_template = template_manager
+            .get_template("desktop-complex-data-visualization")
             .expect("Should have desktop template");
-            
+
         assert_eq!(desktop_template.performance_tier, PerformanceTier::Medium);
         assert!(desktop_template.memory_budget_kb <= 200.0);
         assert!(desktop_template.max_concurrent_animations <= 10);
-        
+
         // Should provide optimization recommendations
-        let optimization_report = template_manager.get_optimization_recommendations(&desktop_template);
+        let optimization_report =
+            template_manager.get_optimization_recommendations(&desktop_template);
         assert!(!optimization_report.recommendations.is_empty());
         assert!(optimization_report.potential_memory_savings_percent >= 0.0);
         assert!(optimization_report.potential_performance_improvement_percent >= 0.0);
@@ -190,59 +200,95 @@ mod tests {
     #[test]
     fn test_real_world_use_case_examples() {
         let example_library = RealWorldExampleLibrary::new();
-        
+
         // Should have comprehensive example categories
         let categories = example_library.get_categories();
         assert!(categories.contains(&ExampleCategory::ECommerce));
         assert!(categories.contains(&ExampleCategory::Dashboard));
         assert!(categories.contains(&ExampleCategory::SocialMedia));
         assert!(categories.contains(&ExampleCategory::Gaming));
-        
+
         // Test e-commerce product showcase example
-        let product_showcase = example_library.get_example("ecommerce-product-showcase")
+        let product_showcase = example_library
+            .get_example("ecommerce-product-showcase")
             .expect("Should have product showcase example");
-            
+
         assert_eq!(product_showcase.category, ExampleCategory::ECommerce);
-        assert_eq!(product_showcase.complexity_level, ComplexityLevel::Intermediate);
-        assert!(product_showcase.required_features.contains(&"timeline-animations"));
-        assert!(product_showcase.required_features.contains(&"gesture-recognition"));
-        
+        assert_eq!(
+            product_showcase.complexity_level,
+            ComplexityLevel::Intermediate
+        );
+        assert!(
+            product_showcase
+                .required_features
+                .contains(&"timeline-animations")
+        );
+        assert!(
+            product_showcase
+                .required_features
+                .contains(&"gesture-recognition")
+        );
+
         // Should provide complete implementation
-        let implementation = example_library.get_implementation(&product_showcase)
+        let implementation = example_library
+            .get_implementation(&product_showcase)
             .expect("Should provide implementation");
-            
+
         assert!(!implementation.component_code.is_empty());
         assert!(!implementation.animation_configs.is_empty());
         assert!(!implementation.styling_guide.is_empty());
         assert!(implementation.performance_considerations.len() >= 3);
-        
+
         // Test dashboard widget transitions example
-        let dashboard_widgets = example_library.get_example("dashboard-widget-transitions")
+        let dashboard_widgets = example_library
+            .get_example("dashboard-widget-transitions")
             .expect("Should have dashboard example");
-            
+
         assert_eq!(dashboard_widgets.category, ExampleCategory::Dashboard);
-        assert_eq!(dashboard_widgets.complexity_level, ComplexityLevel::Advanced);
-        
+        assert_eq!(
+            dashboard_widgets.complexity_level,
+            ComplexityLevel::Advanced
+        );
+
         // Should include performance monitoring
-        let performance_setup = example_library.get_performance_monitoring_setup(&dashboard_widgets)
+        let performance_setup = example_library
+            .get_performance_monitoring_setup(&dashboard_widgets)
             .expect("Should provide performance monitoring");
-            
+
         assert!(!performance_setup.metrics_to_track.is_empty());
-        assert!(performance_setup.alert_thresholds.contains_key("frame_time_ms"));
-        assert!(performance_setup.alert_thresholds.contains_key("memory_usage_mb"));
-        
+        assert!(
+            performance_setup
+                .alert_thresholds
+                .contains_key("frame_time_ms")
+        );
+        assert!(
+            performance_setup
+                .alert_thresholds
+                .contains_key("memory_usage_mb")
+        );
+
         // Test social media feed animations
-        let social_feed = example_library.get_example("social-media-infinite-scroll")
+        let social_feed = example_library
+            .get_example("social-media-infinite-scroll")
             .expect("Should have social media example");
-            
+
         assert_eq!(social_feed.category, ExampleCategory::SocialMedia);
-        assert!(social_feed.required_features.contains(&"performance-monitoring"));
-        assert!(social_feed.required_features.contains(&"memory-optimization"));
-        
+        assert!(
+            social_feed
+                .required_features
+                .contains(&"performance-monitoring")
+        );
+        assert!(
+            social_feed
+                .required_features
+                .contains(&"memory-optimization")
+        );
+
         // Should provide scalability guidelines
-        let scalability_guide = example_library.get_scalability_guidelines(&social_feed)
+        let scalability_guide = example_library
+            .get_scalability_guidelines(&social_feed)
             .expect("Should provide scalability guidelines");
-            
+
         assert!(scalability_guide.max_recommended_items >= 100);
         assert!(!scalability_guide.virtualization_recommendations.is_empty());
         assert!(!scalability_guide.memory_management_strategies.is_empty());
@@ -252,44 +298,48 @@ mod tests {
     #[test]
     fn test_example_developer_tools_integration() {
         let integrated_examples = DeveloperToolsIntegratedExamples::new();
-        
+
         // Should provide examples with built-in debugging
         let debuggable_examples = integrated_examples.get_debuggable_examples();
         assert!(!debuggable_examples.is_empty());
-        
-        let interactive_gallery = debuggable_examples.iter()
+
+        let interactive_gallery = debuggable_examples
+            .iter()
             .find(|ex| ex.name == "interactive-photo-gallery-with-debugging")
             .expect("Should have debuggable gallery example");
-            
+
         // Should include inspector integration
-        let inspector_config = integrated_examples.get_inspector_configuration(&interactive_gallery)
+        let inspector_config = integrated_examples
+            .get_inspector_configuration(&interactive_gallery)
             .expect("Should provide inspector config");
-            
+
         assert!(inspector_config.track_all_animations);
         assert!(inspector_config.real_time_updates);
         assert!(!inspector_config.monitored_properties.is_empty());
-        
+
         // Should include profiler integration
-        let profiler_config = integrated_examples.get_profiler_configuration(&interactive_gallery)
+        let profiler_config = integrated_examples
+            .get_profiler_configuration(&interactive_gallery)
             .expect("Should provide profiler config");
-            
+
         assert!(profiler_config.frame_budget_ms == 16.67);
         assert!(profiler_config.alert_on_budget_exceeded);
         assert!(!profiler_config.bottleneck_detection_rules.is_empty());
-        
+
         // Should provide interactive builder presets
         let builder_presets = integrated_examples.get_builder_presets(&interactive_gallery);
         assert!(!builder_presets.is_empty());
-        
+
         let preset = &builder_presets[0];
         assert!(!preset.name.is_empty());
         assert!(!preset.elements.is_empty());
         assert!(!preset.predefined_animations.is_empty());
-        
+
         // Should generate unified development workflow
-        let workflow = integrated_examples.generate_development_workflow(&interactive_gallery)
+        let workflow = integrated_examples
+            .generate_development_workflow(&interactive_gallery)
             .expect("Should generate workflow");
-            
+
         assert!(!workflow.setup_steps.is_empty());
         assert!(!workflow.debugging_checkpoints.is_empty());
         assert!(!workflow.optimization_milestones.is_empty());
@@ -601,12 +651,19 @@ impl SequenceHandle {
 }
 
 impl DeveloperToolsExt for TDDAnimationEngine {
-    fn execute_sequence(&mut self, _sequence: &AnimationSequence) -> Result<SequenceHandle, String> {
+    fn execute_sequence(
+        &mut self,
+        _sequence: &AnimationSequence,
+    ) -> Result<SequenceHandle, String> {
         Ok(SequenceHandle { id: 1 })
     }
 
     fn get_sequence_stage_handles(&self, _handle: &SequenceHandle) -> Vec<TDDAnimationHandle> {
-        vec![TDDAnimationHandle(1), TDDAnimationHandle(2), TDDAnimationHandle(3)]
+        vec![
+            TDDAnimationHandle(1),
+            TDDAnimationHandle(2),
+            TDDAnimationHandle(3),
+        ]
     }
 }
 
@@ -652,7 +709,10 @@ impl UIPatternLibrary {
     }
 
     fn get_patterns_by_category(&self, category: PatternCategory) -> Vec<&UIPattern> {
-        self.patterns.iter().filter(|p| p.category == category).collect()
+        self.patterns
+            .iter()
+            .filter(|p| p.category == category)
+            .collect()
     }
 
     fn get_pattern(&self, name: &str) -> Option<&UIPattern> {

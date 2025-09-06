@@ -19,29 +19,29 @@ mod tests {
     #[test]
     fn test_leptos_framework_integration() {
         let leptos_integration = LeptosIntegration::new();
-        
+
         // Should detect Leptos environment
         assert!(leptos_integration.is_leptos_environment());
         assert_eq!(leptos_integration.detected_version(), "0.8.8");
-        
+
         // Should provide Leptos-specific components
         let motion_component = leptos_integration.create_motion_component();
         assert_eq!(motion_component.component_name(), "Motion");
         assert!(motion_component.supports_signals());
         assert!(motion_component.supports_reactive_props());
-        
+
         // Should integrate with Leptos lifecycle
         let lifecycle_hooks = leptos_integration.get_lifecycle_hooks();
         assert!(lifecycle_hooks.contains_key("on_mount"));
         assert!(lifecycle_hooks.contains_key("on_cleanup"));
         assert!(lifecycle_hooks.contains_key("create_effect"));
-        
+
         // Should support Leptos resource patterns
         let resource_integration = leptos_integration.create_resource_integration();
         assert!(resource_integration.supports_suspense());
         assert!(resource_integration.supports_error_boundaries());
         assert!(resource_integration.supports_transitions());
-        
+
         // Should provide server-side rendering compatibility
         let ssr_support = leptos_integration.get_ssr_support();
         assert!(ssr_support.supports_hydration);
@@ -53,33 +53,33 @@ mod tests {
     #[test]
     fn test_cross_framework_compatibility() {
         let framework_adapter = CrossFrameworkAdapter::new();
-        
+
         // Should support Yew integration
         let yew_adapter = framework_adapter.create_yew_adapter();
         assert!(yew_adapter.is_compatible());
         assert_eq!(yew_adapter.framework_name(), "Yew");
-        
+
         let yew_component = yew_adapter.create_motion_component();
         assert!(yew_component.supports_properties());
         assert!(yew_component.supports_callbacks());
         assert!(yew_component.supports_refs());
-        
+
         // Should support Dioxus integration
         let dioxus_adapter = framework_adapter.create_dioxus_adapter();
         assert!(dioxus_adapter.is_compatible());
         assert_eq!(dioxus_adapter.framework_name(), "Dioxus");
-        
+
         let dioxus_component = dioxus_adapter.create_motion_component();
         assert!(dioxus_component.supports_props());
         assert!(dioxus_component.supports_hooks());
         assert!(dioxus_component.supports_context());
-        
+
         // Should provide unified API across frameworks
         let unified_api = framework_adapter.create_unified_api();
         assert!(unified_api.supports_framework("leptos"));
         assert!(unified_api.supports_framework("yew"));
         assert!(unified_api.supports_framework("dioxus"));
-        
+
         // Should handle framework-specific optimizations
         let optimizations = framework_adapter.get_framework_optimizations("leptos");
         assert!(optimizations.contains("signal_optimization"));
@@ -91,34 +91,34 @@ mod tests {
     #[test]
     fn test_build_tool_integration() {
         let build_integration = BuildToolIntegration::new();
-        
+
         // Should support Trunk (primary Rust WASM tool)
         let trunk_config = build_integration.create_trunk_configuration();
         assert_eq!(trunk_config.tool_name(), "Trunk");
         assert!(trunk_config.supports_wasm_optimization());
         assert!(trunk_config.supports_asset_processing());
         assert!(!trunk_config.required_dependencies().is_empty());
-        
+
         // Should validate Trunk.toml configuration
         let trunk_validation = trunk_config.validate_configuration();
         assert!(trunk_validation.is_valid);
         assert!(trunk_validation.has_required_features());
         assert!(trunk_validation.wasm_opt_enabled());
-        
+
         // Should support Vite integration for mixed JS/WASM projects
         let vite_config = build_integration.create_vite_configuration();
         assert_eq!(vite_config.tool_name(), "Vite");
         assert!(vite_config.supports_wasm_imports());
         assert!(vite_config.supports_hot_reload());
         assert!(vite_config.supports_code_splitting());
-        
+
         // Should support Webpack integration
         let webpack_config = build_integration.create_webpack_configuration();
         assert_eq!(webpack_config.tool_name(), "Webpack");
         assert!(webpack_config.supports_wasm_loader());
         assert!(webpack_config.supports_tree_shaking());
         assert!(webpack_config.supports_chunk_optimization());
-        
+
         // Should provide optimization recommendations
         let optimization_report = build_integration.generate_optimization_report();
         assert!(!optimization_report.bundle_size_recommendations().is_empty());
@@ -130,32 +130,32 @@ mod tests {
     #[test]
     fn test_package_manager_compatibility() {
         let package_integration = PackageManagerIntegration::new();
-        
+
         // Should support npm package resolution
         let npm_config = package_integration.create_npm_configuration();
         assert_eq!(npm_config.manager_name(), "npm");
         assert!(npm_config.supports_workspaces());
         assert!(npm_config.supports_peer_dependencies());
-        
+
         // Should validate package.json structure
         let package_validation = npm_config.validate_package_json();
         assert!(package_validation.has_required_fields());
         assert!(package_validation.has_correct_main_entry());
         assert!(package_validation.has_typescript_definitions());
         assert!(package_validation.has_correct_exports());
-        
+
         // Should support yarn compatibility
         let yarn_config = package_integration.create_yarn_configuration();
         assert_eq!(yarn_config.manager_name(), "yarn");
         assert!(yarn_config.supports_berry_features());
         assert!(yarn_config.supports_zero_installs());
-        
+
         // Should support pnpm compatibility
         let pnpm_config = package_integration.create_pnpm_configuration();
         assert_eq!(pnpm_config.manager_name(), "pnpm");
         assert!(pnpm_config.supports_hard_links());
         assert!(pnpm_config.supports_strict_peer_deps());
-        
+
         // Should generate dependency graphs
         let dependency_analysis = package_integration.analyze_dependencies();
         assert!(dependency_analysis.total_dependencies() > 0);
@@ -168,7 +168,7 @@ mod tests {
     #[test]
     fn test_browser_compatibility() {
         let browser_compatibility = BrowserCompatibilityMatrix::new();
-        
+
         // Should support modern Chrome
         let chrome_support = browser_compatibility.get_browser_support("Chrome");
         assert!(chrome_support.is_supported());
@@ -176,7 +176,7 @@ mod tests {
         assert!(chrome_support.supports_wasm());
         assert!(chrome_support.supports_web_animations());
         assert!(chrome_support.performance_score() >= 95.0);
-        
+
         // Should support Firefox
         let firefox_support = browser_compatibility.get_browser_support("Firefox");
         assert!(firefox_support.is_supported());
@@ -184,7 +184,7 @@ mod tests {
         assert!(firefox_support.supports_wasm());
         assert!(firefox_support.supports_web_animations());
         assert!(firefox_support.performance_score() >= 90.0);
-        
+
         // Should support Safari (with limitations)
         let safari_support = browser_compatibility.get_browser_support("Safari");
         assert!(safari_support.is_supported());
@@ -192,19 +192,19 @@ mod tests {
         assert!(safari_support.supports_wasm());
         assert!(safari_support.has_known_limitations());
         assert!(safari_support.performance_score() >= 85.0);
-        
+
         // Should support Edge
         let edge_support = browser_compatibility.get_browser_support("Edge");
         assert!(edge_support.is_supported());
         assert!(edge_support.min_version() <= 90);
         assert!(edge_support.supports_wasm());
         assert!(edge_support.performance_score() >= 92.0);
-        
+
         // Should provide polyfill recommendations
         let polyfill_analysis = browser_compatibility.analyze_polyfill_needs();
         assert!(!polyfill_analysis.required_polyfills().is_empty());
         assert!(polyfill_analysis.estimated_compatibility_coverage() >= 95.0);
-        
+
         // Should generate compatibility report
         let compatibility_report = browser_compatibility.generate_compatibility_report();
         assert!(!compatibility_report.supported_browsers().is_empty());
@@ -216,16 +216,16 @@ mod tests {
     #[test]
     fn test_server_side_rendering_support() {
         let ssr_engine = ServerSideRenderingEngine::new();
-        
+
         // Should support SSR rendering
         assert!(ssr_engine.supports_ssr());
         assert!(ssr_engine.supports_hydration());
         assert!(ssr_engine.supports_streaming());
-        
+
         // Should render animations on server
         let animation_config = TDDAnimationConfig {
             id: Some("ssr-test-animation".to_string()),
-            target: motion_target!{
+            target: motion_target! {
                 "opacity" => AnimationValue::Number(1.0),
                 "x" => AnimationValue::Pixels(100.0)
             },
@@ -234,21 +234,21 @@ mod tests {
             delay: Some(0.0),
             repeat: RepeatConfig::Never,
         };
-        
+
         let ssr_result = ssr_engine.render_animation_ssr(&animation_config);
         assert!(ssr_result.is_ok());
-        
+
         let rendered = ssr_result.unwrap();
         assert!(!rendered.html_output().is_empty());
         assert!(!rendered.hydration_data().is_empty());
         assert!(rendered.is_hydration_ready());
-        
+
         // Should support static generation
         let static_config = ssr_engine.create_static_generation_config();
         assert!(static_config.supports_prerendering());
         assert!(static_config.supports_build_time_optimization());
         assert!(!static_config.critical_css_extraction().is_empty());
-        
+
         // Should handle hydration mismatches gracefully
         let hydration_validator = ssr_engine.create_hydration_validator();
         assert!(hydration_validator.detects_mismatches());
@@ -260,27 +260,27 @@ mod tests {
     #[test]
     fn test_typescript_definition_generation() {
         let ts_generator = TypeScriptDefinitionGenerator::new();
-        
+
         // Should generate comprehensive type definitions
         let type_definitions = ts_generator.generate_definitions();
         assert!(!type_definitions.is_empty());
         assert!(type_definitions.contains("export interface AnimationConfig"));
         assert!(type_definitions.contains("export type EasingFunction"));
         assert!(type_definitions.contains("export class MotionComponent"));
-        
+
         // Should support generic types
         let generic_support = ts_generator.analyze_generic_support();
         assert!(generic_support.supports_generic_components());
         assert!(generic_support.supports_conditional_types());
         assert!(generic_support.supports_utility_types());
-        
+
         // Should validate generated types
         let type_validation = ts_generator.validate_generated_types();
         assert!(type_validation.is_syntactically_correct());
         assert!(type_validation.has_no_circular_references());
         assert!(type_validation.exports_all_public_apis());
         assert!(type_validation.typescript_version_compatibility() >= 4.5);
-        
+
         // Should provide IntelliSense support
         let intellisense_config = ts_generator.create_intellisense_configuration();
         assert!(intellisense_config.provides_autocomplete());
@@ -495,15 +495,15 @@ impl LeptosIntegration {
             environment_detected: true,
         }
     }
-    
+
     fn is_leptos_environment(&self) -> bool {
         self.environment_detected
     }
-    
+
     fn detected_version(&self) -> &str {
         &self.version
     }
-    
+
     fn create_motion_component(&self) -> MotionComponent {
         MotionComponent {
             name: "Motion".to_string(),
@@ -511,7 +511,7 @@ impl LeptosIntegration {
             supports_reactive_props: true,
         }
     }
-    
+
     fn get_lifecycle_hooks(&self) -> HashMap<String, String> {
         let mut hooks = HashMap::new();
         hooks.insert("on_mount".to_string(), "mount handler".to_string());
@@ -519,7 +519,7 @@ impl LeptosIntegration {
         hooks.insert("create_effect".to_string(), "effect handler".to_string());
         hooks
     }
-    
+
     fn create_resource_integration(&self) -> ResourceIntegration {
         ResourceIntegration {
             supports_suspense: true,
@@ -527,7 +527,7 @@ impl LeptosIntegration {
             supports_transitions: true,
         }
     }
-    
+
     fn get_ssr_support(&self) -> SSRSupport {
         SSRSupport {
             supports_hydration: true,
@@ -541,11 +541,11 @@ impl MotionComponent {
     fn component_name(&self) -> &str {
         &self.name
     }
-    
+
     fn supports_signals(&self) -> bool {
         self.supports_signals
     }
-    
+
     fn supports_reactive_props(&self) -> bool {
         self.supports_reactive_props
     }

@@ -1,19 +1,19 @@
 //! Phase 1 TDD Implementation: Core Engine Refinement
-//! 
+//!
 //! Red Phase: Write failing tests for production-ready animation engine
 //! Green Phase: Implement minimal code to make tests pass
 //! Refactor Phase: Optimize and improve code quality
 
-use rstest::*;
-use wasm_bindgen_test::*;
 use leptos_motion_core::{
-    AnimationEngine, AnimationConfig, AnimationTarget, AnimationValue, 
-    AnimationHandle, AnimationError, Easing, RepeatConfig
+    AnimationConfig, AnimationEngine, AnimationError, AnimationHandle, AnimationTarget,
+    AnimationValue, Easing, RepeatConfig,
 };
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Arc;
+use rstest::*;
 use std::collections::HashMap;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{Duration, Instant};
+use wasm_bindgen_test::*;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -30,20 +30,25 @@ fn test_animation_engine_handles_concurrent_animations(#[case] animation_count: 
     let animations: Vec<_> = (0..animation_count)
         .map(|i| create_test_animation_config(i))
         .collect();
-    
+
     // Act: Start all animations simultaneously
-    let handles: Vec<_> = animations.iter()
-        .map(|anim| engine.start_animation(anim.clone()).expect("Should start animation"))
+    let handles: Vec<_> = animations
+        .iter()
+        .map(|anim| {
+            engine
+                .start_animation(anim.clone())
+                .expect("Should start animation")
+        })
         .collect();
-    
+
     // Assert: All animations should be active and tracked
     assert_eq!(
-        engine.active_animations_count(), 
+        engine.active_animations_count(),
         animation_count,
-        "Engine should track all {} concurrent animations", 
+        "Engine should track all {} concurrent animations",
         animation_count
     );
-    
+
     // Assert: Each handle should be valid and active
     for (i, handle) in handles.iter().enumerate() {
         assert!(
@@ -52,7 +57,7 @@ fn test_animation_engine_handles_concurrent_animations(#[case] animation_count: 
             i
         );
     }
-    
+
     // Assert: Engine should remain stable under load
     assert!(
         engine.is_stable(),
@@ -69,25 +74,27 @@ fn test_memory_cleanup_after_animation_completion() {
     let engine = AnimationEngine::new();
     let baseline_memory = get_memory_usage();
     let test_animations = 50; // Reasonable number for memory test
-    
+
     // Act: Start and complete multiple animations
     let mut handles = Vec::new();
     for i in 0..test_animations {
         let config = create_short_animation_config(i); // Very short duration
-        let handle = engine.start_animation(config).expect("Should start animation");
+        let handle = engine
+            .start_animation(config)
+            .expect("Should start animation");
         handles.push(handle);
     }
-    
+
     // Wait for all animations to complete
     wait_for_animations_completion(&handles, 1000); // 1 second max wait
-    
+
     // Force garbage collection
     force_garbage_collection();
-    
+
     // Assert: Memory should be cleaned up
     let final_memory = get_memory_usage();
     let memory_growth = final_memory.saturating_sub(baseline_memory);
-    
+
     // Allow for some reasonable memory overhead (100KB)
     const MAX_ACCEPTABLE_GROWTH: usize = 100 * 1024;
     assert!(
@@ -96,7 +103,7 @@ fn test_memory_cleanup_after_animation_completion() {
         memory_growth / 1024,
         MAX_ACCEPTABLE_GROWTH / 1024
     );
-    
+
     // Assert: No animations should remain active
     assert_eq!(
         engine.active_animations_count(),
@@ -121,23 +128,23 @@ fn test_error_recovery_from_invalid_animation_values(#[case] invalid_target: Ani
         ease: Easing::Linear,
         ..Default::default()
     };
-    
+
     // Act: Attempt to start invalid animation
     let result = engine.start_animation(invalid_config);
-    
+
     // Assert: Should return appropriate error, not panic
     assert!(
         result.is_err(),
         "Engine should reject invalid animation values"
     );
-    
+
     if let Err(error) = result {
         assert!(
             matches!(error, AnimationError::InvalidValue(_)),
             "Should return InvalidValue error for invalid animation values"
         );
     }
-    
+
     // Assert: Engine should remain functional after error
     let valid_config = create_test_animation_config(1);
     assert!(
@@ -163,10 +170,10 @@ fn test_error_recovery_from_invalid_duration(#[case] invalid_duration: f64) {
         ease: Easing::Linear,
         ..Default::default()
     };
-    
+
     // Act
     let result = engine.start_animation(config);
-    
+
     // Assert: Should handle invalid duration gracefully
     if invalid_duration <= 0.0 || !invalid_duration.is_finite() {
         assert!(
@@ -184,7 +191,7 @@ fn test_engine_state_consistency_under_rapid_operations() {
     // Arrange
     let engine = AnimationEngine::new();
     let operation_count = 100;
-    
+
     // Act: Rapid start/stop operations
     for i in 0..operation_count {
         let config = create_test_animation_config(i);
@@ -195,14 +202,14 @@ fn test_engine_state_consistency_under_rapid_operations() {
             }
         }
     }
-    
+
     // Assert: Engine should maintain consistent state
     let final_count = engine.active_animations_count();
     assert!(
         final_count <= operation_count,
         "Active animation count should not exceed started animations"
     );
-    
+
     // Assert: Engine should be stable after rapid operations
     assert!(
         engine.is_stable(),
@@ -218,7 +225,7 @@ fn test_animation_engine_performance_under_load() {
     let engine = AnimationEngine::new();
     let animation_count = 200;
     let start_time = Instant::now();
-    
+
     // Act: Start many animations
     let mut successful_starts = 0;
     for i in 0..animation_count {
@@ -227,9 +234,9 @@ fn test_animation_engine_performance_under_load() {
             successful_starts += 1;
         }
     }
-    
+
     let elapsed = start_time.elapsed();
-    
+
     // Assert: Performance should be acceptable
     assert!(
         elapsed.as_millis() < 100,
@@ -237,10 +244,9 @@ fn test_animation_engine_performance_under_load() {
         animation_count,
         elapsed.as_millis()
     );
-    
+
     assert_eq!(
-        successful_starts,
-        animation_count,
+        successful_starts, animation_count,
         "All animations should start successfully under load"
     );
 }
@@ -251,10 +257,16 @@ fn test_animation_engine_performance_under_load() {
 
 fn create_test_animation_config(id: usize) -> AnimationConfig {
     let mut target = AnimationTarget::new();
-    target.values.insert("opacity".to_string(), AnimationValue::Number(1.0));
-    target.values.insert("scale".to_string(), AnimationValue::Number(1.1));
-    target.values.insert("x".to_string(), AnimationValue::Pixels(100.0));
-    
+    target
+        .values
+        .insert("opacity".to_string(), AnimationValue::Number(1.0));
+    target
+        .values
+        .insert("scale".to_string(), AnimationValue::Number(1.1));
+    target
+        .values
+        .insert("x".to_string(), AnimationValue::Pixels(100.0));
+
     AnimationConfig {
         id: Some(format!("test_animation_{}", id)),
         target,
@@ -273,26 +285,36 @@ fn create_short_animation_config(id: usize) -> AnimationConfig {
 
 fn create_valid_animation_target() -> AnimationTarget {
     let mut target = AnimationTarget::new();
-    target.values.insert("opacity".to_string(), AnimationValue::Number(0.8));
-    target.values.insert("scale".to_string(), AnimationValue::Number(1.2));
+    target
+        .values
+        .insert("opacity".to_string(), AnimationValue::Number(0.8));
+    target
+        .values
+        .insert("scale".to_string(), AnimationValue::Number(1.2));
     target
 }
 
 fn create_invalid_target_with_nan() -> AnimationTarget {
     let mut target = AnimationTarget::new();
-    target.values.insert("opacity".to_string(), AnimationValue::Number(f64::NAN));
+    target
+        .values
+        .insert("opacity".to_string(), AnimationValue::Number(f64::NAN));
     target
 }
 
 fn create_invalid_target_with_infinity() -> AnimationTarget {
     let mut target = AnimationTarget::new();
-    target.values.insert("scale".to_string(), AnimationValue::Number(f64::INFINITY));
+    target
+        .values
+        .insert("scale".to_string(), AnimationValue::Number(f64::INFINITY));
     target
 }
 
 fn create_invalid_target_with_neg_infinity() -> AnimationTarget {
     let mut target = AnimationTarget::new();
-    target.values.insert("x".to_string(), AnimationValue::Pixels(f64::NEG_INFINITY));
+    target
+        .values
+        .insert("x".to_string(), AnimationValue::Pixels(f64::NEG_INFINITY));
     target
 }
 
@@ -301,17 +323,13 @@ fn get_memory_usage() -> usize {
     {
         web_sys::window()
             .and_then(|window| window.performance())
-            .and_then(|performance| {
-                js_sys::Reflect::get(&performance, &"memory".into()).ok()
-            })
-            .and_then(|memory| {
-                js_sys::Reflect::get(&memory, &"usedJSHeapSize".into()).ok()
-            })
+            .and_then(|performance| js_sys::Reflect::get(&performance, &"memory".into()).ok())
+            .and_then(|memory| js_sys::Reflect::get(&memory, &"usedJSHeapSize".into()).ok())
             .and_then(|heap_size| heap_size.as_f64())
             .map(|size| size as usize)
             .unwrap_or(0)
     }
-    
+
     #[cfg(not(target_arch = "wasm32"))]
     {
         // For non-WASM environments, return a mock value
@@ -332,13 +350,13 @@ fn force_garbage_collection() {
                 }
             }
         }
-        
+
         // Alternative: Create and release large objects to encourage GC
         for _ in 0..10 {
             let _large_array = js_sys::Array::new_with_length(1000);
         }
     }
-    
+
     #[cfg(not(target_arch = "wasm32"))]
     {
         // For native tests, we can't force GC but we can simulate cleanup
@@ -353,13 +371,13 @@ fn wait_for_animations_completion(handles: &[AnimationHandle], max_wait_ms: u64)
         if active_count == 0 {
             break;
         }
-        
+
         #[cfg(target_arch = "wasm32")]
         {
             // For WASM, we'll use a simple busy wait for now
             // In a real implementation, this would yield to the event loop
         }
-        
+
         #[cfg(not(target_arch = "wasm32"))]
         {
             std::thread::sleep(Duration::from_millis(1));
@@ -374,14 +392,14 @@ fn wait_for_animations_completion(handles: &[AnimationHandle], max_wait_ms: u64)
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[wasm_bindgen_test]
     fn test_helper_functions_work() {
         // Test that our helper functions are working
         let config = create_test_animation_config(1);
         assert!(config.duration.is_some());
         assert!(!config.target.values.is_empty());
-        
+
         let memory = get_memory_usage();
         assert!(memory >= 0); // Should return some value
     }

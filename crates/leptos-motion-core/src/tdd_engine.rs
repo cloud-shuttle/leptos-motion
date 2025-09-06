@@ -1,18 +1,21 @@
 //! TDD-focused Animation Engine Implementation
-//! 
+//!
 //! This module provides a concrete AnimationEngine implementation specifically
 //! designed for our TDD tests and v1.0 production hardening.
 
 use crate::{
-    AnimationError, AnimationHandle, AnimationTarget, AnimationValue, 
-    Easing, Result, RepeatConfig, Timeline
+    AnimationError, AnimationHandle, AnimationTarget, AnimationValue, Easing, RepeatConfig, Result,
+    Timeline,
 };
-use std::sync::{Arc, Mutex, atomic::{AtomicUsize, AtomicBool, Ordering}};
 use std::collections::HashMap;
+use std::sync::{
+    Arc, Mutex,
+    atomic::{AtomicBool, AtomicUsize, Ordering},
+};
 use std::time::Instant;
 
 /// Production-ready Animation Engine for TDD Implementation
-/// 
+///
 /// This engine is designed to pass our TDD tests for Phase 1 production hardening:
 /// - Handles concurrent animations gracefully
 /// - Implements proper memory cleanup
@@ -73,12 +76,12 @@ impl TDDAnimationHandle {
     pub fn new(id: u64) -> Self {
         Self(id)
     }
-    
+
     /// Convert to regular AnimationHandle for error types
     pub fn to_animation_handle(&self) -> AnimationHandle {
         AnimationHandle(self.0)
     }
-    
+
     /// Check if this animation is currently active
     /// Note: This is a simplified check - in a full implementation,
     /// this would query the engine for the actual animation state
@@ -87,7 +90,7 @@ impl TDDAnimationHandle {
         // in Green Phase
         true
     }
-    
+
     /// Stop this animation
     /// Note: This is a simplified implementation for TDD
     pub fn stop(&self) {
@@ -136,18 +139,18 @@ impl AnimationEngine {
     }
 
     /// Start a new animation and return a handle
-    /// 
+    ///
     /// This is the main entry point for our TDD tests.
     /// It validates the configuration, creates the animation,
     /// and returns a handle for controlling it.
     pub fn start_animation(&self, config: AnimationConfig) -> Result<TDDAnimationHandle> {
         // Validate animation configuration first
         self.validate_animation_config(&config)?;
-        
+
         // Generate unique animation ID
         let id = self.next_id.fetch_add(1, Ordering::SeqCst) as u64;
         let handle = TDDAnimationHandle::new(id);
-        
+
         // Create internal animation representation
         let animation = ActiveAnimation {
             config,
@@ -155,29 +158,30 @@ impl AnimationEngine {
             start_time: Instant::now(),
             state: AnimationState::Running,
         };
-        
+
         // Store animation in thread-safe map
         {
-            let mut animations = self.animations.lock()
-                .map_err(|_| AnimationError::MemoryError("Failed to acquire animation lock".to_string()))?;
+            let mut animations = self.animations.lock().map_err(|_| {
+                AnimationError::MemoryError("Failed to acquire animation lock".to_string())
+            })?;
             animations.insert(id, animation);
         }
-        
+
         // Update active animation count
         self.active_count.fetch_add(1, Ordering::SeqCst);
-        
+
         Ok(handle)
     }
 
     /// Get the count of currently active animations
-    /// 
+    ///
     /// This is used by our TDD tests to verify concurrent animation handling
     pub fn active_animations_count(&self) -> usize {
         self.active_count.load(Ordering::SeqCst)
     }
 
     /// Check if the animation engine is in a stable state
-    /// 
+    ///
     /// This is used by our TDD tests to verify the engine can handle
     /// rapid start/stop operations without becoming unstable
     pub fn is_stable(&self) -> bool {
@@ -186,28 +190,32 @@ impl AnimationEngine {
 
     /// Stop a specific animation by handle
     pub fn stop_animation(&self, handle: TDDAnimationHandle) -> Result<()> {
-        let mut animations = self.animations.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire animation lock".to_string()))?;
-        
+        let mut animations = self.animations.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire animation lock".to_string())
+        })?;
+
         if let Some(animation) = animations.get_mut(&handle.0) {
             animation.state = AnimationState::Cancelled;
             self.active_count.fetch_sub(1, Ordering::SeqCst);
             Ok(())
         } else {
-            Err(AnimationError::NotFound { handle: handle.to_animation_handle() })
+            Err(AnimationError::NotFound {
+                handle: handle.to_animation_handle(),
+            })
         }
     }
 
     /// Clean up completed animations to prevent memory leaks
-    /// 
+    ///
     /// This is crucial for our memory cleanup TDD tests
     pub fn cleanup_completed_animations(&self) -> Result<usize> {
-        let mut animations = self.animations.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire animation lock".to_string()))?;
-        
+        let mut animations = self.animations.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire animation lock".to_string())
+        })?;
+
         let initial_count = animations.len();
         let now = Instant::now();
-        
+
         // Remove completed animations
         animations.retain(|_, animation| {
             let is_completed = match animation.state {
@@ -223,98 +231,110 @@ impl AnimationEngine {
                 }
                 AnimationState::Paused => false,
             };
-            
+
             if is_completed {
                 self.active_count.fetch_sub(1, Ordering::SeqCst);
             }
-            
+
             !is_completed
         });
-        
+
         let final_count = animations.len();
         Ok(initial_count - final_count)
     }
 
     /// Force garbage collection of all animations (for testing)
-    /// 
+    ///
     /// This is used by our memory cleanup tests to simulate
     /// aggressive garbage collection
     pub fn force_cleanup(&self) -> Result<()> {
-        let mut animations = self.animations.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire animation lock".to_string()))?;
-        
+        let mut animations = self.animations.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire animation lock".to_string())
+        })?;
+
         let _count = animations.len();
         animations.clear();
-        
+
         self.active_count.store(0, Ordering::SeqCst);
-        
+
         Ok(())
     }
 
     /// Start a timeline animation and return a handle
-    /// 
+    ///
     /// This enables complex, multi-keyframe animation sequences
     /// with precise timing and synchronization control.
     pub fn start_timeline(&self, timeline: &Timeline) -> Result<TDDAnimationHandle> {
         // Generate unique timeline ID
         let id = self.next_id.fetch_add(1, Ordering::SeqCst) as u64;
         let handle = TDDAnimationHandle::new(id);
-        
+
         // Clone the timeline for storage
         let timeline_clone = timeline.clone();
-        
+
         // Store timeline in thread-safe map
         {
-            let mut timelines = self.timelines.lock()
-                .map_err(|_| AnimationError::MemoryError("Failed to acquire timeline lock".to_string()))?;
+            let mut timelines = self.timelines.lock().map_err(|_| {
+                AnimationError::MemoryError("Failed to acquire timeline lock".to_string())
+            })?;
             timelines.insert(id, timeline_clone);
         }
-        
+
         // Update active count (timelines count as animations)
         self.active_count.fetch_add(1, Ordering::SeqCst);
-        
+
         Ok(handle)
     }
 
     /// Stop a timeline animation
     pub fn stop_timeline(&self, handle: TDDAnimationHandle) -> Result<()> {
-        let mut timelines = self.timelines.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire timeline lock".to_string()))?;
-        
+        let mut timelines = self.timelines.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire timeline lock".to_string())
+        })?;
+
         if let Some(mut timeline) = timelines.remove(&handle.0) {
             timeline.stop();
             self.active_count.fetch_sub(1, Ordering::SeqCst);
             Ok(())
         } else {
-            Err(AnimationError::NotFound { handle: handle.to_animation_handle() })
+            Err(AnimationError::NotFound {
+                handle: handle.to_animation_handle(),
+            })
         }
     }
 
     /// Get a reference to a timeline for scrubbing or inspection
     pub fn get_timeline(&self, handle: TDDAnimationHandle) -> Result<Timeline> {
-        let timelines = self.timelines.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire timeline lock".to_string()))?;
-        
-        timelines.get(&handle.0)
+        let timelines = self.timelines.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire timeline lock".to_string())
+        })?;
+
+        timelines
+            .get(&handle.0)
             .cloned()
-            .ok_or(AnimationError::NotFound { handle: handle.to_animation_handle() })
+            .ok_or(AnimationError::NotFound {
+                handle: handle.to_animation_handle(),
+            })
     }
 
     /// Update a timeline (for scrubbing, etc.)
     pub fn update_timeline(&self, handle: TDDAnimationHandle, timeline: Timeline) -> Result<()> {
-        let mut timelines = self.timelines.lock()
-            .map_err(|_| AnimationError::MemoryError("Failed to acquire timeline lock".to_string()))?;
-        
+        let mut timelines = self.timelines.lock().map_err(|_| {
+            AnimationError::MemoryError("Failed to acquire timeline lock".to_string())
+        })?;
+
         if timelines.contains_key(&handle.0) {
             timelines.insert(handle.0, timeline);
             Ok(())
         } else {
-            Err(AnimationError::NotFound { handle: handle.to_animation_handle() })
+            Err(AnimationError::NotFound {
+                handle: handle.to_animation_handle(),
+            })
         }
     }
 
     /// Get memory usage statistics
-    /// 
+    ///
     /// This is used by our memory tests to track memory consumption
     pub fn get_memory_stats(&self) -> MemoryStats {
         let animations = match self.animations.lock() {
@@ -324,10 +344,10 @@ impl AnimationEngine {
                 return MemoryStats::default();
             }
         };
-        
+
         let animation_count = animations.len();
         let estimated_memory = animation_count * std::mem::size_of::<ActiveAnimation>();
-        
+
         MemoryStats {
             active_animations: animation_count,
             estimated_memory_bytes: estimated_memory,
@@ -336,37 +356,47 @@ impl AnimationEngine {
     }
 
     /// Validate animation configuration for errors and edge cases
-    /// 
+    ///
     /// This is crucial for our error handling TDD tests
     fn validate_animation_config(&self, config: &AnimationConfig) -> Result<()> {
         // Validate duration
         if let Some(duration) = config.duration {
             if !duration.is_finite() {
-                return Err(AnimationError::InvalidValue("Duration must be finite".to_string()));
+                return Err(AnimationError::InvalidValue(
+                    "Duration must be finite".to_string(),
+                ));
             }
             if duration < 0.0 {
-                return Err(AnimationError::InvalidValue("Duration cannot be negative".to_string()));
+                return Err(AnimationError::InvalidValue(
+                    "Duration cannot be negative".to_string(),
+                ));
             }
             if duration == 0.0 {
-                return Err(AnimationError::InvalidValue("Duration cannot be zero".to_string()));
+                return Err(AnimationError::InvalidValue(
+                    "Duration cannot be zero".to_string(),
+                ));
             }
         }
-        
+
         // Validate delay
         if let Some(delay) = config.delay {
             if !delay.is_finite() {
-                return Err(AnimationError::InvalidValue("Delay must be finite".to_string()));
+                return Err(AnimationError::InvalidValue(
+                    "Delay must be finite".to_string(),
+                ));
             }
             if delay < 0.0 {
-                return Err(AnimationError::InvalidValue("Delay cannot be negative".to_string()));
+                return Err(AnimationError::InvalidValue(
+                    "Delay cannot be negative".to_string(),
+                ));
             }
         }
-        
+
         // Validate animation target values
         for (property_name, animation_value) in config.target.iter() {
             self.validate_animation_value(property_name, animation_value)?;
         }
-        
+
         Ok(())
     }
 
@@ -375,30 +405,34 @@ impl AnimationEngine {
         match value {
             AnimationValue::Number(n) => {
                 if !n.is_finite() {
-                    return Err(AnimationError::InvalidValue(
-                        format!("Animation value must be finite, got: {}", n)
-                    ));
+                    return Err(AnimationError::InvalidValue(format!(
+                        "Animation value must be finite, got: {}",
+                        n
+                    )));
                 }
             }
             AnimationValue::Pixels(p) => {
                 if !p.is_finite() {
-                    return Err(AnimationError::InvalidValue(
-                        format!("Pixel value must be finite, got: {}", p)
-                    ));
+                    return Err(AnimationError::InvalidValue(format!(
+                        "Pixel value must be finite, got: {}",
+                        p
+                    )));
                 }
             }
             AnimationValue::Percentage(p) => {
                 if !p.is_finite() {
-                    return Err(AnimationError::InvalidValue(
-                        format!("Percentage value must be finite, got: {}", p)
-                    ));
+                    return Err(AnimationError::InvalidValue(format!(
+                        "Percentage value must be finite, got: {}",
+                        p
+                    )));
                 }
             }
             AnimationValue::Degrees(d) => {
                 if !d.is_finite() {
-                    return Err(AnimationError::InvalidValue(
-                        format!("Degree value must be finite, got: {}", d)
-                    ));
+                    return Err(AnimationError::InvalidValue(format!(
+                        "Degree value must be finite, got: {}",
+                        d
+                    )));
                 }
             }
             // Color and String values are always valid
@@ -411,7 +445,7 @@ impl AnimationEngine {
                 // Other types are valid by default
             }
         }
-        
+
         Ok(())
     }
 }
@@ -475,7 +509,7 @@ mod tests {
     fn test_animation_handle_creation() {
         let handle = TDDAnimationHandle::new(123);
         assert_eq!(handle.0, 123);
-        
+
         let handle2 = TDDAnimationHandle::new(456);
         assert_eq!(handle2.0, 456);
         assert_ne!(handle, handle2);
@@ -494,7 +528,7 @@ mod tests {
             "opacity" => AnimationValue::Number(1.0),
             "scale" => AnimationValue::Number(1.5)
         );
-        
+
         assert_eq!(target.len(), 2);
         assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(1.0)));
         assert_eq!(target.get("scale"), Some(&AnimationValue::Number(1.5)));
@@ -518,20 +552,20 @@ mod tests {
     #[test]
     fn test_animation_validation_invalid_duration() {
         let engine = AnimationEngine::new();
-        
+
         // Test negative duration
         let mut config = AnimationConfig::default();
         config.duration = Some(-1.0);
         assert!(engine.validate_animation_config(&config).is_err());
-        
+
         // Test zero duration
         config.duration = Some(0.0);
         assert!(engine.validate_animation_config(&config).is_err());
-        
+
         // Test infinite duration
         config.duration = Some(f64::INFINITY);
         assert!(engine.validate_animation_config(&config).is_err());
-        
+
         // Test NaN duration
         config.duration = Some(f64::NAN);
         assert!(engine.validate_animation_config(&config).is_err());
@@ -540,14 +574,14 @@ mod tests {
     #[test]
     fn test_animation_validation_invalid_values() {
         let engine = AnimationEngine::new();
-        
+
         // Test NaN number value
         let config = AnimationConfig {
             target: motion_target!("opacity" => AnimationValue::Number(f64::NAN)),
             ..AnimationConfig::default()
         };
         assert!(engine.validate_animation_config(&config).is_err());
-        
+
         // Test infinite pixel value
         let config = AnimationConfig {
             target: motion_target!("x" => AnimationValue::Pixels(f64::INFINITY)),

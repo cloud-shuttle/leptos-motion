@@ -1,5 +1,5 @@
 //! Ecosystem Integration Implementation - Green Phase
-//! 
+//!
 //! Provides comprehensive integration with the Rust/WASM ecosystem:
 //! - Framework Integration (Leptos, Yew, Dioxus compatibility)
 //! - Build Tool Integration (Trunk, Vite, Webpack, Parcel)
@@ -8,7 +8,7 @@
 //! - Server-Side Rendering (SSR) support and hydration
 //! - TypeScript Definition Generation
 
-use crate::{TDDAnimationConfig, AnimationValue, Easing, RepeatConfig, Result, AnimationError};
+use crate::{AnimationError, AnimationValue, Easing, RepeatConfig, Result, TDDAnimationConfig};
 use std::collections::HashMap;
 
 /// Leptos framework integration providing seamless component integration
@@ -69,9 +69,18 @@ impl LeptosIntegration {
     /// Get Leptos lifecycle hooks integration
     pub fn get_lifecycle_hooks(&self) -> HashMap<String, String> {
         let mut hooks = HashMap::new();
-        hooks.insert("on_mount".to_string(), "Animation mount handler".to_string());
-        hooks.insert("on_cleanup".to_string(), "Animation cleanup handler".to_string());
-        hooks.insert("create_effect".to_string(), "Reactive effect handler".to_string());
+        hooks.insert(
+            "on_mount".to_string(),
+            "Animation mount handler".to_string(),
+        );
+        hooks.insert(
+            "on_cleanup".to_string(),
+            "Animation cleanup handler".to_string(),
+        );
+        hooks.insert(
+            "create_effect".to_string(),
+            "Reactive effect handler".to_string(),
+        );
         hooks
     }
 
@@ -441,10 +450,7 @@ impl BuildToolConfig {
                 "wasm-bindgen".to_string(),
                 "wasm-pack".to_string(),
             ],
-            "Vite" => vec![
-                "vite".to_string(),
-                "@wasm-tool/vite".to_string(),
-            ],
+            "Vite" => vec!["vite".to_string(), "@wasm-tool/vite".to_string()],
             "Webpack" => vec![
                 "webpack".to_string(),
                 "@wasm-tool/webpack-plugin".to_string(),
@@ -518,42 +524,54 @@ impl BrowserCompatibilityMatrix {
     /// Create new browser compatibility matrix
     pub fn new() -> Self {
         let mut browsers = HashMap::new();
-        
-        browsers.insert("Chrome".to_string(), BrowserSupport {
-            supported: true,
-            min_version: 90,
-            wasm_support: true,
-            web_animations: true,
-            performance_score: 98.0,
-            known_limitations: false,
-        });
-        
-        browsers.insert("Firefox".to_string(), BrowserSupport {
-            supported: true,
-            min_version: 88,
-            wasm_support: true,
-            web_animations: true,
-            performance_score: 95.0,
-            known_limitations: false,
-        });
-        
-        browsers.insert("Safari".to_string(), BrowserSupport {
-            supported: true,
-            min_version: 14,
-            wasm_support: true,
-            web_animations: true,
-            performance_score: 88.0,
-            known_limitations: true,
-        });
-        
-        browsers.insert("Edge".to_string(), BrowserSupport {
-            supported: true,
-            min_version: 90,
-            wasm_support: true,
-            web_animations: true,
-            performance_score: 96.0,
-            known_limitations: false,
-        });
+
+        browsers.insert(
+            "Chrome".to_string(),
+            BrowserSupport {
+                supported: true,
+                min_version: 90,
+                wasm_support: true,
+                web_animations: true,
+                performance_score: 98.0,
+                known_limitations: false,
+            },
+        );
+
+        browsers.insert(
+            "Firefox".to_string(),
+            BrowserSupport {
+                supported: true,
+                min_version: 88,
+                wasm_support: true,
+                web_animations: true,
+                performance_score: 95.0,
+                known_limitations: false,
+            },
+        );
+
+        browsers.insert(
+            "Safari".to_string(),
+            BrowserSupport {
+                supported: true,
+                min_version: 14,
+                wasm_support: true,
+                web_animations: true,
+                performance_score: 88.0,
+                known_limitations: true,
+            },
+        );
+
+        browsers.insert(
+            "Edge".to_string(),
+            BrowserSupport {
+                supported: true,
+                min_version: 90,
+                wasm_support: true,
+                web_animations: true,
+                performance_score: 96.0,
+                known_limitations: false,
+            },
+        );
 
         Self { browsers }
     }
@@ -573,9 +591,12 @@ impl BrowserCompatibilityMatrix {
     /// Generate compatibility report
     pub fn generate_compatibility_report(&self) -> CompatibilityReport {
         let supported_browsers: Vec<String> = self.browsers.keys().cloned().collect();
-        let overall_score = self.browsers.values()
+        let overall_score = self
+            .browsers
+            .values()
             .map(|support| support.performance_score)
-            .sum::<f64>() / self.browsers.len() as f64;
+            .sum::<f64>()
+            / self.browsers.len() as f64;
 
         let mut feature_matrix = HashMap::new();
         feature_matrix.insert("wasm_support".to_string(), true);
@@ -727,7 +748,7 @@ mod tests {
     fn test_leptos_integration() {
         let integration = LeptosIntegration::new();
         assert!(!integration.detected_version().is_empty());
-        
+
         let component = integration.create_motion_component();
         assert_eq!(component.component_name(), "Motion");
         assert!(component.supports_signals());
@@ -749,11 +770,11 @@ mod tests {
     #[test]
     fn test_build_tool_integration() {
         let build_integration = BuildToolIntegration::new();
-        
+
         let trunk_config = build_integration.create_trunk_configuration();
         assert_eq!(trunk_config.tool_name(), "Trunk");
         assert!(trunk_config.supports_wasm_optimization());
-        
+
         let optimization_report = build_integration.generate_optimization_report();
         assert!(optimization_report.estimated_size_reduction_percent() > 0.0);
     }
@@ -761,12 +782,12 @@ mod tests {
     #[test]
     fn test_browser_compatibility() {
         let browser_compat = BrowserCompatibilityMatrix::new();
-        
+
         let chrome_support = browser_compat.get_browser_support("Chrome");
         assert!(chrome_support.is_supported());
         assert!(chrome_support.supports_wasm());
         assert!(chrome_support.performance_score() > 90.0);
-        
+
         let report = browser_compat.generate_compatibility_report();
         assert!(!report.supported_browsers().is_empty());
         assert!(report.overall_compatibility_score() > 85.0);

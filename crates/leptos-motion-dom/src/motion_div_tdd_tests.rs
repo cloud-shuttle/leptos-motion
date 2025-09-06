@@ -1,9 +1,9 @@
 //! TDD tests for MotionDiv component
-//! 
+//!
 //! These tests drive the development of proper MotionDiv functionality
 
+use crate::{DragAxis, DragConfig, DragConstraints};
 use leptos_motion_core::*;
-use crate::{DragConfig, DragAxis, DragConstraints};
 use std::collections::HashMap;
 use wasm_bindgen_test::*;
 
@@ -18,14 +18,14 @@ fn test_motion_div_basic_animation() {
         target.insert("scale".to_string(), AnimationValue::Number(0.5));
         target
     };
-    
+
     let animate = {
         let mut target = HashMap::new();
         target.insert("opacity".to_string(), AnimationValue::Number(1.0));
         target.insert("scale".to_string(), AnimationValue::Number(1.0));
         target
     };
-    
+
     let transition = Transition {
         duration: Some(1.0),
         ease: Easing::Linear,
@@ -33,7 +33,7 @@ fn test_motion_div_basic_animation() {
         repeat: RepeatConfig::Never,
         stagger: None,
     };
-    
+
     // Test that we can create the animation configuration
     assert_eq!(initial.get("opacity"), Some(&AnimationValue::Number(0.0)));
     assert_eq!(animate.get("opacity"), Some(&AnimationValue::Number(1.0)));
@@ -50,7 +50,7 @@ fn test_motion_div_transition_config() {
         repeat: RepeatConfig::Count(2),
         stagger: None,
     };
-    
+
     assert_eq!(transition.duration, Some(0.5));
     assert_eq!(transition.ease, Easing::EaseInOut);
     assert_eq!(transition.delay, Some(0.1));
@@ -69,9 +69,12 @@ fn test_motion_div_while_hover() {
         target.insert("rotate".to_string(), AnimationValue::Number(5.0));
         target
     };
-    
+
     assert_eq!(while_hover.get("scale"), Some(&AnimationValue::Number(1.1)));
-    assert_eq!(while_hover.get("rotate"), Some(&AnimationValue::Number(5.0)));
+    assert_eq!(
+        while_hover.get("rotate"),
+        Some(&AnimationValue::Number(5.0))
+    );
 }
 
 /// Test that MotionDiv can handle while_tap animations
@@ -83,7 +86,7 @@ fn test_motion_div_while_tap() {
         target.insert("opacity".to_string(), AnimationValue::Number(0.8));
         target
     };
-    
+
     assert_eq!(while_tap.get("scale"), Some(&AnimationValue::Number(0.95)));
     assert_eq!(while_tap.get("opacity"), Some(&AnimationValue::Number(0.8)));
 }
@@ -97,7 +100,7 @@ fn test_motion_div_drag_config() {
         elastic: Some(0.2),
         momentum: Some(true),
     };
-    
+
     assert_eq!(drag_config.axis, Some(DragAxis::X));
     assert_eq!(drag_config.elastic, Some(0.2));
     assert_eq!(drag_config.momentum, Some(true));
@@ -114,7 +117,7 @@ fn test_motion_div_layout_animation() {
         repeat: RepeatConfig::Never,
         stagger: None,
     };
-    
+
     assert!(layout_enabled);
     assert_eq!(layout_transition.duration, Some(0.3));
     assert_eq!(layout_transition.ease, Easing::EaseInOut);
@@ -132,7 +135,7 @@ fn test_motion_div_complex_animation() {
         target.insert("rotate".to_string(), AnimationValue::Number(-180.0));
         target
     };
-    
+
     let animate = {
         let mut target = HashMap::new();
         target.insert("opacity".to_string(), AnimationValue::Number(1.0));
@@ -142,7 +145,7 @@ fn test_motion_div_complex_animation() {
         target.insert("rotate".to_string(), AnimationValue::Number(0.0));
         target
     };
-    
+
     let transition = Transition {
         duration: Some(0.8),
         ease: Easing::EaseInOut,
@@ -150,12 +153,12 @@ fn test_motion_div_complex_animation() {
         repeat: RepeatConfig::Never,
         stagger: None,
     };
-    
+
     // Test that all properties are properly configured
     assert_eq!(initial.len(), 5);
     assert_eq!(animate.len(), 5);
     assert_eq!(transition.duration, Some(0.8));
-    
+
     // Test that initial and animate have matching keys
     for key in initial.keys() {
         assert!(animate.contains_key(key));

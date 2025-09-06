@@ -147,6 +147,7 @@ impl SimplifiedAnimationEngine {
     /// * `Result<AnimationHandle>` - Handle to control the animation
     pub fn animate(
         &mut self,
+        #[cfg(feature = "web-sys")]
         element: &web_sys::Element,
         target: &AnimationTarget,
         transition: &Transition,
@@ -156,6 +157,7 @@ impl SimplifiedAnimationEngine {
 
         // Create animation config for the engine
         let config = engine::AnimationConfig {
+            #[cfg(feature = "web-sys")]
             element: element.clone(),
             from: HashMap::new(), // Start from current state
             to: target.clone(),

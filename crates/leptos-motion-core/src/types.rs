@@ -1,14 +1,17 @@
 //! Core types for animation values, targets, and configuration
 
+#[cfg(feature = "serde-support")]
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Unique identifier for animation instances
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct AnimationHandle(pub u64);
 
 /// Animation value types that can be animated
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub enum AnimationValue {
     /// Numeric value (unitless)
     Number(f64),
@@ -86,7 +89,8 @@ impl AnimationValue {
 }
 
 /// 3D transform representation
-#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Default)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct Transform {
     /// X translation
     pub x: Option<f64>,
@@ -113,10 +117,14 @@ pub struct Transform {
 }
 
 /// Complex animation value with custom interpolation
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct ComplexValue {
     /// Raw value data
+    #[cfg(feature = "serde-support")]
     pub data: serde_json::Value,
+    #[cfg(not(feature = "serde-support"))]
+    pub data: String,
     /// Type identifier for custom interpolation
     pub value_type: String,
 }
@@ -125,7 +133,8 @@ pub struct ComplexValue {
 pub type AnimationTarget = HashMap<String, AnimationValue>;
 
 /// Transition configuration
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct Transition {
     /// Animation duration in seconds
     pub duration: Option<f64>,
@@ -140,7 +149,8 @@ pub struct Transition {
 }
 
 /// Easing function types
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub enum Easing {
     /// Linear interpolation
     Linear,
@@ -169,7 +179,8 @@ pub enum Easing {
 }
 
 /// Spring animation configuration
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct SpringConfig {
     /// Spring stiffness (higher = faster)
     pub stiffness: f64,
@@ -186,7 +197,8 @@ pub struct SpringConfig {
 }
 
 /// Repeat configuration
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub enum RepeatConfig {
     /// No repetition
     Never,
@@ -199,7 +211,8 @@ pub enum RepeatConfig {
 }
 
 /// Stagger configuration for multiple element animations
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct StaggerConfig {
     /// Delay between each element
     pub delay: f64,
@@ -208,7 +221,8 @@ pub struct StaggerConfig {
 }
 
 /// Stagger starting position
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub enum StaggerFrom {
     /// Start from first element
     First,

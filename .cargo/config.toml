@@ -1,0 +1,39 @@
+# Cargo configuration for WASM optimization
+[target.wasm32-unknown-unknown]
+# Optimize for size
+rustflags = [
+    # Optimize for size
+    "-C", "opt-level=s",
+    # Remove debug symbols
+    "-C", "debuginfo=0",
+    # Enable codegen units optimization
+    "-C", "codegen-units=1",
+    # Enable panic=abort for smaller binaries
+    "-C", "panic=abort",
+    # Enable strip symbols
+    "-C", "strip=symbols",
+    # Enable link-arg for additional optimizations
+    "-C", "link-arg=--gc-sections",
+    "-C", "link-arg=--strip-all",
+    # Enable wasm-opt optimizations
+    "-C", "link-arg=--export-dynamic",
+]
+
+# Additional optimization for release builds
+[profile.release]
+# Optimize for size
+opt-level = "s"
+# Remove debug symbols
+debug = false
+# Enable panic=abort
+panic = "abort"
+# Enable codegen units optimization
+codegen-units = 1
+# Enable strip symbols
+strip = "symbols"
+
+# Development profile optimizations
+[profile.dev]
+# Enable some optimizations even in dev mode for WASM
+opt-level = 1
+debug = 1

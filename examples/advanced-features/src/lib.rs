@@ -2,8 +2,10 @@
 //!
 //! This example demonstrates advanced motion features using manual DOM manipulation
 
+use leptos::prelude::{
+    ElementChild, Get, IntoAny, OnAttribute, Set, StyleAttribute, Update, signal,
+};
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, signal, OnAttribute, Get, Set, Update};
 use leptos_motion_core::MinimalEngine;
 
 /// Advanced features demo

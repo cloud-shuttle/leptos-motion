@@ -5,6 +5,7 @@
 
 use crate::{AnimationHandle, AnimationTarget, Result, Transition};
 use std::collections::HashMap;
+#[cfg(feature = "web-sys")]
 use web_sys::window;
 
 /// Minimal animation engine with only essential features
@@ -14,10 +15,10 @@ pub struct MinimalEngine {
 }
 
 struct MinimalAnimation {
-    target: AnimationTarget,
-    transition: Transition,
-    start_time: f64,
-    duration: f64,
+    _target: AnimationTarget,
+    _transition: Transition,
+    _start_time: f64,
+    _duration: f64,
 }
 
 impl MinimalEngine {
@@ -39,13 +40,16 @@ impl MinimalEngine {
         self.current_handle += 1;
 
         let duration = transition.duration.unwrap_or(0.3);
+        #[cfg(feature = "web-sys")]
         let start_time = window().unwrap().performance().unwrap().now();
+        #[cfg(not(feature = "web-sys"))]
+        let start_time = 0.0;
 
         let animation = MinimalAnimation {
-            target,
-            transition,
-            start_time,
-            duration,
+            _target: target,
+            _transition: transition,
+            _start_time: start_time,
+            _duration: duration,
         };
 
         self.animations.insert(handle, animation);

@@ -7,6 +7,7 @@
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 use wasm_bindgen::JsCast;
+#[cfg(feature = "web-sys")]
 use web_sys::{Element, HtmlElement};
 
 /// Performance report containing metrics about animation performance
@@ -211,6 +212,7 @@ impl PerformanceMonitor {
 #[derive(Debug)]
 pub struct GPULayerManager {
     /// Active GPU layers
+    #[cfg(feature = "web-sys")]
     layers: HashMap<String, Element>,
     /// Maximum number of layers
     max_layers: usize,
@@ -228,6 +230,7 @@ impl GPULayerManager {
     /// Create a new GPU layer manager
     pub fn new(max_layers: usize) -> Self {
         Self {
+            #[cfg(feature = "web-sys")]
             layers: HashMap::new(),
             max_layers,
             usage_count: HashMap::new(),
@@ -235,12 +238,15 @@ impl GPULayerManager {
     }
 
     /// Request a GPU layer for an element
+    #[cfg(feature = "web-sys")]
     pub fn request_layer(&mut self, element: &Element, layer_id: String) -> bool {
+        #[cfg(feature = "web-sys")]
         if self.layers.len() >= self.max_layers {
             return false;
         }
 
         // Enable GPU acceleration - cast to HtmlElement to access style
+        #[cfg(feature = "web-sys")]
         if let Some(html_element) = element.dyn_ref::<HtmlElement>() {
             let style = html_element.style();
             let _ = style.set_property("transform", "translateZ(0)");
@@ -257,7 +263,8 @@ impl GPULayerManager {
         if let Some(count) = self.usage_count.get_mut(layer_id) {
             *count -= 1;
             if *count == 0 {
-                self.layers.remove(layer_id);
+                #[cfg(feature = "web-sys")]
+        self.layers.remove(layer_id);
                 self.usage_count.remove(layer_id);
             }
         }
@@ -265,12 +272,26 @@ impl GPULayerManager {
 
     /// Get current layer count
     pub fn layer_count(&self) -> usize {
-        self.layers.len()
+        #[cfg(feature = "web-sys")]
+        {
+            self.layers.len()
+        }
+        #[cfg(not(feature = "web-sys"))]
+        {
+            0
+        }
     }
 
     /// Check if we can allocate more layers
     pub fn can_allocate(&self) -> bool {
-        self.layers.len() < self.max_layers
+        #[cfg(feature = "web-sys")]
+        {
+            self.layers.len() < self.max_layers
+        }
+        #[cfg(not(feature = "web-sys"))]
+        {
+            false
+        }
     }
 
     /// Get maximum layers

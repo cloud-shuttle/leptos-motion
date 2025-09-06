@@ -2,8 +2,11 @@
 //!
 //! This example demonstrates a dashboard interface with working animations
 
+use leptos::prelude::{
+    ElementChild, Get, IntoAny, OnAttribute, ReadSignal, Set, StyleAttribute, WriteSignal,
+    set_timeout, signal,
+};
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, OnAttribute, Get, Set, signal, ReadSignal, WriteSignal, set_timeout};
 use std::time::Duration;
 
 /// Dashboard app component

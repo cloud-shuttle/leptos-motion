@@ -8,6 +8,7 @@ use crate::{
 };
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
+#[cfg(feature = "web-sys")]
 use web_sys::{Element, Performance, window};
 
 /// Core animation engine trait
@@ -44,7 +45,8 @@ pub trait AnimationEngine {
 #[derive(Clone)]
 pub struct AnimationConfig {
     /// Target element
-    pub element: Element,
+    #[cfg(feature = "web-sys")]
+    pub element: web_sys::Element,
     /// Animation properties
     pub from: AnimationTarget,
     /// Target values
@@ -99,11 +101,12 @@ pub enum PlaybackState {
 
 /// Optimized hybrid animation engine with performance monitoring
 pub struct OptimizedHybridEngine {
+    #[cfg(feature = "web-sys")]
     waapi_engine: WaapiEngine,
     raf_engine: RafEngine,
     feature_detector: FeatureDetector,
     performance_monitor: Option<PerformanceMonitor>,
-    scheduler: AnimationScheduler,
+    _scheduler: AnimationScheduler,
     gpu_manager: GPULayerManager,
     animation_pool: AnimationPool,
     current_handle: u64,
@@ -117,11 +120,12 @@ impl OptimizedHybridEngine {
         let _frame_budget = std::time::Duration::from_millis(16); // 60fps target
 
         Self {
-            waapi_engine: WaapiEngine::new(),
+            #[cfg(feature = "web-sys")]
+        waapi_engine: WaapiEngine::new(),
             raf_engine: RafEngine::new(),
             feature_detector: FeatureDetector::new(),
             performance_monitor: Some(PerformanceMonitor::new(budget)),
-            scheduler: AnimationScheduler::new(),
+            _scheduler: AnimationScheduler::new(),
             gpu_manager: GPULayerManager::new(50), // Max 50 GPU layers
             animation_pool: AnimationPool::new(100),
             current_handle: 0,
@@ -153,7 +157,8 @@ impl OptimizedHybridEngine {
     }
 
     /// Optimize element for GPU acceleration
-    pub fn optimize_for_gpu(&mut self, _element: &Element) -> bool {
+    #[cfg(feature = "web-sys")]
+    pub fn optimize_for_gpu(&mut self, _element: &web_sys::Element) -> bool {
         // For now, skip GPU optimization to avoid compilation issues
         // In a real implementation, this would check element attributes
         false
@@ -178,7 +183,11 @@ impl OptimizedHybridEngine {
 
 impl AnimationEngine for OptimizedHybridEngine {
     fn is_available(&self) -> bool {
-        self.waapi_engine.is_available() || self.raf_engine.is_available()
+        #[cfg(feature = "web-sys")]
+        let waapi_available = self.waapi_engine.is_available();
+        #[cfg(not(feature = "web-sys"))]
+        let waapi_available = false;
+        waapi_available || self.raf_engine.is_available()
     }
 
     fn animate(&mut self, config: &AnimationConfig) -> Result<AnimationHandle> {
@@ -188,18 +197,29 @@ impl AnimationEngine for OptimizedHybridEngine {
         self.start_performance_monitoring();
 
         // Optimize element for GPU if possible
+        #[cfg(feature = "web-sys")]
         self.optimize_for_gpu(&config.element);
 
         // Select engine based on performance and capabilities
         let engine_choice = self.select_engine(config);
 
         let result = match engine_choice {
-            EngineChoice::Waapi => self
-                .waapi_engine
-                .animate_with_handle(handle, config.clone()),
+            EngineChoice::Waapi => {
+                #[cfg(feature = "web-sys")]
+                {
+                    self.waapi_engine.animate_with_handle(handle, config.clone())
+                }
+                #[cfg(not(feature = "web-sys"))]
+                {
+                    Err(crate::AnimationError::EngineUnavailable("WAAPI not available".to_string()))
+                }
+            }
             EngineChoice::Raf => {
                 // Create RAF animation directly
+                #[cfg(feature = "web-sys")]
                 let start_time = web_sys::window().unwrap().performance().unwrap().now();
+                #[cfg(not(feature = "web-sys"))]
+                let start_time = 0.0; // Fallback for minimal builds
                 let animation = RafAnimation::new(config.clone(), start_time);
                 self.raf_engine.animations.insert(handle, animation);
 
@@ -221,6 +241,7 @@ impl AnimationEngine for OptimizedHybridEngine {
 
     fn stop(&mut self, handle: AnimationHandle) -> Result<()> {
         // Try WAAPI first
+        #[cfg(feature = "web-sys")]
         if let Ok(()) = self.waapi_engine.stop(handle) {
             return Ok(());
         }
@@ -237,6 +258,7 @@ impl AnimationEngine for OptimizedHybridEngine {
 
     fn pause(&mut self, handle: AnimationHandle) -> Result<()> {
         // Try WAAPI first
+        #[cfg(feature = "web-sys")]
         if let Ok(()) = self.waapi_engine.pause(handle) {
             return Ok(());
         }
@@ -247,6 +269,7 @@ impl AnimationEngine for OptimizedHybridEngine {
 
     fn resume(&mut self, handle: AnimationHandle) -> Result<()> {
         // Try WAAPI first
+        #[cfg(feature = "web-sys")]
         if let Ok(()) = self.waapi_engine.resume(handle) {
             return Ok(());
         }
@@ -272,6 +295,7 @@ impl AnimationEngine for OptimizedHybridEngine {
 
     fn get_state(&self, handle: AnimationHandle) -> Result<PlaybackState> {
         // Try WAAPI first
+        #[cfg(feature = "web-sys")]
         if let Ok(state) = self.waapi_engine.get_state(handle) {
             return Ok(state);
         }
@@ -281,7 +305,11 @@ impl AnimationEngine for OptimizedHybridEngine {
     }
 
     fn is_running(&self, handle: AnimationHandle) -> bool {
-        self.waapi_engine.is_running(handle) || self.raf_engine.is_running(handle)
+        #[cfg(feature = "web-sys")]
+        let waapi_running = self.waapi_engine.is_running(handle);
+        #[cfg(not(feature = "web-sys"))]
+        let waapi_running = false;
+        waapi_running || self.raf_engine.is_running(handle)
     }
 
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport> {
@@ -290,10 +318,12 @@ impl AnimationEngine for OptimizedHybridEngine {
 }
 
 /// Web Animations API engine
+#[cfg(feature = "web-sys")]
 pub struct WaapiEngine {
     animations: HashMap<AnimationHandle, web_sys::Animation>,
 }
 
+#[cfg(feature = "web-sys")]
 impl WaapiEngine {
     /// Create a new WAAPI engine
     pub fn new() -> Self {
@@ -316,6 +346,7 @@ impl WaapiEngine {
     }
 }
 
+#[cfg(feature = "web-sys")]
 impl AnimationEngine for WaapiEngine {
     fn is_available(&self) -> bool {
         window()
@@ -385,19 +416,22 @@ impl AnimationEngine for WaapiEngine {
 /// RequestAnimationFrame-based engine
 pub struct RafEngine {
     animations: HashMap<AnimationHandle, RafAnimation>,
-    performance: Performance,
+    #[cfg(feature = "web-sys")]
+    performance: web_sys::Performance,
     raf_handle: Option<i32>,
 }
 
 impl RafEngine {
     /// Create a new RAF engine
     pub fn new() -> Self {
+        #[cfg(feature = "web-sys")]
         let performance = window()
             .and_then(|w| w.performance())
             .expect("Performance API not available");
 
         Self {
             animations: HashMap::new(),
+            #[cfg(feature = "web-sys")]
             performance,
             raf_handle: None,
         }
@@ -409,7 +443,10 @@ impl RafEngine {
         handle: AnimationHandle,
         config: AnimationConfig,
     ) -> Result<()> {
+        #[cfg(feature = "web-sys")]
         let start_time = self.performance.now();
+        #[cfg(not(feature = "web-sys"))]
+        let start_time = 0.0;
         let animation = RafAnimation::new(config, start_time);
         self.animations.insert(handle, animation);
 
@@ -430,7 +467,18 @@ impl RafEngine {
 
 impl AnimationEngine for RafEngine {
     fn is_available(&self) -> bool {
-        window().is_some()
+        if cfg!(feature = "web-sys") {
+            #[cfg(feature = "web-sys")]
+            {
+                window().is_some()
+            }
+            #[cfg(not(feature = "web-sys"))]
+            {
+                false
+            }
+        } else {
+            false
+        }
     }
 
     fn animate(&mut self, config: &AnimationConfig) -> Result<AnimationHandle> {
@@ -726,11 +774,14 @@ impl FeatureDetector {
         }
 
         // Check for Web Animations API support
+        #[cfg(feature = "web-sys")]
         let available = window()
             .and_then(|w| w.document())
             .and_then(|d| d.create_element("div").ok())
             .and_then(|e| js_sys::Reflect::has(&e, &"animate".into()).ok())
             .unwrap_or(false);
+        #[cfg(not(feature = "web-sys"))]
+        let available = false;
 
         available
     }
@@ -783,6 +834,7 @@ impl Default for OptimizedHybridEngine {
     }
 }
 
+#[cfg(feature = "web-sys")]
 impl Default for WaapiEngine {
     fn default() -> Self {
         Self::new()
@@ -800,21 +852,6 @@ mod tests {
     use super::*;
     use crate::{AnimationValue, Transform};
     use std::collections::HashMap;
-
-    // Helper function to create a mock element (for environments that support it)
-    #[cfg(target_arch = "wasm32")]
-    fn create_mock_element() -> Option<Element> {
-        // In a real test environment, this would create a proper Element
-        web_sys::window()
-            .and_then(|w| w.document())
-            .and_then(|d| d.create_element("div").ok())
-    }
-
-    // For non-wasm environments, return None
-    #[cfg(not(target_arch = "wasm32"))]
-    fn create_mock_element() -> Option<Element> {
-        None
-    }
 
     fn create_test_animation_target() -> (
         HashMap<String, AnimationValue>,
@@ -1043,18 +1080,21 @@ mod tests {
         assert!(!gpu_enabled);
     }
 
+    #[cfg(feature = "web-sys")]
     #[test]
     fn test_waapi_engine_creation() {
         let engine = WaapiEngine::new();
         assert!(engine.animations.is_empty());
     }
 
+    #[cfg(feature = "web-sys")]
     #[test]
     fn test_waapi_engine_default() {
         let engine = WaapiEngine::default();
         assert!(engine.animations.is_empty());
     }
 
+    #[cfg(feature = "web-sys")]
     #[test]
     fn test_waapi_engine_tick() {
         let mut engine = WaapiEngine::new();
@@ -1062,6 +1102,7 @@ mod tests {
         assert!(result.is_ok()); // WAAPI doesn't need manual ticking
     }
 
+    #[cfg(feature = "web-sys")]
     #[test]
     fn test_waapi_engine_performance_metrics() {
         let engine = WaapiEngine::new();
@@ -1402,7 +1443,10 @@ mod rand {
         use std::hash::{Hash, Hasher};
 
         let mut hasher = DefaultHasher::new();
+        #[cfg(feature = "web-sys")]
         web_sys::js_sys::Date::now().to_bits().hash(&mut hasher);
+        #[cfg(not(feature = "web-sys"))]
+        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos().hash(&mut hasher);
         T::from(hasher.finish())
     }
 }

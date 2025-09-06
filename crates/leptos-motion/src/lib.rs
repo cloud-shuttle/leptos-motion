@@ -27,11 +27,11 @@
 //!     let mut initial = HashMap::new();
 //!     initial.insert("opacity".to_string(), AnimationValue::Number(0.0));
 //!     initial.insert("scale".to_string(), AnimationValue::Number(0.5));
-//!     
+//!
 //!     let mut animate = HashMap::new();
 //!     animate.insert("opacity".to_string(), AnimationValue::Number(1.0));
 //!     animate.insert("scale".to_string(), AnimationValue::Number(1.0));
-//!     
+//!
 //!     view! {
 //!         <MotionDiv
 //!             class=Some("my-element".to_string())
@@ -101,10 +101,10 @@
 //! # fn main() {
 //! let mut hover_target = HashMap::new();
 //! hover_target.insert("scale".to_string(), AnimationValue::Number(1.1));
-//! 
+//!
 //! let mut tap_target = HashMap::new();
 //! tap_target.insert("scale".to_string(), AnimationValue::Number(0.9));
-//! 
+//!
 //! let _view = view! {
 //!     <MotionDiv
 //!         while_hover=Some(hover_target)

@@ -1,16 +1,19 @@
 //! Motion values for reactive animation state
 
 use crate::AnimationValue;
+#[cfg(feature = "leptos-integration")]
 use leptos::prelude::*;
 use std::collections::HashMap;
 
 /// Reactive motion value that tracks animation state
+#[cfg(feature = "leptos-integration")]
 pub struct MotionValue<T: Clone + Send + Sync + 'static> {
     value: RwSignal<T>,
     velocity: RwSignal<f64>,
     subscribers: std::sync::Mutex<Vec<Box<dyn Fn(&T) + Send + Sync + 'static>>>,
 }
 
+#[cfg(feature = "leptos-integration")]
 impl<T: Clone + Send + Sync + 'static> MotionValue<T> {
     /// Create a new motion value
     pub fn new(initial: T) -> Self {
@@ -72,8 +75,10 @@ impl<T: Clone + Send + Sync + 'static> MotionValue<T> {
 }
 
 /// Specialized motion value for f64 values
+#[cfg(feature = "leptos-integration")]
 pub type MotionNumber = MotionValue<f64>;
 
+#[cfg(feature = "leptos-integration")]
 impl MotionValue<f64> {
     /// Create a numeric motion value starting at 0
     pub fn zero() -> Self {
@@ -99,8 +104,10 @@ impl MotionValue<f64> {
 }
 
 /// Specialized motion value for transform values
+#[cfg(feature = "leptos-integration")]
 pub type MotionTransform = MotionValue<crate::Transform>;
 
+#[cfg(feature = "leptos-integration")]
 impl MotionValue<crate::Transform> {
     /// Create a transform motion value at identity
     pub fn identity() -> Self {
@@ -131,10 +138,12 @@ impl MotionValue<crate::Transform> {
 }
 
 /// Collection of motion values for complex animations
+#[cfg(feature = "leptos-integration")]
 pub struct MotionValues {
     values: HashMap<String, MotionValue<AnimationValue>>,
 }
 
+#[cfg(feature = "leptos-integration")]
 impl MotionValues {
     /// Create a new motion values collection
     pub fn new() -> Self {
@@ -177,6 +186,7 @@ impl MotionValues {
     }
 }
 
+#[cfg(feature = "leptos-integration")]
 impl Default for MotionValues {
     fn default() -> Self {
         Self::new()
@@ -189,7 +199,7 @@ mod tdd_tests {
     include!("values_tdd_tests.rs");
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "leptos-integration"))]
 mod tests {
     use super::*;
 

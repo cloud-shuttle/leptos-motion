@@ -19,7 +19,7 @@ pub struct MemoryProfiler {
     baseline_memory: f64,
     peak_memory: f64,
     measurements: Vec<f64>,
-    start_time: Instant,
+    _start_time: Instant,
 }
 
 impl MemoryProfiler {
@@ -29,7 +29,7 @@ impl MemoryProfiler {
             baseline_memory: Self::get_current_memory_mb(),
             peak_memory: 0.0,
             measurements: Vec::new(),
-            start_time: Instant::now(),
+            _start_time: Instant::now(),
         }
     }
 

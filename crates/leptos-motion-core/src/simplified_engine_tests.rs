@@ -10,6 +10,7 @@ use wasm_bindgen_test::*;
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test fixture for creating a mock element
+#[cfg(feature = "web-sys")]
 fn mock_element() -> web_sys::Element {
     let document = web_sys::window().unwrap().document().unwrap();
     document.create_element("div").unwrap()
@@ -41,6 +42,7 @@ fn test_simplified_animation_engine_creation() {
     assert!(engine.is_available());
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_basic_animation() {
     // Test basic animation functionality
@@ -50,7 +52,7 @@ fn test_simplified_animation_engine_basic_animation() {
     let transition = simple_transition();
 
     // Start animation
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
     assert!(handle.0 > 0);
 
     // Check if animation is running
@@ -61,6 +63,7 @@ fn test_simplified_animation_engine_basic_animation() {
     assert!(!engine.is_running(handle));
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_pause_resume() {
     // Test pause and resume functionality
@@ -69,7 +72,7 @@ fn test_simplified_animation_engine_pause_resume() {
     let target = simple_animation_target();
     let transition = simple_transition();
 
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
 
     // Pause animation
     engine.pause(handle).unwrap();
@@ -83,6 +86,7 @@ fn test_simplified_animation_engine_pause_resume() {
     engine.stop(handle).unwrap();
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_multiple_animations() {
     // Test managing multiple animations
@@ -93,8 +97,8 @@ fn test_simplified_animation_engine_multiple_animations() {
     let transition = simple_transition();
 
     // Start multiple animations
-    let handle1 = engine.animate(&element1, &target, &transition).unwrap();
-    let handle2 = engine.animate(&element2, &target, &transition).unwrap();
+    let handle1 = engine.animate(&target, &transition).unwrap();
+    let handle2 = engine.animate(&target, &transition).unwrap();
 
     assert!(handle1.0 != handle2.0);
     assert!(engine.is_running(handle1));
@@ -110,6 +114,7 @@ fn test_simplified_animation_engine_multiple_animations() {
     assert!(!engine.is_running(handle2));
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_error_handling() {
     // Test error handling for invalid operations
@@ -118,7 +123,7 @@ fn test_simplified_animation_engine_error_handling() {
     let target = simple_animation_target();
     let transition = simple_transition();
 
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
 
     // Stop animation
     engine.stop(handle).unwrap();
@@ -132,6 +137,7 @@ fn test_simplified_animation_engine_error_handling() {
     assert!(result.is_ok() || result.is_err()); // Should not panic
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_performance_metrics() {
     // Test performance metrics access
@@ -141,7 +147,7 @@ fn test_simplified_animation_engine_performance_metrics() {
     let transition = simple_transition();
 
     // Start and stop animation to generate metrics
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
     engine.stop(handle).unwrap();
 
     // Get performance metrics
@@ -153,6 +159,7 @@ fn test_simplified_animation_engine_performance_metrics() {
     assert!(metrics.average_frame_time >= 0.0);
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_spring_animation() {
     // Test spring animation
@@ -167,12 +174,13 @@ fn test_simplified_animation_engine_spring_animation() {
         ..Default::default()
     });
 
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
     assert!(engine.is_running(handle));
 
     engine.stop(handle).unwrap();
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_stagger_animation() {
     // Test stagger animation
@@ -185,12 +193,13 @@ fn test_simplified_animation_engine_stagger_animation() {
         from: StaggerFrom::First,
     });
 
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
     assert!(engine.is_running(handle));
 
     engine.stop(handle).unwrap();
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_cleanup() {
     // Test engine cleanup
@@ -211,6 +220,7 @@ fn test_simplified_animation_engine_cleanup() {
     assert!(!engine.is_running(handle2));
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_batch_operations() {
     // Test batch operations
@@ -221,9 +231,9 @@ fn test_simplified_animation_engine_batch_operations() {
 
     // Start multiple animations
     let handles = vec![
-        engine.animate(&element, &target, &transition).unwrap(),
-        engine.animate(&element, &target, &transition).unwrap(),
-        engine.animate(&element, &target, &transition).unwrap(),
+        engine.animate(&target, &transition).unwrap(),
+        engine.animate(&target, &transition).unwrap(),
+        engine.animate(&target, &transition).unwrap(),
     ];
 
     // Batch stop all animations
@@ -235,6 +245,7 @@ fn test_simplified_animation_engine_batch_operations() {
     }
 }
 
+#[cfg(feature = "web-sys")]
 #[wasm_bindgen_test]
 fn test_simplified_animation_engine_global_control() {
     // Test global control functions
@@ -244,7 +255,7 @@ fn test_simplified_animation_engine_global_control() {
     let transition = simple_transition();
 
     // Start animation
-    let handle = engine.animate(&element, &target, &transition).unwrap();
+    let handle = engine.animate(&target, &transition).unwrap();
 
     // Pause all animations
     engine.pause_all().unwrap();

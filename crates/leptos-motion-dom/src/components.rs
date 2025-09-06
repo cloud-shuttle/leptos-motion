@@ -3,7 +3,7 @@
 //! This module provides motion components that integrate with Leptos
 
 use crate::{DragConfig, DragConstraints};
-use leptos::prelude::{Children, ClassAttribute, ElementChild, StyleAttribute, signal, Get, Set};
+use leptos::prelude::{Children, ClassAttribute, ElementChild, Get, Set, StyleAttribute, signal};
 use leptos::*;
 use leptos_motion_core::*;
 use std::collections::HashMap;
@@ -45,7 +45,7 @@ pub fn MotionDiv(
     let (_is_hovered, _set_hovered) = signal(false);
     let (_is_tapped, _set_tapped) = signal(false);
     let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
-    
+
     // Initialize with initial styles
     if let Some(initial_target) = initial {
         let mut styles = HashMap::new();
@@ -54,7 +54,7 @@ pub fn MotionDiv(
         }
         set_styles.set(styles);
     }
-    
+
     // Handle animate prop
     if let Some(animate_target) = animate {
         let mut styles = current_styles.get();
@@ -63,18 +63,19 @@ pub fn MotionDiv(
         }
         set_styles.set(styles);
     }
-    
+
     // Convert styles to CSS string
     let style_string = move || {
         let styles = current_styles.get();
-        styles.iter()
+        styles
+            .iter()
             .map(|(key, value)| format!("{}: {}", key, value))
             .collect::<Vec<_>>()
             .join("; ")
     };
-    
+
     view! {
-        <div 
+        <div
             class=class
             style=style_string()
         >
@@ -111,7 +112,7 @@ pub fn MotionSpan(
     let (_is_hovered, _set_hovered) = signal(false);
     let (_is_tapped, _set_tapped) = signal(false);
     let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
-    
+
     // Initialize with initial styles
     if let Some(initial_target) = initial {
         let mut styles = HashMap::new();
@@ -120,7 +121,7 @@ pub fn MotionSpan(
         }
         set_styles.set(styles);
     }
-    
+
     // Handle animate prop
     if let Some(animate_target) = animate {
         let mut styles = current_styles.get();
@@ -129,18 +130,19 @@ pub fn MotionSpan(
         }
         set_styles.set(styles);
     }
-    
+
     // Convert styles to CSS string
     let style_string = move || {
         let styles = current_styles.get();
-        styles.iter()
+        styles
+            .iter()
             .map(|(key, value)| format!("{}: {}", key, value))
             .collect::<Vec<_>>()
             .join("; ")
     };
-    
+
     view! {
-        <span 
+        <span
             class=class
             style=style_string()
         >

@@ -1,13 +1,16 @@
 //! Time and scheduling utilities
 
+#[cfg(feature = "web-sys")]
 use web_sys::{Performance, window};
 
 /// High-precision timer for animations
+#[cfg(feature = "web-sys")]
 pub struct Timer {
     performance: Performance,
     start_time: Option<f64>,
 }
 
+#[cfg(feature = "web-sys")]
 impl Timer {
     /// Create a new timer
     pub fn new() -> Option<Self> {
@@ -40,6 +43,7 @@ impl Timer {
     }
 }
 
+#[cfg(feature = "web-sys")]
 impl Default for Timer {
     fn default() -> Self {
         Self::new().expect("Failed to create timer")

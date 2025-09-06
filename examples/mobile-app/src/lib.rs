@@ -2,8 +2,10 @@
 //!
 //! This example demonstrates mobile-friendly animations and interactions
 
+use leptos::prelude::{
+    ElementChild, Get, IntoAny, OnAttribute, ReadSignal, Set, StyleAttribute, Update, signal,
+};
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, OnAttribute, Get, Set, Update, signal, ReadSignal};
 
 /// Mobile app component
 #[component]

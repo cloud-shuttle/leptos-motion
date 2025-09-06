@@ -1,5 +1,5 @@
 //! Comprehensive tests for FLIP layout animations
-//! 
+//!
 //! This module tests FLIP (First, Last, Invert, Play) animations,
 //! layout transitions, and element positioning using a TDD approach.
 
@@ -29,7 +29,7 @@ fn test_element_position_recording() {
         scale_x: 1.0,
         scale_y: 1.0,
     };
-    
+
     assert_eq!(position.x, 100.0);
     assert_eq!(position.y, 200.0);
     assert_eq!(position.width, 300.0);
@@ -53,7 +53,7 @@ fn test_flip_animation_calculation() {
         scale_x: 1.0,
         scale_y: 1.0,
     };
-    
+
     let last_position = ElementPosition {
         x: 200.0,
         y: 300.0,
@@ -63,9 +63,9 @@ fn test_flip_animation_calculation() {
         scale_x: 1.5,
         scale_y: 1.5,
     };
-    
+
     let flip_animation = calculate_flip_animation(&first_position, &last_position);
-    
+
     assert_eq!(flip_animation.translate_x, 200.0);
     assert_eq!(flip_animation.translate_y, 300.0);
     assert_eq!(flip_animation.scale_x, 1.5);
@@ -106,7 +106,7 @@ fn test_layout_transition_detection() {
             },
         ],
     };
-    
+
     let new_layout = LayoutState {
         elements: vec![
             ElementLayout {
@@ -135,16 +135,22 @@ fn test_layout_transition_detection() {
             },
         ],
     };
-    
+
     let transitions = detect_layout_transitions(&old_layout, &new_layout);
     assert_eq!(transitions.len(), 2);
-    
+
     // Check item1 transition
-    let item1_transition = transitions.iter().find(|t| t.element_id == "item1").unwrap();
+    let item1_transition = transitions
+        .iter()
+        .find(|t| t.element_id == "item1")
+        .unwrap();
     assert_eq!(item1_transition.translate_y, 100.0);
-    
+
     // Check item2 transition
-    let item2_transition = transitions.iter().find(|t| t.element_id == "item2").unwrap();
+    let item2_transition = transitions
+        .iter()
+        .find(|t| t.element_id == "item2")
+        .unwrap();
     assert_eq!(item2_transition.translate_x, -100.0);
 }
 
@@ -185,9 +191,9 @@ fn test_staggered_animation_timing() {
             delay: 0.0,
         },
     ];
-    
+
     let staggered_transitions = apply_stagger(transitions, 50.0);
-    
+
     assert_eq!(staggered_transitions[0].delay, 0.0);
     assert_eq!(staggered_transitions[1].delay, 50.0);
     assert_eq!(staggered_transitions[2].delay, 100.0);
@@ -199,11 +205,11 @@ fn test_staggered_animation_timing() {
 fn test_layout_animation_performance() {
     // Test performance with many elements
     let start_time = std::time::Instant::now();
-    
+
     let mut layout = LayoutState {
         elements: Vec::new(),
     };
-    
+
     // Create 100 elements
     for i in 0..100 {
         layout.elements.push(ElementLayout {
@@ -219,16 +225,16 @@ fn test_layout_animation_performance() {
             },
         });
     }
-    
+
     // Simulate layout change
     let mut new_layout = layout.clone();
     for element in &mut new_layout.elements {
         element.position.x += 50.0;
         element.position.y += 50.0;
     }
-    
+
     let transitions = detect_layout_transitions(&layout, &new_layout);
-    
+
     let duration = start_time.elapsed();
     assert!(duration.as_millis() < 50); // Should process 100 elements in under 50ms
     assert_eq!(transitions.len(), 100);
@@ -248,7 +254,7 @@ fn test_layout_animation_easing() {
         Easing::CircOut,
         Easing::CircInOut,
     ];
-    
+
     for easing in easings {
         let transition = LayoutTransition {
             element_id: "test".to_string(),
@@ -260,7 +266,7 @@ fn test_layout_animation_easing() {
             duration: 300.0,
             delay: 0.0,
         };
-        
+
         let eased_transition = apply_easing(transition, easing);
         assert_eq!(eased_transition.element_id, "test");
     }
@@ -272,7 +278,7 @@ fn test_layout_animation_easing() {
 fn test_layout_animation_cancellation() {
     // Test animation cancellation
     let mut flip_system = FlipSystem::new().unwrap();
-    
+
     // Start an animation
     let transition = LayoutTransition {
         element_id: "test".to_string(),
@@ -284,10 +290,10 @@ fn test_layout_animation_cancellation() {
         duration: 1000.0,
         delay: 0.0,
     };
-    
+
     let animation_id = flip_system.start_animation(transition);
     assert!(animation_id.is_ok());
-    
+
     // Cancel the animation
     let result = flip_system.cancel_animation(animation_id.unwrap());
     assert!(result.is_ok());
@@ -299,7 +305,7 @@ fn test_layout_animation_cancellation() {
 fn test_layout_animation_completion() {
     // Test animation completion detection
     let mut flip_system = FlipSystem::new().unwrap();
-    
+
     let transition = LayoutTransition {
         element_id: "test".to_string(),
         translate_x: 100.0,
@@ -310,12 +316,12 @@ fn test_layout_animation_completion() {
         duration: 100.0, // Short duration for testing
         delay: 0.0,
     };
-    
+
     let animation_id = flip_system.start_animation(transition).unwrap();
-    
+
     // Wait for animation to complete (simulated)
     std::thread::sleep(std::time::Duration::from_millis(150));
-    
+
     let is_complete = flip_system.is_animation_complete(animation_id);
     assert!(is_complete);
 }
@@ -326,10 +332,10 @@ fn test_layout_animation_completion() {
 fn test_layout_animation_state_management() {
     // Test animation state management
     let mut flip_system = FlipSystem::new().unwrap();
-    
+
     // Test initial state
     assert_eq!(flip_system.active_animations(), 0);
-    
+
     // Start multiple animations
     for i in 0..5 {
         let transition = LayoutTransition {
@@ -342,12 +348,12 @@ fn test_layout_animation_state_management() {
             duration: 300.0,
             delay: 0.0,
         };
-        
+
         let _ = flip_system.start_animation(transition);
     }
-    
+
     assert_eq!(flip_system.active_animations(), 5);
-    
+
     // Cancel all animations
     flip_system.cancel_all_animations();
     assert_eq!(flip_system.active_animations(), 0);
@@ -367,7 +373,7 @@ fn test_layout_animation_interpolation() {
         scale_x: 1.0,
         scale_y: 1.0,
     };
-    
+
     let end_position = ElementPosition {
         x: 100.0,
         y: 100.0,
@@ -377,10 +383,10 @@ fn test_layout_animation_interpolation() {
         scale_x: 2.0,
         scale_y: 2.0,
     };
-    
+
     // Test interpolation at 50% progress
     let interpolated = interpolate_position(&start_position, &end_position, 0.5);
-    
+
     assert_eq!(interpolated.x, 50.0);
     assert_eq!(interpolated.y, 50.0);
     assert_eq!(interpolated.width, 150.0);
@@ -401,7 +407,7 @@ fn test_layout_animation_bounds_checking() {
         min_y: 0.0,
         max_y: 1000.0,
     };
-    
+
     let position = ElementPosition {
         x: 500.0,
         y: 500.0,
@@ -411,10 +417,10 @@ fn test_layout_animation_bounds_checking() {
         scale_x: 1.0,
         scale_y: 1.0,
     };
-    
+
     // Test within bounds
     assert!(is_within_layout_bounds(&position, &bounds));
-    
+
     // Test outside bounds
     let position_outside = ElementPosition {
         x: 1200.0,
@@ -425,7 +431,7 @@ fn test_layout_animation_bounds_checking() {
         scale_x: 1.0,
         scale_y: 1.0,
     };
-    
+
     assert!(!is_within_layout_bounds(&position_outside, &bounds));
 }
 
@@ -494,27 +500,30 @@ impl FlipSystem {
             next_id: 1,
         })
     }
-    
-    pub fn start_animation(&mut self, transition: LayoutTransition) -> std::result::Result<u64, String> {
+
+    pub fn start_animation(
+        &mut self,
+        transition: LayoutTransition,
+    ) -> std::result::Result<u64, String> {
         let id = self.next_id;
         self.next_id += 1;
         self.active_animations.insert(id, transition);
         Ok(id)
     }
-    
+
     pub fn cancel_animation(&mut self, id: u64) -> std::result::Result<(), String> {
         self.active_animations.remove(&id);
         Ok(())
     }
-    
+
     pub fn cancel_all_animations(&mut self) {
         self.active_animations.clear();
     }
-    
+
     pub fn active_animations(&self) -> usize {
         self.active_animations.len()
     }
-    
+
     pub fn is_animation_complete(&self, _id: u64) -> bool {
         // Simulate animation completion
         true
@@ -533,7 +542,7 @@ fn calculate_flip_animation(first: &ElementPosition, last: &ElementPosition) -> 
 
 fn detect_layout_transitions(old: &LayoutState, new: &LayoutState) -> Vec<LayoutTransition> {
     let mut transitions = Vec::new();
-    
+
     for new_element in &new.elements {
         if let Some(old_element) = old.elements.iter().find(|e| e.id == new_element.id) {
             let dx = new_element.position.x - old_element.position.x;
@@ -541,7 +550,7 @@ fn detect_layout_transitions(old: &LayoutState, new: &LayoutState) -> Vec<Layout
             let scale_x = new_element.position.scale_x / old_element.position.scale_x;
             let scale_y = new_element.position.scale_y / old_element.position.scale_y;
             let rotate = new_element.position.rotation - old_element.position.rotation;
-            
+
             if dx != 0.0 || dy != 0.0 || scale_x != 1.0 || scale_y != 1.0 || rotate != 0.0 {
                 transitions.push(LayoutTransition {
                     element_id: new_element.id.clone(),
@@ -556,11 +565,14 @@ fn detect_layout_transitions(old: &LayoutState, new: &LayoutState) -> Vec<Layout
             }
         }
     }
-    
+
     transitions
 }
 
-fn apply_stagger(mut transitions: Vec<LayoutTransition>, stagger_delay: f64) -> Vec<LayoutTransition> {
+fn apply_stagger(
+    mut transitions: Vec<LayoutTransition>,
+    stagger_delay: f64,
+) -> Vec<LayoutTransition> {
     for (i, transition) in transitions.iter_mut().enumerate() {
         transition.delay = i as f64 * stagger_delay;
     }
@@ -572,7 +584,11 @@ fn apply_easing(mut transition: LayoutTransition, _easing: Easing) -> LayoutTran
     transition
 }
 
-fn interpolate_position(start: &ElementPosition, end: &ElementPosition, progress: f64) -> ElementPosition {
+fn interpolate_position(
+    start: &ElementPosition,
+    end: &ElementPosition,
+    progress: f64,
+) -> ElementPosition {
     ElementPosition {
         x: start.x + (end.x - start.x) * progress,
         y: start.y + (end.y - start.y) * progress,

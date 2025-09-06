@@ -1,5 +1,5 @@
 //! Comprehensive tests for gesture system
-//! 
+//!
 //! This module tests gesture recognition, event handling, and interaction
 //! for the motion gesture system using a TDD approach.
 
@@ -27,7 +27,7 @@ fn test_drag_gesture_detection() {
         elastic: Some(0.2),
         ..Default::default()
     };
-    
+
     assert_eq!(drag_config.axis, Some(DragAxis::X));
     assert_eq!(drag_config.momentum, Some(true));
     assert_eq!(drag_config.elastic, Some(0.2));
@@ -42,7 +42,7 @@ fn test_pan_gesture_detection() {
         direction: PanDirection::Both,
         ..Default::default()
     };
-    
+
     assert_eq!(pan_config.threshold, 10.0);
     assert_eq!(pan_config.direction, PanDirection::Both);
 }
@@ -57,7 +57,7 @@ fn test_pinch_gesture_detection() {
         max_scale: 3.0,
         ..Default::default()
     };
-    
+
     assert_eq!(pinch_config.threshold, 0.1);
     assert_eq!(pinch_config.min_scale, 0.5);
     assert_eq!(pinch_config.max_scale, 3.0);
@@ -72,7 +72,7 @@ fn test_tap_gesture_detection() {
         timeout: 250,
         ..Default::default()
     };
-    
+
     assert_eq!(tap_config.threshold, 5.0);
     assert_eq!(tap_config.timeout, 250);
 }
@@ -87,7 +87,7 @@ fn test_swipe_gesture_detection() {
         direction: SwipeDirection::Horizontal,
         ..Default::default()
     };
-    
+
     assert_eq!(swipe_config.threshold, 50.0);
     assert_eq!(swipe_config.velocity, 0.3);
     assert_eq!(swipe_config.direction, SwipeDirection::Horizontal);
@@ -104,13 +104,28 @@ fn test_gesture_event_handling() {
         GestureEvent::PanStart { x: 0.0, y: 0.0 },
         GestureEvent::PanMove { x: 15.0, y: 8.0 },
         GestureEvent::PanEnd { x: 30.0, y: 16.0 },
-        GestureEvent::PinchStart { scale: 1.0, center_x: 100.0, center_y: 100.0 },
-        GestureEvent::PinchMove { scale: 1.5, center_x: 100.0, center_y: 100.0 },
-        GestureEvent::PinchEnd { scale: 2.0, center_x: 100.0, center_y: 100.0 },
+        GestureEvent::PinchStart {
+            scale: 1.0,
+            center_x: 100.0,
+            center_y: 100.0,
+        },
+        GestureEvent::PinchMove {
+            scale: 1.5,
+            center_x: 100.0,
+            center_y: 100.0,
+        },
+        GestureEvent::PinchEnd {
+            scale: 2.0,
+            center_x: 100.0,
+            center_y: 100.0,
+        },
         GestureEvent::Tap { x: 50.0, y: 50.0 },
-        GestureEvent::Swipe { direction: SwipeDirection::Left, velocity: 0.5 },
+        GestureEvent::Swipe {
+            direction: SwipeDirection::Left,
+            velocity: 0.5,
+        },
     ];
-    
+
     assert_eq!(events.len(), 11);
 }
 
@@ -124,7 +139,7 @@ fn test_gesture_constraints() {
         top: Some(-50.0),
         bottom: Some(50.0),
     };
-    
+
     assert_eq!(drag_constraints.left, Some(-100.0));
     assert_eq!(drag_constraints.right, Some(100.0));
     assert_eq!(drag_constraints.top, Some(-50.0));
@@ -136,19 +151,19 @@ fn test_gesture_constraints() {
 fn test_gesture_state_management() {
     // Test gesture state
     let mut gesture_state = GestureState::default();
-    
+
     // Test initial state
     assert_eq!(gesture_state.is_dragging, false);
     assert_eq!(gesture_state.is_panning, false);
     assert_eq!(gesture_state.is_pinching, false);
-    
+
     // Test state transitions
     gesture_state.is_dragging = true;
     assert_eq!(gesture_state.is_dragging, true);
-    
+
     gesture_state.is_panning = true;
     assert_eq!(gesture_state.is_panning, true);
-    
+
     gesture_state.is_pinching = true;
     assert_eq!(gesture_state.is_pinching, true);
 }
@@ -159,7 +174,7 @@ fn test_gesture_velocity_calculation() {
     // Test velocity calculation
     let velocity = calculate_velocity(0.0, 100.0, 1000.0); // 100px in 1000ms
     assert_eq!(velocity, 0.1); // 0.1 px/ms
-    
+
     let velocity2 = calculate_velocity(0.0, 200.0, 500.0); // 200px in 500ms
     assert_eq!(velocity2, 0.4); // 0.4 px/ms
 }
@@ -183,11 +198,11 @@ fn test_gesture_bounds_checking() {
         top: -50.0,
         bottom: 50.0,
     };
-    
+
     // Test within bounds
     assert!(is_within_bounds(0.0, 0.0, &bounds));
     assert!(is_within_bounds(50.0, 25.0, &bounds));
-    
+
     // Test outside bounds
     assert!(!is_within_bounds(150.0, 0.0, &bounds));
     assert!(!is_within_bounds(0.0, 75.0, &bounds));
@@ -207,17 +222,17 @@ fn test_gesture_elastic_behavior() {
 fn test_multi_touch_gesture_handling() {
     // Test multi-touch state
     let mut multi_touch = MultiTouchState::new();
-    
+
     // Test touch point management
     multi_touch.add_touch(1, 100.0, 100.0);
     multi_touch.add_touch(2, 200.0, 200.0);
-    
+
     assert_eq!(multi_touch.touch_count(), 2);
-    
+
     // Test touch point removal
     multi_touch.remove_touch(1);
     assert_eq!(multi_touch.touch_count(), 1);
-    
+
     // Test touch point update
     multi_touch.update_touch(2, 250.0, 250.0);
     let touch = multi_touch.get_touch(2);
@@ -233,12 +248,21 @@ fn test_multi_touch_gesture_handling() {
 fn test_gesture_recognition_accuracy() {
     // Test gesture recognition with various inputs
     let gestures = vec![
-        ("drag", recognize_gesture(&[Point { x: 0.0, y: 0.0 }, Point { x: 50.0, y: 0.0 }])),
-        ("pan", recognize_gesture(&[Point { x: 0.0, y: 0.0 }, Point { x: 0.0, y: 50.0 }])),
-        ("pinch", recognize_gesture(&[Point { x: 100.0, y: 100.0 }, Point { x: 120.0, y: 100.0 }])),
+        (
+            "drag",
+            recognize_gesture(&[Point { x: 0.0, y: 0.0 }, Point { x: 50.0, y: 0.0 }]),
+        ),
+        (
+            "pan",
+            recognize_gesture(&[Point { x: 0.0, y: 0.0 }, Point { x: 0.0, y: 50.0 }]),
+        ),
+        (
+            "pinch",
+            recognize_gesture(&[Point { x: 100.0, y: 100.0 }, Point { x: 120.0, y: 100.0 }]),
+        ),
         ("tap", recognize_gesture(&[Point { x: 50.0, y: 50.0 }])),
     ];
-    
+
     for (expected, actual) in gestures {
         assert_eq!(actual, expected);
     }
@@ -249,12 +273,15 @@ fn test_gesture_recognition_accuracy() {
 fn test_gesture_performance() {
     // Test gesture processing performance
     let start_time = std::time::Instant::now();
-    
+
     // Simulate processing many gesture events
     for i in 0..1000 {
-        let _ = process_gesture_event(GestureEvent::DragMove { x: i as f64, y: i as f64 });
+        let _ = process_gesture_event(GestureEvent::DragMove {
+            x: i as f64,
+            y: i as f64,
+        });
     }
-    
+
     let duration = start_time.elapsed();
     assert!(duration.as_millis() < 100); // Should process 1000 events in under 100ms
 }
@@ -269,17 +296,53 @@ pub struct Point {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum GestureEvent {
-    DragStart { x: f64, y: f64 },
-    DragMove { x: f64, y: f64 },
-    DragEnd { x: f64, y: f64 },
-    PanStart { x: f64, y: f64 },
-    PanMove { x: f64, y: f64 },
-    PanEnd { x: f64, y: f64 },
-    PinchStart { scale: f64, center_x: f64, center_y: f64 },
-    PinchMove { scale: f64, center_x: f64, center_y: f64 },
-    PinchEnd { scale: f64, center_x: f64, center_y: f64 },
-    Tap { x: f64, y: f64 },
-    Swipe { direction: SwipeDirection, velocity: f64 },
+    DragStart {
+        x: f64,
+        y: f64,
+    },
+    DragMove {
+        x: f64,
+        y: f64,
+    },
+    DragEnd {
+        x: f64,
+        y: f64,
+    },
+    PanStart {
+        x: f64,
+        y: f64,
+    },
+    PanMove {
+        x: f64,
+        y: f64,
+    },
+    PanEnd {
+        x: f64,
+        y: f64,
+    },
+    PinchStart {
+        scale: f64,
+        center_x: f64,
+        center_y: f64,
+    },
+    PinchMove {
+        scale: f64,
+        center_x: f64,
+        center_y: f64,
+    },
+    PinchEnd {
+        scale: f64,
+        center_x: f64,
+        center_y: f64,
+    },
+    Tap {
+        x: f64,
+        y: f64,
+    },
+    Swipe {
+        direction: SwipeDirection,
+        velocity: f64,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -383,26 +446,26 @@ impl MultiTouchState {
             touches: std::collections::HashMap::new(),
         }
     }
-    
+
     pub fn add_touch(&mut self, id: u32, x: f64, y: f64) {
         self.touches.insert(id, TouchPoint { id, x, y });
     }
-    
+
     pub fn remove_touch(&mut self, id: u32) {
         self.touches.remove(&id);
     }
-    
+
     pub fn update_touch(&mut self, id: u32, x: f64, y: f64) {
         if let Some(touch) = self.touches.get_mut(&id) {
             touch.x = x;
             touch.y = y;
         }
     }
-    
+
     pub fn touch_count(&self) -> usize {
         self.touches.len()
     }
-    
+
     pub fn get_touch(&self, id: u32) -> Option<&TouchPoint> {
         self.touches.get(&id)
     }
@@ -449,11 +512,7 @@ fn recognize_gesture(points: &[Point]) -> &'static str {
     } else if points.len() == 2 {
         let dx = (points[1].x - points[0].x).abs();
         let dy = (points[1].y - points[0].y).abs();
-        if dx > dy {
-            "drag"
-        } else {
-            "pan"
-        }
+        if dx > dy { "drag" } else { "pan" }
     } else {
         "pinch"
     }

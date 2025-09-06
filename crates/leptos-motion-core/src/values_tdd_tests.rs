@@ -3,7 +3,12 @@
 // This module demonstrates Test-Driven Development practices using
 // the latest Rust testing crates and patterns as of September 2025.
 
+#[cfg(feature = "leptos-integration")]
 use super::*;
+
+#[cfg(feature = "leptos-integration")]
+mod tests {
+    use super::*;
 
 // Modern fixture-based testing
 fn motion_value_fixture() -> MotionValue<f64> {
@@ -448,3 +453,5 @@ fn test_motion_value_thread_safety() {
     let final_value = motion_value.get();
     assert!(final_value >= 0.0 && final_value < 1000.0);
 }
+
+} // End of tests module

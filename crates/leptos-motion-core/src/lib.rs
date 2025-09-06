@@ -15,6 +15,9 @@ pub mod time;
 pub mod types;
 pub mod values;
 
+#[macro_use]
+pub mod macros;
+
 pub mod lazy_loading;
 pub mod memory_optimization;
 pub mod minimal_engine;
@@ -27,6 +30,17 @@ mod memory_optimization_tests;
 
 #[cfg(test)]
 mod performance_tests;
+#[cfg(test)]
+mod bundle_size_tests;
+#[cfg(test)]
+mod web_sys_optimization_tests;
+#[cfg(test)]
+mod serde_replacement_tests;
+#[cfg(test)]
+mod wasm_optimization_tests;
+#[cfg(test)]
+mod tree_shaking_tests;
+mod minimal_serialization;
 
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
@@ -37,14 +51,18 @@ pub use animation::presets::springs;
 // Re-export core types
 pub use animation::{AnimationBuilder, AnimationConfig, Variants};
 pub use easing::EasingFn;
-pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine, WaapiEngine};
+pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine};
+#[cfg(feature = "web-sys")]
+pub use engine::WaapiEngine;
 pub use interpolation::Interpolate;
 pub use math::{clamp, distance_2d, map_range, smooth_step, smoother_step};
+#[cfg(feature = "web-sys")]
 pub use time::Timer;
 pub use types::{
     AnimationHandle, AnimationTarget, AnimationValue, ComplexValue, Easing, RepeatConfig,
     SpringConfig, StaggerConfig, StaggerFrom, Transform, Transition,
 };
+#[cfg(feature = "leptos-integration")]
 pub use values::{MotionNumber, MotionTransform, MotionValue, MotionValues};
 
 pub use lazy_loading::{

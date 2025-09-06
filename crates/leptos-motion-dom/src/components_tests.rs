@@ -1,5 +1,5 @@
 //! Comprehensive tests for MotionDiv and MotionSpan components
-//! 
+//!
 //! This module tests the animation logic, prop handling, and DOM integration
 //! for the motion components using a TDD approach.
 
@@ -36,8 +36,14 @@ fn test_motion_div_animate_prop() {
     };
 
     // Test that animate prop is properly structured
-    assert_eq!(animate_target.get("opacity"), Some(&AnimationValue::Number(1.0)));
-    assert_eq!(animate_target.get("scale"), Some(&AnimationValue::Number(1.2)));
+    assert_eq!(
+        animate_target.get("opacity"),
+        Some(&AnimationValue::Number(1.0))
+    );
+    assert_eq!(
+        animate_target.get("scale"),
+        Some(&AnimationValue::Number(1.2))
+    );
 }
 
 /// Test that MotionDiv handles while_hover animations
@@ -46,13 +52,22 @@ fn test_motion_div_while_hover() {
     let hover_target = {
         let mut target = HashMap::new();
         target.insert("scale".to_string(), AnimationValue::Number(1.1));
-        target.insert("backgroundColor".to_string(), AnimationValue::String("#ff0000".to_string()));
+        target.insert(
+            "backgroundColor".to_string(),
+            AnimationValue::String("#ff0000".to_string()),
+        );
         target
     };
 
     // Test hover animation target structure
-    assert_eq!(hover_target.get("scale"), Some(&AnimationValue::Number(1.1)));
-    assert_eq!(hover_target.get("backgroundColor"), Some(&AnimationValue::String("#ff0000".to_string())));
+    assert_eq!(
+        hover_target.get("scale"),
+        Some(&AnimationValue::Number(1.1))
+    );
+    assert_eq!(
+        hover_target.get("backgroundColor"),
+        Some(&AnimationValue::String("#ff0000".to_string()))
+    );
 }
 
 /// Test that MotionDiv handles while_tap animations
@@ -101,13 +116,22 @@ fn test_motion_span_consistency() {
     let span_target = {
         let mut target = HashMap::new();
         target.insert("opacity".to_string(), AnimationValue::Number(0.7));
-        target.insert("color".to_string(), AnimationValue::String("#00ff00".to_string()));
+        target.insert(
+            "color".to_string(),
+            AnimationValue::String("#00ff00".to_string()),
+        );
         target
     };
 
     // Test that MotionSpan accepts same animation targets
-    assert_eq!(span_target.get("opacity"), Some(&AnimationValue::Number(0.7)));
-    assert_eq!(span_target.get("color"), Some(&AnimationValue::String("#00ff00".to_string())));
+    assert_eq!(
+        span_target.get("opacity"),
+        Some(&AnimationValue::Number(0.7))
+    );
+    assert_eq!(
+        span_target.get("color"),
+        Some(&AnimationValue::String("#00ff00".to_string()))
+    );
 }
 
 /// Test animation value types
@@ -139,7 +163,7 @@ fn test_animation_value_types() {
             assert_eq!(t.x, Some(10.0));
             assert_eq!(t.y, Some(20.0));
             assert_eq!(t.scale, Some(1.5));
-        },
+        }
         _ => panic!("Expected Transform variant"),
     }
 }

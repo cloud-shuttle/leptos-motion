@@ -135,112 +135,142 @@ impl FeatureFlagsAnalyzer {
         let mut available_features = HashMap::new();
 
         // Core features (always required)
-        available_features.insert("core-animation".to_string(), FeatureInfo {
-            name: "core-animation".to_string(),
-            description: "Core animation engine and basic types".to_string(),
-            estimated_size_bytes: 50_000, // 50KB
-            dependencies: vec![],
-            category: FeatureCategory::Core,
-            is_optional: false,
-            default_enabled: true,
-        });
+        available_features.insert(
+            "core-animation".to_string(),
+            FeatureInfo {
+                name: "core-animation".to_string(),
+                description: "Core animation engine and basic types".to_string(),
+                estimated_size_bytes: 50_000, // 50KB
+                dependencies: vec![],
+                category: FeatureCategory::Core,
+                is_optional: false,
+                default_enabled: true,
+            },
+        );
 
         // DOM components (optional)
-        available_features.insert("motion-div".to_string(), FeatureInfo {
-            name: "motion-div".to_string(),
-            description: "MotionDiv component for animated divs".to_string(),
-            estimated_size_bytes: 25_000, // 25KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Components,
-            is_optional: true,
-            default_enabled: true,
-        });
+        available_features.insert(
+            "motion-div".to_string(),
+            FeatureInfo {
+                name: "motion-div".to_string(),
+                description: "MotionDiv component for animated divs".to_string(),
+                estimated_size_bytes: 25_000, // 25KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Components,
+                is_optional: true,
+                default_enabled: true,
+            },
+        );
 
-        available_features.insert("motion-span".to_string(), FeatureInfo {
-            name: "motion-span".to_string(),
-            description: "MotionSpan component for animated spans".to_string(),
-            estimated_size_bytes: 20_000, // 20KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Components,
-            is_optional: true,
-            default_enabled: true,
-        });
+        available_features.insert(
+            "motion-span".to_string(),
+            FeatureInfo {
+                name: "motion-span".to_string(),
+                description: "MotionSpan component for animated spans".to_string(),
+                estimated_size_bytes: 20_000, // 20KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Components,
+                is_optional: true,
+                default_enabled: true,
+            },
+        );
 
-        available_features.insert("animate-presence".to_string(), FeatureInfo {
-            name: "animate-presence".to_string(),
-            description: "AnimatePresence component for enter/exit animations".to_string(),
-            estimated_size_bytes: 30_000, // 30KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Components,
-            is_optional: true,
-            default_enabled: true,
-        });
+        available_features.insert(
+            "animate-presence".to_string(),
+            FeatureInfo {
+                name: "animate-presence".to_string(),
+                description: "AnimatePresence component for enter/exit animations".to_string(),
+                estimated_size_bytes: 30_000, // 30KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Components,
+                is_optional: true,
+                default_enabled: true,
+            },
+        );
 
         // Gesture features (optional)
-        available_features.insert("gestures".to_string(), FeatureInfo {
-            name: "gestures".to_string(),
-            description: "Gesture recognition system".to_string(),
-            estimated_size_bytes: 60_000, // 60KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Gestures,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "gestures".to_string(),
+            FeatureInfo {
+                name: "gestures".to_string(),
+                description: "Gesture recognition system".to_string(),
+                estimated_size_bytes: 60_000, // 60KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Gestures,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Layout features (optional)
-        available_features.insert("layout".to_string(), FeatureInfo {
-            name: "layout".to_string(),
-            description: "Layout animations and FLIP".to_string(),
-            estimated_size_bytes: 50_000, // 50KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Layout,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "layout".to_string(),
+            FeatureInfo {
+                name: "layout".to_string(),
+                description: "Layout animations and FLIP".to_string(),
+                estimated_size_bytes: 50_000, // 50KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Layout,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Scroll features (optional)
-        available_features.insert("scroll".to_string(), FeatureInfo {
-            name: "scroll".to_string(),
-            description: "Scroll-based animations".to_string(),
-            estimated_size_bytes: 25_000, // 25KB
-            dependencies: vec!["core-animation".to_string()],
-            category: FeatureCategory::Scroll,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "scroll".to_string(),
+            FeatureInfo {
+                name: "scroll".to_string(),
+                description: "Scroll-based animations".to_string(),
+                estimated_size_bytes: 25_000, // 25KB
+                dependencies: vec!["core-animation".to_string()],
+                category: FeatureCategory::Scroll,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Developer tools (optional)
-        available_features.insert("developer-tools".to_string(), FeatureInfo {
-            name: "developer-tools".to_string(),
-            description: "Developer tools and debugging utilities".to_string(),
-            estimated_size_bytes: 45_000, // 45KB
-            dependencies: vec![],
-            category: FeatureCategory::DeveloperTools,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "developer-tools".to_string(),
+            FeatureInfo {
+                name: "developer-tools".to_string(),
+                description: "Developer tools and debugging utilities".to_string(),
+                estimated_size_bytes: 45_000, // 45KB
+                dependencies: vec![],
+                category: FeatureCategory::DeveloperTools,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Advanced features (optional)
-        available_features.insert("advanced-examples".to_string(), FeatureInfo {
-            name: "advanced-examples".to_string(),
-            description: "Advanced animation examples and templates".to_string(),
-            estimated_size_bytes: 35_000, // 35KB
-            dependencies: vec![],
-            category: FeatureCategory::Advanced,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "advanced-examples".to_string(),
+            FeatureInfo {
+                name: "advanced-examples".to_string(),
+                description: "Advanced animation examples and templates".to_string(),
+                estimated_size_bytes: 35_000, // 35KB
+                dependencies: vec![],
+                category: FeatureCategory::Advanced,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Performance monitoring (optional)
-        available_features.insert("performance".to_string(), FeatureInfo {
-            name: "performance".to_string(),
-            description: "Performance monitoring and optimization".to_string(),
-            estimated_size_bytes: 40_000, // 40KB
-            dependencies: vec![],
-            category: FeatureCategory::Performance,
-            is_optional: true,
-            default_enabled: false,
-        });
+        available_features.insert(
+            "performance".to_string(),
+            FeatureInfo {
+                name: "performance".to_string(),
+                description: "Performance monitoring and optimization".to_string(),
+                estimated_size_bytes: 40_000, // 40KB
+                dependencies: vec![],
+                category: FeatureCategory::Performance,
+                is_optional: true,
+                default_enabled: false,
+            },
+        );
 
         // Feature size analysis
         let mut feature_size_analysis = HashMap::new();
@@ -353,7 +383,9 @@ impl FeatureFlagsAnalyzer {
     /// Get minimal bundle size
     pub fn get_minimal_bundle_size(&self) -> u64 {
         if let Some(ref analysis) = self.analysis_results {
-            let minimal_combination = analysis.recommended_combinations.iter()
+            let minimal_combination = analysis
+                .recommended_combinations
+                .iter()
                 .find(|c| c.name == "minimal")
                 .unwrap();
             minimal_combination.estimated_size_bytes
@@ -365,7 +397,9 @@ impl FeatureFlagsAnalyzer {
     /// Get basic bundle size
     pub fn get_basic_bundle_size(&self) -> u64 {
         if let Some(ref analysis) = self.analysis_results {
-            let basic_combination = analysis.recommended_combinations.iter()
+            let basic_combination = analysis
+                .recommended_combinations
+                .iter()
                 .find(|c| c.name == "basic")
                 .unwrap();
             basic_combination.estimated_size_bytes
@@ -382,7 +416,9 @@ impl FeatureFlagsAnalyzer {
     /// Get feature size savings potential
     pub fn get_feature_savings_potential(&self) -> u64 {
         if let Some(ref analysis) = self.analysis_results {
-            let optional_features_size: u64 = analysis.available_features.values()
+            let optional_features_size: u64 = analysis
+                .available_features
+                .values()
                 .filter(|f| f.is_optional)
                 .map(|f| f.estimated_size_bytes)
                 .sum();
@@ -413,7 +449,9 @@ mod tests {
         assert!(core_feature.default_enabled);
 
         // Should have optional features
-        let optional_features: Vec<_> = report.available_features.values()
+        let optional_features: Vec<_> = report
+            .available_features
+            .values()
             .filter(|f| f.is_optional)
             .collect();
         assert!(optional_features.len() >= 6);
@@ -478,10 +516,12 @@ mod tests {
         let report = analyzer.analyze_feature_flags();
 
         // Should have features in different categories
-        let categories: std::collections::HashSet<_> = report.available_features.values()
+        let categories: std::collections::HashSet<_> = report
+            .available_features
+            .values()
             .map(|f| &f.category)
             .collect();
-        
+
         assert!(categories.len() >= 5); // Should have at least 5 categories
         assert!(categories.contains(&&FeatureCategory::Core));
         assert!(categories.contains(&&FeatureCategory::Components));
@@ -513,21 +553,27 @@ mod tests {
         let report = analyzer.analyze_feature_flags();
 
         // Should have minimal combination
-        let minimal = report.recommended_combinations.iter()
+        let minimal = report
+            .recommended_combinations
+            .iter()
             .find(|c| c.name == "minimal")
             .unwrap();
         assert_eq!(minimal.features, vec!["core-animation"]);
         assert!(minimal.estimated_size_bytes < 100_000);
 
         // Should have basic combination
-        let basic = report.recommended_combinations.iter()
+        let basic = report
+            .recommended_combinations
+            .iter()
             .find(|c| c.name == "basic")
             .unwrap();
         assert!(basic.features.len() >= 3);
         assert!(basic.estimated_size_bytes > minimal.estimated_size_bytes);
 
         // Should have full combination
-        let full = report.recommended_combinations.iter()
+        let full = report
+            .recommended_combinations
+            .iter()
             .find(|c| c.name == "full")
             .unwrap();
         assert!(full.features.len() >= 8);
@@ -551,14 +597,23 @@ mod tests {
         assert!(report.optimization_recommendations.len() >= 5);
 
         // Should have make optional recommendations
-        let make_optional_recs: Vec<_> = report.optimization_recommendations.iter()
+        let make_optional_recs: Vec<_> = report
+            .optimization_recommendations
+            .iter()
             .filter(|r| matches!(r.recommendation_type, FeatureOptimizationType::MakeOptional))
             .collect();
         assert!(make_optional_recs.len() >= 3);
 
         // Should have conditional compilation recommendation
-        let conditional_comp_recs: Vec<_> = report.optimization_recommendations.iter()
-            .filter(|r| matches!(r.recommendation_type, FeatureOptimizationType::ConditionalCompilation))
+        let conditional_comp_recs: Vec<_> = report
+            .optimization_recommendations
+            .iter()
+            .filter(|r| {
+                matches!(
+                    r.recommendation_type,
+                    FeatureOptimizationType::ConditionalCompilation
+                )
+            })
             .collect();
         assert!(conditional_comp_recs.len() >= 1);
 
@@ -577,11 +632,18 @@ mod tests {
         let report = analyzer.analyze_feature_flags();
 
         // Should have size analysis for all features
-        assert_eq!(report.feature_size_analysis.len(), report.available_features.len());
+        assert_eq!(
+            report.feature_size_analysis.len(),
+            report.available_features.len()
+        );
 
         // All features should have positive size
         for (feature_name, size) in &report.feature_size_analysis {
-            assert!(*size > 0, "Feature {} should have positive size", feature_name);
+            assert!(
+                *size > 0,
+                "Feature {} should have positive size",
+                feature_name
+            );
         }
 
         // Core animation should be a significant portion
@@ -593,12 +655,12 @@ mod tests {
     #[test]
     fn test_feature_flags_analyzer_initialization() {
         let analyzer = FeatureFlagsAnalyzer::new();
-        
+
         // Should have reasonable size targets
         assert!(analyzer.current_size_bytes > 0);
         assert!(analyzer.target_size_bytes > 0);
         assert!(analyzer.current_size_bytes > analyzer.target_size_bytes);
-        
+
         // Should not have analysis results initially
         assert!(analyzer.analysis_results.is_none());
     }
@@ -610,7 +672,9 @@ mod tests {
         let report = analyzer.analyze_feature_flags();
 
         // Should identify optional features
-        let optional_features: Vec<_> = report.available_features.values()
+        let optional_features: Vec<_> = report
+            .available_features
+            .values()
             .filter(|f| f.is_optional)
             .collect();
 

@@ -81,7 +81,7 @@ impl BundleSizeAnalyzer {
     /// Create a new bundle size analyzer
     pub fn new() -> Self {
         Self {
-            target_size_kb: 30.0, // Target: <30KB
+            target_size_kb: 30.0,   // Target: <30KB
             current_size_kb: 378.0, // Current: 378KB
             analysis_results: None,
         }
@@ -92,7 +92,7 @@ impl BundleSizeAnalyzer {
         // Simulate bundle size analysis
         let mut module_sizes = HashMap::new();
         module_sizes.insert("leptos-motion-core".to_string(), 150_000); // 150KB
-        module_sizes.insert("leptos-motion-dom".to_string(), 80_000);   // 80KB
+        module_sizes.insert("leptos-motion-dom".to_string(), 80_000); // 80KB
         module_sizes.insert("leptos-motion-gestures".to_string(), 60_000); // 60KB
         module_sizes.insert("leptos-motion-layout".to_string(), 50_000); // 50KB
         module_sizes.insert("leptos-motion-scroll".to_string(), 25_000); // 25KB
@@ -108,7 +108,7 @@ impl BundleSizeAnalyzer {
 
         let dead_code_analysis = DeadCodeAnalysis {
             estimated_dead_code_bytes: 150_000, // 150KB of dead code
-            dead_code_percentage: 39.7, // 39.7% dead code
+            dead_code_percentage: 39.7,         // 39.7% dead code
             dead_code_modules: vec![
                 "developer_tools".to_string(),
                 "advanced_examples".to_string(),
@@ -175,18 +175,19 @@ impl BundleSizeAnalyzer {
     /// Get optimization potential
     pub fn get_optimization_potential(&self) -> f64 {
         if let Some(ref analysis) = self.analysis_results {
-            let total_savings: u64 = analysis.recommendations
+            let total_savings: u64 = analysis
+                .recommendations
                 .iter()
                 .map(|r| r.estimated_savings_bytes)
                 .sum();
-            
+
             // Ensure we don't have negative size
             let potential_size_bytes = if total_savings > analysis.total_size_bytes {
                 0
             } else {
                 analysis.total_size_bytes - total_savings
             };
-            
+
             potential_size_bytes as f64 / 1024.0
         } else {
             0.0
@@ -275,15 +276,19 @@ mod tests {
         let report = analyzer.analyze_bundle_size();
 
         let dead_code = &report.dead_code_analysis;
-        
+
         // Should have significant dead code
         assert!(dead_code.estimated_dead_code_bytes > 100_000);
         assert!(dead_code.dead_code_percentage > 30.0);
-        
+
         // Should identify dead code modules
         assert!(!dead_code.dead_code_modules.is_empty());
-        assert!(dead_code.dead_code_modules.contains(&"developer_tools".to_string()));
-        
+        assert!(
+            dead_code
+                .dead_code_modules
+                .contains(&"developer_tools".to_string())
+        );
+
         // Should identify unused dependencies
         assert!(!dead_code.unused_dependencies.is_empty());
         assert!(dead_code.unused_dependencies.contains(&"serde".to_string()));
@@ -299,17 +304,23 @@ mod tests {
         assert!(report.recommendations.len() >= 5);
 
         // Should have dead code elimination recommendation
-        let dead_code_rec = report.recommendations.iter()
+        let dead_code_rec = report
+            .recommendations
+            .iter()
             .find(|r| matches!(r.recommendation_type, OptimizationType::DeadCodeElimination));
         assert!(dead_code_rec.is_some());
 
         // Should have tree shaking recommendation
-        let tree_shaking_rec = report.recommendations.iter()
+        let tree_shaking_rec = report
+            .recommendations
+            .iter()
             .find(|r| matches!(r.recommendation_type, OptimizationType::TreeShaking));
         assert!(tree_shaking_rec.is_some());
 
         // Should have feature flags recommendation
-        let feature_flags_rec = report.recommendations.iter()
+        let feature_flags_rec = report
+            .recommendations
+            .iter()
             .find(|r| matches!(r.recommendation_type, OptimizationType::FeatureFlags));
         assert!(feature_flags_rec.is_some());
 
@@ -325,11 +336,11 @@ mod tests {
     #[test]
     fn test_bundle_size_target_validation() {
         let analyzer = BundleSizeAnalyzer::new();
-        
+
         // Target should be reasonable
         assert!(analyzer.target_size_kb > 0.0);
         assert!(analyzer.target_size_kb < 100.0); // Less than 100KB
-        
+
         // Current size should be larger than target
         assert!(analyzer.current_size_kb > analyzer.target_size_kb);
     }

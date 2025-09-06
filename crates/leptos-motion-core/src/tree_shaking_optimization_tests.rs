@@ -121,83 +121,93 @@ impl TreeShakingAnalyzer {
     pub fn analyze_tree_shaking(&mut self) -> TreeShakingReport {
         // Simulate tree shaking analysis
         let mut dead_code_modules = HashMap::new();
-        
+
         // Developer tools module - mostly unused in production
-        dead_code_modules.insert("developer_tools".to_string(), DeadCodeModule {
-            name: "developer_tools".to_string(),
-            dead_code_bytes: 45_000, // 45KB
-            dead_code_percentage: 85.0,
-            unused_functions: vec![
-                "attach_inspector".to_string(),
-                "attach_profiler".to_string(),
-                "attach_debug_console".to_string(),
-                "update_all_animations".to_string(),
-            ],
-            unused_types: vec![
-                "AnimationInspector".to_string(),
-                "PerformanceProfiler".to_string(),
-                "DebugConsole".to_string(),
-                "BottleneckSeverity".to_string(),
-            ],
-        });
+        dead_code_modules.insert(
+            "developer_tools".to_string(),
+            DeadCodeModule {
+                name: "developer_tools".to_string(),
+                dead_code_bytes: 45_000, // 45KB
+                dead_code_percentage: 85.0,
+                unused_functions: vec![
+                    "attach_inspector".to_string(),
+                    "attach_profiler".to_string(),
+                    "attach_debug_console".to_string(),
+                    "update_all_animations".to_string(),
+                ],
+                unused_types: vec![
+                    "AnimationInspector".to_string(),
+                    "PerformanceProfiler".to_string(),
+                    "DebugConsole".to_string(),
+                    "BottleneckSeverity".to_string(),
+                ],
+            },
+        );
 
         // Advanced examples module - not needed in production
-        dead_code_modules.insert("advanced_examples".to_string(), DeadCodeModule {
-            name: "advanced_examples".to_string(),
-            dead_code_bytes: 35_000, // 35KB
-            dead_code_percentage: 90.0,
-            unused_functions: vec![
-                "create_animation_sequence".to_string(),
-                "execute_sequence".to_string(),
-                "get_sequence_stage_handles".to_string(),
-            ],
-            unused_types: vec![
-                "AnimationSequence".to_string(),
-                "AnimationTemplate".to_string(),
-                "PatternCategory".to_string(),
-            ],
-        });
+        dead_code_modules.insert(
+            "advanced_examples".to_string(),
+            DeadCodeModule {
+                name: "advanced_examples".to_string(),
+                dead_code_bytes: 35_000, // 35KB
+                dead_code_percentage: 90.0,
+                unused_functions: vec![
+                    "create_animation_sequence".to_string(),
+                    "execute_sequence".to_string(),
+                    "get_sequence_stage_handles".to_string(),
+                ],
+                unused_types: vec![
+                    "AnimationSequence".to_string(),
+                    "AnimationTemplate".to_string(),
+                    "PatternCategory".to_string(),
+                ],
+            },
+        );
 
         // Ecosystem integration module - optional
-        dead_code_modules.insert("ecosystem_integration".to_string(), DeadCodeModule {
-            name: "ecosystem_integration".to_string(),
-            dead_code_bytes: 25_000, // 25KB
-            dead_code_percentage: 70.0,
-            unused_functions: vec![
-                "validate_integration".to_string(),
-                "generate_integration_report".to_string(),
-            ],
-            unused_types: vec![
-                "IntegrationConfig".to_string(),
-                "BuildToolIntegration".to_string(),
-            ],
-        });
+        dead_code_modules.insert(
+            "ecosystem_integration".to_string(),
+            DeadCodeModule {
+                name: "ecosystem_integration".to_string(),
+                dead_code_bytes: 25_000, // 25KB
+                dead_code_percentage: 70.0,
+                unused_functions: vec![
+                    "validate_integration".to_string(),
+                    "generate_integration_report".to_string(),
+                ],
+                unused_types: vec![
+                    "IntegrationConfig".to_string(),
+                    "BuildToolIntegration".to_string(),
+                ],
+            },
+        );
 
         // TDD engine module - test-only code
-        dead_code_modules.insert("tdd_engine".to_string(), DeadCodeModule {
-            name: "tdd_engine".to_string(),
-            dead_code_bytes: 20_000, // 20KB
-            dead_code_percentage: 80.0,
-            unused_functions: vec![
-                "motion_target_macro_impl".to_string(),
-            ],
-            unused_types: vec![
-                "TDDAnimationHandle".to_string(),
-                "ActiveAnimation".to_string(),
-            ],
-        });
+        dead_code_modules.insert(
+            "tdd_engine".to_string(),
+            DeadCodeModule {
+                name: "tdd_engine".to_string(),
+                dead_code_bytes: 20_000, // 20KB
+                dead_code_percentage: 80.0,
+                unused_functions: vec!["motion_target_macro_impl".to_string()],
+                unused_types: vec![
+                    "TDDAnimationHandle".to_string(),
+                    "ActiveAnimation".to_string(),
+                ],
+            },
+        );
 
         // Timeline module - not implemented yet
-        dead_code_modules.insert("timeline".to_string(), DeadCodeModule {
-            name: "timeline".to_string(),
-            dead_code_bytes: 15_000, // 15KB
-            dead_code_percentage: 100.0,
-            unused_functions: vec![],
-            unused_types: vec![
-                "Timeline".to_string(),
-                "TimelineKeyframe".to_string(),
-            ],
-        });
+        dead_code_modules.insert(
+            "timeline".to_string(),
+            DeadCodeModule {
+                name: "timeline".to_string(),
+                dead_code_bytes: 15_000, // 15KB
+                dead_code_percentage: 100.0,
+                unused_functions: vec![],
+                unused_types: vec!["Timeline".to_string(), "TimelineKeyframe".to_string()],
+            },
+        );
 
         let unused_functions = vec![
             UnusedFunction {
@@ -272,7 +282,8 @@ impl TreeShakingAnalyzer {
             },
             TreeShakingRecommendation {
                 recommendation_type: TreeShakingType::FeatureBasedShaking,
-                description: "Implement feature-based tree shaking for optional components".to_string(),
+                description: "Implement feature-based tree shaking for optional components"
+                    .to_string(),
                 estimated_savings_bytes: 30_000,
                 difficulty: 3,
                 priority: 4,
@@ -286,9 +297,7 @@ impl TreeShakingAnalyzer {
             },
         ];
 
-        let total_dead_code: u64 = dead_code_modules.values()
-            .map(|m| m.dead_code_bytes)
-            .sum();
+        let total_dead_code: u64 = dead_code_modules.values().map(|m| m.dead_code_bytes).sum();
 
         let report = TreeShakingReport {
             dead_code_bytes: total_dead_code,
@@ -345,7 +354,11 @@ mod tests {
         // Should identify dead code modules
         assert!(report.dead_code_modules.contains_key("developer_tools"));
         assert!(report.dead_code_modules.contains_key("advanced_examples"));
-        assert!(report.dead_code_modules.contains_key("ecosystem_integration"));
+        assert!(
+            report
+                .dead_code_modules
+                .contains_key("ecosystem_integration")
+        );
 
         // Should identify unused functions
         assert!(!report.unused_functions.is_empty());
@@ -385,7 +398,7 @@ mod tests {
         let potential_size = analyzer.get_potential_size_after_shaking();
         assert!(potential_size > 0);
         assert!(potential_size < analyzer.current_size_bytes);
-        
+
         // Test effectiveness calculation
         let effectiveness = analyzer.get_shaking_effectiveness();
         assert!(effectiveness > 0.0);
@@ -421,8 +434,16 @@ mod tests {
 
         // All modules should have positive dead code
         for (module_name, module) in &report.dead_code_modules {
-            assert!(module.dead_code_bytes > 0, "Module {} should have dead code", module_name);
-            assert!(module.dead_code_percentage > 0.0, "Module {} should have dead code percentage", module_name);
+            assert!(
+                module.dead_code_bytes > 0,
+                "Module {} should have dead code",
+                module_name
+            );
+            assert!(
+                module.dead_code_percentage > 0.0,
+                "Module {} should have dead code percentage",
+                module_name
+            );
         }
     }
 
@@ -433,19 +454,33 @@ mod tests {
         let report = analyzer.analyze_tree_shaking();
 
         // Should identify specific unused functions
-        let function_names: Vec<String> = report.unused_functions.iter()
+        let function_names: Vec<String> = report
+            .unused_functions
+            .iter()
             .map(|f| f.name.clone())
             .collect();
-        
+
         assert!(function_names.contains(&"attach_inspector".to_string()));
         assert!(function_names.contains(&"create_animation_sequence".to_string()));
         assert!(function_names.contains(&"motion_target_macro_impl".to_string()));
 
         // All unused functions should have positive size
         for func in &report.unused_functions {
-            assert!(func.size_bytes > 0, "Function {} should have positive size", func.name);
-            assert!(!func.module.is_empty(), "Function {} should have module", func.name);
-            assert!(!func.signature.is_empty(), "Function {} should have signature", func.name);
+            assert!(
+                func.size_bytes > 0,
+                "Function {} should have positive size",
+                func.name
+            );
+            assert!(
+                !func.module.is_empty(),
+                "Function {} should have module",
+                func.name
+            );
+            assert!(
+                !func.signature.is_empty(),
+                "Function {} should have signature",
+                func.name
+            );
         }
     }
 
@@ -456,19 +491,29 @@ mod tests {
         let report = analyzer.analyze_tree_shaking();
 
         // Should identify specific unused types
-        let type_names: Vec<String> = report.unused_types.iter()
-            .map(|t| t.name.clone())
-            .collect();
-        
+        let type_names: Vec<String> = report.unused_types.iter().map(|t| t.name.clone()).collect();
+
         assert!(type_names.contains(&"AnimationInspector".to_string()));
         assert!(type_names.contains(&"AnimationSequence".to_string()));
         assert!(type_names.contains(&"TDDAnimationHandle".to_string()));
 
         // All unused types should have positive size
         for type_info in &report.unused_types {
-            assert!(type_info.size_bytes > 0, "Type {} should have positive size", type_info.name);
-            assert!(!type_info.module.is_empty(), "Type {} should have module", type_info.name);
-            assert!(!type_info.type_kind.is_empty(), "Type {} should have type kind", type_info.name);
+            assert!(
+                type_info.size_bytes > 0,
+                "Type {} should have positive size",
+                type_info.name
+            );
+            assert!(
+                !type_info.module.is_empty(),
+                "Type {} should have module",
+                type_info.name
+            );
+            assert!(
+                !type_info.type_kind.is_empty(),
+                "Type {} should have type kind",
+                type_info.name
+            );
         }
     }
 
@@ -482,14 +527,23 @@ mod tests {
         assert!(report.recommendations.len() >= 5);
 
         // Should have unused module removal recommendations
-        let module_removal_recs: Vec<_> = report.recommendations.iter()
+        let module_removal_recs: Vec<_> = report
+            .recommendations
+            .iter()
             .filter(|r| matches!(r.recommendation_type, TreeShakingType::UnusedModuleRemoval))
             .collect();
         assert!(module_removal_recs.len() >= 2);
 
         // Should have conditional compilation recommendation
-        let conditional_comp_recs: Vec<_> = report.recommendations.iter()
-            .filter(|r| matches!(r.recommendation_type, TreeShakingType::ConditionalCompilation))
+        let conditional_comp_recs: Vec<_> = report
+            .recommendations
+            .iter()
+            .filter(|r| {
+                matches!(
+                    r.recommendation_type,
+                    TreeShakingType::ConditionalCompilation
+                )
+            })
             .collect();
         assert!(conditional_comp_recs.len() >= 1);
 
@@ -505,12 +559,12 @@ mod tests {
     #[test]
     fn test_tree_shaking_analyzer_initialization() {
         let analyzer = TreeShakingAnalyzer::new();
-        
+
         // Should have reasonable size targets
         assert!(analyzer.current_size_bytes > 0);
         assert!(analyzer.target_size_bytes > 0);
         assert!(analyzer.current_size_bytes > analyzer.target_size_bytes);
-        
+
         // Should not have analysis results initially
         assert!(analyzer.analysis_results.is_none());
     }
@@ -522,7 +576,9 @@ mod tests {
         let report = analyzer.analyze_tree_shaking();
 
         // Calculate total dead code from modules
-        let calculated_total: u64 = report.dead_code_modules.values()
+        let calculated_total: u64 = report
+            .dead_code_modules
+            .values()
             .map(|m| m.dead_code_bytes)
             .sum();
 

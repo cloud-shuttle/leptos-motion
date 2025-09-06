@@ -210,7 +210,7 @@ We welcome community input on our roadmap! Here's how you can contribute:
 | **Phase 3** | Weeks 1-4   | Production Readiness | End of September 2025 |
 | **Phase 4** | Weeks 5-8   | Advanced Features    | End of October 2025   |
 | **Phase 5** | Weeks 9-12  | Ecosystem & Tools    | End of November 2025  |
-| **Phase 6** | Weeks 13-16 | Production Release   | End of December 2025  |
+| **Phase 6** | Weeks 13-16 | Production Release   | End of March 2026     |
 
 ---
 

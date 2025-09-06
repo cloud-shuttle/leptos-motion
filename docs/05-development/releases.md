@@ -357,10 +357,10 @@ If a release has critical issues:
 - **Patch**: As needed for bug fixes
 
 ### Release Calendar
-- **Q1 2024**: v0.3.0 (Current)
-- **Q2 2024**: v0.4.0 (Planned)
-- **Q3 2024**: v0.5.0 (Planned)
-- **Q4 2024**: v1.0.0 (Target)
+- **Q3 2025**: v0.3.0-beta (Current)
+- **Q4 2025**: v0.4.0 (Planned)
+- **Q1 2026**: v0.5.0 (Planned)
+- **Q2 2026**: v1.0.0 (Target)
 
 ## Best Practices
 
@@ -374,7 +374,7 @@ If a release has critical issues:
 
 ---
 
-**Last Updated**: Version 0.3.0 - December 2024
+**Last Updated**: Version 0.3.0-beta - September 6th, 2025
 
 For questions about the release process, please open a GitHub issue or contact the maintainers.
 ```

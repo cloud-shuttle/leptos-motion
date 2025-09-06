@@ -1,8 +1,8 @@
 # 🚀 Leptos Motion v0.3.0-beta Release Notes
 
-**Release Date**: December 2024  
+**Release Date**: September 6th, 2025  
 **Status**: Beta Release - Solid Foundation Ready for Testing  
-**Next Target**: v1.0 (Q2 2025)
+**Next Target**: v1.0 (Q1 2026)
 
 ## 🎉 What's New in v0.3.0-beta
 
@@ -90,19 +90,19 @@ Missing:   All CSS properties, colors, 3D transforms, filters
 
 ## 🛣️ **Roadmap to v1.0**
 
-### **Phase 1: Bundle Size Optimization (Q1 2025)**
+### **Phase 1: Bundle Size Optimization (Q4 2025)**
 - [ ] **WASM Optimization**: Reduce from 378KB to <30KB
 - [ ] **Tree Shaking**: Proper dead code elimination
 - [ ] **Feature Flags**: Optional features to reduce size
 - [ ] **Code Splitting**: Lazy load non-essential features
 
-### **Phase 2: Component Completeness (Q1 2025)**
+### **Phase 2: Component Completeness (Q1 2026)**
 - [ ] **HTML Elements**: MotionButton, MotionImg, MotionSvg, etc.
 - [ ] **SVG Support**: MotionCircle, MotionRect, MotionPath
 - [ ] **Form Elements**: MotionInput, MotionTextarea, MotionSelect
 - [ ] **Media Elements**: MotionVideo, MotionAudio, MotionCanvas
 
-### **Phase 3: Feature Completeness (Q2 2025)**
+### **Phase 3: Feature Completeness (Q2 2026)**
 - [ ] **Animation Properties**: All CSS properties, colors, 3D transforms
 - [ ] **Advanced Features**: Timeline, keyframes, scroll animations
 - [ ] **API Completeness**: Imperative API, hooks, utilities
@@ -176,4 +176,4 @@ We welcome contributions! The foundation is solid, and there are clear paths for
 
 ---
 
-**This is a beta release with a solid foundation. We're about 6-8 months away from a true v1.0 release that can compete with Motion.js in terms of features and bundle size.**
+**This is a beta release with a solid foundation. We're about 3-6 months away from a true v1.0 release that can compete with Motion.js in terms of features and bundle size.**

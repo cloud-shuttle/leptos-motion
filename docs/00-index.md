@@ -305,4 +305,4 @@ cargo test --all-features
 
 ---
 
-_Last updated: 2024 | Status: Pre-alpha Development_
+_Last updated: September 6th, 2025 | Status: Beta Release v0.3.0_

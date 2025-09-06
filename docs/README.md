@@ -7,33 +7,43 @@ Welcome to the comprehensive documentation for Leptos Motion - a high-performanc
 Our documentation is organized into clear, logical sections to help you find exactly what you need:
 
 ### 🚀 [01. Getting Started](./01-getting-started/)
+
 **New to Leptos Motion? Start here!**
+
 - [Installation Guide](./01-getting-started/installation.md)
 - [Quick Start Guide](./01-getting-started/QUICK_START_GUIDES.md)
 - [Your First Animation](./01-getting-started/first-animation.md)
 - [Migration from Framer Motion](./01-getting-started/framer-motion.md)
 
 ### 📚 [02. API Reference](./02-api-reference/)
+
 **Complete API documentation and reference**
+
 - [API Reference](./02-api-reference/API_REFERENCE.md)
 - [API Stability Analysis](./02-api-reference/API_STABILITY_ANALYSIS.md)
 - [Changelog](./02-api-reference/changelog.md)
 
 ### 🎯 [03. Guides](./03-guides/)
+
 **In-depth guides and best practices**
+
 - [Developer Experience Guide](./03-guides/DEVELOPER_EXPERIENCE_GUIDE.md)
 - [Advanced Features](./03-guides/advanced_features.md)
 - [Performance Optimization](./03-guides/performance.md)
 - [Design Principles](./03-guides/design.md)
 
 ### 💡 [04. Examples](./04-examples/)
+
 **Working examples and code samples**
+
 - Interactive examples and demos
 - Real-world use cases
 - Best practice implementations
 
 ### 🛠️ [05. Development](./05-development/)
+
 **Contributing and development information**
+
 - [Contributing Guide](./05-development/contributing.md)
 - [Development Setup](./05-development/setup.md)
 - [Testing Guidelines](./05-development/testing.md)
@@ -42,23 +52,31 @@ Our documentation is organized into clear, logical sections to help you find exa
 - [Pre-Commit Summary](./05-development/PRE_COMMIT_SUMMARY.md)
 
 ### 🎉 [06. Releases](./06-releases/)
+
 **Release notes and version information**
+
 - [Release Notes](./06-releases/RELEASE_NOTES.md)
 - [Release Summary](./06-releases/RELEASE_SUMMARY.md)
 - [Release Checklist](./06-releases/release_checklist.md)
 
 ### 📋 [11. Release Notes](./11-release-notes/)
+
 **Detailed release notes and planning**
+
 - [Release Notes Index](./11-release-notes/README.md)
 - Beta release readiness and version-specific notes
 
 ### 📊 [12. Summaries](./12-summaries/)
+
 **Release summaries and project status**
+
 - [Summaries Index](./12-summaries/README.md)
 - Project status and release summaries
 
 ### 🏗️ [07. Architecture](./07-architecture/)
+
 **Technical architecture and design decisions**
+
 - [Animation Engine Simplification](./07-architecture/ANIMATION_ENGINE_SIMPLIFICATION.md)
 - [Bundle Size Analysis](./07-architecture/BUNDLE_SIZE_ANALYSIS.md)
 - [Competitive Analysis](./07-architecture/COMPETITIVE_ANALYSIS.md)
@@ -66,14 +84,18 @@ Our documentation is organized into clear, logical sections to help you find exa
 - [Project Structure](./07-architecture/PROJECT_STRUCTURE.md)
 
 ### 🧪 [08. Testing](./08-testing/)
+
 **Testing strategy and implementation**
+
 - [TDD Process Guide](./08-testing/TDD_PROCESS_GUIDE.md)
 - [Testing Strategy](./08-testing/testing_strategy.md)
 - [E2E Testing Guide](./08-testing/E2E_TESTING_GUIDE.md)
 - [Performance Testing](./08-testing/PERFORMANCE_TESTING_SUMMARY.md)
 
 ### 🗺️ [09. Roadmap](./09-roadmap/)
+
 **Future plans and development roadmap**
+
 - [Main Roadmap](./09-roadmap/ROADMAP.md)
 - [V1 Readiness Assessment](./09-roadmap/V1_READINESS_ASSESSMENT.md)
 - [Roadmap Summary](./09-roadmap/ROADMAP_SUMMARY.md)
@@ -83,23 +105,24 @@ Our documentation is organized into clear, logical sections to help you find exa
 ## 📚 Additional Resources
 
 ### 📖 [Book Documentation](./book/)
+
 Our comprehensive book-style documentation with detailed tutorials and examples.
 
 ### 🎯 Quick Navigation
 
-| Need Help With? | Go To |
-|----------------|-------|
-| **Getting started** | [01. Getting Started](./01-getting-started/) |
-| **API questions** | [02. API Reference](./02-api-reference/) |
-| **How-to guides** | [03. Guides](./03-guides/) |
-| **Code examples** | [04. Examples](./04-examples/) |
-| **Contributing** | [05. Development](./05-development/) |
-| **Release info** | [06. Releases](./06-releases/) |
-| **Architecture** | [07. Architecture](./07-architecture/) |
-| **Testing** | [08. Testing](./08-testing/) |
-| **Future plans** | [09. Roadmap](./09-roadmap/) |
-| **Release notes** | [11. Release Notes](./11-release-notes/) |
-| **Project summaries** | [12. Summaries](./12-summaries/) |
+| Need Help With?       | Go To                                        |
+| --------------------- | -------------------------------------------- |
+| **Getting started**   | [01. Getting Started](./01-getting-started/) |
+| **API questions**     | [02. API Reference](./02-api-reference/)     |
+| **How-to guides**     | [03. Guides](./03-guides/)                   |
+| **Code examples**     | [04. Examples](./04-examples/)               |
+| **Contributing**      | [05. Development](./05-development/)         |
+| **Release info**      | [06. Releases](./06-releases/)               |
+| **Architecture**      | [07. Architecture](./07-architecture/)       |
+| **Testing**           | [08. Testing](./08-testing/)                 |
+| **Future plans**      | [09. Roadmap](./09-roadmap/)                 |
+| **Release notes**     | [11. Release Notes](./11-release-notes/)     |
+| **Project summaries** | [12. Summaries](./12-summaries/)             |
 
 ## 🚀 Quick Start
 
@@ -121,6 +144,7 @@ If you're new to Leptos Motion, we recommend this learning path:
 ## 🎯 Current Status
 
 **Leptos Motion v0.3.2** is now **stable and production-ready** with:
+
 - ✅ 264 tests passing across all crates
 - ✅ Zero compilation errors
 - ✅ Complete performance monitoring
@@ -129,4 +153,4 @@ If you're new to Leptos Motion, we recommend this learning path:
 
 ---
 
-*Happy animating with Leptos Motion! 🎬*
+_Happy animating with Leptos Motion! 🎬_

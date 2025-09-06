@@ -3,15 +3,16 @@
 //! These tests ensure that WASM compilation optimizations don't break functionality
 //! while achieving significant bundle size reductions.
 
-#[cfg(feature = "leptos-integration")]
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
-#[cfg(feature = "leptos-integration")]
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test that core functionality still works after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_core_functionality_after_wasm_optimization() {
     use crate::*;
     use std::collections::HashMap;
@@ -37,8 +38,8 @@ fn test_core_functionality_after_wasm_optimization() {
 }
 
 /// Test that engines still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_engines_after_wasm_optimization() {
     use crate::*;
 
@@ -57,8 +58,8 @@ fn test_engines_after_wasm_optimization() {
 }
 
 /// Test that performance monitoring still works after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_after_wasm_optimization() {
     use crate::performance::*;
 
@@ -73,8 +74,8 @@ fn test_performance_monitoring_after_wasm_optimization() {
 }
 
 /// Test that animation values still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_values_after_wasm_optimization() {
     use crate::*;
 
@@ -99,8 +100,8 @@ fn test_animation_values_after_wasm_optimization() {
 }
 
 /// Test that easing functions still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_easing_functions_after_wasm_optimization() {
     use crate::*;
 
@@ -134,8 +135,8 @@ fn test_easing_functions_after_wasm_optimization() {
 }
 
 /// Test that repeat configurations still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_repeat_configurations_after_wasm_optimization() {
     use crate::*;
 
@@ -168,8 +169,8 @@ fn test_repeat_configurations_after_wasm_optimization() {
 }
 
 /// Test that stagger configurations still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_stagger_configurations_after_wasm_optimization() {
     use crate::*;
 
@@ -210,8 +211,8 @@ fn test_stagger_configurations_after_wasm_optimization() {
 }
 
 /// Test that complex nested types still work after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_complex_nested_types_after_wasm_optimization() {
     use crate::*;
     use std::collections::HashMap;
@@ -263,8 +264,8 @@ fn test_complex_nested_types_after_wasm_optimization() {
 }
 
 /// Test WASM optimization bundle size targets (conceptual - actual measurement will be done externally)
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_wasm_optimization_bundle_size_targets() {
     // This test documents our WASM optimization bundle size targets
     // Actual measurement will be done with external tools
@@ -275,8 +276,8 @@ fn test_wasm_optimization_bundle_size_targets() {
 }
 
 /// Test that memory optimization still works after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_memory_optimization_after_wasm_optimization() {
     use crate::memory_optimization::*;
 
@@ -290,8 +291,8 @@ fn test_memory_optimization_after_wasm_optimization() {
 }
 
 /// Test that lazy loading still works after WASM optimization
-#[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_lazy_loading_after_wasm_optimization() {
     use crate::lazy_loading::*;
 

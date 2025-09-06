@@ -7,17 +7,20 @@ Successfully completed dependency investigation and achieved **91% bundle size r
 ## Key Achievements
 
 ### Bundle Size Reduction
+
 - **Before**: 7.0MB (with all dependencies)
 - **After**: 643KB (with conditional compilation)
 - **Reduction**: **91%** (6.36MB saved)
 
 ### Hidden Dependencies Identified and Resolved
+
 1. **`futures` dependency** - Was being pulled in by `lazy_loading` module
 2. **`approx` dependency** - Was being pulled in by `math`, `spring`, `interpolation`, and `easing` modules
 3. **`num-traits` dependency** - Was being pulled in by `approx` dependency
 4. **`wasm-bindgen-futures` dependency** - Was being pulled in by `lazy_loading` module
 
 ### Build System Analysis
+
 - **Root Cause**: Modules were always included in the build, even when their dependencies were optional
 - **Solution**: Made modules conditional on feature flags
 - **Result**: Dependencies are now properly excluded when features are disabled
@@ -25,6 +28,7 @@ Successfully completed dependency investigation and achieved **91% bundle size r
 ## Technical Implementation
 
 ### Conditional Module Compilation
+
 ```rust
 #[cfg(feature = "approx")]
 pub mod animation;
@@ -41,9 +45,11 @@ pub mod lazy_loading;
 ```
 
 ### Core Method Implementations
+
 Added essential methods to core types to avoid dependency on conditional modules:
 
 #### Easing::evaluate() Method
+
 ```rust
 impl Easing {
     pub fn evaluate(&self, t: f64) -> f64 {
@@ -64,6 +70,7 @@ impl Easing {
 ```
 
 #### AnimationValue::interpolate() Method
+
 ```rust
 impl AnimationValue {
     pub fn interpolate(&self, other: &AnimationValue, progress: f64) -> AnimationValue {
@@ -83,6 +90,7 @@ impl AnimationValue {
 ```
 
 ### Conditional Type Definitions
+
 ```rust
 #[cfg(feature = "approx")]
 pub struct SpringConfig {
@@ -110,6 +118,7 @@ impl Default for SpringConfig {
 ```
 
 ### Conditional Re-exports
+
 ```rust
 #[cfg(feature = "approx")]
 pub use animation::presets::AnimationPresets;
@@ -138,6 +147,7 @@ pub use lazy_loading::{
 ## TDD Implementation
 
 ### Red Phase (Test Creation)
+
 - Created comprehensive `dependency_investigation_tests.rs` with tests for:
   - Identifying futures dependencies
   - Identifying approx dependencies
@@ -153,6 +163,7 @@ pub use lazy_loading::{
   - Functionality maintenance with bundle reduction
 
 ### Green Phase (Implementation)
+
 - Made core modules conditional on feature flags
 - Added essential methods to core types
 - Implemented conditional compilation for all dependent code
@@ -160,6 +171,7 @@ pub use lazy_loading::{
 - Achieved successful build with no features
 
 ### Refactor Phase (Optimization)
+
 - Verified bundle size reduction
 - Confirmed dependency tree optimization
 - Validated functionality preservation
@@ -168,16 +180,19 @@ pub use lazy_loading::{
 ## Bundle Size Analysis
 
 ### Current Bundle Sizes
-| Feature Combination | Bundle Size | Reduction | Notes |
-|-------------------|-------------|-----------|-------|
-| No features | 643KB | 91% | Core functionality only |
-| core-animations | 643KB | 91% | Same as no features |
-| minimal preset | 643KB | 91% | Same as no features |
-| standard preset | 7.0MB | 0% | Includes all dependencies |
-| full preset | 7.0MB | 0% | Includes all dependencies |
+
+| Feature Combination | Bundle Size | Reduction | Notes                     |
+| ------------------- | ----------- | --------- | ------------------------- |
+| No features         | 643KB       | 91%       | Core functionality only   |
+| core-animations     | 643KB       | 91%       | Same as no features       |
+| minimal preset      | 643KB       | 91%       | Same as no features       |
+| standard preset     | 7.0MB       | 0%        | Includes all dependencies |
+| full preset         | 7.0MB       | 0%        | Includes all dependencies |
 
 ### Dependency Tree Analysis
+
 **Before (with all features):**
+
 ```
 leptos-motion-core
 ├── futures v0.3.31 (large dependency tree)
@@ -188,6 +203,7 @@ leptos-motion-core
 ```
 
 **After (no features):**
+
 ```
 leptos-motion-core
 ├── js-sys v0.3.78
@@ -198,18 +214,21 @@ leptos-motion-core
 ## Key Findings
 
 ### Hidden Dependencies Identified
+
 1. **`lazy_loading` module** - Was always included, pulling in `futures` and `wasm-bindgen-futures`
 2. **`animation` module** - Was always included, pulling in `interpolation` module
 3. **`interpolation` module** - Was always included, pulling in `approx` dependency
 4. **`math`, `spring`, `easing` modules** - Were always included, pulling in `approx` dependency
 
 ### Build System Issues Resolved
+
 1. **Module Inclusion** - Modules were always included regardless of feature flags
 2. **Dependency Propagation** - Dependencies were pulled in even when not needed
 3. **Conditional Compilation** - Feature flags weren't properly controlling module inclusion
 4. **Re-export Dependencies** - Re-exports were always included regardless of feature flags
 
 ### Bundle Size Optimization Achieved
+
 1. **91% Reduction** - From 7.0MB to 643KB
 2. **Dependency Elimination** - Removed `futures`, `approx`, `num-traits`, `wasm-bindgen-futures`
 3. **Core Functionality Preserved** - All essential features still work
@@ -218,6 +237,7 @@ leptos-motion-core
 ## Impact Assessment
 
 ### Positive Impacts
+
 - ✅ **Massive Bundle Size Reduction**: 91% reduction (7.0MB → 643KB)
 - ✅ **Dependency Elimination**: Removed major dependencies (`futures`, `approx`, etc.)
 - ✅ **Conditional Compilation**: Proper feature flag control
@@ -226,6 +246,7 @@ leptos-motion-core
 - ✅ **Clean Architecture**: Proper separation of concerns
 
 ### Trade-offs
+
 - ⚠️ **Advanced Features**: Some features require optional dependencies
 - ⚠️ **Feature Flags**: Users need to enable features for advanced functionality
 - ⚠️ **Documentation**: Need to document which features require which dependencies

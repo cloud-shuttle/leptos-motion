@@ -4,14 +4,17 @@
 //! while achieving significant bundle size reductions.
 
 #[cfg(feature = "leptos-integration")]
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
-#[cfg(feature = "leptos-integration")]
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test that core types still work after serde removal
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_core_types_after_serde_replacement() {
     use crate::*;
     use std::collections::HashMap;
@@ -49,7 +52,8 @@ fn test_core_types_after_serde_replacement() {
 
 /// Test that Transition types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_transition_types_after_serde_replacement() {
     use crate::*;
 
@@ -91,7 +95,8 @@ fn test_transition_types_after_serde_replacement() {
 
 /// Test that Transform types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_transform_types_after_serde_replacement() {
     use crate::*;
 
@@ -132,7 +137,8 @@ fn test_transform_types_after_serde_replacement() {
 
 /// Test that Easing types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_easing_types_after_serde_replacement() {
     use crate::*;
 
@@ -188,7 +194,8 @@ fn test_easing_types_after_serde_replacement() {
 
 /// Test that RepeatConfig types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_repeat_config_after_serde_replacement() {
     use crate::*;
 
@@ -222,7 +229,8 @@ fn test_repeat_config_after_serde_replacement() {
 
 /// Test that SpringConfig types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_spring_config_after_serde_replacement() {
     use crate::*;
 
@@ -249,7 +257,8 @@ fn test_spring_config_after_serde_replacement() {
 
 /// Test that StaggerConfig types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_stagger_config_after_serde_replacement() {
     use crate::*;
 
@@ -291,7 +300,8 @@ fn test_stagger_config_after_serde_replacement() {
 
 /// Test that complex nested types still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_complex_nested_types_after_serde_replacement() {
     use crate::*;
     use std::collections::HashMap;
@@ -344,7 +354,8 @@ fn test_complex_nested_types_after_serde_replacement() {
 
 /// Test that animation engines still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_engines_after_serde_replacement() {
     use crate::*;
     use std::collections::HashMap;
@@ -371,7 +382,8 @@ fn test_animation_engines_after_serde_replacement() {
 
 /// Test serde replacement bundle size targets (conceptual - actual measurement will be done externally)
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_serde_replacement_bundle_size_targets() {
     // This test documents our serde replacement bundle size targets
     // Actual measurement will be done with external tools

@@ -1,14 +1,17 @@
 //! Performance monitoring integration tests
 
 use crate::engine::OptimizedHybridEngine;
-use crate::performance::*;
 use crate::*;
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test performance monitoring integration with OptimizedHybridEngine
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_optimized_hybrid_engine_performance_monitoring() {
     // Create OptimizedHybridEngine with performance monitoring
     let mut engine = OptimizedHybridEngine::new();
@@ -24,7 +27,8 @@ fn test_optimized_hybrid_engine_performance_monitoring() {
 }
 
 /// Test performance monitoring with animation workload
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_with_animations() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -41,7 +45,8 @@ fn test_performance_monitoring_with_animations() {
 }
 
 /// Test performance budget enforcement
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_budget_enforcement() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -59,7 +64,8 @@ fn test_performance_budget_enforcement() {
 
 /// Test GPU layer management integration
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_gpu_layer_management_integration() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -73,7 +79,8 @@ fn test_gpu_layer_management_integration() {
 }
 
 /// Test animation pool integration
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_pool_integration() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -87,7 +94,8 @@ fn test_animation_pool_integration() {
 }
 
 /// Test performance monitoring with real animation
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_with_real_animation() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -100,7 +108,8 @@ fn test_performance_monitoring_with_real_animation() {
 }
 
 /// Test performance monitoring error handling
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_error_handling() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -116,7 +125,8 @@ fn test_performance_monitoring_error_handling() {
 }
 
 /// Test performance monitoring memory usage tracking
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_memory_tracking() {
     let mut engine = OptimizedHybridEngine::new();
 
@@ -129,7 +139,8 @@ fn test_performance_monitoring_memory_tracking() {
 }
 
 /// Test performance monitoring with multiple engines
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_multiple_engines() {
     let mut engine1 = OptimizedHybridEngine::new();
     let mut engine2 = OptimizedHybridEngine::new();

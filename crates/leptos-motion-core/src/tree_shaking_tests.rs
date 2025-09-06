@@ -4,14 +4,17 @@
 //! while achieving significant bundle size reductions by removing unused code.
 
 #[cfg(feature = "leptos-integration")]
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
-#[cfg(feature = "leptos-integration")]
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test that core functionality still works after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_core_functionality_after_tree_shaking() {
     use crate::*;
     use std::collections::HashMap;
@@ -38,7 +41,8 @@ fn test_core_functionality_after_tree_shaking() {
 
 /// Test that engines still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_engines_after_tree_shaking() {
     use crate::*;
 
@@ -58,7 +62,8 @@ fn test_engines_after_tree_shaking() {
 
 /// Test that performance monitoring still works after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_after_tree_shaking() {
     use crate::performance::*;
 
@@ -74,7 +79,8 @@ fn test_performance_monitoring_after_tree_shaking() {
 
 /// Test that animation values still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_values_after_tree_shaking() {
     use crate::*;
 
@@ -100,7 +106,8 @@ fn test_animation_values_after_tree_shaking() {
 
 /// Test that easing functions still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_easing_functions_after_tree_shaking() {
     use crate::*;
 
@@ -135,7 +142,8 @@ fn test_easing_functions_after_tree_shaking() {
 
 /// Test that repeat configurations still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_repeat_configurations_after_tree_shaking() {
     use crate::*;
 
@@ -169,7 +177,8 @@ fn test_repeat_configurations_after_tree_shaking() {
 
 /// Test that stagger configurations still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_stagger_configurations_after_tree_shaking() {
     use crate::*;
 
@@ -211,7 +220,8 @@ fn test_stagger_configurations_after_tree_shaking() {
 
 /// Test that complex nested types still work after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_complex_nested_types_after_tree_shaking() {
     use crate::*;
     use std::collections::HashMap;
@@ -264,7 +274,8 @@ fn test_complex_nested_types_after_tree_shaking() {
 
 /// Test tree shaking bundle size targets (conceptual - actual measurement will be done externally)
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_tree_shaking_bundle_size_targets() {
     // This test documents our tree shaking bundle size targets
     // Actual measurement will be done with external tools
@@ -276,7 +287,8 @@ fn test_tree_shaking_bundle_size_targets() {
 
 /// Test that memory optimization still works after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_memory_optimization_after_tree_shaking() {
     use crate::memory_optimization::*;
 
@@ -291,7 +303,8 @@ fn test_memory_optimization_after_tree_shaking() {
 
 /// Test that lazy loading still works after tree shaking
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_lazy_loading_after_tree_shaking() {
     use crate::lazy_loading::*;
 
@@ -306,7 +319,8 @@ fn test_lazy_loading_after_tree_shaking() {
 
 /// Test that unused code paths are properly removed
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_unused_code_paths_removed() {
     // This test ensures that unused code paths are properly removed
     // by verifying that only essential functionality is available

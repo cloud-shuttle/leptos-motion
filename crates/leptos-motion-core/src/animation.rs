@@ -1,6 +1,6 @@
 //! Core animation types and builders
 
-use crate::{AnimationTarget, AnimationValue, Easing, Interpolate, Transition};
+use crate::{AnimationTarget, AnimationValue, Easing, Transition};
 use std::collections::HashMap;
 
 /// Animation builder for creating animations fluently

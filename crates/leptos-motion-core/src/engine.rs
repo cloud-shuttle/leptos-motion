@@ -7,6 +7,7 @@ use crate::{
     AnimationError, AnimationHandle, AnimationTarget, AnimationValue, Result, Transform, Transition,
 };
 use std::collections::HashMap;
+#[cfg(feature = "web-sys")]
 use wasm_bindgen::prelude::*;
 #[cfg(feature = "web-sys")]
 use web_sys::window;

@@ -18,6 +18,11 @@ pub mod math;
 pub mod time;
 pub mod types;
 pub mod values;
+pub mod tdd_engine;
+pub mod timeline;
+pub mod developer_tools;
+pub mod advanced_examples;
+pub mod ecosystem_integration;
 
 #[macro_use]
 pub mod macros;
@@ -36,6 +41,12 @@ mod memory_optimization_tests;
 
 #[cfg(test)]
 mod bundle_size_tests;
+#[cfg(test)]
+mod dependency_investigation_tests;
+#[cfg(test)]
+mod dependency_optimization_tests;
+#[cfg(test)]
+mod feature_flags_tests;
 mod minimal_serialization;
 #[cfg(test)]
 mod performance_tests;
@@ -44,13 +55,17 @@ mod serde_replacement_tests;
 #[cfg(test)]
 mod tree_shaking_tests;
 #[cfg(test)]
-mod feature_flags_tests;
-#[cfg(test)]
-mod dependency_optimization_tests;
-#[cfg(test)]
-mod dependency_investigation_tests;
-#[cfg(test)]
 mod wasm_optimization_tests;
+#[cfg(test)]
+mod wasm_test_setup;
+#[cfg(test)]
+mod basic_functionality_tests;
+#[cfg(test)]
+mod error_handling_tdd_tests;
+#[cfg(test)]
+mod wasm_browser_tdd_tests;
+#[cfg(test)]
+mod performance_optimization_tdd_tests;
 #[cfg(test)]
 mod web_sys_optimization_tests;
 
@@ -78,12 +93,12 @@ pub use interpolation::Interpolate;
 pub use math::{clamp, distance_2d, map_range, smooth_step, smoother_step};
 #[cfg(feature = "web-sys")]
 pub use time::Timer;
+#[cfg(feature = "approx")]
+pub use types::SpringConfig;
 pub use types::{
     AnimationHandle, AnimationTarget, AnimationValue, ComplexValue, Easing, RepeatConfig,
     StaggerConfig, StaggerFrom, Transform, Transition,
 };
-#[cfg(feature = "approx")]
-pub use types::SpringConfig;
 #[cfg(feature = "leptos-integration")]
 pub use values::{MotionNumber, MotionTransform, MotionValue, MotionValues};
 
@@ -111,6 +126,21 @@ pub use simplified_engine::*;
 
 #[cfg(feature = "minimal-serialization")]
 pub use minimal_serialization::*;
+
+// TDD Engine exports for v1.0 development
+pub use tdd_engine::{AnimationEngine as TDDAnimationEngine, AnimationConfig as TDDAnimationConfig, TDDAnimationHandle, MemoryStats};
+
+// Timeline Animation exports for Phase 2
+pub use timeline::{Timeline, TimelineKeyframe, TimelinePerformanceMetrics};
+
+// Developer Tools exports for Phase 3
+pub use developer_tools::*;
+
+// Advanced Examples & Templates exports for Phase 3
+pub use advanced_examples::*;
+
+// Ecosystem Integration exports for Phase 4
+pub use ecosystem_integration::*;
 
 // Note: Error handling types are defined in this file, not re-exported
 
@@ -216,6 +246,8 @@ impl ErrorHandler for DefaultErrorHandler {
             AnimationError::InvalidConfig(_) => RecoveryStrategy::Fallback,
             AnimationError::MemoryError(_) => RecoveryStrategy::Abort,
             AnimationError::TimingError(_) => RecoveryStrategy::Retry,
+            AnimationError::NotImplemented(_) => RecoveryStrategy::Abort,
+            AnimationError::InvalidValue(_) => RecoveryStrategy::Skip,
         }
     }
 
@@ -248,6 +280,8 @@ impl ErrorHandler for DefaultErrorHandler {
             AnimationError::InvalidConfig(_) => "Invalid animation configuration".to_string(),
             AnimationError::MemoryError(_) => "Animation memory error".to_string(),
             AnimationError::TimingError(_) => "Animation timing error".to_string(),
+            AnimationError::NotImplemented(_) => "Feature not yet available".to_string(),
+            AnimationError::InvalidValue(_) => "Invalid animation value".to_string(),
         }
     }
 }
@@ -301,6 +335,14 @@ pub enum AnimationError {
     /// Animation timing error
     #[error("Animation timing error: {0}")]
     TimingError(String),
+    
+    /// Feature not yet implemented
+    #[error("Feature not yet implemented: {0}")]
+    NotImplemented(String),
+    
+    /// Invalid animation value (NaN, Infinity, etc.)
+    #[error("Invalid animation value: {0}")]
+    InvalidValue(String),
 }
 
 // Include simplified engine tests

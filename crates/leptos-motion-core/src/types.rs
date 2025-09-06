@@ -275,7 +275,8 @@ pub enum Easing {
 
 impl Easing {
     /// Evaluate the easing function at the given progress (0.0 to 1.0)
-    pub fn evaluate(&self, t: f64) -> f64 {
+    /// This is a basic implementation for when the easing module is not available
+    pub fn basic_evaluate(&self, t: f64) -> f64 {
         match self {
             Easing::Linear => t,
             Easing::EaseIn => t * t,
@@ -321,14 +322,13 @@ impl Easing {
                 // This should be replaced with proper spring physics when available
                 t
             }
-            Easing::Bezier(x1, y1, x2, y2) => {
+            Easing::Bezier(_x1, y1, _x2, y2) => {
                 // Simple cubic bezier implementation
                 // This is a simplified version - for production use, consider a more robust implementation
                 let t2 = t * t;
                 let t3 = t2 * t;
                 let mt = 1.0 - t;
                 let mt2 = mt * mt;
-                let mt3 = mt2 * mt;
                 
                 3.0 * mt2 * t * y1 + 3.0 * mt * t2 * y2 + t3
             }

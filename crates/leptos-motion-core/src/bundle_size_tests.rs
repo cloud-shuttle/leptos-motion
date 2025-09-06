@@ -4,14 +4,17 @@
 //! while achieving the target bundle size goals.
 
 #[cfg(feature = "leptos-integration")]
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
-#[cfg(feature = "leptos-integration")]
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test that core animation functionality still works after bundle optimization
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_core_animation_functionality_after_optimization() {
     use crate::*;
 
@@ -34,7 +37,8 @@ fn test_core_animation_functionality_after_optimization() {
 
 /// Test that minimal engine still works after dependency reduction
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_minimal_engine_after_optimization() {
     use crate::MinimalEngine;
 
@@ -45,7 +49,8 @@ fn test_minimal_engine_after_optimization() {
 
 /// Test that performance monitoring still works after optimization
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_after_optimization() {
     use crate::performance::*;
 
@@ -59,7 +64,8 @@ fn test_performance_monitoring_after_optimization() {
 
 /// Test that animation values still work after serde replacement
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_values_after_serde_replacement() {
     use crate::*;
 
@@ -85,7 +91,8 @@ fn test_animation_values_after_serde_replacement() {
 
 /// Test that gesture system still works after web-sys optimization
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_gesture_system_after_web_sys_optimization() {
     // This test will be implemented when we optimize web-sys dependencies
     // For now, just ensure the test structure is in place
@@ -94,7 +101,8 @@ fn test_gesture_system_after_web_sys_optimization() {
 
 /// Test that layout animations still work after optimization
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_layout_animations_after_optimization() {
     // This test will be implemented when we optimize layout dependencies
     // For now, just ensure the test structure is in place
@@ -103,7 +111,8 @@ fn test_layout_animations_after_optimization() {
 
 /// Test bundle size targets (conceptual - actual measurement will be done externally)
 #[cfg(feature = "leptos-integration")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_bundle_size_targets() {
     // This test documents our bundle size targets
     // Actual measurement will be done with external tools

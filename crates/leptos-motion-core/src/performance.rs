@@ -6,6 +6,7 @@
 
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
+#[cfg(feature = "web-sys")]
 use wasm_bindgen::JsCast;
 #[cfg(feature = "web-sys")]
 use web_sys::{Element, HtmlElement};

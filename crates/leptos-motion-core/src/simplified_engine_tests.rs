@@ -5,8 +5,11 @@
 
 use crate::*;
 use std::collections::HashMap;
+// WASM-specific test configuration - conditional compilation
+#[cfg(feature = "web-sys")]
 use wasm_bindgen_test::*;
 
+#[cfg(feature = "web-sys")]
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test fixture for creating a mock element
@@ -35,7 +38,8 @@ fn simple_transition() -> Transition {
     }
 }
 
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_creation() {
     // Test that we can create a simplified animation engine
     let engine = SimplifiedAnimationEngine::new();
@@ -43,7 +47,8 @@ fn test_simplified_animation_engine_creation() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_basic_animation() {
     // Test basic animation functionality
     let mut engine = SimplifiedAnimationEngine::new();
@@ -52,7 +57,7 @@ fn test_simplified_animation_engine_basic_animation() {
     let transition = simple_transition();
 
     // Start animation
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(handle.0 > 0);
 
     // Check if animation is running
@@ -64,7 +69,8 @@ fn test_simplified_animation_engine_basic_animation() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_pause_resume() {
     // Test pause and resume functionality
     let mut engine = SimplifiedAnimationEngine::new();
@@ -72,7 +78,7 @@ fn test_simplified_animation_engine_pause_resume() {
     let target = simple_animation_target();
     let transition = simple_transition();
 
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
 
     // Pause animation
     engine.pause(handle).unwrap();
@@ -87,7 +93,8 @@ fn test_simplified_animation_engine_pause_resume() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_multiple_animations() {
     // Test managing multiple animations
     let mut engine = SimplifiedAnimationEngine::new();
@@ -97,8 +104,8 @@ fn test_simplified_animation_engine_multiple_animations() {
     let transition = simple_transition();
 
     // Start multiple animations
-    let handle1 = engine.animate(&target, &transition).unwrap();
-    let handle2 = engine.animate(&target, &transition).unwrap();
+    let handle1 = engine.animate(&element1, &target, &transition).unwrap();
+    let handle2 = engine.animate(&element2, &target, &transition).unwrap();
 
     assert!(handle1.0 != handle2.0);
     assert!(engine.is_running(handle1));
@@ -115,7 +122,8 @@ fn test_simplified_animation_engine_multiple_animations() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_error_handling() {
     // Test error handling for invalid operations
     let mut engine = SimplifiedAnimationEngine::new();
@@ -123,7 +131,7 @@ fn test_simplified_animation_engine_error_handling() {
     let target = simple_animation_target();
     let transition = simple_transition();
 
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
 
     // Stop animation
     engine.stop(handle).unwrap();
@@ -138,7 +146,8 @@ fn test_simplified_animation_engine_error_handling() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_performance_metrics() {
     // Test performance metrics access
     let mut engine = SimplifiedAnimationEngine::new();
@@ -147,7 +156,7 @@ fn test_simplified_animation_engine_performance_metrics() {
     let transition = simple_transition();
 
     // Start and stop animation to generate metrics
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
     engine.stop(handle).unwrap();
 
     // Get performance metrics
@@ -160,7 +169,8 @@ fn test_simplified_animation_engine_performance_metrics() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_spring_animation() {
     // Test spring animation
     let mut engine = SimplifiedAnimationEngine::new();
@@ -174,14 +184,15 @@ fn test_simplified_animation_engine_spring_animation() {
         ..Default::default()
     });
 
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(engine.is_running(handle));
 
     engine.stop(handle).unwrap();
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_stagger_animation() {
     // Test stagger animation
     let mut engine = SimplifiedAnimationEngine::new();
@@ -193,14 +204,15 @@ fn test_simplified_animation_engine_stagger_animation() {
         from: StaggerFrom::First,
     });
 
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(engine.is_running(handle));
 
     engine.stop(handle).unwrap();
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_cleanup() {
     // Test engine cleanup
     let mut engine = SimplifiedAnimationEngine::new();
@@ -221,7 +233,8 @@ fn test_simplified_animation_engine_cleanup() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_batch_operations() {
     // Test batch operations
     let mut engine = SimplifiedAnimationEngine::new();
@@ -231,9 +244,9 @@ fn test_simplified_animation_engine_batch_operations() {
 
     // Start multiple animations
     let handles = vec![
-        engine.animate(&target, &transition).unwrap(),
-        engine.animate(&target, &transition).unwrap(),
-        engine.animate(&target, &transition).unwrap(),
+        engine.animate(&element, &target, &transition).unwrap(),
+        engine.animate(&element, &target, &transition).unwrap(),
+        engine.animate(&element, &target, &transition).unwrap(),
     ];
 
     // Batch stop all animations
@@ -246,7 +259,8 @@ fn test_simplified_animation_engine_batch_operations() {
 }
 
 #[cfg(feature = "web-sys")]
-#[wasm_bindgen_test]
+#[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
+#[cfg_attr(not(feature = "web-sys"), test)]
 fn test_simplified_animation_engine_global_control() {
     // Test global control functions
     let mut engine = SimplifiedAnimationEngine::new();
@@ -255,7 +269,7 @@ fn test_simplified_animation_engine_global_control() {
     let transition = simple_transition();
 
     // Start animation
-    let handle = engine.animate(&target, &transition).unwrap();
+    let handle = engine.animate(&element, &target, &transition).unwrap();
 
     // Pause all animations
     engine.pause_all().unwrap();

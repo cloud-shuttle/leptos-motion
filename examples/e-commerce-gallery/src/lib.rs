@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos_motion::*;
+use std::collections::HashMap;
 
 #[component]
 fn App() -> impl IntoView {
@@ -40,9 +41,11 @@ fn ProductGallery() -> impl IntoView {
             <div class="main-image-container">
                 <MotionDiv
                     class="main-image".to_string()
-                    animate=motion_target!(
-                        "scale" => AnimationValue::Number(if is_zoomed.get() { 1.5 } else { 1.0 })
-                    )
+                    animate={
+                        let mut target = HashMap::new();
+                        target.insert("scale".to_string(), AnimationValue::Number(if is_zoomed.get() { 1.5 } else { 1.0 }));
+                        target
+                    }
                     transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseInOut,
@@ -90,9 +93,11 @@ fn ProductGallery() -> impl IntoView {
                             class="thumbnail".to_string()
                             class:active=is_active
                             on:click=move |_| set_current_image.set(i)
-                            while_hover=motion_target!(
-                                "scale" => AnimationValue::Number(1.1)
-                            )
+                            while_hover={
+                                let mut target = HashMap::new();
+                                target.insert("scale".to_string(), AnimationValue::Number(1.1));
+                                target
+                            }
                             transition=Transition {
                                 duration: Some(0.2),
                                 ease: Easing::EaseOut,
@@ -162,18 +167,24 @@ fn ProductDetails() -> impl IntoView {
                 class="add-to-cart-btn".to_string()
                 class:added=is_added_to_cart
                 on:click=add_to_cart
-                while_hover=motion_target!(
-                    "scale" => AnimationValue::Number(1.05),
-                    "boxShadow" => AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string())
-                )
-                while_tap=motion_target!(
-                    "scale" => AnimationValue::Number(0.95)
-                )
-                animate=motion_target!(
-                    "backgroundColor" => AnimationValue::String(
+                while_hover={
+                    let mut target = HashMap::new();
+                    target.insert("scale".to_string(), AnimationValue::Number(1.05));
+                    target.insert("boxShadow".to_string(), AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string()));
+                    target
+                }
+                while_tap={
+                    let mut target = HashMap::new();
+                    target.insert("scale".to_string(), AnimationValue::Number(0.95));
+                    target
+                }
+                animate={
+                    let mut target = HashMap::new();
+                    target.insert("backgroundColor".to_string(), AnimationValue::String(
                         if is_added_to_cart.get() { "#4CAF50".to_string() } else { "#667eea".to_string() }
-                    )
-                )
+                    ));
+                    target
+                }
                 transition=Transition {
                     duration: Some(0.3),
                     ease: Easing::EaseInOut,

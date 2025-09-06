@@ -11,6 +11,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 ### ✨ Core Features
 
 #### 🎨 **Animation Engine**
+
 - **High-performance animation engine** with multiple backends
 - **Spring physics** with configurable stiffness, damping, and mass
 - **Easing functions** including cubic-bezier, ease-in/out, and custom curves
@@ -19,6 +20,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 - **Animation chaining** and sequencing support
 
 #### 🎯 **Animation Targets**
+
 - **Flexible property targeting** (transform, opacity, color, etc.)
 - **Multiple value types** (numbers, pixels, degrees, strings)
 - **Dynamic property updates** with reactive signals
@@ -26,6 +28,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 - **Transform shorthand** for common operations
 
 #### 🚀 **Performance Optimizations**
+
 - **RequestAnimationFrame** integration
 - **GPU acceleration** for transform properties
 - **Memory management** with automatic cleanup
@@ -33,6 +36,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 - **Optimized rendering** with minimal reflows
 
 #### 🎭 **Components & Macros**
+
 - **`MotionDiv`** and **`MotionSpan`** components (placeholder implementation)
 - **`motion_target!`** macro for easy animation target creation
 - **`AnimatePresence`** for enter/exit animations
@@ -40,6 +44,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 - **Hover and tap** gesture animations
 
 #### 📱 **Cross-Platform Support**
+
 - **WebAssembly** optimized for browsers
 - **Server-side rendering** (SSR) compatibility
 - **Mobile-friendly** touch gesture support
@@ -48,6 +53,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 ## 🏗️ Architecture
 
 ### Modular Design
+
 - **`leptos-motion-core`** - Core animation engine and types
 - **`leptos-motion-macros`** - Procedural macros for developer experience
 - **`leptos-motion-dom`** - DOM-specific components and utilities
@@ -55,6 +61,7 @@ This is the first stable release of Leptos Motion, providing a comprehensive ani
 - **`leptos-motion-gestures`** - Touch and gesture recognition
 
 ### Workspace Structure
+
 ```
 leptos-motion/
 ├── crates/
@@ -70,6 +77,7 @@ leptos-motion/
 ## 📚 Examples Included
 
 ### ✅ Working Examples
+
 - **`basic-animations`** - Simple transform and opacity animations
 - **`dashboard-app`** - Real-world dashboard with animated components
 - **`mobile-app`** - Mobile-optimized animations with touch support
@@ -79,6 +87,7 @@ leptos-motion/
 - **`ultra-minimal`** - Absolute minimal example
 
 ### 🎯 Example Features Demonstrated
+
 - CSS-based animations using `requestAnimationFrame`
 - Reactive signal integration with Leptos
 - Touch gesture handling
@@ -88,12 +97,14 @@ leptos-motion/
 ## 🛠️ Getting Started
 
 ### Installation
+
 ```toml
 [dependencies]
 leptos-motion = "0.3.0"
 ```
 
 ### Basic Usage
+
 ```rust
 use leptos::*;
 use leptos_motion::*;
@@ -101,7 +112,7 @@ use leptos_motion::*;
 #[component]
 fn App() -> impl IntoView {
     let (animated, set_animated) = create_signal(false);
-    
+
     view! {
         <div
             class="animated-box"
@@ -121,6 +132,7 @@ fn App() -> impl IntoView {
 ## 📖 Documentation
 
 ### Comprehensive Documentation Structure
+
 - **Getting Started Guide** - Quick setup and first animations
 - **API Reference** - Complete API documentation
 - **Examples Gallery** - Working code examples
@@ -129,6 +141,7 @@ fn App() -> impl IntoView {
 - **Integration Guide** - Using with other Leptos libraries
 
 ### Documentation Features
+
 - **Interactive examples** with live code
 - **Performance benchmarks** and comparisons
 - **Best practices** for common use cases
@@ -137,6 +150,7 @@ fn App() -> impl IntoView {
 ## 🧪 Testing
 
 ### Test Coverage
+
 - **108 tests passing** in core libraries
 - **Unit tests** for all major components
 - **Integration tests** for example applications
@@ -144,6 +158,7 @@ fn App() -> impl IntoView {
 - **Cross-browser testing** for compatibility
 
 ### Test Results
+
 ```
 running 108 tests
 test result: ok. 108 passed; 0 failed; 0 ignored
@@ -152,6 +167,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 ## 🔧 Development Tools
 
 ### Scripts & Automation
+
 - **Pre-commit hooks** for code quality
 - **Automated testing** with CI/CD support
 - **Documentation generation** with mdbook
@@ -159,6 +175,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 - **Release automation** scripts
 
 ### Code Quality
+
 - **Rust clippy** linting
 - **Documentation coverage** requirements
 - **Performance benchmarking** tools
@@ -167,6 +184,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 ## 🚀 Performance
 
 ### Benchmarks
+
 - **60 FPS** animations on modern devices
 - **< 1ms** animation frame overhead
 - **Minimal memory footprint** with automatic cleanup
@@ -174,6 +192,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 - **Optimized for mobile** devices
 
 ### Optimization Features
+
 - **RequestAnimationFrame** integration
 - **CSS transforms** for hardware acceleration
 - **Efficient signal updates** with Leptos
@@ -183,6 +202,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 ## 🔮 What's Next (v0.3.1)
 
 ### Planned Improvements
+
 - **Fix DOM component imports** for full `MotionDiv`/`MotionSpan` functionality
 - **Enhanced gesture support** with more touch interactions
 - **Advanced layout animations** with shared element transitions
@@ -190,6 +210,7 @@ test result: ok. 108 passed; 0 failed; 0 ignored
 - **Additional easing functions** and animation presets
 
 ### Community Contributions
+
 - **Plugin system** for custom animation types
 - **Theme integration** with popular CSS frameworks
 - **Accessibility improvements** for screen readers

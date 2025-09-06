@@ -3,8 +3,10 @@
 //! This example demonstrates how to create smooth animations without
 //! requiring the MotionDiv component
 
+use leptos::prelude::{
+    ClassAttribute, ElementChild, Get, OnAttribute, StyleAttribute, Update, signal,
+};
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, ClassAttribute, signal, Get, Update, OnAttribute};
 use leptos_motion_core::*;
 
 /// Simple working animation example

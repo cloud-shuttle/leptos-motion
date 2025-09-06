@@ -6,8 +6,8 @@
 
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
-use web_sys::{Element, HtmlElement};
 use wasm_bindgen::JsCast;
+use web_sys::{Element, HtmlElement};
 
 /// Performance report containing metrics about animation performance
 #[derive(Debug, Clone)]
@@ -81,7 +81,8 @@ impl PerformanceBudget {
     /// Calculate budget utilization (0.0 to 1.0)
     pub fn calculate_utilization(&self, report: &PerformanceReport) -> f64 {
         let frame_util = (report.average_frame_time / self.max_frame_time).min(1.0);
-        let animation_util = (report.active_animations as f64 / self.max_animations as f64).min(1.0);
+        let animation_util =
+            (report.active_animations as f64 / self.max_animations as f64).min(1.0);
         let memory_util = (report.memory_usage as f64 / self.max_memory as f64).min(1.0);
         let gpu_util = (report.gpu_layers as f64 / self.max_gpu_layers as f64).min(1.0);
 
@@ -143,7 +144,12 @@ impl PerformanceMonitor {
     }
 
     /// Generate a performance report
-    pub fn generate_report(&mut self, active_animations: usize, memory_usage: usize, gpu_layers: usize) -> PerformanceReport {
+    pub fn generate_report(
+        &mut self,
+        active_animations: usize,
+        memory_usage: usize,
+        gpu_layers: usize,
+    ) -> PerformanceReport {
         // Check if we have a cached report that's still valid
         if let (Some(cached), Some(expiry)) = (&self.cached_report, &self.cache_expiry) {
             if Instant::now() < *expiry {
@@ -415,12 +421,15 @@ impl AnimationScheduler {
         let handle = self.next_handle;
         self.next_handle += 1;
 
-        self.scheduled.insert(handle, ScheduledAnimation {
+        self.scheduled.insert(
             handle,
-            start_time: self.current_time,
-            duration,
-            active: true,
-        });
+            ScheduledAnimation {
+                handle,
+                start_time: self.current_time,
+                duration,
+                active: true,
+            },
+        );
 
         handle
     }
@@ -534,10 +543,10 @@ mod tests {
     fn test_performance_budget_exceeded() {
         let budget = PerformanceBudget::default();
         let report = PerformanceReport {
-            average_frame_time: 20.0, // Exceeds 16.67ms
-            active_animations: 150,   // Exceeds 100
+            average_frame_time: 20.0,       // Exceeds 16.67ms
+            active_animations: 150,         // Exceeds 100
             memory_usage: 15 * 1024 * 1024, // Exceeds 10MB
-            gpu_layers: 60,           // Exceeds 50
+            gpu_layers: 60,                 // Exceeds 50
             ..Default::default()
         };
 
@@ -547,7 +556,7 @@ mod tests {
     #[test]
     fn test_performance_monitor() {
         let mut monitor = PerformanceMonitor::new(PerformanceBudget::default());
-        
+
         // Record some frame times
         monitor.record_frame(16.0);
         monitor.record_frame(17.0);
@@ -563,18 +572,18 @@ mod tests {
     #[test]
     fn test_animation_pool() {
         let mut pool = AnimationPool::new(5);
-        
+
         // Get animations from pool
         let handle1 = pool.get_animation().unwrap();
         let _handle2 = pool.get_animation().unwrap();
-        
+
         assert_eq!(pool.size(), 2);
         assert_eq!(pool.in_use_count(), 2);
-        
+
         // Return one animation
         pool.return_animation(handle1);
         assert_eq!(pool.in_use_count(), 1);
-        
+
         // Get another animation (should reuse the returned one)
         let handle3 = pool.get_animation().unwrap();
         assert_eq!(handle3, handle1);
@@ -583,25 +592,25 @@ mod tests {
     #[test]
     fn test_animation_scheduler() {
         let mut scheduler = AnimationScheduler::new();
-        
+
         // Schedule an animation
         let handle = scheduler.schedule(1000.0); // 1 second duration
-        
+
         // Update time to start of animation
         scheduler.update(0.0);
         assert_eq!(scheduler.get_active_animations(), vec![handle]);
         assert_eq!(scheduler.get_progress(handle), Some(0.0));
-        
+
         // Update time to middle of animation
         scheduler.update(500.0);
         assert_eq!(scheduler.get_active_animations(), vec![handle]);
         assert_eq!(scheduler.get_progress(handle), Some(0.5));
-        
+
         // Update time to end of animation
         scheduler.update(1000.0);
         assert_eq!(scheduler.get_active_animations(), vec![handle]);
         assert_eq!(scheduler.get_progress(handle), Some(1.0));
-        
+
         // Update time past end of animation
         scheduler.update(1500.0);
         assert_eq!(scheduler.get_active_animations(), Vec::<u64>::new());
@@ -611,10 +620,10 @@ mod tests {
     #[test]
     fn test_gpu_layer_manager() {
         let manager = GPULayerManager::new(10);
-        
+
         // Mock element (we can't create real DOM elements in tests)
         // This test would need to be adapted for actual DOM testing
-        
+
         assert_eq!(manager.layer_count(), 0);
         assert!(manager.can_allocate());
         assert_eq!(manager.max_layers(), 10);

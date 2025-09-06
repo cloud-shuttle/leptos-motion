@@ -5,11 +5,13 @@ Welcome to Leptos Motion! This section will get you up and running quickly.
 ## 📚 What's in This Section
 
 ### 🎯 Essential Guides
+
 - **[Installation Guide](./installation.md)** - Set up Leptos Motion in your project
 - **[Quick Start Guide](./QUICK_START_GUIDES.md)** - Get animating in minutes
 - **[Your First Animation](./first-animation.md)** - Step-by-step tutorial
 
 ### 🔄 Migration
+
 - **[Migration from Framer Motion](./framer-motion.md)** - Coming from React? We've got you covered
 
 ## 🚀 Quick Start Path
@@ -29,6 +31,7 @@ Welcome to Leptos Motion! This section will get you up and running quickly.
 ## 🎯 Next Steps
 
 Once you're comfortable with the basics:
+
 - Explore [Advanced Features](../03-guides/advanced_features.md)
 - Check out [Performance Optimization](../03-guides/performance.md)
 - Browse [Working Examples](../04-examples/)
@@ -36,4 +39,4 @@ Once you're comfortable with the basics:
 
 ---
 
-*Ready to start animating? Let's go! 🎬*
+_Ready to start animating? Let's go! 🎬_

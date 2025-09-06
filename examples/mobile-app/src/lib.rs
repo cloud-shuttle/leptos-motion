@@ -3,6 +3,7 @@
 //! This example demonstrates mobile-friendly animations and interactions
 
 use leptos::*;
+use leptos::prelude::{ElementChild, StyleAttribute, IntoAny};
 use leptos_motion_core::*;
 
 /// Mobile app component

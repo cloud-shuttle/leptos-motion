@@ -5,6 +5,7 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 ## 📚 What's in This Section
 
 ### 🎯 Essential Guides
+
 - **[Developer Experience Guide](./DEVELOPER_EXPERIENCE_GUIDE.md)** - Best practices for developers
 - **[Advanced Features](./advanced_features.md)** - Unlock the full potential
 - **[Performance Optimization](./performance.md)** - Make your animations smooth
@@ -13,11 +14,13 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 ## 🚀 Learning Path
 
 ### Beginner → Intermediate
+
 1. **Start with basics** → [Getting Started](../01-getting-started/)
 2. **Learn best practices** → [Developer Experience Guide](./DEVELOPER_EXPERIENCE_GUIDE.md)
 3. **Optimize performance** → [Performance Guide](./performance.md)
 
 ### Intermediate → Advanced
+
 1. **Explore advanced features** → [Advanced Features](./advanced_features.md)
 2. **Understand design principles** → [Design Principles](./design.md)
 3. **Check architecture** → [Architecture](../07-architecture/)
@@ -25,18 +28,21 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 ## 💡 Key Topics
 
 ### Performance Optimization
+
 - **60fps animations** - Smooth, performant animations
 - **GPU acceleration** - Hardware-accelerated transforms
 - **Memory management** - Efficient resource usage
 - **Bundle optimization** - Minimal bundle size
 
 ### Advanced Features
+
 - **Complex animations** - Multi-step, orchestrated animations
 - **Gesture handling** - Touch, drag, and hover interactions
 - **Layout animations** - FLIP-based smooth transitions
 - **Spring physics** - Natural, physics-based motion
 
 ### Best Practices
+
 - **Component design** - Reusable, composable components
 - **Animation patterns** - Common animation patterns
 - **Error handling** - Robust error management
@@ -45,36 +51,38 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 ## 🎯 Quick Reference
 
 ### Performance Tips
+
 ```rust
 // Use GPU-accelerated properties
-<MotionDiv 
-    animate={{ 
+<MotionDiv
+    animate={{
         x: 100,  // ✅ GPU accelerated
         opacity: 0.5  // ✅ GPU accelerated
-    }} 
+    }}
 />
 
 // Avoid layout-triggering properties
-<MotionDiv 
-    animate={{ 
+<MotionDiv
+    animate={{
         width: 200,  // ⚠️ Can cause layout
         height: 100  // ⚠️ Can cause layout
-    }} 
+    }}
 />
 ```
 
 ### Animation Patterns
+
 ```rust
 // Staggered animations
-<MotionDiv 
+<MotionDiv
     animate={{ opacity: 1 }}
     transition={{ delay: index * 0.1 }}
 />
 
 // Spring physics
-<MotionDiv 
+<MotionDiv
     animate={{ scale: 1.1 }}
-    transition={{ 
+    transition={{
         type: "spring",
         stiffness: 300,
         damping: 20
@@ -84,12 +92,12 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 
 ## 🔍 Finding What You Need
 
-| Need Help With? | Check Here |
-|----------------|------------|
-| **Performance issues** | [Performance Guide](./performance.md) |
-| **Advanced features** | [Advanced Features](./advanced_features.md) |
-| **Best practices** | [Developer Experience Guide](./DEVELOPER_EXPERIENCE_GUIDE.md) |
-| **Design decisions** | [Design Principles](./design.md) |
+| Need Help With?        | Check Here                                                    |
+| ---------------------- | ------------------------------------------------------------- |
+| **Performance issues** | [Performance Guide](./performance.md)                         |
+| **Advanced features**  | [Advanced Features](./advanced_features.md)                   |
+| **Best practices**     | [Developer Experience Guide](./DEVELOPER_EXPERIENCE_GUIDE.md) |
+| **Design decisions**   | [Design Principles](./design.md)                              |
 
 ## 🎯 Next Steps
 
@@ -99,4 +107,4 @@ In-depth guides, tutorials, and best practices for Leptos Motion.
 
 ---
 
-*Master these guides to become a Leptos Motion expert! 🎬*
+_Master these guides to become a Leptos Motion expert! 🎬_

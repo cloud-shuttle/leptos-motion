@@ -2,32 +2,41 @@
 //!
 //! This module provides motion components that integrate with Leptos
 
-use leptos::*;
-use leptos::prelude::{ElementChild, ClassAttribute, Children};
-use leptos_motion_core::*;
 use crate::{DragConfig, DragConstraints};
+use leptos::prelude::{Children, ClassAttribute, ElementChild};
+use leptos::*;
+use leptos_motion_core::*;
 
 /// Simple MotionDiv component for animated div elements
 #[component]
 pub fn MotionDiv(
     /// CSS class name
-    #[prop(optional)] class: Option<String>,
+    #[prop(optional)]
+    class: Option<String>,
     /// Initial animation state - placeholder for future implementation
-    #[prop(optional)] initial: Option<AnimationTarget>,
-    /// Target animation state - placeholder for future implementation  
-    #[prop(optional)] animate: Option<AnimationTarget>,
+    #[prop(optional)]
+    initial: Option<AnimationTarget>,
+    /// Target animation state - placeholder for future implementation
+    #[prop(optional)]
+    animate: Option<AnimationTarget>,
     /// Transition configuration - placeholder for future implementation
-    #[prop(optional)] transition: Option<Transition>,
+    #[prop(optional)]
+    transition: Option<Transition>,
     /// Hover animation state - placeholder for future implementation
-    #[prop(optional)] while_hover: Option<AnimationTarget>,
+    #[prop(optional)]
+    while_hover: Option<AnimationTarget>,
     /// Tap animation state - placeholder for future implementation
-    #[prop(optional)] while_tap: Option<AnimationTarget>,
+    #[prop(optional)]
+    while_tap: Option<AnimationTarget>,
     /// Layout animation enabled - placeholder for future implementation
-    #[prop(optional)] layout: Option<bool>,
+    #[prop(optional)]
+    layout: Option<bool>,
     /// Drag configuration - placeholder for future implementation
-    #[prop(optional)] drag: Option<DragConfig>,
+    #[prop(optional)]
+    drag: Option<DragConfig>,
     /// Drag constraints - placeholder for future implementation
-    #[prop(optional)] drag_constraints: Option<DragConstraints>,
+    #[prop(optional)]
+    drag_constraints: Option<DragConstraints>,
     /// Children elements
     children: Children,
 ) -> impl IntoView {
@@ -42,17 +51,23 @@ pub fn MotionDiv(
 #[component]
 pub fn MotionSpan(
     /// CSS class name
-    #[prop(optional)] class: Option<String>,
+    #[prop(optional)]
+    class: Option<String>,
     /// Initial animation state - placeholder for future implementation
-    #[prop(optional)] initial: Option<AnimationTarget>,
+    #[prop(optional)]
+    initial: Option<AnimationTarget>,
     /// Target animation state - placeholder for future implementation
-    #[prop(optional)] animate: Option<AnimationTarget>,
+    #[prop(optional)]
+    animate: Option<AnimationTarget>,
     /// Transition configuration - placeholder for future implementation
-    #[prop(optional)] transition: Option<Transition>,
+    #[prop(optional)]
+    transition: Option<Transition>,
     /// Hover animation state - placeholder for future implementation
-    #[prop(optional)] while_hover: Option<AnimationTarget>,
+    #[prop(optional)]
+    while_hover: Option<AnimationTarget>,
     /// Tap animation state - placeholder for future implementation
-    #[prop(optional)] while_tap: Option<AnimationTarget>,
+    #[prop(optional)]
+    while_tap: Option<AnimationTarget>,
     /// Children elements
     children: Children,
 ) -> impl IntoView {

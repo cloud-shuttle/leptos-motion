@@ -3,6 +3,7 @@
 //! This example demonstrates advanced motion features using manual DOM manipulation
 
 use leptos::*;
+use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, signal};
 use leptos_motion_core::*;
 
 /// Advanced features demo

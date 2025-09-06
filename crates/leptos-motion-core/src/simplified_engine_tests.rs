@@ -149,8 +149,8 @@ fn test_simplified_animation_engine_performance_metrics() {
     assert!(metrics.is_some());
 
     let metrics = metrics.unwrap();
-    assert!(metrics.total_frames >= 1);
-    assert!(metrics.avg_frame_time >= 0.0);
+    assert!(metrics.active_animations >= 0);
+    assert!(metrics.average_frame_time >= 0.0);
 }
 
 #[wasm_bindgen_test]

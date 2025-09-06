@@ -30,7 +30,7 @@ pub fn create_motion_elements(_input: TokenStream) -> TokenStream {
 /// Macro for creating animation targets
 #[proc_macro]
 pub fn motion_target(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as syn::Expr);
+    let _input = parse_macro_input!(input as syn::Expr);
 
     let expanded = quote! {
         {

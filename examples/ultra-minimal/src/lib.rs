@@ -5,7 +5,7 @@ use wasm_bindgen::prelude::*;
 
 #[component]
 pub fn App() -> impl IntoView {
-    let (count, _set_count) = signal(0);
+    let (_count, _set_count) = signal(0);
 
     view! {
         <div class="app">

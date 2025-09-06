@@ -4,6 +4,7 @@
 //! requiring the MotionDiv component
 
 use leptos::*;
+use leptos::prelude::{ElementChild, StyleAttribute, ClassAttribute, signal, Get, Update, OnAttribute};
 use leptos_motion_core::*;
 
 /// Simple working animation example

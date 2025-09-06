@@ -378,7 +378,7 @@ mod tests {
 
     #[wasm_bindgen_test]
     fn test_css_optimizer() {
-        let mut optimizer = CSSOptimizer::new();
+        let optimizer = CSSOptimizer::new();
 
         assert!(optimizer.is_gpu_accelerated("transform"));
         assert!(optimizer.is_gpu_accelerated("opacity"));

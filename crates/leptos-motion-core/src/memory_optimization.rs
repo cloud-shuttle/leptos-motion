@@ -6,7 +6,7 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::Mutex;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 /// Memory usage thresholds
 pub const TARGET_MAX_MEMORY_MB: f64 = 10.0;

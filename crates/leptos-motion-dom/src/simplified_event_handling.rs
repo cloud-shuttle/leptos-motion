@@ -1064,10 +1064,9 @@ mod tests {
             drag: Some(DragConfig {
                 axis: Some(DragAxis::X),
                 constraints: None,
-                elastic: 0.2,
-                momentum: true,
+                elastic: Some(0.2),
+                momentum: Some(true),
             }),
-            drag_constraints: None,
             while_hover: None,
             while_tap: None,
             while_focus: None,

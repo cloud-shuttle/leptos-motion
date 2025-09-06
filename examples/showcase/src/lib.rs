@@ -1,6 +1,7 @@
 use leptos::mount::mount_to_body;
 use leptos::prelude::*;
 use leptos_motion::*;
+use std::collections::HashMap;
 
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures;
@@ -31,14 +32,18 @@ pub fn App() -> impl IntoView {
 
                 <MotionDiv
                     class="animated-box".to_string()
-                    initial=motion_target!(
-                        "opacity" => AnimationValue::Number(0.0),
-                        "scale" => AnimationValue::Number(0.5)
-                    )
-                    animate=motion_target!(
-                        "opacity" => AnimationValue::Number(1.0),
-                        "scale" => AnimationValue::Number(1.0)
-                    )
+                    initial={
+                        let mut target = HashMap::new();
+                        target.insert("opacity".to_string(), AnimationValue::Number(0.0));
+                        target.insert("scale".to_string(), AnimationValue::Number(0.5));
+                        target
+                    }
+                    animate={
+                        let mut target = HashMap::new();
+                        target.insert("opacity".to_string(), AnimationValue::Number(1.0));
+                        target.insert("scale".to_string(), AnimationValue::Number(1.0));
+                        target
+                    }
                     transition=Transition {
                         duration: Some(0.8),
                         ease: Easing::EaseOut,
@@ -70,18 +75,18 @@ pub fn App() -> impl IntoView {
                 >
                     <MotionDiv
                         class="content-box".to_string()
-                        initial=motion_target!(
-                            "opacity" => AnimationValue::Number(0.0),
-                            "y" => AnimationValue::Pixels(50.0)
-                        )
-                        animate=motion_target!(
-                            "opacity" => AnimationValue::Number(1.0),
-                            "y" => AnimationValue::Pixels(0.0)
-                        )
-                        exit=motion_target!(
-                            "opacity" => AnimationValue::Number(0.0),
-                            "y" => AnimationValue::Pixels(-50.0)
-                        )
+                        initial={
+                            let mut target = HashMap::new();
+                            target.insert("opacity".to_string(), AnimationValue::Number(0.0));
+                            target.insert("y".to_string(), AnimationValue::Pixels(50.0));
+                            target
+                        }
+                        animate={
+                            let mut target = HashMap::new();
+                            target.insert("opacity".to_string(), AnimationValue::Number(1.0));
+                            target.insert("y".to_string(), AnimationValue::Pixels(0.0));
+                            target
+                        }
                         transition=Transition {
                             duration: Some(0.5),
                             ease: Easing::EaseInOut,
@@ -166,12 +171,16 @@ pub fn App() -> impl IntoView {
 
                 <MotionDiv
                     class="gesture-box".to_string()
-                    while_hover=motion_target!(
-                        "scale" => AnimationValue::Number(1.1)
-                    )
-                    while_tap=motion_target!(
-                        "scale" => AnimationValue::Number(0.95)
-                    )
+                    while_hover={
+                        let mut target = HashMap::new();
+                        target.insert("scale".to_string(), AnimationValue::Number(1.1));
+                        target
+                    }
+                    while_tap={
+                        let mut target = HashMap::new();
+                        target.insert("scale".to_string(), AnimationValue::Number(0.95));
+                        target
+                    }
                 >
                     <h3>"Interactive Box!"</h3>
                     <p>"Try hovering and tapping this box"</p>
@@ -184,12 +193,16 @@ pub fn App() -> impl IntoView {
 
                 <MotionDiv
                     class="touch-box".to_string()
-                    while_hover=motion_target!(
-                        "scale" => AnimationValue::Number(1.05)
-                    )
-                    while_tap=motion_target!(
-                        "scale" => AnimationValue::Number(0.98)
-                    )
+                    while_hover={
+                        let mut target = HashMap::new();
+                        target.insert("scale".to_string(), AnimationValue::Number(1.05));
+                        target
+                    }
+                    while_tap={
+                        let mut target = HashMap::new();
+                        target.insert("scale".to_string(), AnimationValue::Number(0.98));
+                        target
+                    }
                 >
                     <h3>"Touch Interactive"</h3>
                     <p>"Supports touch, mouse, and pointer events"</p>

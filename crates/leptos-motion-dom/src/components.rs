@@ -3,6 +3,7 @@
 //! This module provides motion components that integrate with Leptos
 
 use leptos::*;
+use leptos::prelude::{ElementChild, ClassAttribute, Children};
 use leptos_motion_core::*;
 use crate::{DragConfig, DragConstraints};
 
@@ -27,10 +28,12 @@ pub fn MotionDiv(
     #[prop(optional)] drag: Option<DragConfig>,
     /// Drag constraints - placeholder for future implementation
     #[prop(optional)] drag_constraints: Option<DragConstraints>,
+    /// Children elements
+    children: Children,
 ) -> impl IntoView {
     view! {
         <div class=class>
-            "MotionDiv - Placeholder Component"
+            {children()}
         </div>
     }
 }
@@ -50,10 +53,12 @@ pub fn MotionSpan(
     #[prop(optional)] while_hover: Option<AnimationTarget>,
     /// Tap animation state - placeholder for future implementation
     #[prop(optional)] while_tap: Option<AnimationTarget>,
+    /// Children elements
+    children: Children,
 ) -> impl IntoView {
     view! {
         <span class=class>
-            "MotionSpan - Placeholder Component"
+            {children()}
         </span>
     }
 }

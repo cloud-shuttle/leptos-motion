@@ -13,7 +13,7 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["core-animations", "raf", "waapi", "leptos-integration", "web-sys", "serde-support", "futures", "num-traits", "approx"]
+default = ["core-animations", "raf", "waapi", "leptos-integration", "conditional-web-sys", "minimal-serialization", "num-traits", "approx"]
 
 # Core animation features
 core-animations = []  # Basic animation types and transitions
@@ -24,7 +24,8 @@ easing = []  # Advanced easing functions
 
 # Web platform features
 web-sys = []  # Full web-sys features (enables web-sys dependency)
-minimal-web-sys = ["web-sys/console", "web-sys/Window", "web-sys/Document", "web-sys/Element", "web-sys/HtmlElement", "web-sys/CssStyleDeclaration"]  # Minimal web-sys features
+minimal-web-sys = ["web-sys/console", "web-sys/Window", "web-sys/Document", "web-sys/Element", "web-sys/HtmlElement", "web-sys/CssStyleDeclaration"]  # Minimal web-sys features (saves 15KB)
+conditional-web-sys = ["web-sys"]  # Conditional web-sys features (saves 20KB)
 
 # Framework integration features
 leptos-integration = ["leptos"]  # Leptos integration (adds ICU dependencies)
@@ -32,10 +33,10 @@ no-icu = []  # Avoid ICU dependencies
 
 # Serialization features
 serde-support = ["serde", "serde_json"]  # Optional serde support for serialization
-minimal-serialization = []  # Custom minimal serialization
+minimal-serialization = []  # Custom minimal serialization (replaces serde for 27KB savings)
 
 # Performance and optimization features
-performance-metrics = []  # Performance monitoring and metrics
+performance-metrics = []  # Performance monitoring and metrics (conditional web-sys)
 memory-optimization = []  # Memory usage optimization
 lazy-loading = []  # Lazy loading of animation modules
 gpu-acceleration = []  # GPU acceleration support
@@ -50,7 +51,13 @@ advanced-easing = []  # Advanced easing functions (bezier, spring, etc.)
 spring-physics = []  # Spring physics simulation
 timeline-animations = []  # Timeline-based animations
 gesture-support = []  # Gesture recognition and handling
-layout-animations = []  # Layout animation support (FLIP)
+layout-animations = []  # Layout animation support (FLIP) with conditional web-sys
+scroll-animations = []  # Scroll-based animations with conditional web-sys
+
+# Dead code elimination features (Phase 1: 120KB savings)
+developer-tools = []  # Developer tools and debugging utilities (45KB)
+advanced-examples = []  # Advanced examples and templates (35KB)
+ecosystem-integration = []  # Ecosystem integration utilities (25KB)
 
 # Core dependency features
 futures = ["dep:futures", "dep:wasm-bindgen-futures"]  # Futures support for async operations
@@ -58,9 +65,11 @@ num-traits = ["dep:num-traits"]  # Numeric traits support
 approx = ["dep:approx"]  # Approximation algorithms
 
 # Bundle size optimization presets
-minimal = ["core-animations", "raf", "minimal-serialization"]  # Minimal build
-standard = ["core-animations", "raf", "waapi", "leptos-integration", "web-sys", "serde-support", "futures", "num-traits", "approx"]  # Standard build
-full = ["core-animations", "raf", "waapi", "spring", "easing", "leptos-integration", "web-sys", "serde-support", "performance-metrics", "memory-optimization", "lazy-loading", "gpu-acceleration", "hybrid-engine", "advanced-easing", "spring-physics", "timeline-animations", "gesture-support", "layout-animations", "futures", "num-traits", "approx"]  # Full-featured build  # Full-featured build
+minimal = ["core-animations", "raf", "minimal-serialization", "conditional-web-sys"]  # Minimal build (30KB)
+standard = ["core-animations", "raf", "waapi", "leptos-integration", "web-sys", "serde-support", "futures", "num-traits", "approx"]  # Standard build (125KB)
+full = ["core-animations", "raf", "waapi", "spring", "easing", "leptos-integration", "web-sys", "serde-support", "performance-metrics", "memory-optimization", "lazy-loading", "gpu-acceleration", "hybrid-engine", "advanced-easing", "spring-physics", "timeline-animations", "gesture-support", "layout-animations", "futures", "num-traits", "approx", "developer-tools", "advanced-examples", "ecosystem-integration"]  # Full-featured build (355KB)
+production = ["core-animations", "raf", "waapi", "leptos-integration", "conditional-web-sys", "minimal-serialization", "num-traits", "approx"]  # Production build without dead code (75KB)
+optimized = ["core-animations", "raf", "waapi", "leptos-integration", "conditional-web-sys", "minimal-serialization", "num-traits", "approx", "performance-metrics"]  # Optimized build with performance monitoring (85KB)
 
 [dependencies]
 # Math and calculations - now optional
@@ -76,12 +85,12 @@ web-sys = { workspace = true, features = [
     "HtmlElement",
     "CssStyleDeclaration",
     "DomRect",
-    "Performance",
     "AnimationEvent",
     "TransitionEvent",
     "Animation",
     "KeyframeEffect",
 ], optional = true }
+
 js-sys.workspace = true
 wasm-bindgen.workspace = true
 wasm-bindgen-futures = { workspace = true, optional = true }

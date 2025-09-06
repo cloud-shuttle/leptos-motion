@@ -49,9 +49,11 @@ fn test_minimal_engine_after_optimization() {
 
 /// Test that performance monitoring still works after optimization
 #[cfg(feature = "leptos-integration")]
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_after_optimization() {
+    #[cfg(feature = "performance-metrics")]
     use crate::performance::*;
 
     let budget = PerformanceBudget::default();

@@ -3,9 +3,11 @@
 // This module contains tests to identify and fix memory issues
 // to achieve the target of <10MB memory usage.
 
+#[cfg(feature = "memory-optimization")]
 use crate::memory_optimization::*;
 
 /// Test that memory-optimized cache works correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_basic_functionality() {
     let mut cache = MemoryOptimizedCache::new(3);
@@ -34,6 +36,7 @@ fn test_memory_optimized_cache_basic_functionality() {
 }
 
 /// Test that memory-optimized cache handles LRU eviction correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_lru_eviction() {
     let mut cache = MemoryOptimizedCache::new(2);
@@ -55,6 +58,7 @@ fn test_memory_optimized_cache_lru_eviction() {
 }
 
 /// Test that memory-optimized cache handles empty cache correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_empty() {
     let mut cache: MemoryOptimizedCache<&str, f64> = MemoryOptimizedCache::new(5);
@@ -65,6 +69,7 @@ fn test_memory_optimized_cache_empty() {
 }
 
 /// Test that memory-optimized cache handles zero size limit correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_zero_size() {
     let mut cache: MemoryOptimizedCache<&str, f64> = MemoryOptimizedCache::new(0);
@@ -76,6 +81,7 @@ fn test_memory_optimized_cache_zero_size() {
 }
 
 /// Test that memory-optimized cache handles large size limit correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_large_size() {
     let mut cache = MemoryOptimizedCache::new(1000);
@@ -95,6 +101,7 @@ fn test_memory_optimized_cache_large_size() {
 }
 
 /// Test that memory-optimized cache handles string keys correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_string_keys() {
     let mut cache = MemoryOptimizedCache::new(3);
@@ -109,6 +116,7 @@ fn test_memory_optimized_cache_string_keys() {
 }
 
 /// Test that memory-optimized cache handles numeric keys correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_numeric_keys() {
     let mut cache = MemoryOptimizedCache::new(3);
@@ -124,6 +132,7 @@ fn test_memory_optimized_cache_numeric_keys() {
 }
 
 /// Test that memory-optimized cache handles complex values correctly
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_complex_values() {
     let mut cache = MemoryOptimizedCache::new(2);
@@ -139,6 +148,7 @@ fn test_memory_optimized_cache_complex_values() {
 }
 
 /// Test that memory-optimized cache handles concurrent-like access patterns
+#[cfg(feature = "memory-optimization")]
 #[test]
 fn test_memory_optimized_cache_access_patterns() {
     let mut cache = MemoryOptimizedCache::new(5);

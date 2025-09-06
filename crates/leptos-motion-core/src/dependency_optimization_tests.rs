@@ -5,7 +5,9 @@
 
 #[cfg(test)]
 mod tests {
+    #[cfg(feature = "memory-optimization")]
     use crate::memory_optimization::MemoryProfiler;
+    #[cfg(feature = "performance-metrics")]
     use crate::performance::{PerformanceBudget, PerformanceMonitor};
     use crate::*;
 

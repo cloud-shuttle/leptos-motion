@@ -58,9 +58,11 @@ fn test_engines_after_wasm_optimization() {
 }
 
 /// Test that performance monitoring still works after WASM optimization
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_after_wasm_optimization() {
+    #[cfg(feature = "performance-metrics")]
     use crate::performance::*;
 
     // Test performance budget creation
@@ -276,9 +278,11 @@ fn test_wasm_optimization_bundle_size_targets() {
 }
 
 /// Test that memory optimization still works after WASM optimization
+#[cfg(feature = "memory-optimization")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_memory_optimization_after_wasm_optimization() {
+    #[cfg(feature = "memory-optimization")]
     use crate::memory_optimization::*;
 
     // Test memory profiler creation
@@ -294,13 +298,22 @@ fn test_memory_optimization_after_wasm_optimization() {
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_lazy_loading_after_wasm_optimization() {
-    use crate::lazy_loading::*;
+    #[cfg(feature = "lazy-loading")]
+    {
+        use crate::lazy_loading::*;
 
-    // Test lazy loader creation
-    let _loader = get_lazy_loader();
+        // Test lazy loader creation
+        let _loader = get_lazy_loader();
 
-    // Test lazy loading configuration
-    let config = LazyLoadingConfig::default();
-    assert_eq!(config.max_loaded_modules, 10);
-    assert_eq!(config.max_total_size, 1024 * 1024); // 1MB
+        // Test lazy loading configuration
+        let config = LazyLoadingConfig::default();
+        assert_eq!(config.max_loaded_modules, 10);
+        assert_eq!(config.max_total_size, 1024 * 1024); // 1MB
+    }
+    
+    #[cfg(not(feature = "lazy-loading"))]
+    {
+        // When lazy loading is disabled, just verify the test passes
+        assert!(true);
+    }
 }

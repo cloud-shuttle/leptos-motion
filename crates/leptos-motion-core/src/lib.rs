@@ -6,20 +6,25 @@
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
+#[cfg(feature = "advanced-examples")]
 pub mod advanced_examples;
 #[cfg(feature = "approx")]
 pub mod animation;
+#[cfg(feature = "developer-tools")]
 pub mod developer_tools;
 #[cfg(feature = "approx")]
 pub mod easing;
+#[cfg(feature = "ecosystem-integration")]
 pub mod ecosystem_integration;
 pub mod engine;
 #[cfg(feature = "approx")]
 pub mod interpolation;
 #[cfg(feature = "approx")]
 pub mod math;
+#[cfg(feature = "developer-tools")]
 pub mod tdd_engine;
 pub mod time;
+#[cfg(feature = "timeline-animations")]
 pub mod timeline;
 pub mod types;
 pub mod values;
@@ -29,10 +34,15 @@ pub mod macros;
 
 #[cfg(feature = "futures")]
 pub mod lazy_loading;
+#[cfg(feature = "memory-optimization")]
 pub mod memory_optimization;
 pub mod minimal_engine;
+#[cfg(feature = "performance-metrics")]
 pub mod performance;
 pub mod simplified_engine;
+
+// Phase 4: Dependency optimization - minimal serialization
+pub mod minimal_serialization;
 #[cfg(feature = "approx")]
 pub mod spring;
 
@@ -51,7 +61,6 @@ mod dependency_optimization_tests;
 mod error_handling_tdd_tests;
 #[cfg(test)]
 mod feature_flags_tests;
-mod minimal_serialization;
 #[cfg(test)]
 mod performance_optimization_tdd_tests;
 #[cfg(test)]
@@ -68,7 +77,13 @@ mod wasm_optimization_tests;
 #[cfg(test)]
 mod bundle_size_optimization_tests;
 #[cfg(test)]
+mod dead_code_elimination_tests;
+#[cfg(test)]
 mod feature_flags_optimization_tests;
+#[cfg(test)]
+mod feature_flags_phase3_tests;
+#[cfg(test)]
+mod dependency_optimization_phase4_tests;
 #[cfg(test)]
 mod tree_shaking_optimization_tests;
 #[cfg(test)]
@@ -134,22 +149,27 @@ pub use simplified_engine::*;
 #[cfg(feature = "minimal-serialization")]
 pub use minimal_serialization::*;
 
-// TDD Engine exports for v1.0 development
+// TDD Engine exports for v1.0 development (conditional for production builds)
+#[cfg(feature = "developer-tools")]
 pub use tdd_engine::{
     AnimationConfig as TDDAnimationConfig, AnimationEngine as TDDAnimationEngine, MemoryStats,
     TDDAnimationHandle,
 };
 
-// Timeline Animation exports for Phase 2
+// Timeline Animation exports for Phase 2 (conditional for production builds)
+#[cfg(feature = "timeline-animations")]
 pub use timeline::{Timeline, TimelineKeyframe, TimelinePerformanceMetrics};
 
 // Developer Tools exports for Phase 3
+#[cfg(feature = "developer-tools")]
 pub use developer_tools::*;
 
 // Advanced Examples & Templates exports for Phase 3
+#[cfg(feature = "advanced-examples")]
 pub use advanced_examples::*;
 
 // Ecosystem Integration exports for Phase 4
+#[cfg(feature = "ecosystem-integration")]
 pub use ecosystem_integration::*;
 
 // Note: Error handling types are defined in this file, not re-exported

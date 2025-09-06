@@ -2,6 +2,7 @@
 //!
 //! These tests ensure that performance optimization works correctly in production scenarios
 
+#[cfg(feature = "performance-metrics")]
 use crate::performance::{PerformanceBudget, PerformanceMonitor, PerformanceReport};
 use crate::*;
 use std::collections::HashMap;
@@ -15,6 +16,7 @@ use wasm_bindgen_test::*;
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test that performance monitoring works correctly
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_basic() {
@@ -55,6 +57,7 @@ fn test_performance_monitoring_basic() {
 }
 
 /// Test that performance budgets work correctly
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_budget_creation() {
@@ -74,6 +77,7 @@ fn test_performance_budget_creation() {
 }
 
 /// Test that performance budget validation works
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_budget_validation() {
@@ -120,6 +124,7 @@ fn test_performance_budget_validation() {
 }
 
 /// Test that performance budget utilization calculation works
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_budget_utilization() {
@@ -155,6 +160,7 @@ fn test_performance_budget_utilization() {
 }
 
 /// Test that performance reports are generated correctly
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_report_generation() {
@@ -193,6 +199,7 @@ fn test_performance_report_generation() {
 }
 
 /// Test that frame timing works correctly
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_frame_timing_accuracy() {
@@ -228,6 +235,7 @@ fn test_frame_timing_accuracy() {
 }
 
 /// Test that performance monitoring handles edge cases
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_edge_cases() {
@@ -265,6 +273,7 @@ fn test_performance_monitoring_edge_cases() {
 }
 
 /// Test that performance optimization strategies work
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_optimization_strategies() {
@@ -293,6 +302,7 @@ fn test_performance_optimization_strategies() {
 }
 
 /// Test that GPU acceleration optimization works
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_gpu_acceleration_optimization() {
@@ -316,6 +326,7 @@ fn test_gpu_acceleration_optimization() {
 }
 
 /// Test that animation batching optimization works
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_animation_batching_optimization() {
@@ -340,6 +351,7 @@ fn test_animation_batching_optimization() {
 }
 
 /// Test that memory management optimization works
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_memory_management_optimization() {
@@ -371,6 +383,7 @@ fn test_memory_management_optimization() {
 }
 
 /// Test that performance fallback strategies work
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_fallback_strategies() {
@@ -407,6 +420,7 @@ fn test_performance_fallback_strategies() {
 }
 
 /// Test that performance monitoring works with real browser APIs
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_monitoring_browser_integration() {
@@ -445,6 +459,7 @@ fn test_performance_monitoring_browser_integration() {
 }
 
 /// Test that performance optimization handles browser limitations
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_optimization_browser_limitations() {
@@ -491,6 +506,7 @@ fn test_performance_optimization_browser_limitations() {
 }
 
 /// Test that performance optimization works with animation workloads
+#[cfg(feature = "performance-metrics")]
 #[cfg_attr(feature = "web-sys", wasm_bindgen_test)]
 #[cfg_attr(not(feature = "web-sys"), test)]
 fn test_performance_optimization_animation_workloads() {

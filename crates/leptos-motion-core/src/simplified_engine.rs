@@ -3,6 +3,7 @@
 //! This module provides a simplified, user-friendly animation engine API
 //! that hides implementation details and provides a clean interface.
 
+#[cfg(feature = "performance-metrics")]
 use crate::performance::PerformanceReport;
 use crate::*;
 use std::collections::HashMap;
@@ -68,7 +69,13 @@ impl AnimationEngine for MockEngine {
         self.animations.contains_key(&handle)
     }
 
+    #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<PerformanceReport> {
+        None
+    }
+
+    #[cfg(not(feature = "performance-metrics"))]
+    fn get_performance_metrics(&self) -> Option<()> {
         None
     }
 }
@@ -86,6 +93,7 @@ pub struct SimplifiedAnimationEngine {
     #[cfg(not(target_arch = "wasm32"))]
     internal_engine: Arc<Mutex<MockEngine>>,
     /// Performance metrics cache
+    #[cfg(feature = "performance-metrics")]
     performance_cache: Arc<Mutex<Option<PerformanceReport>>>,
     /// Global state for batch operations
     global_state: Arc<Mutex<GlobalState>>,
@@ -113,6 +121,7 @@ impl SimplifiedAnimationEngine {
         {
             Self {
                 internal_engine: Arc::new(Mutex::new(OptimizedHybridEngine::new())),
+                #[cfg(feature = "performance-metrics")]
                 performance_cache: Arc::new(Mutex::new(None)),
                 global_state: Arc::new(Mutex::new(GlobalState::default())),
             }
@@ -122,6 +131,7 @@ impl SimplifiedAnimationEngine {
             // For non-WASM targets, create a mock engine that doesn't access WASM statics
             Self {
                 internal_engine: Arc::new(Mutex::new(MockEngine::new())),
+                #[cfg(feature = "performance-metrics")]
                 performance_cache: Arc::new(Mutex::new(None)),
                 global_state: Arc::new(Mutex::new(GlobalState::default())),
             }
@@ -246,6 +256,7 @@ impl SimplifiedAnimationEngine {
     ///
     /// # Returns
     /// * `Option<PerformanceReport>` - Performance metrics if available
+    #[cfg(feature = "performance-metrics")]
     pub fn get_performance_metrics(&self) -> Option<PerformanceReport> {
         let mut cache = self.performance_cache.lock().unwrap();
 
@@ -262,6 +273,15 @@ impl SimplifiedAnimationEngine {
         } else {
             None
         }
+    }
+
+    /// Get performance metrics (no-op when feature disabled)
+    ///
+    /// # Returns
+    /// * `Option<()>` - Always None when performance metrics are disabled
+    #[cfg(not(feature = "performance-metrics"))]
+    pub fn get_performance_metrics(&self) -> Option<()> {
+        None
     }
 
     /// Cleanup all animations and reset engine state
@@ -283,8 +303,11 @@ impl SimplifiedAnimationEngine {
         global_state.globally_stopped = false;
 
         // Clear performance cache
-        let mut cache = self.performance_cache.lock().unwrap();
-        *cache = None;
+        #[cfg(feature = "performance-metrics")]
+        {
+            let mut cache = self.performance_cache.lock().unwrap();
+            *cache = None;
+        }
 
         Ok(())
     }
@@ -373,6 +396,7 @@ impl Clone for SimplifiedAnimationEngine {
     fn clone(&self) -> Self {
         Self {
             internal_engine: Arc::clone(&self.internal_engine),
+            #[cfg(feature = "performance-metrics")]
             performance_cache: Arc::clone(&self.performance_cache),
             global_state: Arc::clone(&self.global_state),
         }

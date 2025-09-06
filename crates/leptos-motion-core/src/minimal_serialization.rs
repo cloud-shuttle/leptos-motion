@@ -1,248 +1,310 @@
-//! Minimal serialization support without serde
-//!
-//! This module provides basic serialization capabilities for core types
-//! without the overhead of the full serde ecosystem.
+//! Minimal serialization implementation for Phase 4 optimization
+//! 
+//! This module provides lightweight serialization alternatives to reduce
+//! bundle size by replacing heavy serde usage with custom minimal implementations.
 
-use crate::types::*;
-// use std::collections::HashMap;
+use std::fmt;
 
-/// Minimal serialization trait for core types
+/// Minimal serialization trait for lightweight serialization
 pub trait MinimalSerialize {
-    fn to_json(&self) -> String;
+    /// Serialize to a minimal string representation
+    fn to_minimal_string(&self) -> String;
 }
 
-/// Minimal deserialization trait for core types
+/// Minimal deserialization trait for lightweight deserialization
 pub trait MinimalDeserialize: Sized {
-    fn from_json(json: &str) -> Result<Self, String>;
+    /// Deserialize from a minimal string representation
+    fn from_minimal_string(s: &str) -> Result<Self, MinimalSerializationError>;
 }
 
-impl MinimalSerialize for AnimationValue {
-    fn to_json(&self) -> String {
+/// Error type for minimal serialization
+#[derive(Debug, Clone, PartialEq)]
+pub enum MinimalSerializationError {
+    /// Invalid format
+    InvalidFormat(String),
+    /// Missing field
+    MissingField(String),
+    /// Type conversion error
+    TypeConversion(String),
+}
+
+impl fmt::Display for MinimalSerializationError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AnimationValue::Number(n) => format!("{{\"type\":\"number\",\"value\":{}}}", n),
-            AnimationValue::Pixels(p) => format!("{{\"type\":\"pixels\",\"value\":{}}}", p),
-            AnimationValue::Percentage(p) => format!("{{\"type\":\"percentage\",\"value\":{}}}", p),
-            AnimationValue::Degrees(d) => format!("{{\"type\":\"degrees\",\"value\":{}}}", d),
-            AnimationValue::Radians(r) => format!("{{\"type\":\"radians\",\"value\":{}}}", r),
-            AnimationValue::Color(c) => format!("{{\"type\":\"color\",\"value\":\"{}\"}}", c),
-            AnimationValue::Transform(t) => {
-                format!("{{\"type\":\"transform\",\"value\":{}}}", t.to_json())
+            MinimalSerializationError::InvalidFormat(msg) => write!(f, "Invalid format: {}", msg),
+            MinimalSerializationError::MissingField(field) => write!(f, "Missing field: {}", field),
+            MinimalSerializationError::TypeConversion(msg) => write!(f, "Type conversion error: {}", msg),
+        }
+    }
+}
+
+impl std::error::Error for MinimalSerializationError {}
+
+/// Minimal JSON-like serialization for simple types
+pub struct MinimalJsonSerializer;
+
+impl MinimalJsonSerializer {
+    /// Serialize a simple key-value pair
+    pub fn serialize_kv(key: &str, value: &str) -> String {
+        format!("\"{}\":\"{}\"", key, value)
+    }
+
+    /// Serialize a simple key-number pair
+    pub fn serialize_kv_number(key: &str, value: f64) -> String {
+        format!("\"{}\":{}", key, value)
+    }
+
+    /// Serialize a simple key-boolean pair
+    pub fn serialize_kv_bool(key: &str, value: bool) -> String {
+        format!("\"{}\":{}", key, if value { "true" } else { "false" })
+    }
+
+    /// Create a simple object
+    pub fn create_object(fields: Vec<String>) -> String {
+        format!("{{{}}}", fields.join(","))
+    }
+
+    /// Create a simple array
+    pub fn create_array(items: Vec<String>) -> String {
+        format!("[{}]", items.join(","))
+    }
+
+    /// Parse a simple key-value pair
+    pub fn parse_kv(s: &str) -> Result<(String, String), MinimalSerializationError> {
+        if let Some(colon_pos) = s.find(':') {
+            let key_part = &s[..colon_pos];
+            let value_part = &s[colon_pos + 1..];
+            
+            // Remove quotes from key
+            let key = if key_part.starts_with('"') && key_part.ends_with('"') {
+                key_part[1..key_part.len() - 1].to_string()
+            } else {
+                return Err(MinimalSerializationError::InvalidFormat("Key must be quoted".to_string()));
+            };
+
+            // Remove quotes from value if present
+            let value = if value_part.starts_with('"') && value_part.ends_with('"') {
+                value_part[1..value_part.len() - 1].to_string()
+            } else {
+                value_part.to_string()
+            };
+
+            Ok((key, value))
+        } else {
+            Err(MinimalSerializationError::InvalidFormat("Missing colon".to_string()))
+        }
+    }
+
+    /// Parse a simple object
+    pub fn parse_object(s: &str) -> Result<Vec<(String, String)>, MinimalSerializationError> {
+        let trimmed = s.trim();
+        if !trimmed.starts_with('{') || !trimmed.ends_with('}') {
+            return Err(MinimalSerializationError::InvalidFormat("Not an object".to_string()));
+        }
+
+        let content = &trimmed[1..trimmed.len() - 1];
+        if content.trim().is_empty() {
+            return Ok(vec![]);
+        }
+
+        let mut result = Vec::new();
+        let mut current = String::new();
+        let mut in_quotes = false;
+        let mut brace_count = 0;
+
+        for ch in content.chars() {
+            match ch {
+                '"' => in_quotes = !in_quotes,
+                '{' | '[' => if !in_quotes { brace_count += 1; },
+                '}' | ']' => if !in_quotes { brace_count -= 1; },
+                ',' => {
+                    if !in_quotes && brace_count == 0 {
+                        result.push(Self::parse_kv(&current.trim())?);
+                        current.clear();
+                        continue;
+                    }
+                }
+                _ => {}
             }
-            AnimationValue::String(s) => format!("{{\"type\":\"string\",\"value\":\"{}\"}}", s),
-            AnimationValue::Complex(c) => {
-                format!("{{\"type\":\"complex\",\"value\":{}}}", c.to_json())
-            }
+            current.push(ch);
+        }
+
+        if !current.trim().is_empty() {
+            result.push(Self::parse_kv(&current.trim())?);
+        }
+
+        Ok(result)
+    }
+}
+
+/// Minimal binary serialization for compact representation
+pub struct MinimalBinarySerializer;
+
+impl MinimalBinarySerializer {
+    /// Serialize a u32 to 4 bytes
+    pub fn serialize_u32(value: u32) -> [u8; 4] {
+        value.to_le_bytes()
+    }
+
+    /// Deserialize a u32 from 4 bytes
+    pub fn deserialize_u32(bytes: [u8; 4]) -> u32 {
+        u32::from_le_bytes(bytes)
+    }
+
+    /// Serialize a f64 to 8 bytes
+    pub fn serialize_f64(value: f64) -> [u8; 8] {
+        value.to_le_bytes()
+    }
+
+    /// Deserialize a f64 from 8 bytes
+    pub fn deserialize_f64(bytes: [u8; 8]) -> f64 {
+        f64::from_le_bytes(bytes)
+    }
+
+    /// Serialize a boolean to 1 byte
+    pub fn serialize_bool(value: bool) -> u8 {
+        if value { 1 } else { 0 }
+    }
+
+    /// Deserialize a boolean from 1 byte
+    pub fn deserialize_bool(byte: u8) -> Result<bool, MinimalSerializationError> {
+        match byte {
+            0 => Ok(false),
+            1 => Ok(true),
+            _ => Err(MinimalSerializationError::TypeConversion("Invalid boolean value".to_string())),
         }
     }
 }
 
-impl MinimalSerialize for Transform {
-    fn to_json(&self) -> String {
-        let mut parts = Vec::new();
+/// Compact string serialization for small strings
+pub struct CompactStringSerializer;
 
-        if let Some(x) = self.x {
-            parts.push(format!("\"x\":{}", x));
-        }
-        if let Some(y) = self.y {
-            parts.push(format!("\"y\":{}", y));
-        }
-        if let Some(z) = self.z {
-            parts.push(format!("\"z\":{}", z));
-        }
-        if let Some(rx) = self.rotate_x {
-            parts.push(format!("\"rotate_x\":{}", rx));
-        }
-        if let Some(ry) = self.rotate_y {
-            parts.push(format!("\"rotate_y\":{}", ry));
-        }
-        if let Some(rz) = self.rotate_z {
-            parts.push(format!("\"rotate_z\":{}", rz));
-        }
-        if let Some(s) = self.scale {
-            parts.push(format!("\"scale\":{}", s));
-        }
-        if let Some(sx) = self.scale_x {
-            parts.push(format!("\"scale_x\":{}", sx));
-        }
-        if let Some(sy) = self.scale_y {
-            parts.push(format!("\"scale_y\":{}", sy));
-        }
-        if let Some(skew_x) = self.skew_x {
-            parts.push(format!("\"skew_x\":{}", skew_x));
-        }
-        if let Some(skew_y) = self.skew_y {
-            parts.push(format!("\"skew_y\":{}", skew_y));
-        }
-
-        format!("{{{}}}", parts.join(","))
+impl CompactStringSerializer {
+    /// Serialize a string with length prefix
+    pub fn serialize_string(s: &str) -> Vec<u8> {
+        let bytes = s.as_bytes();
+        let mut result = Vec::with_capacity(4 + bytes.len());
+        
+        // Add length as u32 (4 bytes)
+        result.extend_from_slice(&(bytes.len() as u32).to_le_bytes());
+        
+        // Add string bytes
+        result.extend_from_slice(bytes);
+        
+        result
     }
-}
 
-impl MinimalSerialize for ComplexValue {
-    fn to_json(&self) -> String {
-        // For complex values, we'll use a simple string representation
-        // In a real implementation, you might want to handle this differently
-        format!(
-            "{{\"type\":\"{}\",\"data\":\"{}\"}}",
-            self.value_type, "complex_data"
-        )
-    }
-}
-
-impl MinimalSerialize for AnimationTarget {
-    fn to_json(&self) -> String {
-        let mut parts = Vec::new();
-
-        for (key, value) in self {
-            parts.push(format!("\"{}\":{}", key, value.to_json()));
+    /// Deserialize a string with length prefix
+    pub fn deserialize_string(data: &[u8]) -> Result<String, MinimalSerializationError> {
+        if data.len() < 4 {
+            return Err(MinimalSerializationError::InvalidFormat("Data too short".to_string()));
         }
 
-        format!("{{{}}}", parts.join(","))
-    }
-}
-
-impl MinimalSerialize for Transition {
-    fn to_json(&self) -> String {
-        let mut parts = Vec::new();
-
-        if let Some(duration) = self.duration {
-            parts.push(format!("\"duration\":{}", duration));
-        }
-        if let Some(delay) = self.delay {
-            parts.push(format!("\"delay\":{}", delay));
+        let length = u32::from_le_bytes([data[0], data[1], data[2], data[3]]) as usize;
+        
+        if data.len() < 4 + length {
+            return Err(MinimalSerializationError::InvalidFormat("Incomplete string data".to_string()));
         }
 
-        parts.push(format!("\"ease\":\"{}\"", self.ease.to_string()));
-        parts.push(format!("\"repeat\":\"{}\"", self.repeat.to_string()));
-
-        if let Some(stagger) = &self.stagger {
-            parts.push(format!("\"stagger\":{}", stagger.to_json()));
-        }
-
-        format!("{{{}}}", parts.join(","))
-    }
-}
-
-impl MinimalSerialize for StaggerConfig {
-    fn to_json(&self) -> String {
-        format!(
-            "{{\"delay\":{},\"from\":\"{}\"}}",
-            self.delay,
-            self.from.to_string()
-        )
-    }
-}
-
-#[cfg(feature = "approx")]
-impl MinimalSerialize for SpringConfig {
-    fn to_json(&self) -> String {
-        format!(
-            "{{\"stiffness\":{},\"damping\":{},\"mass\":{},\"velocity\":{},\"rest_delta\":{},\"rest_speed\":{}}}",
-            self.stiffness,
-            self.damping,
-            self.mass,
-            self.velocity,
-            self.rest_delta,
-            self.rest_speed
-        )
-    }
-}
-
-// Extension traits for string conversion
-pub trait ToStringExt {
-    fn to_string(&self) -> String;
-}
-
-impl ToStringExt for Easing {
-    fn to_string(&self) -> String {
-        match self {
-            Easing::Linear => "linear".to_string(),
-            Easing::EaseIn => "ease-in".to_string(),
-            Easing::EaseOut => "ease-out".to_string(),
-            Easing::EaseInOut => "ease-in-out".to_string(),
-            Easing::CircIn => "circ-in".to_string(),
-            Easing::CircOut => "circ-out".to_string(),
-            Easing::CircInOut => "circ-in-out".to_string(),
-            Easing::BackIn => "back-in".to_string(),
-            Easing::BackOut => "back-out".to_string(),
-            Easing::BackInOut => "back-in-out".to_string(),
-            #[cfg(feature = "approx")]
-            Easing::Spring(_) => "spring".to_string(),
-            Easing::Bezier(_, _, _, _) => "bezier".to_string(),
-        }
-    }
-}
-
-impl ToStringExt for RepeatConfig {
-    fn to_string(&self) -> String {
-        match self {
-            RepeatConfig::Never => "never".to_string(),
-            RepeatConfig::Count(n) => format!("count:{}", n),
-            RepeatConfig::Infinite => "infinite".to_string(),
-            RepeatConfig::InfiniteReverse => "infinite-reverse".to_string(),
-        }
-    }
-}
-
-impl ToStringExt for StaggerFrom {
-    fn to_string(&self) -> String {
-        match self {
-            StaggerFrom::First => "first".to_string(),
-            StaggerFrom::Last => "last".to_string(),
-            StaggerFrom::Center => "center".to_string(),
-            StaggerFrom::Index(n) => format!("index:{}", n),
-        }
+        let string_bytes = &data[4..4 + length];
+        String::from_utf8(string_bytes.to_vec())
+            .map_err(|e| MinimalSerializationError::TypeConversion(e.to_string()))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    // use std::collections::HashMap;
 
     #[test]
-    fn test_animation_value_serialization() {
-        let value = AnimationValue::Number(42.0);
-        let json = value.to_json();
-        assert!(json.contains("\"type\":\"number\""));
-        assert!(json.contains("\"value\":42"));
+    fn test_minimal_json_serializer_basic() {
+        let kv = MinimalJsonSerializer::serialize_kv("name", "value");
+        assert_eq!(kv, "\"name\":\"value\"");
+
+        let kv_num = MinimalJsonSerializer::serialize_kv_number("count", 42.5);
+        assert_eq!(kv_num, "\"count\":42.5");
+
+        let kv_bool = MinimalJsonSerializer::serialize_kv_bool("enabled", true);
+        assert_eq!(kv_bool, "\"enabled\":true");
     }
 
     #[test]
-    fn test_transform_serialization() {
-        let transform = Transform {
-            x: Some(10.0),
-            y: Some(20.0),
-            scale: Some(1.5),
-            ..Default::default()
-        };
-        let json = transform.to_json();
-        assert!(json.contains("\"x\":10"));
-        assert!(json.contains("\"y\":20"));
-        assert!(json.contains("\"scale\":1.5"));
+    fn test_minimal_json_serializer_objects() {
+        let fields = vec![
+            MinimalJsonSerializer::serialize_kv("name", "test"),
+            MinimalJsonSerializer::serialize_kv_number("count", 10.0),
+        ];
+        let obj = MinimalJsonSerializer::create_object(fields);
+        assert_eq!(obj, "{\"name\":\"test\",\"count\":10}");
+
+        let items = vec!["\"item1\"".to_string(), "\"item2\"".to_string()];
+        let arr = MinimalJsonSerializer::create_array(items);
+        assert_eq!(arr, "[\"item1\",\"item2\"]");
     }
 
     #[test]
-    fn test_animation_target_serialization() {
-        let mut target = std::collections::HashMap::new();
-        target.insert("opacity".to_string(), AnimationValue::Number(0.5));
-        target.insert("x".to_string(), AnimationValue::Pixels(100.0));
-        let animation_target: AnimationTarget = target;
+    fn test_minimal_json_serializer_parsing() {
+        let (key, value) = MinimalJsonSerializer::parse_kv("\"name\":\"value\"").unwrap();
+        assert_eq!(key, "name");
+        assert_eq!(value, "value");
 
-        let json = animation_target.to_json();
-        assert!(json.contains("\"opacity\""));
-        assert!(json.contains("\"x\""));
+        let (key, value) = MinimalJsonSerializer::parse_kv("\"count\":42").unwrap();
+        assert_eq!(key, "count");
+        assert_eq!(value, "42");
     }
 
     #[test]
-    fn test_transition_serialization() {
-        let transition = Transition {
-            duration: Some(1.0),
-            ease: Easing::EaseOut,
-            ..Default::default()
-        };
-        let json = transition.to_json();
-        assert!(json.contains("\"duration\":1"));
-        assert!(json.contains("\"ease\":\"ease-out\""));
+    fn test_minimal_json_serializer_object_parsing() {
+        let obj_str = "{\"name\":\"test\",\"count\":10}";
+        let fields = MinimalJsonSerializer::parse_object(obj_str).unwrap();
+        assert_eq!(fields.len(), 2);
+        assert_eq!(fields[0], ("name".to_string(), "test".to_string()));
+        assert_eq!(fields[1], ("count".to_string(), "10".to_string()));
+
+        let empty_obj = "{}";
+        let empty_fields = MinimalJsonSerializer::parse_object(empty_obj).unwrap();
+        assert_eq!(empty_fields.len(), 0);
+    }
+
+    #[test]
+    fn test_minimal_binary_serializer() {
+        let original_u32 = 12345u32;
+        let bytes = MinimalBinarySerializer::serialize_u32(original_u32);
+        let deserialized = MinimalBinarySerializer::deserialize_u32(bytes);
+        assert_eq!(original_u32, deserialized);
+
+        let original_f64 = 3.14159f64;
+        let bytes = MinimalBinarySerializer::serialize_f64(original_f64);
+        let deserialized = MinimalBinarySerializer::deserialize_f64(bytes);
+        assert_eq!(original_f64, deserialized);
+
+        let original_bool = true;
+        let byte = MinimalBinarySerializer::serialize_bool(original_bool);
+        let deserialized = MinimalBinarySerializer::deserialize_bool(byte).unwrap();
+        assert_eq!(original_bool, deserialized);
+    }
+
+    #[test]
+    fn test_compact_string_serializer() {
+        let original = "Hello, World!";
+        let serialized = CompactStringSerializer::serialize_string(original);
+        let deserialized = CompactStringSerializer::deserialize_string(&serialized).unwrap();
+        assert_eq!(original, deserialized);
+
+        let empty = "";
+        let serialized_empty = CompactStringSerializer::serialize_string(empty);
+        let deserialized_empty = CompactStringSerializer::deserialize_string(&serialized_empty).unwrap();
+        assert_eq!(empty, deserialized_empty);
+    }
+
+    #[test]
+    fn test_compact_string_serializer_errors() {
+        // Test with data too short
+        let result = CompactStringSerializer::deserialize_string(&[1, 2]);
+        assert!(result.is_err());
+
+        // Test with incomplete data
+        let result = CompactStringSerializer::deserialize_string(&[5, 0, 0, 0, 1, 2]);
+        assert!(result.is_err());
     }
 }

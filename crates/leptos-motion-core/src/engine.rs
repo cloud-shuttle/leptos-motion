@@ -1,5 +1,6 @@
 //! Animation engine traits and implementations
 
+#[cfg(feature = "performance-metrics")]
 use crate::performance::{
     AnimationPool, AnimationScheduler, GPULayerManager, PerformanceBudget, PerformanceMonitor,
 };
@@ -39,7 +40,12 @@ pub trait AnimationEngine {
     fn is_running(&self, handle: AnimationHandle) -> bool;
 
     /// Get performance metrics
+    #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport>;
+    
+    /// Get performance metrics (no-op when feature disabled)
+    #[cfg(not(feature = "performance-metrics"))]
+    fn get_performance_metrics(&self) -> Option<()>;
 }
 
 /// Animation configuration
@@ -106,9 +112,13 @@ pub struct OptimizedHybridEngine {
     waapi_engine: WaapiEngine,
     raf_engine: RafEngine,
     feature_detector: FeatureDetector,
+    #[cfg(feature = "performance-metrics")]
     performance_monitor: Option<PerformanceMonitor>,
+    #[cfg(feature = "performance-metrics")]
     _scheduler: AnimationScheduler,
+    #[cfg(feature = "performance-metrics")]
     gpu_manager: GPULayerManager,
+    #[cfg(feature = "performance-metrics")]
     animation_pool: AnimationPool,
     current_handle: u64,
     frame_count: u64,
@@ -117,17 +127,21 @@ pub struct OptimizedHybridEngine {
 impl OptimizedHybridEngine {
     /// Create a new optimized hybrid engine instance
     pub fn new() -> Self {
-        let budget = PerformanceBudget::default();
-        let _frame_budget = std::time::Duration::from_millis(16); // 60fps target
-
         Self {
             #[cfg(feature = "web-sys")]
             waapi_engine: WaapiEngine::new(),
             raf_engine: RafEngine::new(),
             feature_detector: FeatureDetector::new(),
-            performance_monitor: Some(PerformanceMonitor::new(budget)),
+            #[cfg(feature = "performance-metrics")]
+            performance_monitor: {
+                let budget = PerformanceBudget::default();
+                Some(PerformanceMonitor::new(budget))
+            },
+            #[cfg(feature = "performance-metrics")]
             _scheduler: AnimationScheduler::new(),
+            #[cfg(feature = "performance-metrics")]
             gpu_manager: GPULayerManager::new(50), // Max 50 GPU layers
+            #[cfg(feature = "performance-metrics")]
             animation_pool: AnimationPool::new(100),
             current_handle: 0,
             frame_count: 0,
@@ -135,6 +149,7 @@ impl OptimizedHybridEngine {
     }
 
     /// Start performance monitoring
+    #[cfg(feature = "performance-metrics")]
     pub fn start_performance_monitoring(&mut self) {
         if let Some(monitor) = &mut self.performance_monitor {
             monitor.record_frame_timestamp(std::time::Instant::now());
@@ -142,6 +157,7 @@ impl OptimizedHybridEngine {
     }
 
     /// End performance monitoring
+    #[cfg(feature = "performance-metrics")]
     pub fn end_performance_monitoring(&mut self, animations_updated: usize) {
         if let Some(monitor) = &mut self.performance_monitor {
             let memory_usage = self.animation_pool.in_use_count() * 1024; // Rough estimate
@@ -150,10 +166,29 @@ impl OptimizedHybridEngine {
         }
     }
 
+    /// Start performance monitoring (no-op when feature disabled)
+    #[cfg(not(feature = "performance-metrics"))]
+    pub fn start_performance_monitoring(&mut self) {
+        // No-op when performance metrics are disabled
+    }
+
+    /// End performance monitoring (no-op when feature disabled)
+    #[cfg(not(feature = "performance-metrics"))]
+    pub fn end_performance_monitoring(&mut self, _animations_updated: usize) {
+        // No-op when performance metrics are disabled
+    }
+
     /// Get performance report
+    #[cfg(feature = "performance-metrics")]
     pub fn get_performance_report(&self) -> Option<crate::performance::PerformanceReport> {
         // We can't generate a report here since we need mutable access
         // This is a limitation of the current design
+        None
+    }
+
+    /// Get performance report (no-op when feature disabled)
+    #[cfg(not(feature = "performance-metrics"))]
+    pub fn get_performance_report(&self) -> Option<()> {
         None
     }
 
@@ -253,6 +288,7 @@ impl AnimationEngine for OptimizedHybridEngine {
         // Try RAF
         if let Ok(()) = self.raf_engine.stop(handle) {
             // Return animation to pool
+            #[cfg(feature = "performance-metrics")]
             self.animation_pool.return_animation(handle.0);
             return Ok(());
         }
@@ -316,7 +352,13 @@ impl AnimationEngine for OptimizedHybridEngine {
         waapi_running || self.raf_engine.is_running(handle)
     }
 
+    #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport> {
+        self.get_performance_report()
+    }
+
+    #[cfg(not(feature = "performance-metrics"))]
+    fn get_performance_metrics(&self) -> Option<()> {
         self.get_performance_report()
     }
 }
@@ -412,7 +454,13 @@ impl AnimationEngine for WaapiEngine {
         self.animations.contains_key(&handle)
     }
 
+    #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport> {
+        None // WAAPI doesn't provide performance metrics
+    }
+
+    #[cfg(not(feature = "performance-metrics"))]
+    fn get_performance_metrics(&self) -> Option<()> {
         None // WAAPI doesn't provide performance metrics
     }
 }
@@ -554,7 +602,13 @@ impl AnimationEngine for RafEngine {
             .unwrap_or(false)
     }
 
+    #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport> {
+        None // RAF engine doesn't provide performance metrics
+    }
+
+    #[cfg(not(feature = "performance-metrics"))]
+    fn get_performance_metrics(&self) -> Option<()> {
         None // RAF engine doesn't provide performance metrics
     }
 }

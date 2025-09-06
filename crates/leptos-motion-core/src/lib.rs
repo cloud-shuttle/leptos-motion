@@ -64,6 +64,13 @@ mod tree_shaking_tests;
 mod wasm_browser_tdd_tests;
 #[cfg(test)]
 mod wasm_optimization_tests;
+
+#[cfg(test)]
+mod bundle_size_optimization_tests;
+#[cfg(test)]
+mod tree_shaking_optimization_tests;
+#[cfg(test)]
+mod feature_flags_optimization_tests;
 #[cfg(test)]
 mod wasm_test_setup;
 #[cfg(test)]

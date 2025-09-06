@@ -25,6 +25,9 @@ pub mod spring;
 #[cfg(test)]
 mod memory_optimization_tests;
 
+#[cfg(test)]
+mod performance_tests;
+
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
 pub use animation::presets::SlideDirection;

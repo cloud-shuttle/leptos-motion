@@ -3,8 +3,8 @@
 //! This example demonstrates a dashboard interface with working animations
 
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny};
-use leptos_motion_core::*;
+use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, OnAttribute, Get, Set, signal, ReadSignal, WriteSignal, set_timeout};
+use std::time::Duration;
 
 /// Dashboard app component
 #[component]

@@ -51,7 +51,7 @@ pub fn App() -> impl IntoView {
 
 #[component]
 pub fn SimpleAnimation() -> impl IntoView {
-    let engine = MinimalEngine::new();
+    let _engine = MinimalEngine::new();
     view! {
         <div>
             <h2>"Leptos Motion Core Engine Demo"</h2>

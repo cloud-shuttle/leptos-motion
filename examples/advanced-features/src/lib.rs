@@ -3,8 +3,8 @@
 //! This example demonstrates advanced motion features using manual DOM manipulation
 
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, signal};
-use leptos_motion_core::*;
+use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, signal, OnAttribute, Get, Set, Update};
+use leptos_motion_core::MinimalEngine;
 
 /// Advanced features demo
 #[component]
@@ -73,7 +73,7 @@ pub fn App() -> impl IntoView {
 
 #[component]
 fn AnimationEngineDemo() -> impl IntoView {
-    let engine = MinimalEngine::new();
+    let _engine = MinimalEngine::new();
     let (running, set_running) = signal(false);
 
     view! {

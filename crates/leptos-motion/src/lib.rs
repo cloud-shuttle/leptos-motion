@@ -20,25 +20,28 @@
 //! ```rust,no_run
 //! use leptos::*;
 //! use leptos_motion::*;
+//! use std::collections::HashMap;
 //!
 //! #[component]
 //! fn App() -> impl IntoView {
+//!     let mut initial = HashMap::new();
+//!     initial.insert("opacity".to_string(), AnimationValue::Number(0.0));
+//!     initial.insert("scale".to_string(), AnimationValue::Number(0.5));
+//!     
+//!     let mut animate = HashMap::new();
+//!     animate.insert("opacity".to_string(), AnimationValue::Number(1.0));
+//!     animate.insert("scale".to_string(), AnimationValue::Number(1.0));
+//!     
 //!     view! {
 //!         <MotionDiv
-//!             class="my-element".to_string()
-//!             initial=motion_target!(
-//!                 "opacity" => AnimationValue::Number(0.0),
-//!                 "scale" => AnimationValue::Number(0.5)
-//!             )
-//!             animate=motion_target!(
-//!                 "opacity" => AnimationValue::Number(1.0),
-//!                 "scale" => AnimationValue::Number(1.0)
-//!             )
-//!             transition=Transition {
+//!             class=Some("my-element".to_string())
+//!             initial=Some(initial)
+//!             animate=Some(animate)
+//!             transition=Some(Transition {
 //!                 duration: Some(0.5),
 //!                 ease: Easing::EaseOut,
 //!                 ..Default::default()
-//!             }
+//!             })
 //!         >
 //!             "Hello Leptos Motion!"
 //!         </MotionDiv>
@@ -94,12 +97,19 @@
 //! ```rust,no_run
 //! # use leptos::*;
 //! # use leptos_motion::*;
+//! # use std::collections::HashMap;
 //! # fn main() {
+//! let mut hover_target = HashMap::new();
+//! hover_target.insert("scale".to_string(), AnimationValue::Number(1.1));
+//! 
+//! let mut tap_target = HashMap::new();
+//! tap_target.insert("scale".to_string(), AnimationValue::Number(0.9));
+//! 
 //! let _view = view! {
 //!     <MotionDiv
-//!         while_hover=motion_target!("scale" => AnimationValue::Number(1.1))
-//!         while_tap=motion_target!("scale" => AnimationValue::Number(0.9))
-//!         drag=DragConfig::new().axis(DragAxis::Both)
+//!         while_hover=Some(hover_target)
+//!         while_tap=Some(tap_target)
+//!         drag=Some(DragConfig::default())
 //!     >
 //!         "Interactive element"
 //!     </MotionDiv>

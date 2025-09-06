@@ -3,8 +3,7 @@
 //! This example demonstrates mobile-friendly animations and interactions
 
 use leptos::*;
-use leptos::prelude::{ElementChild, StyleAttribute, IntoAny};
-use leptos_motion_core::*;
+use leptos::prelude::{ElementChild, StyleAttribute, IntoAny, OnAttribute, Get, Set, Update, signal, ReadSignal};
 
 /// Mobile app component
 #[component]
@@ -238,11 +237,11 @@ fn SettingsPage() -> impl IntoView {
 }
 
 #[component]
-fn StatCard(title: String, value: Signal<String>) -> impl IntoView {
+fn StatCard(title: String, value: impl Fn() -> String + 'static + Send) -> impl IntoView {
     view! {
         <div style="background: rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem;">
             <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.25rem;">
-                {move || value.get()}
+                {move || value()}
             </div>
             <div style="opacity: 0.8; font-size: 0.875rem;">
                 {title}

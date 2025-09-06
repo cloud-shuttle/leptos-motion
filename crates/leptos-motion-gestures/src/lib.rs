@@ -253,3 +253,6 @@ pub use simplified_gesture_api::{
 mod simplified_gesture_tests {
     include!("simplified_gesture_tests.rs");
 }
+
+#[cfg(test)]
+mod gesture_tests;

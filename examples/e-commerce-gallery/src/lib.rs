@@ -117,7 +117,7 @@ fn ProductGallery() -> impl IntoView {
 fn ProductDetails() -> impl IntoView {
     let (quantity, set_quantity) = signal(1);
     let (is_added_to_cart, set_added_to_cart) = signal(false);
-    let (price, set_price) = signal(99.99);
+    let (_price, _set_price) = signal(99.99);
 
     let add_to_cart = move |_| {
         set_added_to_cart.set(true);

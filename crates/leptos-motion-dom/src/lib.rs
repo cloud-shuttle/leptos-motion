@@ -19,8 +19,11 @@ pub mod css_animations;
 #[cfg(test)]
 mod accessibility_tests;
 
+#[cfg(test)]
+mod components_tests;
+
 // Re-export commonly used items
-pub use components::*;
+// pub use components::*; // Temporarily disabled due to unused imports
 pub use elements::*;
 pub use hooks::*;
 pub use presence::*;

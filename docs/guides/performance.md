@@ -86,7 +86,7 @@ Group related animations to reduce reflows:
 #[component]
 fn OptimizedAnimation() -> impl IntoView {
     let (is_expanded, set_expanded) = signal(false);
-    
+
     // Batch all animations together
     let animation_target = motion_target!(
         "x" => AnimationValue::Pixels(if is_expanded.get() { 100.0 } else { 0.0 }),
@@ -94,7 +94,7 @@ fn OptimizedAnimation() -> impl IntoView {
         "scale" => AnimationValue::Number(if is_expanded.get() { 1.2 } else { 1.0 }),
         "opacity" => AnimationValue::Number(if is_expanded.get() { 1.0 } else { 0.8 })
     );
-    
+
     view! {
         <MotionDiv
             animate=animation_target
@@ -116,12 +116,12 @@ Hint to the browser about elements that will animate:
 
 ```css
 .animated-element {
-    will-change: transform, opacity;
+  will-change: transform, opacity;
 }
 
 /* Remove will-change after animation completes */
 .animated-element.animation-complete {
-    will-change: auto;
+  will-change: auto;
 }
 ```
 
@@ -135,18 +135,18 @@ Properly dispose of motion values to prevent memory leaks:
 #[component]
 fn MemoryOptimizedComponent() -> impl IntoView {
     let motion_value = MotionValue::new(0.0);
-    
+
     // Subscribe to changes
     let subscription = motion_value.subscribe(|value| {
         // Handle value changes
     });
-    
+
     // Clean up when component unmounts
     on_cleanup(move || {
         // Unsubscribe to prevent memory leaks
         drop(subscription);
     });
-    
+
     view! {
         <div>
             // Component content
@@ -167,17 +167,17 @@ static ACTIVE_ANIMATIONS: AtomicUsize = AtomicUsize::new(0);
 #[component]
 fn AnimationManager() -> impl IntoView {
     let animation_count = create_rw_signal(0);
-    
+
     // Track animation count
     Effect::new(move |_| {
         let count = ACTIVE_ANIMATIONS.load(Ordering::Relaxed);
         animation_count.set(count);
-        
+
         if count > MAX_CONCURRENT_ANIMATIONS {
             log::warn!("Too many concurrent animations: {}", count);
         }
     });
-    
+
     view! {
         <div>
             <p>"Active animations: {animation_count}"</p>
@@ -197,14 +197,14 @@ use std::rc::Weak;
 fn WeakReferenceExample() -> impl IntoView {
     let component_ref = create_node_ref::<Div>();
     let weak_ref = Rc::downgrade(&component_ref);
-    
+
     let motion_value = MotionValue::new(0.0);
     motion_value.subscribe(move |value| {
         if let Some(element) = weak_ref.upgrade() {
             // Update element with animation value
         }
     });
-    
+
     view! {
         <div node_ref=component_ref>
             "Weak reference example"
@@ -310,7 +310,7 @@ Use event delegation for better performance with many elements:
 #[component]
 fn OptimizedList(items: Vec<String>) -> impl IntoView {
     let container_ref = create_node_ref::<html::Div>();
-    
+
     let on_click = move |event: web_sys::MouseEvent| {
         if let Some(target) = event.target() {
             if let Some(element) = target.dyn_ref::<web_sys::Element>() {
@@ -322,7 +322,7 @@ fn OptimizedList(items: Vec<String>) -> impl IntoView {
             }
         }
     };
-    
+
     view! {
         <div node_ref=container_ref on:click=on_click>
             {items.iter().enumerate().map(|(i, item)| {
@@ -443,7 +443,7 @@ fn VirtualList(items: Vec<String>) -> impl IntoView {
     let (visible_range, set_visible_range) = signal((0, 20));
     let container_height = 400.0;
     let item_height = 50.0;
-    
+
     view! {
         <div class="virtual-list" style="height: {container_height}px; overflow: auto;">
             <div style="height: {items.len() as f64 * item_height}px; position: relative;">
@@ -486,7 +486,7 @@ use std::time::Duration;
 fn DebouncedAnimation() -> impl IntoView {
     let (value, set_value) = signal(0.0);
     let debounced_value = create_rw_signal(0.0);
-    
+
     // Debounce updates
     Effect::new(move |_| {
         let current_value = value.get();
@@ -497,7 +497,7 @@ fn DebouncedAnimation() -> impl IntoView {
             Duration::from_millis(16) // ~60fps
         ).expect("Failed to set timeout");
     });
-    
+
     view! {
         <MotionDiv
             animate=motion_target!(
@@ -520,23 +520,23 @@ use web_sys::window;
 #[component]
 fn RafOptimizedAnimation() -> impl IntoView {
     let (frame_count, set_frame_count) = signal(0);
-    
+
     Effect::new(move |_| {
         let window = window().expect("No window");
-        
+
         let animate = move || {
             set_frame_count.update(|count| *count += 1);
-            
+
             // Schedule next frame
             window.request_animation_frame(&Closure::wrap(Box::new(animate) as Box<dyn FnMut()>))
                 .expect("Failed to request animation frame");
         };
-        
+
         // Start animation loop
         window.request_animation_frame(&Closure::wrap(Box::new(animate) as Box<dyn FnMut()>))
             .expect("Failed to request animation frame");
     });
-    
+
     view! {
         <div>
             <p>"Frame count: {frame_count}"</p>
@@ -559,20 +559,20 @@ fn PerformanceMonitor() -> impl IntoView {
     let (fps, set_fps) = signal(0.0);
     let (frame_time, set_frame_time) = signal(0.0);
     let (memory_usage, set_memory_usage) = signal(0.0);
-    
+
     Effect::new(move |_| {
         let start_time = Instant::now();
-        
+
         // Measure frame time
         let frame_duration = start_time.elapsed();
         set_frame_time.set(frame_duration.as_millis() as f64);
-        
+
         // Calculate FPS
         if frame_duration.as_millis() > 0 {
             let current_fps = 1000.0 / frame_duration.as_millis() as f64;
             set_fps.set(current_fps);
         }
-        
+
         // Monitor memory usage (if available)
         if let Some(window) = window() {
             if let Some(performance) = window.performance() {
@@ -583,7 +583,7 @@ fn PerformanceMonitor() -> impl IntoView {
             }
         }
     });
-    
+
     view! {
         <div class="performance-monitor">
             <div class="metric">
@@ -618,19 +618,19 @@ Profile individual animations:
 fn ProfiledAnimation() -> impl IntoView {
     let animation_start = create_rw_signal(Instant::now());
     let animation_duration = create_rw_signal(0.0);
-    
+
     let on_animation_start = move || {
         animation_start.set(Instant::now());
     };
-    
+
     let on_animation_complete = move || {
         let duration = animation_start.get().elapsed();
         animation_duration.set(duration.as_millis() as f64);
-        
+
         // Log performance data
         log::info!("Animation completed in {:.2}ms", duration.as_millis());
     };
-    
+
     view! {
         <div>
             <MotionDiv
@@ -657,10 +657,10 @@ fn ProfiledAnimation() -> impl IntoView {
 fn PerformanceBenchmark() -> impl IntoView {
     let (test_results, set_test_results) = signal(Vec::new());
     let (is_running, set_running) = signal(false);
-    
+
     let run_benchmark = move || {
         set_running.set(true);
-        
+
         // Test different animation types
         let tests = vec![
             ("Transform Only", motion_target!("x" => AnimationValue::Pixels(100.0))),
@@ -673,31 +673,31 @@ fn PerformanceBenchmark() -> impl IntoView {
             )),
             ("Spring Animation", motion_target!("x" => AnimationValue::Pixels(100.0))),
         ];
-        
+
         for (test_name, animation) in tests {
             let start_time = Instant::now();
-            
+
             // Run animation
             // ... animation logic ...
-            
+
             let duration = start_time.elapsed();
             set_test_results.update(|results| {
                 results.push((test_name.to_string(), duration.as_millis() as f64));
             });
         }
-        
+
         set_running.set(false);
     };
-    
+
     view! {
         <div class="benchmark">
             <button on:click=run_benchmark disabled=is_running>
                 "Run Performance Benchmark"
             </button>
-            
+
             <div class="results">
                 <h3>"Benchmark Results"</h3>
-                
+
                 {move || {
                     test_results.get().iter().map(|(test_name, duration)| {
                         view! {
@@ -755,21 +755,22 @@ Before deploying animations to production:
 - [ ] Performance monitoring is in place
 - [ ] Fallbacks are provided for older browsers
 - [ ] Tests cover performance edge cases
-                {move || {
-                    test_results.get().iter().map(|(name, duration)| {
-                        view! {
-                            <div class="result">
-                                <span>{name}</span>
-                                <span>{format!("{:.2}ms", duration)}</span>
-                            </div>
-                        }
-                    }).collect::<Vec<_>>()
-                }}
-            </div>
-        </div>
-    }
-}
-```
+      {move || {
+      test*results.get().iter().map(|(name, duration)| {
+      view! {
+      <div class="result">
+      <span>{name}</span>
+      <span>{format!("{:.2}ms", duration)}</span>
+      </div>
+      }
+      }).collect::<Vec<*>>()
+      }}
+      </div>
+      </div>
+      }
+      }
+
+````
 
 ### 2. Memory Usage Test
 
@@ -779,7 +780,7 @@ fn MemoryBenchmark() -> impl IntoView {
     let (memory_before, set_memory_before) = signal(0.0);
     let (memory_after, set_memory_after) = signal(0.0);
     let (leak_detected, set_leak_detected) = signal(false);
-    
+
     let run_memory_test = move || {
         // Measure memory before
         if let Some(window) = window() {
@@ -787,17 +788,17 @@ fn MemoryBenchmark() -> impl IntoView {
                 if let Some(memory) = performance.memory() {
                     let before = memory.used_js_heap_size() as f64 / (1024.0 * 1024.0);
                     set_memory_before.set(before);
-                    
+
                     // Create many animations
                     for _ in 0..100 {
                         let motion_value = MotionValue::new(0.0);
                         motion_value.subscribe(|_| {});
                     }
-                    
+
                     // Measure memory after
                     let after = memory.used_js_heap_size() as f64 / (1024.0 * 1024.0);
                     set_memory_after.set(after);
-                    
+
                     // Check for memory leak
                     let increase = after - before;
                     set_leak_detected.set(increase > 1.0); // More than 1MB increase
@@ -805,13 +806,13 @@ fn MemoryBenchmark() -> impl IntoView {
             }
         }
     };
-    
+
     view! {
         <div class="memory-benchmark">
             <button on:click=run_memory_test>
                 "Run Memory Test"
             </button>
-            
+
             <div class="memory-results">
                 <p>"Memory before: {memory_before}MB"</p>
                 <p>"Memory after: {memory_after}MB"</p>
@@ -822,7 +823,7 @@ fn MemoryBenchmark() -> impl IntoView {
         </div>
     }
 }
-```
+````
 
 ## Best Practices Summary
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # E2E Test Runner for Leptos Motion
-# 
+#
 # This script runs comprehensive end-to-end tests for complete workflows
 # ensuring the animation system works correctly in real browser environments.
 
@@ -162,7 +162,7 @@ FAILED_TESTS=0
 
 for browser in "${BROWSERS[@]}"; do
     print_status "Running tests on $browser..."
-    
+
     if npx playwright test --project="$browser" --reporter=list; then
         print_success "All tests passed on $browser"
         ((PASSED_TESTS++))
@@ -170,7 +170,7 @@ for browser in "${BROWSERS[@]}"; do
         print_error "Some tests failed on $browser"
         ((FAILED_TESTS++))
     fi
-    
+
     ((TOTAL_TESTS++))
 done
 
@@ -180,7 +180,7 @@ print_status "Running mobile E2E tests..."
 MOBILE_BROWSERS=("Mobile Chrome" "Mobile Safari")
 for browser in "${MOBILE_BROWSERS[@]}"; do
     print_status "Running tests on $browser..."
-    
+
     if npx playwright test --project="$browser" --reporter=list; then
         print_success "All tests passed on $browser"
         ((PASSED_TESTS++))
@@ -188,7 +188,7 @@ for browser in "${MOBILE_BROWSERS[@]}"; do
         print_error "Some tests failed on $browser"
         ((FAILED_TESTS++))
     fi
-    
+
     ((TOTAL_TESTS++))
 done
 
@@ -279,7 +279,7 @@ if [ $FAILED_TESTS -eq 0 ]; then
     echo "  - Update tests when adding new features"
     echo "  - Use visual regression testing for UI changes"
     echo ""
-    
+
     exit 0
 else
     print_error "Some E2E tests failed! ❌"
@@ -300,6 +300,6 @@ else
     echo "  3. Check browser console logs for errors"
     echo "  4. Verify test environment setup"
     echo ""
-    
+
     exit 1
 fi

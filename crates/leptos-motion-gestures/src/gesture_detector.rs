@@ -1,16 +1,16 @@
 //! Main gesture detector that coordinates all gesture types
 
-use crate::{
-    GestureConfig, GestureEvent, GestureResult, GestureHandler, MultiTouchGestureDetector,
-    MultiTouchState, MultiTouchGestureType, TouchPoint
-};
 use crate::drag::DragGesture;
 use crate::hover::HoverGesture;
 use crate::tap::TapGesture;
+use crate::{
+    GestureConfig, GestureEvent, GestureHandler, GestureResult, MultiTouchGestureDetector,
+    MultiTouchGestureType, MultiTouchState, TouchPoint,
+};
 use std::collections::HashMap;
 
-use web_sys::{Element, TouchEvent, MouseEvent, PointerEvent};
 use wasm_bindgen::prelude::*;
+use web_sys::{Element, MouseEvent, PointerEvent, TouchEvent};
 
 /// Main gesture detector that coordinates all gesture types
 pub struct GestureDetector {
@@ -58,12 +58,12 @@ impl GestureDetector {
     /// Attach the detector to a DOM element
     pub fn attach(&mut self, element: Element) -> Result<(), JsValue> {
         self.element = Some(element.clone());
-        
+
         // Set up event listeners
         self.setup_touch_events(&element)?;
         self.setup_mouse_events(&element)?;
         self.setup_pointer_events(&element)?;
-        
+
         Ok(())
     }
 
@@ -75,7 +75,7 @@ impl GestureDetector {
             self.remove_mouse_events(element)?;
             self.remove_pointer_events(element)?;
         }
-        
+
         self.element = None;
         Ok(())
     }
@@ -85,7 +85,8 @@ impl GestureDetector {
     where
         F: Fn(GestureResult) + Send + Sync + 'static,
     {
-        self.callbacks.insert(gesture_type.to_string(), Box::new(callback));
+        self.callbacks
+            .insert(gesture_type.to_string(), Box::new(callback));
     }
 
     /// Register a callback for multi-touch gestures
@@ -95,15 +96,16 @@ impl GestureDetector {
     {
         let wrapped_callback = move |result: GestureResult| {
             if let Some(data) = result.data {
-                if let Ok(multi_touch_state) = serde_json::from_value::<MultiTouchState>(
-                    serde_json::to_value(data).unwrap()
-                ) {
+                if let Ok(multi_touch_state) =
+                    serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
+                {
                     callback(multi_touch_state);
                 }
             }
         };
-        
-        self.callbacks.insert("multi_touch".to_string(), Box::new(wrapped_callback));
+
+        self.callbacks
+            .insert("multi_touch".to_string(), Box::new(wrapped_callback));
     }
 
     /// Register a callback for pinch gestures
@@ -113,18 +115,20 @@ impl GestureDetector {
     {
         let wrapped_callback = move |result: GestureResult| {
             if let Some(data) = result.data {
-                if let Ok(multi_touch_state) = serde_json::from_value::<MultiTouchState>(
-                    serde_json::to_value(data).unwrap()
-                ) {
-                    if multi_touch_state.gesture_type == MultiTouchGestureType::Pinch ||
-                       multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate {
+                if let Ok(multi_touch_state) =
+                    serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
+                {
+                    if multi_touch_state.gesture_type == MultiTouchGestureType::Pinch
+                        || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate
+                    {
                         callback(multi_touch_state.scale);
                     }
                 }
             }
         };
-        
-        self.callbacks.insert("pinch".to_string(), Box::new(wrapped_callback));
+
+        self.callbacks
+            .insert("pinch".to_string(), Box::new(wrapped_callback));
     }
 
     /// Register a callback for rotation gestures
@@ -134,18 +138,20 @@ impl GestureDetector {
     {
         let wrapped_callback = move |result: GestureResult| {
             if let Some(data) = result.data {
-                if let Ok(multi_touch_state) = serde_json::from_value::<MultiTouchState>(
-                    serde_json::to_value(data).unwrap()
-                ) {
-                    if multi_touch_state.gesture_type == MultiTouchGestureType::Rotation ||
-                       multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate {
+                if let Ok(multi_touch_state) =
+                    serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
+                {
+                    if multi_touch_state.gesture_type == MultiTouchGestureType::Rotation
+                        || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate
+                    {
                         callback(multi_touch_state.rotation);
                     }
                 }
             }
         };
-        
-        self.callbacks.insert("rotation".to_string(), Box::new(wrapped_callback));
+
+        self.callbacks
+            .insert("rotation".to_string(), Box::new(wrapped_callback));
     }
 
     /// Update the gesture configuration
@@ -176,30 +182,39 @@ impl GestureDetector {
             // Process the gesture event (would need reference to self)
             log::info!("Touch start: {} touches", event.touches().length());
         }) as Box<dyn FnMut(TouchEvent)>);
-        
+
         let touchmove_callback = Closure::wrap(Box::new(move |event: TouchEvent| {
             let touches = Self::extract_touch_points(&event);
             let _gesture_event = GestureEvent::TouchMove { touches };
             // Process the gesture event (would need reference to self)
             log::info!("Touch move: {} touches", event.touches().length());
         }) as Box<dyn FnMut(TouchEvent)>);
-        
+
         let touchend_callback = Closure::wrap(Box::new(move |event: TouchEvent| {
             let touches = Self::extract_touch_points(&event);
             let _gesture_event = GestureEvent::TouchEnd { touches };
             // Process the gesture event (would need reference to self)
             log::info!("Touch end: {} touches", event.touches().length());
         }) as Box<dyn FnMut(TouchEvent)>);
-        
-        element.add_event_listener_with_callback("touchstart", touchstart_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("touchmove", touchmove_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("touchend", touchend_callback.as_ref().unchecked_ref())?;
-        
+
+        element.add_event_listener_with_callback(
+            "touchstart",
+            touchstart_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "touchmove",
+            touchmove_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "touchend",
+            touchend_callback.as_ref().unchecked_ref(),
+        )?;
+
         // Store callbacks to prevent them from being dropped
         touchstart_callback.forget();
         touchmove_callback.forget();
         touchend_callback.forget();
-        
+
         Ok(())
     }
 
@@ -208,36 +223,51 @@ impl GestureDetector {
         let mousedown_callback = Closure::wrap(Box::new(move |_event: MouseEvent| {
             // Handle mouse down
         }) as Box<dyn FnMut(MouseEvent)>);
-        
+
         let mousemove_callback = Closure::wrap(Box::new(move |_event: MouseEvent| {
             // Handle mouse move
         }) as Box<dyn FnMut(MouseEvent)>);
-        
+
         let mouseup_callback = Closure::wrap(Box::new(move |_event: MouseEvent| {
             // Handle mouse up
         }) as Box<dyn FnMut(MouseEvent)>);
-        
+
         let mouseenter_callback = Closure::wrap(Box::new(move |_event: MouseEvent| {
             // Handle mouse enter
         }) as Box<dyn FnMut(MouseEvent)>);
-        
+
         let mouseleave_callback = Closure::wrap(Box::new(move |_event: MouseEvent| {
             // Handle mouse leave
         }) as Box<dyn FnMut(MouseEvent)>);
-        
-        element.add_event_listener_with_callback("mousedown", mousedown_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("mousemove", mousemove_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("mouseup", mouseup_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("mouseenter", mouseenter_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("mouseleave", mouseleave_callback.as_ref().unchecked_ref())?;
-        
+
+        element.add_event_listener_with_callback(
+            "mousedown",
+            mousedown_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "mousemove",
+            mousemove_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "mouseup",
+            mouseup_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "mouseenter",
+            mouseenter_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "mouseleave",
+            mouseleave_callback.as_ref().unchecked_ref(),
+        )?;
+
         // Store callbacks
         mousedown_callback.forget();
         mousemove_callback.forget();
         mouseup_callback.forget();
         mouseenter_callback.forget();
         mouseleave_callback.forget();
-        
+
         Ok(())
     }
 
@@ -246,24 +276,33 @@ impl GestureDetector {
         let pointerdown_callback = Closure::wrap(Box::new(move |_event: PointerEvent| {
             // Handle pointer down
         }) as Box<dyn FnMut(PointerEvent)>);
-        
+
         let pointermove_callback = Closure::wrap(Box::new(move |_event: PointerEvent| {
             // Handle pointer move
         }) as Box<dyn FnMut(PointerEvent)>);
-        
+
         let pointerup_callback = Closure::wrap(Box::new(move |_event: PointerEvent| {
             // Handle pointer up
         }) as Box<dyn FnMut(PointerEvent)>);
-        
-        element.add_event_listener_with_callback("pointerdown", pointerdown_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("pointermove", pointermove_callback.as_ref().unchecked_ref())?;
-        element.add_event_listener_with_callback("pointerup", pointerup_callback.as_ref().unchecked_ref())?;
-        
+
+        element.add_event_listener_with_callback(
+            "pointerdown",
+            pointerdown_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "pointermove",
+            pointermove_callback.as_ref().unchecked_ref(),
+        )?;
+        element.add_event_listener_with_callback(
+            "pointerup",
+            pointerup_callback.as_ref().unchecked_ref(),
+        )?;
+
         // Store callbacks
         pointerdown_callback.forget();
         pointermove_callback.forget();
         pointerup_callback.forget();
-        
+
         Ok(())
     }
 
@@ -289,24 +328,24 @@ impl GestureDetector {
     fn process_gesture_event(&mut self, event: GestureEvent) {
         // Add to history
         self.event_history.push(event.clone());
-        
+
         // Keep only last 100 events
         if self.event_history.len() > 100 {
             self.event_history.remove(0);
         }
-        
+
         // Process with multi-touch detector
         let result = self.multi_touch.handle_gesture(event.clone());
-        
+
         // Update current gesture state
         if let Some(data) = &result.data {
-            if let Ok(multi_touch_state) = serde_json::from_value::<MultiTouchState>(
-                serde_json::to_value(data).unwrap()
-            ) {
+            if let Ok(multi_touch_state) =
+                serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
+            {
                 self.current_gesture = Some(multi_touch_state);
             }
         }
-        
+
         // Trigger callbacks based on gesture type
         match result.gesture_type {
             MultiTouchGestureType::Pinch => {
@@ -329,12 +368,12 @@ impl GestureDetector {
             }
             _ => {}
         }
-        
+
         // Always trigger multi-touch callback if registered
         if let Some(callback) = self.callbacks.get("multi_touch") {
             callback(result.clone());
         }
-        
+
         // Trigger general gesture callback
         if let Some(callback) = self.callbacks.get("gesture") {
             callback(result);
@@ -355,7 +394,7 @@ impl GestureDetector {
     fn extract_touch_points(event: &TouchEvent) -> Vec<TouchPoint> {
         let mut touches = Vec::new();
         let touch_list = event.touches();
-        
+
         for i in 0..touch_list.length() {
             if let Some(touch) = touch_list.get(i) {
                 touches.push(TouchPoint {
@@ -367,7 +406,7 @@ impl GestureDetector {
                 });
             }
         }
-        
+
         touches
     }
 }
@@ -375,7 +414,7 @@ impl GestureDetector {
 impl GestureHandler for GestureDetector {
     fn handle_gesture(&mut self, event: GestureEvent) -> GestureResult {
         self.process_gesture_event(event.clone());
-        
+
         // Delegate to multi-touch detector for the actual result
         self.multi_touch.handle_gesture(event)
     }
@@ -502,7 +541,7 @@ mod tests {
             .max_touches(3)
             .timeout(500)
             .build();
-        
+
         assert!(!detector.is_active());
         assert!(detector.get_multi_touch_state().is_none());
     }
@@ -510,16 +549,16 @@ mod tests {
     #[test]
     fn test_gesture_event_processing() {
         let mut detector = GestureDetector::default();
-        
+
         // Test with a simple touch event
         let touches = vec![
             create_touch_point(1, 100.0, 100.0),
             create_touch_point(2, 200.0, 200.0),
         ];
-        
+
         let event = GestureEvent::TouchStart { touches };
         let result = detector.handle_gesture(event);
-        
+
         // Should recognize the gesture
         assert!(result.recognized);
     }

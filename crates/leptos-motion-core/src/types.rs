@@ -1,7 +1,7 @@
 //! Core types for animation values, targets, and configuration
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// Unique identifier for animation instances
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -42,7 +42,7 @@ impl AnimationValue {
             AnimationValue::Color(c) => c.clone(),
             AnimationValue::Transform(t) => {
                 let mut transforms = Vec::new();
-                
+
                 if let Some(x) = t.x {
                     transforms.push(format!("translateX({}px)", x));
                 }
@@ -76,7 +76,7 @@ impl AnimationValue {
                 if let Some(skew_y) = t.skew_y {
                     transforms.push(format!("skewY({}deg)", skew_y));
                 }
-                
+
                 transforms.join(" ")
             }
             AnimationValue::String(s) => s.clone(),
@@ -90,7 +90,7 @@ impl AnimationValue {
 pub struct Transform {
     /// X translation
     pub x: Option<f64>,
-    /// Y translation  
+    /// Y translation
     pub y: Option<f64>,
     /// Z translation
     pub z: Option<f64>,
@@ -212,7 +212,7 @@ pub struct StaggerConfig {
 pub enum StaggerFrom {
     /// Start from first element
     First,
-    /// Start from last element  
+    /// Start from last element
     Last,
     /// Start from center element
     Center,
@@ -267,7 +267,7 @@ impl AnimationValue {
             _ => None,
         }
     }
-    
+
     /// Check if value is numeric (can be interpolated)
     pub fn is_numeric(&self) -> bool {
         matches!(
@@ -279,7 +279,7 @@ impl AnimationValue {
                 | AnimationValue::Radians(_)
         )
     }
-    
+
     /// Get the unit suffix for CSS
     pub fn unit(&self) -> &'static str {
         match self {
@@ -302,7 +302,7 @@ impl Transform {
             ..Default::default()
         }
     }
-    
+
     /// Create a new transform with rotation
     pub fn rotate(degrees: f64) -> Self {
         Self {
@@ -310,7 +310,7 @@ impl Transform {
             ..Default::default()
         }
     }
-    
+
     /// Create a new transform with scale
     pub fn scale(scale: f64) -> Self {
         Self {
@@ -318,12 +318,12 @@ impl Transform {
             ..Default::default()
         }
     }
-    
+
     /// Check if transform is identity (no changes)
     pub fn is_identity(&self) -> bool {
         let zero_or_none = |v: Option<f64>| v.map_or(true, |v| v == 0.0);
         let one_or_none = |v: Option<f64>| v.map_or(true, |v| v == 1.0);
-        
+
         zero_or_none(self.x)
             && zero_or_none(self.y)
             && zero_or_none(self.z)
@@ -336,11 +336,11 @@ impl Transform {
             && zero_or_none(self.skew_x)
             && zero_or_none(self.skew_y)
     }
-    
+
     /// Convert to CSS transform string
     pub fn to_css(&self) -> String {
         let mut transforms = Vec::new();
-        
+
         if let (Some(x), Some(y)) = (self.x, self.y) {
             transforms.push(format!("translate({}px, {}px)", x, y));
         } else {
@@ -351,11 +351,11 @@ impl Transform {
                 transforms.push(format!("translateY({}px)", y));
             }
         }
-        
+
         if let Some(z) = self.z {
             transforms.push(format!("translateZ({}px)", z));
         }
-        
+
         if let Some(rotate) = self.rotate_z {
             transforms.push(format!("rotate({}deg)", rotate));
         }
@@ -365,7 +365,7 @@ impl Transform {
         if let Some(rotate_y) = self.rotate_y {
             transforms.push(format!("rotateY({}deg)", rotate_y));
         }
-        
+
         if let Some(scale) = self.scale {
             transforms.push(format!("scale({})", scale));
         } else {
@@ -376,14 +376,14 @@ impl Transform {
                 transforms.push(format!("scaleY({})", scale_y));
             }
         }
-        
+
         if let Some(skew_x) = self.skew_x {
             transforms.push(format!("skewX({}deg)", skew_x));
         }
         if let Some(skew_y) = self.skew_y {
             transforms.push(format!("skewY({}deg)", skew_y));
         }
-        
+
         transforms.join(" ")
     }
 }
@@ -391,27 +391,27 @@ impl Transform {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_animation_value_numeric() {
         let value = AnimationValue::Number(42.0);
         assert_eq!(value.as_number(), Some(42.0));
         assert!(value.is_numeric());
         assert_eq!(value.unit(), "");
-        
+
         let pixels = AnimationValue::Pixels(100.0);
         assert_eq!(pixels.unit(), "px");
     }
-    
+
     #[test]
     fn test_transform_identity() {
         let identity = Transform::default();
         assert!(identity.is_identity());
-        
+
         let translated = Transform::translate(10.0, 20.0);
         assert!(!translated.is_identity());
     }
-    
+
     #[test]
     fn test_transform_css() {
         let transform = Transform {
@@ -421,7 +421,7 @@ mod tests {
             scale: Some(1.5),
             ..Default::default()
         };
-        
+
         let css = transform.to_css();
         assert!(css.contains("translate(10px, 20px)"));
         assert!(css.contains("rotate(45deg)"));

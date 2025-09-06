@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::mount::mount_to_body;
+use leptos::prelude::*;
 use leptos_motion::*;
 
 use wasm_bindgen::prelude::*;
@@ -14,7 +14,7 @@ pub fn App() -> impl IntoView {
     view! {
         <div class="app">
             <h1>"Leptos Motion - Advanced Features! 🚀"</h1>
-            
+
             <div class="demo-section">
                 <h2>"✅ What We Just Implemented:"</h2>
                 <ul>
@@ -28,7 +28,7 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"🎬 Animation Demo:"</h2>
-                
+
                 <MotionDiv
                     class="animated-box".to_string()
                     initial=motion_target!(
@@ -55,7 +55,7 @@ pub fn App() -> impl IntoView {
                     }>
                         {move || if is_visible.get() { "Hide" } else { "Show" }}
                     </button>
-                    
+
                     <button class="button" on:click=move |_| {
                         let new_count = count.get() + 1;
                         _set_count.set(new_count);
@@ -97,10 +97,10 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"🔄 FLIP Layout Animations:"</h2>
-                
+
                 <div class="layout-demo">
-                    <button 
-                        class="button" 
+                    <button
+                        class="button"
                         on:click=move |_| {
                             let new_mode = !layout_mode.get();
                             _set_layout_mode.set(new_mode);
@@ -108,7 +108,7 @@ pub fn App() -> impl IntoView {
                     >
                         {move || if layout_mode.get() { "Switch to Grid" } else { "Switch to List" }}
                     </button>
-                    
+
                     <div class={move || if layout_mode.get() { "grid-layout" } else { "list-layout" }}>
                         <MotionDiv
                             class="layout-item".to_string()
@@ -121,7 +121,7 @@ pub fn App() -> impl IntoView {
                         >
                             "Item 1"
                         </MotionDiv>
-                        
+
                         <MotionDiv
                             class="layout-item".to_string()
                             layout=true
@@ -133,7 +133,7 @@ pub fn App() -> impl IntoView {
                         >
                             "Item 2"
                         </MotionDiv>
-                        
+
                         <MotionDiv
                             class="layout-item".to_string()
                             layout=true
@@ -145,7 +145,7 @@ pub fn App() -> impl IntoView {
                         >
                             "Item 3"
                         </MotionDiv>
-                        
+
                         <MotionDiv
                             class="layout-item".to_string()
                             layout=true
@@ -163,7 +163,7 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"👆 Gesture Integration:"</h2>
-                
+
                 <MotionDiv
                     class="gesture-box".to_string()
                     while_hover=motion_target!(
@@ -181,7 +181,7 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"📱 Multi-touch Support:"</h2>
-                
+
                 <MotionDiv
                     class="touch-box".to_string()
                     while_hover=motion_target!(
@@ -216,9 +216,9 @@ pub fn main() {
     // Initialize console logging for debugging
     console_error_panic_hook::set_once();
     console_log::init_with_level(log::Level::Debug).unwrap();
-    
+
     log::info!("Starting Leptos Motion Showcase app");
-    
+
     // Try using mount_to_body with spawn_local - this works in Leptos v0.8.x
     wasm_bindgen_futures::spawn_local(async move {
         mount_to_body(|| view! { <App/> });

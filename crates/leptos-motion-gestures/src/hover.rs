@@ -1,6 +1,6 @@
 //! Hover gesture implementation
 
-use crate::{GestureEvent, GestureResult, GestureHandler};
+use crate::{GestureEvent, GestureHandler, GestureResult};
 use std::time::{Duration, Instant};
 
 /// Hover gesture handler
@@ -92,8 +92,7 @@ impl HoverGesture {
     /// Check if position is within bounds
     fn is_within_bounds(&self, position: (f64, f64)) -> bool {
         if let Some(((min_x, min_y), (max_x, max_y))) = self.bounds {
-            position.0 >= min_x && position.0 <= max_x && 
-            position.1 >= min_y && position.1 <= max_y
+            position.0 >= min_x && position.0 <= max_x && position.1 >= min_y && position.1 <= max_y
         } else {
             true // No bounds set, always within
         }
@@ -111,11 +110,11 @@ impl GestureHandler for HoverGesture {
             GestureEvent::TouchStart { touches } => {
                 if let Some(touch) = touches.first() {
                     let position = (touch.x, touch.y);
-                    
+
                     if self.is_within_bounds(position) {
                         self.current_position = Some(position);
                         self.start_time = Some(Instant::now());
-                        
+
                         // Trigger enter callback
                         if let Some(ref callback) = self.on_enter {
                             callback(position);
@@ -126,15 +125,15 @@ impl GestureHandler for HoverGesture {
             GestureEvent::TouchMove { touches } => {
                 if let Some(touch) = touches.first() {
                     let position = (touch.x, touch.y);
-                    
+
                     if self.is_within_bounds(position) {
                         let was_active = self.active;
                         self.current_position = Some(position);
-                        
+
                         if !was_active && self.has_exceeded_threshold() {
                             self.active = true;
                         }
-                        
+
                         // Trigger move callback
                         if let Some(ref callback) = self.on_move {
                             callback(position);
@@ -143,7 +142,7 @@ impl GestureHandler for HoverGesture {
                         // Position is outside bounds
                         if self.active {
                             self.active = false;
-                            
+
                             // Trigger leave callback
                             if let Some(ref callback) = self.on_leave {
                                 if let Some(current_pos) = self.current_position {
@@ -159,7 +158,7 @@ impl GestureHandler for HoverGesture {
             GestureEvent::TouchEnd { touches: _ } => {
                 if self.active {
                     self.active = false;
-                    
+
                     // Trigger leave callback
                     if let Some(ref callback) = self.on_leave {
                         if let Some(current_pos) = self.current_position {

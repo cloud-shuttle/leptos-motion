@@ -25,7 +25,7 @@ use leptos_motion_dom::*;
 #[component]
 fn SimpleFadeIn() -> impl IntoView {
     let (is_visible, set_is_visible) = create_signal(false);
-    
+
     view! {
         <div class="fade-in" class:opacity-0=move || !is_visible()>
             <h1>"Hello World!"</h1>
@@ -40,11 +40,21 @@ fn SimpleFadeIn() -> impl IntoView {
 ### CSS Classes Available
 
 ```css
-.fade-in { animation: fadeIn 0.6s ease-out; }
-.slide-in { animation: slideIn 0.8s ease-out; }
-.bounce-in { animation: bounceIn 1s ease-out; }
-.scale-in { animation: scaleIn 0.5s ease-out; }
-.rotate-in { animation: rotateIn 0.7s ease-out; }
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+.slide-in {
+  animation: slideIn 0.8s ease-out;
+}
+.bounce-in {
+  animation: bounceIn 1s ease-out;
+}
+.scale-in {
+  animation: scaleIn 0.5s ease-out;
+}
+.rotate-in {
+  animation: rotateIn 0.7s ease-out;
+}
 ```
 
 ### When to Use
@@ -74,7 +84,7 @@ use leptos_motion::*;
 #[component]
 fn StandardAnimation() -> impl IntoView {
     let (is_animating, set_is_animating) = create_signal(false);
-    
+
     view! {
         <MotionDiv
             initial=AnimationValue::Opacity(0.0)
@@ -133,13 +143,13 @@ use leptos_motion::*;
 #[component]
 fn AdvancedAnimation() -> impl IntoView {
     let (performance_metrics, set_performance_metrics) = create_signal(None);
-    
+
     // Performance monitoring
     let monitor_performance = move || {
         let metrics = get_performance_metrics();
         set_performance_metrics(Some(metrics));
     };
-    
+
     view! {
         <MotionDiv
             initial=AnimationValue::Opacity(0.0)
@@ -160,7 +170,7 @@ fn AdvancedAnimation() -> impl IntoView {
                 "Drag me!"
             </div>
         </MotionDiv>
-        
+
         <Show when=move || performance_metrics().is_some()>
             <div class="mt-4 p-4 bg-gray-100 rounded">
                 <h3>"Performance Metrics"</h3>
@@ -232,27 +242,30 @@ fn AdvancedAnimation() -> impl IntoView {
 
 ## Performance Comparison
 
-| Approach | Bundle Size | Performance | Complexity | Use Case |
-|----------|-------------|-------------|------------|----------|
-| **CSS-only** | ~15KB | Excellent | Low | Simple effects |
-| **Standard** | ~75KB | Excellent | Medium | Most applications |
-| **Advanced** | ~120KB | Excellent | High | Enterprise apps |
+| Approach     | Bundle Size | Performance | Complexity | Use Case          |
+| ------------ | ----------- | ----------- | ---------- | ----------------- |
+| **CSS-only** | ~15KB       | Excellent   | Low        | Simple effects    |
+| **Standard** | ~75KB       | Excellent   | Medium     | Most applications |
+| **Advanced** | ~120KB      | Excellent   | High       | Enterprise apps   |
 
 ## Recommendations
 
 ### Choose CSS-only when:
+
 - Building simple websites or prototypes
 - Bundle size is critical (<20KB)
 - You only need basic animations
 - Team has limited Rust experience
 
 ### Choose Standard when:
+
 - Building production applications
 - You need interactive animations
 - Bundle size is moderate (50-100KB acceptable)
 - You want the best of both worlds
 
 ### Choose Advanced when:
+
 - Building enterprise applications
 - Performance monitoring is required
 - Complex gesture interactions needed

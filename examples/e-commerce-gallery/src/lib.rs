@@ -25,19 +25,21 @@ fn App() -> impl IntoView {
 fn ProductGallery() -> impl IntoView {
     let (current_image, set_current_image) = signal(0);
     let (is_zoomed, set_zoomed) = signal(false);
-    
+
     let images = vec![
         "https://via.placeholder.com/400x400/667eea/ffffff?text=Product+1",
-        "https://via.placeholder.com/400x400/764ba2/ffffff?text=Product+2", 
+        "https://via.placeholder.com/400x400/764ba2/ffffff?text=Product+2",
         "https://via.placeholder.com/400x400/f093fb/ffffff?text=Product+3",
         "https://via.placeholder.com/400x400/f5576c/ffffff?text=Product+4",
     ];
+    let images_len = images.len();
+    let images_clone = images.clone();
 
     view! {
         <div class="product-gallery">
             <div class="main-image-container">
                 <MotionDiv
-                    class="main-image"
+                    class="main-image".to_string()
                     animate=motion_target!(
                         "scale" => AnimationValue::Number(if is_zoomed.get() { 1.5 } else { 1.0 })
                     )
@@ -53,13 +55,13 @@ fn ProductGallery() -> impl IntoView {
                         on:click=move |_| set_zoomed.set(!is_zoomed.get())
                     />
                 </MotionDiv>
-                
+
                 <div class="image-controls">
                     <button
                         class="nav-btn prev"
                         on:click=move |_| {
                             let new_index = if current_image.get() == 0 {
-                                images.len() - 1
+                                images_len - 1
                             } else {
                                 current_image.get() - 1
                             };
@@ -71,7 +73,7 @@ fn ProductGallery() -> impl IntoView {
                     <button
                         class="nav-btn next"
                         on:click=move |_| {
-                            let new_index = (current_image.get() + 1) % images.len();
+                            let new_index = (current_image.get() + 1) % images_len;
                             set_current_image.set(new_index);
                         }
                     >
@@ -81,16 +83,16 @@ fn ProductGallery() -> impl IntoView {
             </div>
 
             <div class="thumbnail-grid">
-                {images.into_iter().enumerate().map(|(i, src)| {
+                {images_clone.into_iter().enumerate().map(|(i, src)| {
                     let is_active = move || current_image.get() == i;
                     view! {
                         <MotionDiv
-                            class="thumbnail"
+                            class="thumbnail".to_string()
                             class:active=is_active
                             on:click=move |_| set_current_image.set(i)
-                            while_hover=Some(motion_target!(
+                            while_hover=motion_target!(
                                 "scale" => AnimationValue::Number(1.1)
-                            ))
+                            )
                             transition=Transition {
                                 duration: Some(0.2),
                                 ease: Easing::EaseOut,
@@ -117,8 +119,9 @@ fn ProductDetails() -> impl IntoView {
         // Reset after animation
         set_timeout_with_handle(
             move || set_added_to_cart.set(false),
-            std::time::Duration::from_millis(2000)
-        ).expect("Failed to set timeout");
+            std::time::Duration::from_millis(2000),
+        )
+        .expect("Failed to set timeout");
     };
 
     view! {
@@ -127,7 +130,7 @@ fn ProductDetails() -> impl IntoView {
             <p class="description">
                 "This is a high-quality product with amazing features. Perfect for everyday use and designed with user experience in mind."
             </p>
-            
+
             <div class="price-section">
                 <span class="price">"${price}"</span>
                 <span class="original-price">"$129.99"</span>
@@ -156,16 +159,16 @@ fn ProductDetails() -> impl IntoView {
             </div>
 
             <MotionDiv
-                class="add-to-cart-btn"
+                class="add-to-cart-btn".to_string()
                 class:added=is_added_to_cart
                 on:click=add_to_cart
-                while_hover=Some(motion_target!(
+                while_hover=motion_target!(
                     "scale" => AnimationValue::Number(1.05),
                     "boxShadow" => AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string())
-                ))
-                while_tap=Some(motion_target!(
+                )
+                while_tap=motion_target!(
                     "scale" => AnimationValue::Number(0.95)
-                ))
+                )
                 animate=motion_target!(
                     "backgroundColor" => AnimationValue::String(
                         if is_added_to_cart.get() { "#4CAF50".to_string() } else { "#667eea".to_string() }
@@ -198,6 +201,6 @@ fn ProductDetails() -> impl IntoView {
 pub fn main() {
     console_error_panic_hook::set_once();
     console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
-    
+
     mount_to_body(App);
 }

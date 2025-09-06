@@ -7,6 +7,7 @@ This document provides an honest, comprehensive comparison between our `leptos-m
 ## 🎯 Library Overview
 
 ### leptos-animate
+
 - **Repository**: [brofrain/leptos-animate](https://github.com/brofrain/leptos-animate)
 - **Stars**: 8 stars, 0 forks
 - **Focus**: FLIP animations, in/out transitions, CSS class-based animations
@@ -14,6 +15,7 @@ This document provides an honest, comprehensive comparison between our `leptos-m
 - **Status**: Early stages, expect breaking changes
 
 ### leptos-motion
+
 - **Repository**: [cloud-shuttle/leptos-motion](https://github.com/cloud-shuttle/leptos-motion)
 - **Stars**: Growing community
 - **Focus**: Comprehensive animation framework with enterprise features
@@ -22,19 +24,19 @@ This document provides an honest, comprehensive comparison between our `leptos-m
 
 ## 🔍 Feature Comparison Matrix
 
-| Feature | leptos-animate | leptos-motion | Winner |
-|---------|----------------|---------------|---------|
-| **Bundle Size** | Small (estimated <50KB) | 75KB (minimal), 378KB (full) | 🟡 Tie |
-| **API Simplicity** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 🏆 leptos-animate |
-| **Feature Completeness** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 🏆 leptos-motion |
-| **Performance Monitoring** | ❌ | ✅ | 🏆 leptos-motion |
-| **Gesture Recognition** | ❌ | ✅ | 🏆 leptos-motion |
-| **Layout Animations** | ✅ (FLIP only) | ✅ (FLIP + Shared Elements) | 🏆 leptos-motion |
-| **Spring Physics** | ❌ | ✅ | 🏆 leptos-motion |
-| **CSS Class Support** | ✅ | ❌ | 🏆 leptos-animate |
-| **Documentation** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 🏆 leptos-motion |
-| **Test Coverage** | ⭐ | ⭐⭐⭐⭐⭐ | 🏆 leptos-motion |
-| **Production Readiness** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 🏆 leptos-motion |
+| Feature                    | leptos-animate          | leptos-motion                | Winner            |
+| -------------------------- | ----------------------- | ---------------------------- | ----------------- |
+| **Bundle Size**            | Small (estimated <50KB) | 75KB (minimal), 378KB (full) | 🟡 Tie            |
+| **API Simplicity**         | ⭐⭐⭐⭐⭐              | ⭐⭐⭐                       | 🏆 leptos-animate |
+| **Feature Completeness**   | ⭐⭐                    | ⭐⭐⭐⭐⭐                   | 🏆 leptos-motion  |
+| **Performance Monitoring** | ❌                      | ✅                           | 🏆 leptos-motion  |
+| **Gesture Recognition**    | ❌                      | ✅                           | 🏆 leptos-motion  |
+| **Layout Animations**      | ✅ (FLIP only)          | ✅ (FLIP + Shared Elements)  | 🏆 leptos-motion  |
+| **Spring Physics**         | ❌                      | ✅                           | 🏆 leptos-motion  |
+| **CSS Class Support**      | ✅                      | ❌                           | 🏆 leptos-animate |
+| **Documentation**          | ⭐⭐                    | ⭐⭐⭐⭐⭐                   | 🏆 leptos-motion  |
+| **Test Coverage**          | ⭐                      | ⭐⭐⭐⭐⭐                   | 🏆 leptos-motion  |
+| **Production Readiness**   | ⭐⭐                    | ⭐⭐⭐⭐⭐                   | 🏆 leptos-motion  |
 
 ## 🚀 API Design Comparison
 
@@ -66,6 +68,7 @@ use leptos_animate::{animate, animations::classes};
 ```
 
 **Strengths:**
+
 - ✅ Intuitive CSS class-based approach
 - ✅ Works seamlessly with Tailwind CSS
 - ✅ Minimal learning curve
@@ -105,6 +108,7 @@ use leptos_motion::*;
 ```
 
 **Strengths:**
+
 - ✅ Programmatic control over all properties
 - ✅ Advanced gesture interactions
 - ✅ Complex animation sequences
@@ -113,11 +117,13 @@ use leptos_motion::*;
 ## 📊 Bundle Size Analysis
 
 ### leptos-animate
+
 - **Estimated Size**: <50KB (focused feature set)
 - **Approach**: Naturally small due to limited scope
 - **Optimization**: Built-in minimalism
 
 ### leptos-motion
+
 - **Current Sizes**:
   - Full showcase: 378KB
   - Minimal showcase: 75KB ✅
@@ -126,6 +132,7 @@ use leptos_motion::*;
 - **Achievement**: 80% reduction through TDD optimization
 
 ### Bundle Size Verdict
+
 - **leptos-animate**: Naturally smaller, but limited features
 - **leptos-motion**: Achieved similar results (75KB) with comprehensive features
 - **Winner**: 🟡 Tie - Both are now production-viable
@@ -133,6 +140,7 @@ use leptos_motion::*;
 ## 🎯 Target Audience Analysis
 
 ### leptos-animate: Perfect For
+
 - ✅ **Prototyping**: Quick animation setup
 - ✅ **Simple Apps**: Basic transitions and FLIP animations
 - ✅ **CSS-First Teams**: Developers comfortable with CSS classes
@@ -140,6 +148,7 @@ use leptos_motion::*;
 - ✅ **Learning**: Easy to understand and implement
 
 ### leptos-motion: Perfect For
+
 - ✅ **Production Apps**: Enterprise-grade features
 - ✅ **Complex Interactions**: Advanced gestures and animations
 - ✅ **Performance-Critical**: Built-in monitoring and optimization
@@ -149,6 +158,7 @@ use leptos_motion::*;
 ## 🏗️ Architecture Comparison
 
 ### leptos-animate Architecture
+
 ```
 leptos-animate/
 ├── src/
@@ -161,12 +171,14 @@ leptos-animate/
 ```
 
 **Characteristics:**
+
 - Single-purpose design
 - Minimal dependencies
 - CSS-focused approach
 - Simple directive system
 
 ### leptos-motion Architecture
+
 ```
 leptos-motion/
 ├── crates/
@@ -182,6 +194,7 @@ leptos-motion/
 ```
 
 **Characteristics:**
+
 - Modular architecture
 - Enterprise-grade features
 - Comprehensive testing
@@ -190,12 +203,14 @@ leptos-motion/
 ## 🚀 Performance Comparison
 
 ### leptos-animate Performance
+
 - **Runtime**: Lightweight, minimal overhead
 - **Memory**: Low memory footprint
 - **CPU**: Efficient CSS-based animations
 - **Monitoring**: None built-in
 
 ### leptos-motion Performance
+
 - **Runtime**: Optimized RAF/WAAPI hybrid engine
 - **Memory**: Configurable with performance budgets
 - **CPU**: Advanced optimization and monitoring
@@ -204,12 +219,14 @@ leptos-motion/
 ## 📚 Documentation & Developer Experience
 
 ### leptos-animate
+
 - **Documentation**: Basic README with examples
 - **Examples**: Simple, focused examples
 - **Testing**: Minimal test coverage
 - **Community**: Small but growing
 
 ### leptos-motion
+
 - **Documentation**: Comprehensive guides and API docs
 - **Examples**: Multiple showcase applications
 - **Testing**: TDD approach with 95%+ coverage
@@ -218,11 +235,13 @@ leptos-motion/
 ## 🎯 Market Positioning
 
 ### leptos-animate: "The Simple Choice"
+
 - **Tagline**: "Animation utilities for Leptos"
 - **Value Prop**: Easy to use, minimal setup
 - **Target**: Developers who want simple animations quickly
 
 ### leptos-motion: "The Professional Choice"
+
 - **Tagline**: "Professional animation framework for Leptos"
 - **Value Prop**: Enterprise-grade features and performance
 - **Target**: Teams building production applications
@@ -230,11 +249,13 @@ leptos-motion/
 ## 🔮 Future Outlook
 
 ### leptos-animate Trajectory
+
 - **Strengths**: Simplicity and focus
 - **Risks**: Limited feature set may not scale
 - **Opportunities**: Could become the "go-to" for simple animations
 
 ### leptos-motion Trajectory
+
 - **Strengths**: Comprehensive feature set and enterprise readiness
 - **Risks**: Complexity might intimidate simple use cases
 - **Opportunities**: Could become the standard for production Leptos apps
@@ -242,6 +263,7 @@ leptos-motion/
 ## 🏆 Competitive Advantages
 
 ### Our Key Differentiators
+
 1. **Enterprise Features**: Performance monitoring, advanced gestures
 2. **Comprehensive Testing**: TDD approach with extensive coverage
 3. **Bundle Optimization**: Solved the size problem while maintaining features
@@ -249,6 +271,7 @@ leptos-motion/
 5. **Modular Design**: Use only what you need
 
 ### Their Key Differentiators
+
 1. **Simplicity**: Easy to learn and implement
 2. **CSS Integration**: Works seamlessly with existing CSS workflows
 3. **Minimal Bundle**: Naturally small due to focused scope

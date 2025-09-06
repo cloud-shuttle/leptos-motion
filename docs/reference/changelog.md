@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Advanced gesture combinations (swipe, long-press)
 - Performance benchmarking tools
 - Developer debugging utilities
 - Community examples showcase
 
 ### Changed
+
 - Performance optimizations
 - Enhanced error handling
 - Improved documentation
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0-beta.1] - 2024-12-XX
 
 ### Added
+
 - **Multi-Touch Gesture Support**
   - Pinch-to-zoom with precise scale calculations
   - Rotation detection with angle precision
@@ -50,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - CSS optimization and batching
 
 ### Changed
+
 - **Breaking Changes**
   - Updated to Leptos 0.8.x compatibility
   - Improved API design for better ergonomics
@@ -68,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Better documentation
 
 ### Fixed
+
 - **Critical Bugs**
   - Multi-touch rotation calculation (#123)
   - Gesture state management (#124)
@@ -81,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive coverage
 
 ### Removed
+
 - Deprecated API methods
 - Unused code and imports
 - Legacy gesture handling
@@ -89,23 +95,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2024-XX-XX
 
 ### Added
+
 - Basic animation engine
 - Core motion components
 - Simple gesture support
 - Basic documentation
 
 ### Changed
+
 - Initial alpha release
 - Basic functionality implementation
 - Core architecture established
 
 ### Fixed
+
 - Initial implementation bugs
 - Basic compatibility issues
 
 ## [0.1.0-alpha] - 2024-XX-XX
 
 ### Added
+
 - Initial project setup
 - Basic animation framework
 - Core project structure
@@ -122,6 +132,7 @@ For detailed information about each release, see [RELEASE_NOTES.md](RELEASE_NOTE
 ### From 0.1.x to 0.2.0-beta.1
 
 1. **Update Dependencies**
+
    ```toml
    [dependencies]
    leptos-motion = "0.2.0-beta.1"

@@ -45,7 +45,7 @@ fn App() -> impl IntoView {
     view! {
         <div class="container">
             <h1>"Welcome to Leptos Motion!"</h1>
-            
+
             <MotionDiv
                 class="animated-box"
                 animate=motion_target!(
@@ -77,26 +77,26 @@ Add some CSS to make it look good:
 
 ```css
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
 .animated-box {
-    padding: 20px;
-    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.2s ease;
+  padding: 20px;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .animated-box:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 ```
 
@@ -187,13 +187,13 @@ Simple animations between two values:
 #[component]
 fn TweenAnimation() -> impl IntoView {
     let (is_expanded, set_expanded) = signal(false);
-    
+
     view! {
         <div>
             <button on:click=move |_| set_expanded.set(!is_expanded.get())>
                 "Toggle Size"
             </button>
-            
+
             <MotionDiv
                 class="tween-box"
                 animate=motion_target!(
@@ -254,7 +254,7 @@ fn KeyframeAnimation() -> impl IntoView {
         (0.5, motion_target!("x" => AnimationValue::Pixels(100.0), "y" => AnimationValue::Pixels(-50.0))),
         (1.0, motion_target!("x" => AnimationValue::Pixels(200.0), "y" => AnimationValue::Pixels(0.0))),
     ];
-    
+
     view! {
         <MotionDiv
             class="keyframe-box"
@@ -337,7 +337,7 @@ fn DragAnimation() -> impl IntoView {
             top: Some(-100.0),
             bottom: Some(100.0),
         });
-    
+
     view! {
         <MotionDiv
             class="drag-box"
@@ -363,7 +363,7 @@ Define reusable animation states:
 #[component]
 fn VariantAnimation() -> impl IntoView {
     let (is_visible, set_visible) = signal(false);
-    
+
     let variants = Variants::new()
         .variant("hidden", motion_target!(
             "opacity" => AnimationValue::Number(0.0),
@@ -375,13 +375,13 @@ fn VariantAnimation() -> impl IntoView {
             "x" => AnimationValue::Pixels(0.0),
             "scale" => AnimationValue::Number(1.0)
         ));
-    
+
     view! {
         <div>
             <button on:click=move |_| set_visible.set(!is_visible.get())>
                 "Toggle Visibility"
             </button>
-            
+
             <MotionDiv
                 class="variant-box"
                 variants=Some(variants)
@@ -408,13 +408,13 @@ Animate layout changes automatically:
 #[component]
 fn LayoutAnimation() -> impl IntoView {
     let (is_expanded, set_expanded) = signal(false);
-    
+
     view! {
         <div class="layout-container">
             <button on:click=move |_| set_expanded.set(!is_expanded.get())>
                 "Toggle Layout"
             </button>
-            
+
             <MotionDiv
                 class="layout-box"
                 layout=Some(true)
@@ -443,7 +443,7 @@ Animate multiple elements with delays:
 #[component]
 fn StaggeredAnimation() -> impl IntoView {
     let items = vec!["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
-    
+
     view! {
         <div class="stagger-container">
             {items.into_iter().enumerate().map(|(i, item)| {

@@ -37,103 +37,103 @@ command_exists() {
 # Check prerequisites
 check_prerequisites() {
     print_status "Checking prerequisites..."
-    
+
     if ! command_exists cargo; then
         print_error "Cargo is not installed. Please install Rust first."
         exit 1
     fi
-    
+
     if ! command_exists wasm-pack; then
         print_warning "wasm-pack is not installed. Installing..."
         cargo install wasm-pack
     fi
-    
+
     if ! command_exists cargo-nextest; then
         print_warning "cargo-nextest is not installed. Installing..."
         cargo install cargo-nextest
     fi
-    
+
     print_success "Prerequisites check completed"
 }
 
 # Run unit tests
 run_unit_tests() {
     print_status "Running unit tests..."
-    
+
     # Run core unit tests
     print_status "Testing leptos-motion-core..."
     cargo test --package leptos-motion-core --lib
-    
+
     # Run DOM unit tests
     print_status "Testing leptos-motion-dom..."
     cargo test --package leptos-motion-dom --lib
-    
+
     # Run main package unit tests
     print_status "Testing leptos-motion..."
     cargo test --package leptos-motion --lib
-    
+
     print_success "Unit tests completed"
 }
 
 # Run integration tests
 run_integration_tests() {
     print_status "Running integration tests..."
-    
+
     # Run WASM integration tests
     print_status "Running WASM integration tests..."
     wasm-pack test --headless --chrome
-    
+
     print_success "Integration tests completed"
 }
 
 # Run performance tests
 run_performance_tests() {
     print_status "Running performance benchmarks..."
-    
+
     # Run criterion benchmarks
     cargo bench
-    
+
     print_success "Performance tests completed"
 }
 
 # Run E2E tests (placeholder for future implementation)
 run_e2e_tests() {
     print_status "Running E2E tests..."
-    
+
     # This would run Playwright or similar E2E tests
     # For now, just run the basic animations example
     print_status "Testing basic animations example..."
     cargo check --package basic-animations
-    
+
     print_success "E2E tests completed"
 }
 
 # Run visual tests (placeholder for future implementation)
 run_visual_tests() {
     print_status "Running visual regression tests..."
-    
+
     # This would run visual regression tests
     # For now, just a placeholder
     print_warning "Visual tests not yet implemented"
-    
+
     print_success "Visual tests completed"
 }
 
 # Run all tests with coverage
 run_coverage_tests() {
     print_status "Running tests with coverage..."
-    
+
     # This would run tests with coverage reporting
     # For now, just run regular tests
     cargo test --all-features
-    
+
     print_success "Coverage tests completed"
 }
 
 # Run specific test suite
 run_specific_tests() {
     local test_type=$1
-    
+
     case $test_type in
         "unit")
             run_unit_tests
@@ -164,10 +164,10 @@ run_specific_tests() {
 # Main function
 main() {
     print_status "Starting Leptos Motion test suite..."
-    
+
     # Check prerequisites
     check_prerequisites
-    
+
     # Parse command line arguments
     if [ $# -eq 0 ]; then
         # Run all tests
@@ -181,7 +181,7 @@ main() {
         # Run specific test suite
         run_specific_tests "$1"
     fi
-    
+
     print_success "All tests completed successfully! 🎉"
 }
 

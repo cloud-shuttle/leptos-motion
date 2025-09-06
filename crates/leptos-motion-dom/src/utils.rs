@@ -5,12 +5,17 @@ use web_sys::{Element, HtmlElement};
 /// Get computed style for an element
 pub fn get_computed_style(element: &Element, property: &str) -> Option<String> {
     web_sys::window()?
-        .get_computed_style(element).ok()?
+        .get_computed_style(element)
+        .ok()?
         .and_then(|style| style.get_property_value(property).ok())
 }
 
 /// Set CSS property on element
-pub fn set_css_property(element: &HtmlElement, property: &str, value: &str) -> Result<(), wasm_bindgen::JsValue> {
+pub fn set_css_property(
+    element: &HtmlElement,
+    property: &str,
+    value: &str,
+) -> Result<(), wasm_bindgen::JsValue> {
     element.style().set_property(property, value)
 }
 

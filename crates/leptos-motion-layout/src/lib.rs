@@ -1,5 +1,5 @@
 //! Leptos Motion Layout
-//! 
+//!
 //! Layout animation system providing FLIP animations, shared element transitions,
 //! and layout change detection for smooth UI transitions.
 
@@ -7,19 +7,19 @@
 #![forbid(unsafe_code)]
 
 pub mod flip;
-pub mod shared_elements;
 pub mod layout_tracker;
+pub mod shared_elements;
 pub mod simplified_layout_api;
 
 // Re-export main types
-pub use flip::{FLIPAnimator, FLIPAnimation, FLIPState, TransformValues, EasingFunction};
-pub use shared_elements::{SharedElementManager, SharedElementConfig, ZIndexStrategy};
-pub use layout_tracker::{LayoutTracker, LayoutChange, LayoutChangeType, PerformanceImpact};
+pub use flip::{EasingFunction, FLIPAnimation, FLIPAnimator, FLIPState, TransformValues};
+pub use layout_tracker::{LayoutChange, LayoutChangeType, LayoutTracker, PerformanceImpact};
+pub use shared_elements::{SharedElementConfig, SharedElementManager, ZIndexStrategy};
 
 // Re-export simplified layout API (new public API)
 pub use simplified_layout_api::{
-    SimplifiedLayoutManager, SimplifiedLayoutConfig, SimplifiedEasing,
-    SimplifiedAnimationStatus, SimplifiedPerformanceMetrics
+    SimplifiedAnimationStatus, SimplifiedEasing, SimplifiedLayoutConfig, SimplifiedLayoutManager,
+    SimplifiedPerformanceMetrics,
 };
 
 /// Layout information for FLIP animations
@@ -49,29 +49,34 @@ impl Default for LayoutInfo {
 impl LayoutInfo {
     /// Create new layout info
     pub fn new(x: f64, y: f64, width: f64, height: f64) -> Self {
-        Self { x, y, width, height }
+        Self {
+            x,
+            y,
+            width,
+            height,
+        }
     }
-    
+
     /// Create layout info from dimensions
     pub fn from_dimensions(width: f64, height: f64) -> Self {
         Self::new(0.0, 0.0, width, height)
     }
-    
+
     /// Create layout info from position
     pub fn from_position(x: f64, y: f64) -> Self {
         Self::new(x, y, 0.0, 0.0)
     }
-    
+
     /// Get area of layout
     pub fn area(&self) -> f64 {
         self.width * self.height
     }
-    
+
     /// Get center point
     pub fn center(&self) -> (f64, f64) {
         (self.x + self.width / 2.0, self.y + self.height / 2.0)
     }
-    
+
     /// Check if point is inside layout
     pub fn contains_point(&self, x: f64, y: f64) -> bool {
         x >= self.x && x <= (self.x + self.width) && y >= self.y && y <= (self.y + self.height)
@@ -107,25 +112,25 @@ impl LayoutAnimationConfig {
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     /// Set duration
     pub fn with_duration(mut self, duration: f64) -> Self {
         self.duration = duration;
         self
     }
-    
+
     /// Set easing function
     pub fn with_easing(mut self, easing: EasingFunction) -> Self {
         self.easing = easing;
         self
     }
-    
+
     /// Enable hardware acceleration
     pub fn hardware_accelerated(mut self, enabled: bool) -> Self {
         self.hardware_accelerated = enabled;
         self
     }
-    
+
     /// Enable/disable animations
     pub fn enabled(mut self, enabled: bool) -> Self {
         self.enabled = enabled;
@@ -190,12 +195,12 @@ mod tests {
     #[test]
     fn test_layout_info_contains_point() {
         let info = LayoutInfo::new(10.0, 20.0, 100.0, 200.0);
-        
+
         // Inside
         assert!(info.contains_point(50.0, 100.0));
         assert!(info.contains_point(10.0, 20.0)); // Top-left corner
         assert!(info.contains_point(110.0, 220.0)); // Bottom-right corner
-        
+
         // Outside
         assert!(!info.contains_point(5.0, 100.0)); // Left of bounds
         assert!(!info.contains_point(115.0, 100.0)); // Right of bounds
@@ -224,7 +229,7 @@ mod tests {
             .with_duration(0.5)
             .hardware_accelerated(false)
             .enabled(false);
-            
+
         assert!(!config.enabled);
         assert_eq!(config.duration, 0.5);
         assert!(!config.hardware_accelerated);
@@ -232,11 +237,10 @@ mod tests {
 
     #[test]
     fn test_layout_animation_config_with_easing() {
-        let config = LayoutAnimationConfig::new()
-            .with_easing(EasingFunction::Linear);
-            
+        let config = LayoutAnimationConfig::new().with_easing(EasingFunction::Linear);
+
         match config.easing {
-            EasingFunction::Linear => {},
+            EasingFunction::Linear => {}
             _ => panic!("Expected Linear easing function"),
         }
     }

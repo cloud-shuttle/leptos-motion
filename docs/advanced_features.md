@@ -151,7 +151,7 @@ use leptos_motion_core::AnimationPresets;
 #[component]
 fn AnimatedCard() -> impl IntoView {
     let animation = AnimationPresets::slide_up(30.0);
-    
+
     view! {
         <MotionDiv
             initial=animation.initial.clone()
@@ -265,11 +265,11 @@ use web_sys::TouchEvent;
 #[component]
 fn GestureComponent() -> impl IntoView {
     let (gesture_recognizer, set_gesture_recognizer) = create_signal(AdvancedGestureRecognizer::new());
-    
+
     let handle_touch_start = move |event: TouchEvent| {
         let mut recognizer = gesture_recognizer.get();
         let events = recognizer.handle_touch_start(&event);
-        
+
         for event in events {
             match event.gesture_type {
                 GestureType::PinchZoom => {
@@ -287,10 +287,10 @@ fn GestureComponent() -> impl IntoView {
                 _ => {}
             }
         }
-        
+
         set_gesture_recognizer.set(recognizer);
     };
-    
+
     view! {
         <div
             class="gesture-area"
@@ -563,10 +563,10 @@ use leptos_motion_core::{AnimationPresets, springs};
 #[component]
 fn AnimatedCard() -> impl IntoView {
     let (is_hovered, set_is_hovered) = create_signal(false);
-    
+
     let animation = AnimationPresets::slide_up(30.0);
     let hover_variants = AnimationPresets::hover_lift();
-    
+
     view! {
         <MotionDiv
             initial=animation.initial.clone()
@@ -608,9 +608,9 @@ fn GestureDemo() -> impl IntoView {
     let (scale, set_scale) = create_signal(1.0);
     let (rotation, set_rotation) = create_signal(0.0);
     let (position, set_position) = create_signal((0.0, 0.0));
-    
+
     let (gesture_recognizer, set_gesture_recognizer) = create_signal(AdvancedGestureRecognizer::new());
-    
+
     let handle_gesture = move |event: GestureEvent| {
         match event.gesture_type {
             GestureType::PinchZoom => {
@@ -625,7 +625,7 @@ fn GestureDemo() -> impl IntoView {
             _ => {}
         }
     };
-    
+
     view! {
         <div class="gesture-demo">
             <MotionDiv

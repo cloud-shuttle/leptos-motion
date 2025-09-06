@@ -22,7 +22,7 @@ leptos.workspace = true
 # Web APIs
 web-sys = { workspace = true, features = [
     "Element",
-    "Window", 
+    "Window",
     "Document",
     "EventTarget",
     "Event",

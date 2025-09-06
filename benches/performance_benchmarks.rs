@@ -1,12 +1,12 @@
 // Performance Benchmarks for Leptos Motion
-// 
+//
 // This module provides comprehensive performance testing using Criterion
 // to ensure the animation system maintains high performance standards.
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkId};
+use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
 use leptos_motion_core::*;
-use leptos_motion_gestures::*;
 use leptos_motion_dom::*;
+use leptos_motion_gestures::*;
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -14,81 +14,61 @@ use std::time::Duration;
 fn bench_motion_value_creation(c: &mut Criterion) {
     let mut group = c.benchmark_group("motion_value_creation");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("create_motion_value", |b| {
-        b.iter(|| {
-            black_box(MotionValue::new(42.0))
-        })
+        b.iter(|| black_box(MotionValue::new(42.0)))
     });
-    
+
     group.bench_function("create_motion_number", |b| {
-        b.iter(|| {
-            black_box(MotionNumber::new(100.0))
-        })
+        b.iter(|| black_box(MotionNumber::new(100.0)))
     });
-    
+
     group.bench_function("create_motion_transform", |b| {
-        b.iter(|| {
-            black_box(MotionTransform::identity())
-        })
+        b.iter(|| black_box(MotionTransform::identity()))
     });
-    
+
     group.finish();
 }
 
 fn bench_motion_value_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("motion_value_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     let motion_value = MotionValue::new(0.0);
-    
-    group.bench_function("get_value", |b| {
-        b.iter(|| {
-            black_box(motion_value.get())
-        })
-    });
-    
+
+    group.bench_function("get_value", |b| b.iter(|| black_box(motion_value.get())));
+
     group.bench_function("set_value", |b| {
-        b.iter(|| {
-            motion_value.set(black_box(42.0))
-        })
+        b.iter(|| motion_value.set(black_box(42.0)))
     });
-    
+
     group.bench_function("get_velocity", |b| {
-        b.iter(|| {
-            black_box(motion_value.get_velocity())
-        })
+        b.iter(|| black_box(motion_value.get_velocity()))
     });
-    
+
     group.finish();
 }
 
 fn bench_motion_values_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("motion_values_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     let motion_values = MotionValues::new();
-    
+
     group.bench_function("add_value", |b| {
-        b.iter(|| {
-            motion_values.add("test_key".to_string(), MotionValue::new(black_box(42.0)))
-        })
+        b.iter(|| motion_values.add("test_key".to_string(), MotionValue::new(black_box(42.0))))
     });
-    
+
     group.bench_function("get_value", |b| {
         motion_values.add("test_key".to_string(), MotionValue::new(42.0));
-        b.iter(|| {
-            black_box(motion_values.get("test_key"))
-        })
+        b.iter(|| black_box(motion_values.get("test_key")))
     });
-    
+
     group.bench_function("set_value", |b| {
         motion_values.add("test_key".to_string(), MotionValue::new(0.0));
-        b.iter(|| {
-            motion_values.set("test_key", MotionValue::new(black_box(42.0)))
-        })
+        b.iter(|| motion_values.set("test_key", MotionValue::new(black_box(42.0))))
     });
-    
+
     group.finish();
 }
 
@@ -96,9 +76,9 @@ fn bench_motion_values_operations(c: &mut Criterion) {
 fn bench_gesture_detection(c: &mut Criterion) {
     let mut group = c.benchmark_group("gesture_detection");
     group.measurement_time(Duration::from_secs(10));
-    
+
     let mut detector = MultiTouchGestureDetector::default();
-    
+
     let touches = vec![
         TouchPoint {
             id: 1,
@@ -115,20 +95,16 @@ fn bench_gesture_detection(c: &mut Criterion) {
             timestamp: 1000,
         },
     ];
-    
+
     group.bench_function("handle_touch_start", |b| {
-        b.iter(|| {
-            black_box(detector.handle_touch_start(touches.clone()))
-        })
+        b.iter(|| black_box(detector.handle_touch_start(touches.clone())))
     });
-    
+
     group.bench_function("handle_touch_move", |b| {
         detector.handle_touch_start(touches.clone());
-        b.iter(|| {
-            black_box(detector.handle_touch_move(touches.clone()))
-        })
+        b.iter(|| black_box(detector.handle_touch_move(touches.clone())))
     });
-    
+
     group.finish();
 }
 
@@ -136,7 +112,7 @@ fn bench_gesture_detection(c: &mut Criterion) {
 fn bench_animation_target_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("animation_target_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("create_animation_target", |b| {
         b.iter(|| {
             let mut target = HashMap::new();
@@ -148,7 +124,7 @@ fn bench_animation_target_operations(c: &mut Criterion) {
             black_box(target)
         })
     });
-    
+
     group.bench_function("animation_value_to_string", |b| {
         let values = vec![
             AnimationValue::Pixels(100.0),
@@ -156,14 +132,14 @@ fn bench_animation_target_operations(c: &mut Criterion) {
             AnimationValue::Degrees(45.0),
             AnimationValue::Color("#ff0000".to_string()),
         ];
-        
+
         b.iter(|| {
             for value in &values {
                 black_box(value.to_string());
             }
         })
     });
-    
+
     group.finish();
 }
 
@@ -171,7 +147,7 @@ fn bench_animation_target_operations(c: &mut Criterion) {
 fn bench_transition_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("transition_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("create_transition", |b| {
         b.iter(|| {
             black_box(Transition {
@@ -182,7 +158,7 @@ fn bench_transition_operations(c: &mut Criterion) {
             })
         })
     });
-    
+
     group.finish();
 }
 
@@ -190,17 +166,17 @@ fn bench_transition_operations(c: &mut Criterion) {
 fn bench_motion_props_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("motion_props_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("create_motion_props", |b| {
         b.iter(|| {
             let mut initial = HashMap::new();
             initial.insert("x".to_string(), AnimationValue::Pixels(0.0));
             initial.insert("y".to_string(), AnimationValue::Pixels(0.0));
-            
+
             let mut animate = HashMap::new();
             animate.insert("x".to_string(), AnimationValue::Pixels(100.0));
             animate.insert("y".to_string(), AnimationValue::Pixels(200.0));
-            
+
             black_box(MotionProps {
                 initial: Some(initial),
                 animate: Some(animate),
@@ -222,7 +198,7 @@ fn bench_motion_props_operations(c: &mut Criterion) {
             })
         })
     });
-    
+
     group.finish();
 }
 
@@ -230,26 +206,30 @@ fn bench_motion_props_operations(c: &mut Criterion) {
 fn bench_scalability(c: &mut Criterion) {
     let mut group = c.benchmark_group("scalability");
     group.measurement_time(Duration::from_secs(10));
-    
+
     for size in [10, 100, 1000, 10000].iter() {
-        group.bench_with_input(BenchmarkId::new("motion_values_operations", size), size, |b, &size| {
-            let motion_values = MotionValues::new();
-            
-            // Pre-populate with data
-            for i in 0..size {
-                motion_values.add(format!("key_{}", i), MotionValue::new(i as f64));
-            }
-            
-            b.iter(|| {
-                // Test operations on the populated data
+        group.bench_with_input(
+            BenchmarkId::new("motion_values_operations", size),
+            size,
+            |b, &size| {
+                let motion_values = MotionValues::new();
+
+                // Pre-populate with data
                 for i in 0..size {
-                    let key = format!("key_{}", i);
-                    let _ = motion_values.get(&key);
+                    motion_values.add(format!("key_{}", i), MotionValue::new(i as f64));
                 }
-            })
-        });
+
+                b.iter(|| {
+                    // Test operations on the populated data
+                    for i in 0..size {
+                        let key = format!("key_{}", i);
+                        let _ = motion_values.get(&key);
+                    }
+                })
+            },
+        );
     }
-    
+
     group.finish();
 }
 
@@ -257,7 +237,7 @@ fn bench_scalability(c: &mut Criterion) {
 fn bench_memory_patterns(c: &mut Criterion) {
     let mut group = c.benchmark_group("memory_patterns");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("create_and_drop_motion_values", |b| {
         b.iter(|| {
             let mut values = Vec::new();
@@ -268,20 +248,20 @@ fn bench_memory_patterns(c: &mut Criterion) {
             // Values are dropped here
         })
     });
-    
+
     group.bench_function("reuse_motion_values", |b| {
         let mut values = Vec::new();
         for i in 0..1000 {
             values.push(MotionValue::new(i as f64));
         }
-        
+
         b.iter(|| {
             for value in &values {
                 black_box(value.get());
             }
         })
     });
-    
+
     group.finish();
 }
 
@@ -289,7 +269,7 @@ fn bench_memory_patterns(c: &mut Criterion) {
 fn bench_concurrent_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("concurrent_operations");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("parallel_motion_value_creation", |b| {
         b.iter(|| {
             let handles: Vec<_> = (0..4)
@@ -303,12 +283,12 @@ fn bench_concurrent_operations(c: &mut Criterion) {
                     })
                 })
                 .collect();
-            
+
             let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
             black_box(results);
         })
     });
-    
+
     group.finish();
 }
 
@@ -316,10 +296,10 @@ fn bench_concurrent_operations(c: &mut Criterion) {
 fn bench_real_world_scenarios(c: &mut Criterion) {
     let mut group = c.benchmark_group("real_world_scenarios");
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("animation_sequence", |b| {
         let motion_value = MotionValue::new(0.0);
-        
+
         b.iter(|| {
             // Simulate a complete animation sequence
             motion_value.set(0.0);
@@ -329,10 +309,10 @@ fn bench_real_world_scenarios(c: &mut Criterion) {
             }
         })
     });
-    
+
     group.bench_function("gesture_sequence", |b| {
         let mut detector = MultiTouchGestureDetector::default();
-        
+
         b.iter(|| {
             // Simulate a complete gesture sequence
             let start_touches = vec![
@@ -351,9 +331,9 @@ fn bench_real_world_scenarios(c: &mut Criterion) {
                     timestamp: 1000,
                 },
             ];
-            
+
             let _ = detector.handle_touch_start(start_touches);
-            
+
             for i in 1..=10 {
                 let move_touches = vec![
                     TouchPoint {
@@ -371,12 +351,12 @@ fn bench_real_world_scenarios(c: &mut Criterion) {
                         timestamp: 1000 + i,
                     },
                 ];
-                
+
                 let _ = detector.handle_touch_move(move_touches);
             }
         })
     });
-    
+
     group.finish();
 }
 
@@ -387,7 +367,7 @@ criterion_group!(
         .measurement_time(Duration::from_secs(10))
         .warm_up_time(Duration::from_secs(3))
         .sample_size(100);
-    targets = 
+    targets =
         bench_motion_value_creation,
         bench_motion_value_operations,
         bench_motion_values_operations,

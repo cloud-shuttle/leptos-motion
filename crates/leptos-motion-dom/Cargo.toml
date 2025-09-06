@@ -54,7 +54,7 @@ web-sys = { workspace = true, features = [
     "EventTarget",
     "Event",
     "MouseEvent",
-    "TouchEvent", 
+    "TouchEvent",
     "PointerEvent",
     "CssStyleDeclaration",
     "DomRect",

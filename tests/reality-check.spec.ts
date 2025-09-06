@@ -23,7 +23,7 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should have animated boxes with proper styling', async ({ page }) => {
       const animatedBox = page.locator('.animated-box').first();
       await expect(animatedBox).toBeVisible();
-      
+
       // Check if it has the expected styles
       const styles = await animatedBox.evaluate(el => {
         const computed = window.getComputedStyle(el);
@@ -33,7 +33,7 @@ test.describe('Leptos Motion - Reality Check', () => {
           boxShadow: computed.boxShadow,
         };
       });
-      
+
       expect(styles.background).not.toBe('none');
       expect(styles.borderRadius).toBe('12px');
       expect(styles.boxShadow).not.toBe('none');
@@ -41,13 +41,13 @@ test.describe('Leptos Motion - Reality Check', () => {
 
     test('should apply initial animation states', async ({ page }) => {
       const animatedBox = page.locator('.animated-box').first();
-      
+
       // Check if the element has transform styles (indicating animation)
       const transform = await animatedBox.evaluate(el => {
         const computed = window.getComputedStyle(el);
         return computed.transform;
       });
-      
+
       // Should have some transform applied
       expect(transform).not.toBe('none');
     });
@@ -72,16 +72,16 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should switch between grid and list layouts', async ({ page }) => {
       const toggleButton = page.locator('button:has-text("Switch to Grid")');
       const layoutContainer = page.locator('.list-layout, .grid-layout');
-      
+
       // Initial state should be list
       await expect(layoutContainer).toHaveClass(/list-layout/);
-      
+
       // Click to switch to grid
       await toggleButton.click();
-      
+
       // Should now be grid layout
       await expect(layoutContainer).toHaveClass(/grid-layout/);
-      
+
       // Click again to switch back
       await toggleButton.click();
       await expect(layoutContainer).toHaveClass(/list-layout/);
@@ -97,13 +97,13 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should have interactive gesture box', async ({ page }) => {
       const gestureBox = page.locator('.gesture-box');
       await expect(gestureBox).toBeVisible();
-      
+
       // Check if it has proper cursor styles
       const cursor = await gestureBox.evaluate(el => {
         const computed = window.getComputedStyle(el);
         return computed.cursor;
       });
-      
+
       expect(cursor).toBe('pointer');
     });
 
@@ -117,7 +117,7 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should have working buttons', async ({ page }) => {
       const buttons = page.locator('button');
       await expect(buttons).toHaveCount(6); // Count all buttons
-      
+
       // Test that buttons are clickable
       for (let i = 0; i < Math.min(buttons.count(), 3); i++) {
         const button = buttons.nth(i);
@@ -128,11 +128,11 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should have counter functionality', async ({ page }) => {
       const counterButton = page.locator('button:has-text("Count: 0")');
       await expect(counterButton).toBeVisible();
-      
+
       // Click to increment
       await counterButton.click();
       await expect(counterButton).toHaveText(/Count: 1/);
-      
+
       // Click again
       await counterButton.click();
       await expect(counterButton).toHaveText(/Count: 2/);
@@ -141,15 +141,15 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should have show/hide functionality', async ({ page }) => {
       const toggleButton = page.locator('button:has-text("Hide")');
       const contentBox = page.locator('.content-box');
-      
+
       // Initially visible
       await expect(contentBox).toBeVisible();
-      
+
       // Click to hide
       await toggleButton.click();
       await expect(toggleButton).toHaveText('Show');
       await expect(contentBox).not.toBeVisible();
-      
+
       // Click to show again
       await toggleButton.click();
       await expect(toggleButton).toHaveText('Hide');
@@ -163,7 +163,7 @@ test.describe('Leptos Motion - Reality Check', () => {
       const animations = await page.evaluate(() => {
         const styleSheets = Array.from(document.styleSheets);
         let hasAnimations = false;
-        
+
         for (const sheet of styleSheets) {
           try {
             const rules = Array.from(sheet.cssRules || []);
@@ -177,28 +177,28 @@ test.describe('Leptos Motion - Reality Check', () => {
             // CORS issues with external stylesheets
           }
         }
-        
+
         return hasAnimations;
       });
-      
+
       expect(animations).toBe(true);
     });
 
     test('should have responsive design', async ({ page }) => {
       // Test mobile viewport
       await page.setViewportSize({ width: 375, height: 667 });
-      
+
       // Check if layout adapts
       const app = page.locator('.app');
       await expect(app).toBeVisible();
-      
+
       // Check if buttons stack vertically on mobile
       const buttonGroup = page.locator('.button-group');
       const flexDirection = await buttonGroup.evaluate(el => {
         const computed = window.getComputedStyle(el);
         return computed.flexDirection;
       });
-      
+
       // Should be column on mobile
       expect(flexDirection).toBe('column');
     });
@@ -206,15 +206,17 @@ test.describe('Leptos Motion - Reality Check', () => {
 
   test.describe('Performance and Technical Features', () => {
     test('should have hardware acceleration hints', async ({ page }) => {
-      const animatedElements = page.locator('.animated-box, .content-box, .layout-item, .gesture-box, .touch-box');
-      
+      const animatedElements = page.locator(
+        '.animated-box, .content-box, .layout-item, .gesture-box, .touch-box'
+      );
+
       for (let i = 0; i < Math.min(animatedElements.count(), 3); i++) {
         const element = animatedElements.nth(i);
         const willChange = await element.evaluate(el => {
           const computed = window.getComputedStyle(el);
           return computed.willChange;
         });
-        
+
         // Should have will-change property for performance
         expect(willChange).not.toBe('auto');
       }
@@ -222,7 +224,7 @@ test.describe('Leptos Motion - Reality Check', () => {
 
     test('should have proper transform styles', async ({ page }) => {
       const animatedBox = page.locator('.animated-box').first();
-      
+
       const transform = await animatedBox.evaluate(el => {
         const computed = window.getComputedStyle(el);
         return {
@@ -231,7 +233,7 @@ test.describe('Leptos Motion - Reality Check', () => {
           transformStyle: computed.transformStyle,
         };
       });
-      
+
       // Should have 3D transform support
       expect(transform.backfaceVisibility).toBe('hidden');
       expect(transform.transformStyle).toBe('flat');
@@ -241,12 +243,12 @@ test.describe('Leptos Motion - Reality Check', () => {
   test.describe('Error Handling and Robustness', () => {
     test('should handle rapid interactions gracefully', async ({ page }) => {
       const counterButton = page.locator('button:has-text("Count: 0")');
-      
+
       // Rapid clicking
       for (let i = 0; i < 10; i++) {
         await counterButton.click();
       }
-      
+
       // Should still be functional
       await expect(counterButton).toHaveText(/Count: \d+/);
     });
@@ -254,15 +256,15 @@ test.describe('Leptos Motion - Reality Check', () => {
     test('should maintain state during layout changes', async ({ page }) => {
       const counterButton = page.locator('button:has-text("Count: 0")');
       const layoutToggle = page.locator('button:has-text("Switch to Grid")');
-      
+
       // Increment counter
       await counterButton.click();
       await expect(counterButton).toHaveText('Count: 1');
-      
+
       // Change layout
       await layoutToggle.click();
       await expect(page.locator('.grid-layout')).toBeVisible();
-      
+
       // Counter should maintain state
       await expect(counterButton).toHaveText('Count: 1');
     });

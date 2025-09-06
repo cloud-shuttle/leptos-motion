@@ -9,7 +9,7 @@ pub fn AnimatePresence(
     children: Children,
 ) -> impl IntoView {
     let _mode = mode.unwrap_or(PresenceMode::Sync);
-    
+
     // Simplified implementation for now
     view! {
         <div class="animate-presence">

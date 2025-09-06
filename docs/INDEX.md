@@ -5,6 +5,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ## 📑 Table of Contents
 
 ### Core Documentation
+
 - [🏠 **README.md**](../README.md) - Project overview, features, and quick start
 - [🎨 **Design Document**](design.md) - Comprehensive architecture and implementation design
 - [📋 **Implementation Plan**](implementation_plan.md) - 16-week development roadmap with phases
@@ -13,12 +14,14 @@ Complete documentation index for the Leptos Motion animation library project.
 ### Architecture & Design
 
 #### System Architecture
+
 - **Animation Engine** - Hybrid WAAPI/RAF system with feature detection
 - **Motion Values** - Reactive value system integrated with Leptos signals
 - **Component System** - Declarative animation components with macro generation
 - **Performance Engine** - Frame batching, GPU optimization, and memory management
 
 #### Key Design Principles
+
 - **Type Safety**: Compile-time validation of animation properties
 - **Performance First**: 60fps target with hardware acceleration
 - **Developer Experience**: Motion-inspired API with Rust improvements
@@ -27,6 +30,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ### API Reference
 
 #### Core Components
+
 ```rust
 // Motion components for all HTML elements
 <MotionDiv animate=... transition=... />
@@ -40,12 +44,14 @@ Complete documentation index for the Leptos Motion animation library project.
 ```
 
 #### Animation Properties
+
 - **Transform**: x, y, z, rotate, scale, skew
 - **Style**: opacity, background, border, etc.
 - **Layout**: width, height, position changes
 - **Custom**: User-defined animatable properties
 
 #### Transition Types
+
 - **Tween**: Duration-based with easing curves
 - **Spring**: Physics-based with stiffness/damping
 - **Keyframes**: Multi-step animation sequences
@@ -54,36 +60,42 @@ Complete documentation index for the Leptos Motion animation library project.
 ### Implementation Phases
 
 #### Phase 1: Foundation (Weeks 1-3) ✅
+
 - [x] Project setup and core architecture
 - [x] Animation engine trait design
 - [x] Motion value system
 - [x] Basic component framework
 
 #### Phase 2: Animation Engine (Weeks 4-5) 🚧
+
 - [ ] RAF-based animation implementation
 - [ ] Web Animations API integration
 - [ ] Feature detection and fallbacks
 - [ ] Transition system with easing
 
 #### Phase 3: Components (Weeks 6-7) 📋
+
 - [ ] Motion component macro system
 - [ ] AnimatePresence implementation
 - [ ] Leptos integration and reactivity
 - [ ] Component lifecycle management
 
 #### Phase 4: Gestures (Weeks 8-9) 📋
+
 - [ ] Gesture recognition system
 - [ ] Drag with constraints and momentum
 - [ ] Hover, tap, and focus gestures
 - [ ] Multi-touch and pointer support
 
 #### Phase 5: Advanced (Weeks 10-12) 📋
+
 - [ ] Layout animations (FLIP technique)
 - [ ] Scroll-triggered animations
 - [ ] Parallax and scroll progress
 - [ ] Intersection Observer integration
 
 #### Phase 6: Polish (Weeks 13-16) 📋
+
 - [ ] Performance optimizations
 - [ ] Bundle size reduction
 - [ ] Comprehensive examples
@@ -92,6 +104,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ### Testing Strategy
 
 #### Test Pyramid
+
 1. **Unit Tests** (Fast, Isolated)
    - Pure Rust logic testing
    - Mathematical functions (spring physics, easing)
@@ -108,8 +121,9 @@ Complete documentation index for the Leptos Motion animation library project.
    - Visual regression testing
 
 #### Testing Tools & Infrastructure
+
 - **Unit**: `cargo test`, `wasm-bindgen-test`
-- **Integration**: `Playwright`, `fantoccini` 
+- **Integration**: `Playwright`, `fantoccini`
 - **Performance**: `Criterion`, `divan`
 - **Visual**: `Percy`, `BackstopJS`
 - **Property**: `proptest`, `quickcheck`
@@ -117,6 +131,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ### Performance Considerations
 
 #### Optimization Strategies
+
 - **Animation Batching**: RequestAnimationFrame coordination
 - **GPU Acceleration**: Transform and opacity preferences
 - **Will-Change Management**: Dynamic layer promotion
@@ -124,6 +139,7 @@ Complete documentation index for the Leptos Motion animation library project.
 - **Bundle Splitting**: Lazy-loaded features
 
 #### Performance Targets
+
 - Bundle: <30KB core, <50KB complete
 - Animations: 60fps for 100+ concurrent
 - Memory: <10MB typical usage
@@ -132,8 +148,9 @@ Complete documentation index for the Leptos Motion animation library project.
 ### Examples & Use Cases
 
 #### Basic Animations
+
 ```rust
-<MotionDiv 
+<MotionDiv
   initial=hashmap!{"opacity" => 0.0, "y" => 50.0}
   animate=hashmap!{"opacity" => 1.0, "y" => 0.0}
   transition=Transition::spring()
@@ -141,6 +158,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ```
 
 #### Gesture Interactions
+
 ```rust
 <MotionDiv
   drag=true
@@ -151,6 +169,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ```
 
 #### Layout Transitions
+
 ```rust
 <For each=items key=|item| item.id children=move |item| {
   <MotionDiv layout=true class="item">
@@ -160,6 +179,7 @@ Complete documentation index for the Leptos Motion animation library project.
 ```
 
 #### Scroll Effects
+
 ```rust
 let scroll_progress = use_scroll_progress();
 let opacity = move || 1.0 - scroll_progress.get();
@@ -172,36 +192,42 @@ let opacity = move || 1.0 - scroll_progress.get();
 ### Crate Structure
 
 #### leptos-motion-core
+
 - Animation engine implementations
 - Spring physics and easing
 - Math utilities and interpolation
 - Core types and traits
 
 #### leptos-motion-dom
+
 - Leptos component implementations
 - DOM manipulation and styling
 - Event handling and lifecycle
 - CSS transform utilities
 
 #### leptos-motion-gestures
+
 - Pointer event handling
 - Gesture recognition algorithms
 - Touch and mouse support
 - Gesture state machines
 
 #### leptos-motion-layout
+
 - FLIP layout animations
 - Element measurement and tracking
 - Shared element transitions
 - Layout change detection
 
 #### leptos-motion-scroll
+
 - Scroll event handling
 - Intersection Observer integration
 - Parallax effect implementations
 - Scroll progress calculations
 
 #### leptos-motion-macros
+
 - Component generation macros
 - Animation property validation
 - Compile-time optimizations
@@ -210,6 +236,7 @@ let opacity = move || 1.0 - scroll_progress.get();
 ### Development Workflow
 
 #### Local Development
+
 ```bash
 # Setup
 git clone <repo> && cd leptos-motion
@@ -226,6 +253,7 @@ cargo test --all-features
 ```
 
 #### CI/CD Pipeline
+
 - **Unit Tests**: All platforms and feature combinations
 - **Integration**: WASM tests in headless browsers
 - **E2E**: Cross-browser testing with Playwright
@@ -235,12 +263,14 @@ cargo test --all-features
 ### Community & Contribution
 
 #### Getting Started
+
 1. Read [CONTRIBUTING.md](../CONTRIBUTING.md)
 2. Join community discussions
 3. Check open issues and good first issues
 4. Fork, develop, test, and submit PR
 
 #### Code Standards
+
 - **Rust**: Edition 2021, clippy compliance
 - **Testing**: >90% coverage, comprehensive test types
 - **Documentation**: Rustdoc for all public APIs
@@ -249,12 +279,14 @@ cargo test --all-features
 ### Release Strategy
 
 #### Version Planning
+
 - **0.1.0 Alpha**: Core features, basic examples
 - **0.2.0 Beta**: Complete feature set, optimizations
 - **0.3.0 RC**: Production testing, stability
 - **1.0.0 Stable**: API stability guarantee
 
 #### Compatibility Promise
+
 - **Semver**: Strict semantic versioning
 - **MSRV**: Minimum Rust version policy
 - **Browser**: Modern browser support matrix
@@ -273,4 +305,4 @@ cargo test --all-features
 
 ---
 
-*Last updated: 2024 | Status: Pre-alpha Development*
+_Last updated: 2024 | Status: Pre-alpha Development_

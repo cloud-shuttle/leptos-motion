@@ -5,6 +5,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 ## Pre-Release Tasks
 
 ### ✅ Code Quality
+
 - [x] All tests pass
 - [x] Code compiles without warnings
 - [x] Documentation is complete
@@ -13,6 +14,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [x] Bundle size is optimized
 
 ### ✅ Documentation
+
 - [x] API reference is complete
 - [x] Getting started guide is ready
 - [x] Performance optimization guide is available
@@ -21,6 +23,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [x] CONTRIBUTING.md is ready
 
 ### ✅ Testing
+
 - [x] Unit tests cover core functionality
 - [x] Integration tests verify component behavior
 - [x] Performance tests validate benchmarks
@@ -28,6 +31,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [x] Cross-platform compatibility verified
 
 ### ✅ Examples
+
 - [x] Basic animations showcase
 - [x] E-commerce product gallery
 - [x] Dashboard application
@@ -37,12 +41,14 @@ This checklist outlines all the tasks required for the initial alpha release of 
 ## Release Tasks
 
 ### 1. Version Management
+
 - [ ] Update version numbers in all Cargo.toml files
 - [ ] Update CHANGELOG.md with release notes
 - [ ] Tag the release in Git
 - [ ] Create release branch if needed
 
 ### 2. Crate.io Publication
+
 - [ ] Verify all crates can be published
 - [ ] Check crate metadata (description, keywords, etc.)
 - [ ] Test crate installation locally
@@ -52,6 +58,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
   - [ ] leptos-motion (main crate)
 
 ### 3. Documentation Website
+
 - [ ] Set up documentation hosting (GitHub Pages or similar)
 - [ ] Deploy API documentation
 - [ ] Deploy getting started guide
@@ -59,6 +66,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [ ] Set up custom domain if desired
 
 ### 4. GitHub Release
+
 - [ ] Create GitHub release
 - [ ] Upload compiled examples
 - [ ] Write release notes
@@ -66,6 +74,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [ ] Create release assets
 
 ### 5. Community Outreach
+
 - [ ] Write announcement blog post
 - [ ] Share on social media
 - [ ] Post to relevant forums/communities
@@ -75,6 +84,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 ## Post-Release Tasks
 
 ### 1. Monitoring
+
 - [ ] Monitor crate downloads
 - [ ] Track GitHub stars and forks
 - [ ] Monitor issue reports
@@ -82,6 +92,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [ ] Track performance metrics
 
 ### 2. Community Management
+
 - [ ] Respond to issues promptly
 - [ ] Review and merge PRs
 - [ ] Update documentation based on feedback
@@ -89,6 +100,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 - [ ] Engage with community
 
 ### 3. Maintenance
+
 - [ ] Keep dependencies updated
 - [ ] Monitor for security issues
 - [ ] Maintain CI/CD pipeline
@@ -97,7 +109,7 @@ This checklist outlines all the tasks required for the initial alpha release of 
 
 ## Release Notes Template
 
-```markdown
+````markdown
 # Leptos Motion v0.1.0-alpha
 
 ## 🎉 Initial Alpha Release
@@ -120,6 +132,7 @@ This is the first alpha release of Leptos Motion, a comprehensive animation libr
 leptos = "0.7"
 leptos_motion = "0.1.0-alpha"
 ```
+````
 
 ```rust
 use leptos::prelude::*;
@@ -184,6 +197,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 - Inspired by Framer Motion
 - Built on the excellent Leptos framework
 - Thanks to all contributors and the Rust community
+
 ```
 
 ## Success Metrics
@@ -217,6 +231,7 @@ If issues are discovered after release:
 
 ---
 
-**Release Manager**: [Your Name]  
-**Release Date**: [Date]  
+**Release Manager**: [Your Name]
+**Release Date**: [Date]
 **Version**: 0.1.0-alpha
+```

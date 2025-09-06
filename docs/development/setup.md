@@ -5,34 +5,40 @@ This guide will help you set up the Leptos Motion development environment using 
 ## 🎯 **Prerequisites**
 
 ### **Required Software**
+
 - **Nix** (with flakes enabled) - [Install Nix](https://nixos.org/download.html)
 - **Git** - [Install Git](https://git-scm.com/downloads)
 - **Make** - Usually pre-installed on Unix systems
 
 ### **Optional Software**
+
 - **VS Code** with Rust extension
 - **Direnv** - Automatic environment activation
 
 ## 🚀 **Quick Start (Recommended)**
 
 ### **1. Clone and Enter the Project**
+
 ```bash
 git clone https://github.com/cloud-shuttle/leptos-motion.git
 cd leptos-motion
 ```
 
 ### **2. Enter Nix Development Environment**
+
 ```bash
 nix develop
 ```
 
 This will automatically:
+
 - Install Rust toolchain with WASM support
 - Install Node.js 20 and pnpm
 - Install all development tools (trunk, cargo-watch, etc.)
 - Set up environment variables
 
 ### **3. Install Dependencies**
+
 ```bash
 # Install Node.js dependencies
 pnpm install
@@ -42,6 +48,7 @@ pnpm install:browsers
 ```
 
 ### **4. Start Development**
+
 ```bash
 # Build everything
 make build
@@ -58,6 +65,7 @@ make test
 If you prefer not to use Nix, you can set up the environment manually:
 
 ### **1. Install Rust**
+
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source ~/.cargo/env
@@ -67,6 +75,7 @@ rustup target add wasm32-unknown-unknown
 ```
 
 ### **2. Install Rust Tools**
+
 ```bash
 cargo install trunk
 cargo install cargo-watch
@@ -76,6 +85,7 @@ cargo install cargo-tarpaulin
 ```
 
 ### **3. Install Node.js and pnpm**
+
 ```bash
 # Using nvm (recommended)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -87,6 +97,7 @@ npm install -g pnpm
 ```
 
 ### **4. Install Dependencies**
+
 ```bash
 pnpm install
 pnpm install:browsers
@@ -95,6 +106,7 @@ pnpm install:browsers
 ## 🛠️ **Available Commands**
 
 ### **Make Commands**
+
 ```bash
 make help              # Show all available commands
 make install           # Install all dependencies
@@ -108,6 +120,7 @@ make check-all         # Run all quality checks
 ```
 
 ### **Nix Commands**
+
 ```bash
 nix develop            # Enter development environment
 nix build              # Build with Nix
@@ -115,6 +128,7 @@ nix flake check        # Check flake configuration
 ```
 
 ### **pnpm Commands**
+
 ```bash
 pnpm test:e2e          # Run E2E tests
 pnpm test:e2e:ui       # Run E2E tests with UI
@@ -125,6 +139,7 @@ pnpm install:browsers  # Install Playwright browsers
 ## 🧪 **Testing**
 
 ### **Rust Tests**
+
 ```bash
 # Run all Rust tests
 cargo test --workspace
@@ -137,6 +152,7 @@ cargo test -- --nocapture
 ```
 
 ### **E2E Tests (Playwright)**
+
 ```bash
 # Run all E2E tests
 pnpm test:e2e
@@ -152,6 +168,7 @@ pnpm test:e2e tests/e2e/playwright_tests.spec.ts
 ```
 
 ### **Performance Tests**
+
 ```bash
 # Run benchmarks
 cargo bench
@@ -163,6 +180,7 @@ cargo test --test performance
 ## 🔨 **Building**
 
 ### **Development Build**
+
 ```bash
 # Quick check
 cargo check
@@ -175,6 +193,7 @@ cargo watch -x check -x test
 ```
 
 ### **Release Build**
+
 ```bash
 # Release build
 cargo build --release
@@ -184,6 +203,7 @@ cd examples/showcase && trunk build --release
 ```
 
 ### **Documentation**
+
 ```bash
 # Build docs
 cargo doc --workspace --no-deps
@@ -195,6 +215,7 @@ cargo doc --workspace --no-deps --open
 ## 🌐 **Development Server**
 
 ### **Start Showcase Example**
+
 ```bash
 # Development mode
 cd examples/showcase
@@ -205,6 +226,7 @@ trunk serve --watch
 ```
 
 ### **Build for Production**
+
 ```bash
 cd examples/showcase
 trunk build --release
@@ -213,6 +235,7 @@ trunk build --release
 ## 🐛 **Debugging**
 
 ### **Rust Debugging**
+
 ```bash
 # Enable backtraces
 export RUST_BACKTRACE=1
@@ -225,6 +248,7 @@ RUST_LOG=debug cargo test
 ```
 
 ### **WASM Debugging**
+
 ```bash
 # Enable WASM logging
 export RUST_LOG=leptos_motion=debug
@@ -234,6 +258,7 @@ export RUST_LOG=leptos_motion=debug
 ```
 
 ### **Playwright Debugging**
+
 ```bash
 # Run with headed mode
 pnpm test:e2e:headed
@@ -248,6 +273,7 @@ PWDEBUG=1 pnpm test:e2e
 ## 🔍 **Code Quality**
 
 ### **Formatting**
+
 ```bash
 # Format Rust code
 cargo fmt
@@ -257,6 +283,7 @@ cargo fmt --check
 ```
 
 ### **Linting**
+
 ```bash
 # Run clippy
 cargo clippy --workspace -- -D warnings
@@ -271,6 +298,7 @@ make check-all
 ## 📦 **Package Management**
 
 ### **Rust Dependencies**
+
 ```bash
 # Add dependency
 cargo add package-name
@@ -286,6 +314,7 @@ cargo outdated
 ```
 
 ### **Node.js Dependencies**
+
 ```bash
 # Add dependency
 pnpm add package-name
@@ -303,6 +332,7 @@ pnpm outdated
 ## 🚀 **CI/CD**
 
 ### **Local CI Checks**
+
 ```bash
 # Run all CI checks locally
 make ci-test
@@ -312,7 +342,9 @@ make ci-setup
 ```
 
 ### **GitHub Actions**
+
 The project includes GitHub Actions workflows for:
+
 - Rust testing and quality checks
 - E2E testing with Playwright
 - Documentation building
@@ -321,6 +353,7 @@ The project includes GitHub Actions workflows for:
 ## 🐧 **Nix Development Environment**
 
 ### **What's Included**
+
 - **Rust**: Latest stable with WASM target
 - **Node.js**: Version 20
 - **pnpm**: Latest version
@@ -329,6 +362,7 @@ The project includes GitHub Actions workflows for:
 - **Build Tools**: make, gcc, pkg-config
 
 ### **Environment Variables**
+
 ```bash
 RUST_BACKTRACE=1
 RUST_LOG=info
@@ -337,7 +371,9 @@ RUSTFLAGS="-C target-cpu=native"
 ```
 
 ### **Customizing the Environment**
+
 Edit `flake.nix` to:
+
 - Add more packages
 - Change Rust version
 - Modify environment variables
@@ -348,6 +384,7 @@ Edit `flake.nix` to:
 ### **Common Issues**
 
 #### **Nix Issues**
+
 ```bash
 # Enable flakes
 mkdir -p ~/.config/nix
@@ -358,6 +395,7 @@ nix store gc
 ```
 
 #### **Rust Issues**
+
 ```bash
 # Update Rust
 rustup update
@@ -368,6 +406,7 @@ cargo build
 ```
 
 #### **WASM Issues**
+
 ```bash
 # Reinstall WASM target
 rustup target remove wasm32-unknown-unknown
@@ -378,6 +417,7 @@ cargo install --force trunk
 ```
 
 #### **Node.js Issues**
+
 ```bash
 # Clear pnpm cache
 pnpm store prune
@@ -388,6 +428,7 @@ pnpm install
 ```
 
 ### **Getting Help**
+
 - Check the [Rust Book](https://doc.rust-lang.org/book/)
 - Check the [Leptos Book](https://leptos.dev/)
 - Check the [Trunk Documentation](https://trunkrs.dev/)

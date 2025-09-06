@@ -1,9 +1,9 @@
 //! Minimal animation engine for bundle size optimization
-//! 
+//!
 //! This engine only includes the essential animation functionality
 //! without performance monitoring, complex scheduling, or advanced features.
 
-use crate::{AnimationHandle, Result, AnimationTarget, Transition};
+use crate::{AnimationHandle, AnimationTarget, Result, Transition};
 use std::collections::HashMap;
 use web_sys::window;
 
@@ -30,16 +30,16 @@ impl MinimalEngine {
     }
 
     /// Start a new animation
-    pub fn animate(&mut self, target: AnimationTarget, transition: Transition) -> Result<AnimationHandle> {
+    pub fn animate(
+        &mut self,
+        target: AnimationTarget,
+        transition: Transition,
+    ) -> Result<AnimationHandle> {
         let handle = AnimationHandle(self.current_handle);
         self.current_handle += 1;
 
         let duration = transition.duration.unwrap_or(0.3);
-        let start_time = window()
-            .unwrap()
-            .performance()
-            .unwrap()
-            .now();
+        let start_time = window().unwrap().performance().unwrap().now();
 
         let animation = MinimalAnimation {
             target,

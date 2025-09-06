@@ -1,15 +1,15 @@
 //! FLIP (First, Last, Invert, Play) animation implementation
-//! 
+//!
 //! FLIP is a technique for creating smooth layout animations by:
 //! 1. First: Record the initial position
-//! 2. Last: Record the final position  
+//! 2. Last: Record the final position
 //! 3. Invert: Apply transforms to make it appear in the initial position
 //! 4. Play: Animate the transforms to their natural values
 
-use crate::{LayoutAnimationConfig};
+use crate::LayoutAnimationConfig;
 use std::collections::HashMap;
-use web_sys::{Element, DomRect};
 use wasm_bindgen::prelude::*;
+use web_sys::{DomRect, Element};
 
 /// FLIP animation state
 #[derive(Debug, Clone)]
@@ -55,7 +55,13 @@ impl Default for TransformValues {
 
 impl TransformValues {
     /// Create new transform values
-    pub fn new(translate_x: f64, translate_y: f64, scale_x: f64, scale_y: f64, rotation: f64) -> Self {
+    pub fn new(
+        translate_x: f64,
+        translate_y: f64,
+        scale_x: f64,
+        scale_y: f64,
+        rotation: f64,
+    ) -> Self {
         Self {
             translate_x,
             translate_y,
@@ -114,11 +120,11 @@ pub enum EasingFunction {
     /// Custom cubic-bezier
     CubicBezier(f64, f64, f64, f64),
     /// Spring physics
-    Spring { 
+    Spring {
         /// Spring tension
-        tension: f64, 
+        tension: f64,
         /// Spring friction
-        friction: f64 
+        friction: f64,
     },
 }
 
@@ -152,7 +158,7 @@ impl EasingFunction {
                 // Simplified spring physics
                 let damping = friction / (2.0 * (tension).sqrt());
                 let frequency = (tension).sqrt();
-                
+
                 if damping < 1.0 {
                     let damped_freq = frequency * (1.0 - damping * damping).sqrt();
                     let decay = (-damping * frequency * t).exp();
@@ -219,7 +225,7 @@ impl FLIPAnimator {
         config: LayoutAnimationConfig,
     ) -> Result<(), String> {
         let inverted = self.calculate_transform_values(&first, &last);
-        
+
         let state = FLIPState {
             first,
             last,
@@ -240,7 +246,7 @@ impl FLIPAnimator {
 
         self.active_animations.insert(id, animation);
         self.performance_metrics.total_animations += 1;
-        
+
         Ok(())
     }
 
@@ -248,8 +254,16 @@ impl FLIPAnimator {
     fn calculate_transform_values(&self, first: &DomRect, last: &DomRect) -> TransformValues {
         let translate_x = first.x() - last.x();
         let translate_y = first.y() - last.y();
-        let scale_x = if last.width() > 0.0 { first.width() / last.width() } else { 1.0 };
-        let scale_y = if last.height() > 0.0 { first.height() / last.height() } else { 1.0 };
+        let scale_x = if last.width() > 0.0 {
+            first.width() / last.width()
+        } else {
+            1.0
+        };
+        let scale_y = if last.height() > 0.0 {
+            first.height() / last.height()
+        } else {
+            1.0
+        };
 
         TransformValues::new(translate_x, translate_y, scale_x, scale_y, 0.0)
     }
@@ -288,7 +302,13 @@ impl FLIPAnimator {
                 current_x, current_y, current_scale_x, current_scale_y
             );
 
-            if let Ok(_) = animation.element.dyn_ref::<web_sys::HtmlElement>().unwrap().style().set_property("transform", &transform) {
+            if let Ok(_) = animation
+                .element
+                .dyn_ref::<web_sys::HtmlElement>()
+                .unwrap()
+                .style()
+                .set_property("transform", &transform)
+            {
                 // Transform applied successfully
             }
         }
@@ -312,7 +332,13 @@ impl FLIPAnimator {
             current_x, current_y, current_scale_x, current_scale_y
         );
 
-        if let Ok(style) = animation.element.dyn_ref::<web_sys::HtmlElement>().unwrap().style().set_property("transform", &transform) {
+        if let Ok(style) = animation
+            .element
+            .dyn_ref::<web_sys::HtmlElement>()
+            .unwrap()
+            .style()
+            .set_property("transform", &transform)
+        {
             // Transform applied successfully
         }
     }
@@ -346,26 +372,27 @@ impl FLIPAnimator {
             _ => {
                 if easing.starts_with("cubic-bezier(") && easing.ends_with(')') {
                     // Parse cubic-bezier values
-                    let values_str = &easing[13..easing.len()-1];
-                    let values: Result<Vec<f64>, _> = values_str
-                        .split(',')
-                        .map(|s| s.trim().parse())
-                        .collect();
-                    
+                    let values_str = &easing[13..easing.len() - 1];
+                    let values: Result<Vec<f64>, _> =
+                        values_str.split(',').map(|s| s.trim().parse()).collect();
+
                     match values {
-                        Ok(v) if v.len() == 4 => Ok(EasingFunction::CubicBezier(v[0], v[1], v[2], v[3])),
+                        Ok(v) if v.len() == 4 => {
+                            Ok(EasingFunction::CubicBezier(v[0], v[1], v[2], v[3]))
+                        }
                         _ => Err("Invalid cubic-bezier format".to_string()),
                     }
                 } else if easing.starts_with("spring(") && easing.ends_with(')') {
                     // Parse spring values
-                    let values_str = &easing[7..easing.len()-1];
-                    let values: Result<Vec<f64>, _> = values_str
-                        .split(',')
-                        .map(|s| s.trim().parse())
-                        .collect();
-                    
+                    let values_str = &easing[7..easing.len() - 1];
+                    let values: Result<Vec<f64>, _> =
+                        values_str.split(',').map(|s| s.trim().parse()).collect();
+
                     match values {
-                        Ok(v) if v.len() == 2 => Ok(EasingFunction::Spring { tension: v[0], friction: v[1] }),
+                        Ok(v) if v.len() == 2 => Ok(EasingFunction::Spring {
+                            tension: v[0],
+                            friction: v[1],
+                        }),
                         _ => Err("Invalid spring format".to_string()),
                     }
                 } else {
@@ -378,8 +405,9 @@ impl FLIPAnimator {
     fn update_performance_metrics(&mut self, duration: f64) {
         let total = self.performance_metrics.total_animations as f64;
         let current_avg = self.performance_metrics.average_duration;
-        self.performance_metrics.average_duration = (current_avg * (total - 1.0) + duration) / total;
-        
+        self.performance_metrics.average_duration =
+            (current_avg * (total - 1.0) + duration) / total;
+
         // Update performance score based on success rate
         let success_rate = 1.0 - (self.performance_metrics.failed_animations as f64 / total);
         self.performance_metrics.performance_score = success_rate;
@@ -396,7 +424,7 @@ impl Default for FLIPAnimator {
 mod tests {
     use super::*;
     use wasm_bindgen_test::*;
-    
+
     wasm_bindgen_test_configure!(run_in_browser);
 
     #[test]
@@ -491,17 +519,24 @@ mod tests {
 
     #[test]
     fn test_easing_function_spring() {
-        let easing = EasingFunction::Spring { tension: 120.0, friction: 14.0 };
+        let easing = EasingFunction::Spring {
+            tension: 120.0,
+            friction: 14.0,
+        };
         let result = easing.evaluate(0.5);
         // Spring animations can temporarily exceed bounds due to oscillation
-        assert!(result >= -0.5 && result <= 1.5, "Spring result was: {}", result);
+        assert!(
+            result >= -0.5 && result <= 1.5,
+            "Spring result was: {}",
+            result
+        );
     }
 
     #[test]
     fn test_easing_function_default() {
         let easing = EasingFunction::default();
         match easing {
-            EasingFunction::EaseOut => {},
+            EasingFunction::EaseOut => {}
             _ => panic!("Default should be EaseOut"),
         }
     }
@@ -544,35 +579,53 @@ mod tests {
     #[test]
     fn test_easing_function_parsing() {
         let animator = FLIPAnimator::new();
-        
-        assert!(matches!(animator.parse_easing_function("linear"), Ok(EasingFunction::Linear)));
-        assert!(matches!(animator.parse_easing_function("ease-in"), Ok(EasingFunction::EaseIn)));
-        assert!(matches!(animator.parse_easing_function("ease-out"), Ok(EasingFunction::EaseOut)));
-        assert!(matches!(animator.parse_easing_function("ease-in-out"), Ok(EasingFunction::EaseInOut)));
-        
+
+        assert!(matches!(
+            animator.parse_easing_function("linear"),
+            Ok(EasingFunction::Linear)
+        ));
+        assert!(matches!(
+            animator.parse_easing_function("ease-in"),
+            Ok(EasingFunction::EaseIn)
+        ));
+        assert!(matches!(
+            animator.parse_easing_function("ease-out"),
+            Ok(EasingFunction::EaseOut)
+        ));
+        assert!(matches!(
+            animator.parse_easing_function("ease-in-out"),
+            Ok(EasingFunction::EaseInOut)
+        ));
+
         assert!(matches!(
             animator.parse_easing_function("cubic-bezier(0.25, 0.1, 0.25, 1.0)"),
             Ok(EasingFunction::CubicBezier(0.25, 0.1, 0.25, 1.0))
         ));
-        
+
         assert!(matches!(
             animator.parse_easing_function("spring(120, 14)"),
-            Ok(EasingFunction::Spring { tension: 120.0, friction: 14.0 })
+            Ok(EasingFunction::Spring {
+                tension: 120.0,
+                friction: 14.0
+            })
         ));
-        
+
         assert!(animator.parse_easing_function("invalid").is_err());
     }
 
     #[wasm_bindgen_test]
     fn test_transform_values_calculation() {
         let animator = FLIPAnimator::new();
-        
+
         // Create mock DomRect objects
-        let first = web_sys::DomRect::new_with_x_and_y_and_width_and_height(0.0, 0.0, 100.0, 100.0).unwrap();
-        let last = web_sys::DomRect::new_with_x_and_y_and_width_and_height(50.0, 25.0, 200.0, 150.0).unwrap();
-        
+        let first = web_sys::DomRect::new_with_x_and_y_and_width_and_height(0.0, 0.0, 100.0, 100.0)
+            .unwrap();
+        let last =
+            web_sys::DomRect::new_with_x_and_y_and_width_and_height(50.0, 25.0, 200.0, 150.0)
+                .unwrap();
+
         let transform = animator.calculate_transform_values(&first, &last);
-        
+
         assert_eq!(transform.translate_x, -50.0); // 0 - 50
         assert_eq!(transform.translate_y, -25.0); // 0 - 25
         assert_eq!(transform.scale_x, 0.5); // 100 / 200

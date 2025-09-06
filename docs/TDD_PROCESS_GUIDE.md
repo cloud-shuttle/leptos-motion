@@ -29,19 +29,20 @@ This guide establishes the Test-Driven Development (TDD) process for Leptos Moti
 ### 1. Feature Development Workflow
 
 #### Step 1: Write Failing Test
+
 ```rust
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_new_feature_behavior() {
         // Arrange
         let input = create_test_input();
-        
+
         // Act
         let result = new_feature(input);
-        
+
         // Assert
         assert_eq!(result, expected_output);
     }
@@ -49,6 +50,7 @@ mod tests {
 ```
 
 #### Step 2: Make Test Pass
+
 ```rust
 pub fn new_feature(input: InputType) -> OutputType {
     // Minimal implementation to make test pass
@@ -57,6 +59,7 @@ pub fn new_feature(input: InputType) -> OutputType {
 ```
 
 #### Step 3: Refactor
+
 ```rust
 pub fn new_feature(input: InputType) -> OutputType {
     // Improved implementation with better design
@@ -68,21 +71,23 @@ pub fn new_feature(input: InputType) -> OutputType {
 ### 2. Bug Fix Workflow
 
 #### Step 1: Reproduce Bug with Test
+
 ```rust
 #[test]
 fn test_bug_reproduction() {
     // Arrange
     let buggy_input = create_buggy_scenario();
-    
+
     // Act
     let result = function_with_bug(buggy_input);
-    
+
     // Assert - This should fail initially
     assert_eq!(result, expected_correct_output);
 }
 ```
 
 #### Step 2: Fix Bug
+
 ```rust
 pub fn function_with_bug(input: InputType) -> OutputType {
     // Fix the bug
@@ -91,6 +96,7 @@ pub fn function_with_bug(input: InputType) -> OutputType {
 ```
 
 #### Step 3: Verify Fix
+
 ```rust
 #[test]
 fn test_bug_fix() {
@@ -108,6 +114,7 @@ fn test_bug_fix() {
 **Purpose**: Test individual functions and components in isolation
 
 **Guidelines**:
+
 - Test one behavior per test
 - Use descriptive test names
 - Follow Arrange-Act-Assert pattern
@@ -115,6 +122,7 @@ fn test_bug_fix() {
 - Test edge cases and error conditions
 
 **Example**:
+
 ```rust
 #[test]
 fn test_animation_value_interpolation() {
@@ -122,10 +130,10 @@ fn test_animation_value_interpolation() {
     let start = AnimationValue::Number(0.0);
     let end = AnimationValue::Number(100.0);
     let progress = 0.5;
-    
+
     // Act
     let result = interpolate_animation_value(start, end, progress);
-    
+
     // Assert
     assert_eq!(result, AnimationValue::Number(50.0));
 }
@@ -137,7 +145,7 @@ fn test_animation_value_interpolation_edge_cases() {
         interpolate_animation_value(AnimationValue::Number(0.0), AnimationValue::Number(100.0), 0.0),
         AnimationValue::Number(0.0)
     );
-    
+
     assert_eq!(
         interpolate_animation_value(AnimationValue::Number(0.0), AnimationValue::Number(100.0), 1.0),
         AnimationValue::Number(100.0)
@@ -150,19 +158,21 @@ fn test_animation_value_interpolation_edge_cases() {
 **Purpose**: Test how components work together
 
 **Guidelines**:
+
 - Test component interactions
 - Use real DOM elements when possible
 - Test animation lifecycle
 - Verify side effects
 
 **Example**:
+
 ```rust
 #[wasm_bindgen_test]
 async fn test_motion_div_animation_lifecycle() {
     // Arrange
     let test_app = TestApp::new();
     let element = test_app.create_element("div");
-    
+
     // Act
     let motion_div = view! {
         <MotionDiv
@@ -177,9 +187,9 @@ async fn test_motion_div_animation_lifecycle() {
             }
         />
     };
-    
+
     test_app.mount(motion_div);
-    
+
     // Assert
     test_app.wait_for_animation(150);
     test_app.assert_style_equals(&element, "opacity", "1");
@@ -191,25 +201,27 @@ async fn test_motion_div_animation_lifecycle() {
 **Purpose**: Test complete user scenarios
 
 **Guidelines**:
+
 - Test real user workflows
 - Use actual browser automation
 - Test performance and accessibility
 - Verify visual consistency
 
 **Example**:
+
 ```rust
 #[test]
 async fn test_user_drag_interaction() {
     let page = create_test_page().await;
-    
+
     // User drags element
     page.drag_element("#draggable", 100, 100).await;
-    
+
     // Verify element moved
     let position = page.get_element_position("#draggable").await;
     assert_eq!(position.x, 100);
     assert_eq!(position.y, 100);
-    
+
     // Verify visual feedback
     assert!(page.has_class("#draggable", "dragging"));
 }
@@ -220,6 +232,7 @@ async fn test_user_drag_interaction() {
 ### 1. Test Naming
 
 **Good Names**:
+
 ```rust
 #[test]
 fn test_animation_value_interpolation_linear_progress() { }
@@ -232,6 +245,7 @@ fn test_layout_animation_flip_transform_calculation() { }
 ```
 
 **Bad Names**:
+
 ```rust
 #[test]
 fn test1() { }
@@ -246,16 +260,17 @@ fn test_stuff() { }
 ### 2. Test Structure
 
 **Follow Arrange-Act-Assert**:
+
 ```rust
 #[test]
 fn test_feature_behavior() {
     // Arrange - Set up test data and conditions
     let input = create_test_input();
     let expected = create_expected_output();
-    
+
     // Act - Execute the function under test
     let result = function_under_test(input);
-    
+
     // Assert - Verify the result
     assert_eq!(result, expected);
 }
@@ -264,6 +279,7 @@ fn test_feature_behavior() {
 ### 3. Test Data Management
 
 **Use Test Factories**:
+
 ```rust
 pub struct TestDataFactory;
 
@@ -274,7 +290,7 @@ impl TestDataFactory {
         target.insert("scale".to_string(), AnimationValue::Number(1.5));
         target
     }
-    
+
     pub fn create_transition() -> Transition {
         Transition {
             duration: Some(0.5),
@@ -289,6 +305,7 @@ impl TestDataFactory {
 ### 4. Property-Based Testing
 
 **Use Proptest for Mathematical Functions**:
+
 ```rust
 use proptest::prelude::*;
 
@@ -300,14 +317,14 @@ proptest! {
         progress in 0.0..1.0f64
     ) {
         let result = interpolate(start, end, progress);
-        
+
         // Property: result should be between start and end
         prop_assert!(result >= start.min(end));
         prop_assert!(result <= start.max(end));
-        
+
         // Property: progress 0 should give start
         prop_assert_eq!(interpolate(start, end, 0.0), start);
-        
+
         // Property: progress 1 should give end
         prop_assert_eq!(interpolate(start, end, 1.0), end);
     }
@@ -317,12 +334,14 @@ proptest! {
 ## TDD Checklist
 
 ### Before Writing Code
+
 - [ ] Do I understand the requirement?
 - [ ] Can I write a test for this behavior?
 - [ ] What are the edge cases?
 - [ ] What are the error conditions?
 
 ### During Development
+
 - [ ] Did I write the test first?
 - [ ] Does the test fail for the right reason?
 - [ ] Did I write minimal code to pass?
@@ -330,6 +349,7 @@ proptest! {
 - [ ] Are all tests still passing?
 
 ### After Implementation
+
 - [ ] Do I have good test coverage?
 - [ ] Are the tests readable and maintainable?
 - [ ] Do the tests serve as documentation?
@@ -340,6 +360,7 @@ proptest! {
 ### 1. Test Doubles (Mocks/Stubs)
 
 **For External Dependencies**:
+
 ```rust
 pub trait AnimationEngine {
     fn start_animation(&self, config: AnimationConfig) -> AnimationHandle;
@@ -360,9 +381,9 @@ impl AnimationEngine for MockAnimationEngine {
 fn test_animation_start() {
     let mock_engine = MockAnimationEngine::new();
     let animator = Animator::new(mock_engine);
-    
+
     animator.start_animation(create_test_config());
-    
+
     assert_eq!(mock_engine.start_animation_calls.len(), 1);
 }
 ```
@@ -370,6 +391,7 @@ fn test_animation_start() {
 ### 2. Test Builders
 
 **For Complex Test Data**:
+
 ```rust
 pub struct AnimationConfigBuilder {
     duration: Option<f64>,
@@ -385,17 +407,17 @@ impl AnimationConfigBuilder {
             delay: None,
         }
     }
-    
+
     pub fn with_duration(mut self, duration: f64) -> Self {
         self.duration = Some(duration);
         self
     }
-    
+
     pub fn with_ease(mut self, ease: Easing) -> Self {
         self.ease = ease;
         self
     }
-    
+
     pub fn build(self) -> AnimationConfig {
         AnimationConfig {
             duration: self.duration,
@@ -411,7 +433,7 @@ fn test_animation_config() {
         .with_duration(0.5)
         .with_ease(Easing::EaseInOut)
         .build();
-    
+
     assert_eq!(config.duration, Some(0.5));
     assert_eq!(config.ease, Easing::EaseInOut);
 }
@@ -420,6 +442,7 @@ fn test_animation_config() {
 ### 3. Test Helpers
 
 **For Common Test Operations**:
+
 ```rust
 pub struct TestHelper {
     document: web_sys::Document,
@@ -431,15 +454,15 @@ impl TestHelper {
         let document = window.document().unwrap();
         Self { document }
     }
-    
+
     pub fn create_element(&self, tag: &str) -> web_sys::Element {
         self.document.create_element(tag).unwrap()
     }
-    
+
     pub fn wait_for_animation(&self, duration_ms: u64) {
         // Implementation for waiting
     }
-    
+
     pub fn assert_style_equals(&self, element: &web_sys::Element, property: &str, expected: &str) {
         let actual = self.get_computed_style(element, property);
         assert_eq!(actual, expected);
@@ -450,6 +473,7 @@ impl TestHelper {
 ## TDD Anti-Patterns to Avoid
 
 ### 1. Testing Implementation Details
+
 ```rust
 // Bad - Testing internal implementation
 #[test]
@@ -468,6 +492,7 @@ fn test_animation_starts() {
 ```
 
 ### 2. Over-Mocking
+
 ```rust
 // Bad - Mocking everything
 #[test]
@@ -488,6 +513,7 @@ fn test_animation() {
 ```
 
 ### 3. Test Duplication
+
 ```rust
 // Bad - Duplicated test setup
 #[test]
@@ -523,6 +549,7 @@ fn create_test_config() -> AnimationConfig {
 ## TDD Tools and Setup
 
 ### Required Tools
+
 ```toml
 [dev-dependencies]
 # Core testing
@@ -547,6 +574,7 @@ cargo-llvm-cov = "0.5"
 ```
 
 ### Test Configuration
+
 ```toml
 # .cargo/config.toml
 [coverage]
@@ -569,12 +597,14 @@ layout = 75
 ## TDD Metrics and Monitoring
 
 ### Key Metrics
+
 - **Test Coverage**: 85%+ overall, 95%+ for core
 - **Test Execution Time**: <30 seconds for unit tests
 - **Test Reliability**: 99%+ pass rate
 - **TDD Adoption**: 90%+ features developed test-first
 
 ### Monitoring Tools
+
 - Coverage reports with `cargo-tarpaulin`
 - Test performance with `cargo nextest`
 - Test trends with CI/CD analytics
@@ -591,4 +621,3 @@ This TDD process guide provides the foundation for implementing Test-Driven Deve
 - Living documentation
 
 **Next Steps**: Begin implementing TDD practices with the test improvement action plan, starting with critical test fixes and TDD process adoption.
-

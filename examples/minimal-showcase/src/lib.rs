@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::mount::mount_to_body;
+use leptos::prelude::*;
 use leptos_motion_core::*;
 
 use wasm_bindgen::prelude::*;
@@ -11,7 +11,7 @@ pub fn App() -> impl IntoView {
     view! {
         <div class="app">
             <h1>"Leptos Motion - Minimal Core Only! 🚀"</h1>
-            
+
             <div class="demo-section">
                 <h2>"✅ Core Animation Engine Only:"</h2>
                 <ul>
@@ -24,7 +24,7 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"🎬 Core Animation Demo:"</h2>
-                
+
                 <div class="animated-box">
                     "Core Animation Engine Test"
                 </div>

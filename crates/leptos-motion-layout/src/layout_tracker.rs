@@ -1,12 +1,11 @@
 //! Layout tracking and performance monitoring
-//! 
+//!
 //! This module provides functionality for tracking layout changes,
 //! monitoring performance metrics, and optimizing layout animations.
 
 use std::collections::HashMap;
 use std::time::Instant;
-use web_sys::{Element, DomRect};
-
+use web_sys::{DomRect, Element};
 
 /// Layout change record
 #[derive(Debug, Clone)]
@@ -132,10 +131,10 @@ impl LayoutTracker {
     /// Start tracking an element
     pub fn track_element(&mut self, element: Element) -> Result<(), String> {
         let element_id = element.id();
-        
+
         // Get current layout
         let current_layout = element.get_bounding_client_rect();
-        
+
         // Create tracked element
         let tracked_element = TrackedElement {
             id: element_id.clone(),
@@ -145,10 +144,10 @@ impl LayoutTracker {
             last_update: Instant::now(),
             change_count: 0,
         };
-        
+
         // Add to tracking
         self.tracked_elements.insert(element_id, tracked_element);
-        
+
         Ok(())
     }
 
@@ -166,13 +165,13 @@ impl LayoutTracker {
         if !self.enabled {
             return Ok(Vec::new());
         }
-        
+
         let mut changes = Vec::new();
         let current_time = js_sys::Date::now();
-        
+
         // Check each tracked element for changes
         let element_ids: Vec<String> = self.tracked_elements.keys().cloned().collect();
-        
+
         for element_id in element_ids {
             // Get current layout first
             let new_layout = if let Some(tracked_element) = self.tracked_elements.get(&element_id) {
@@ -180,14 +179,15 @@ impl LayoutTracker {
             } else {
                 continue;
             };
-            
+
             // Check if layout changed
-            let current_layout = if let Some(tracked_element) = self.tracked_elements.get(&element_id) {
-                tracked_element.current_layout.clone()
-            } else {
-                continue;
-            };
-            
+            let current_layout =
+                if let Some(tracked_element) = self.tracked_elements.get(&element_id) {
+                    tracked_element.current_layout.clone()
+                } else {
+                    continue;
+                };
+
             if self.has_layout_changed(&current_layout, &new_layout) {
                 // Create change record
                 let change = LayoutChange {
@@ -196,11 +196,11 @@ impl LayoutTracker {
                     current_layout: new_layout.clone(),
                     timestamp: current_time,
                     change_type: LayoutChangeType::PositionAndSize, // Default to both
-                    performance_impact: PerformanceImpact::Low, // Default to low impact
+                    performance_impact: PerformanceImpact::Low,     // Default to low impact
                 };
-            
+
                 changes.push(change.clone());
-                
+
                 // Update tracked element (now we can borrow mutably)
                 if let Some(tracked_element) = self.tracked_elements.get_mut(&element_id) {
                     tracked_element.previous_layout = Some(current_layout);
@@ -208,21 +208,21 @@ impl LayoutTracker {
                     tracked_element.last_update = Instant::now();
                     tracked_element.change_count += 1;
                 }
-                
+
                 // Add to history
                 self.change_history.push(change);
             }
         }
-        
+
         // Update performance monitoring
         self.performance_monitor.update()?;
-        
+
         // Update statistics
         self.update_stats(&changes);
-        
+
         // Clean up old history
         self.cleanup_history();
-        
+
         Ok(changes)
     }
 
@@ -246,7 +246,7 @@ impl LayoutTracker {
         } else {
             0
         };
-        
+
         self.change_history[start..].iter().collect()
     }
 
@@ -273,11 +273,11 @@ impl LayoutTracker {
     /// Check if layout has changed
     fn has_layout_changed(&self, old: &DomRect, new: &DomRect) -> bool {
         const THRESHOLD: f64 = 0.1; // 0.1px threshold for changes
-        
-        (old.left() - new.left()).abs() > THRESHOLD ||
-        (old.top() - new.top()).abs() > THRESHOLD ||
-        (old.width() - new.width()).abs() > THRESHOLD ||
-        (old.height() - new.height()).abs() > THRESHOLD
+
+        (old.left() - new.left()).abs() > THRESHOLD
+            || (old.top() - new.top()).abs() > THRESHOLD
+            || (old.width() - new.width()).abs() > THRESHOLD
+            || (old.height() - new.height()).abs() > THRESHOLD
     }
 
     /// Create a layout change record
@@ -288,13 +288,13 @@ impl LayoutTracker {
         timestamp: f64,
     ) -> Result<LayoutChange, String> {
         let previous_layout = tracked_element.current_layout.clone();
-        
+
         // Determine change type
         let change_type = self.determine_change_type(&previous_layout, new_layout);
-        
+
         // Calculate performance impact
         let performance_impact = self.calculate_performance_impact(&previous_layout, new_layout);
-        
+
         Ok(LayoutChange {
             element_id: tracked_element.id.clone(),
             previous_layout,
@@ -307,9 +307,11 @@ impl LayoutTracker {
 
     /// Determine the type of layout change
     fn determine_change_type(&self, old: &DomRect, new: &DomRect) -> LayoutChangeType {
-        let position_changed = (old.left() - new.left()).abs() > 0.1 || (old.top() - new.top()).abs() > 0.1;
-        let size_changed = (old.width() - new.width()).abs() > 0.1 || (old.height() - new.height()).abs() > 0.1;
-        
+        let position_changed =
+            (old.left() - new.left()).abs() > 0.1 || (old.top() - new.top()).abs() > 0.1;
+        let size_changed =
+            (old.width() - new.width()).abs() > 0.1 || (old.height() - new.height()).abs() > 0.1;
+
         match (position_changed, size_changed) {
             (true, true) => LayoutChangeType::PositionAndSize,
             (true, false) => LayoutChangeType::Position,
@@ -321,10 +323,11 @@ impl LayoutTracker {
     /// Calculate performance impact of layout change
     fn calculate_performance_impact(&self, old: &DomRect, new: &DomRect) -> PerformanceImpact {
         let area_change = (new.width() * new.height() - old.width() * old.height()).abs();
-        let position_change = ((new.left() - old.left()).powi(2) + (new.top() - old.top()).powi(2)).sqrt();
-        
+        let position_change =
+            ((new.left() - old.left()).powi(2) + (new.top() - old.top()).powi(2)).sqrt();
+
         let total_change = area_change + position_change;
-        
+
         match total_change {
             change if change < 100.0 => PerformanceImpact::Low,
             change if change < 1000.0 => PerformanceImpact::Medium,
@@ -336,28 +339,33 @@ impl LayoutTracker {
     /// Update statistics
     fn update_stats(&mut self, changes: &[LayoutChange]) {
         self.stats.total_changes += changes.len();
-        
+
         // Update changes in last second
         let current_time = js_sys::Date::now();
         let one_second_ago = current_time - 1000.0;
-        
-        self.stats.changes_last_second = self.change_history
+
+        self.stats.changes_last_second = self
+            .change_history
             .iter()
             .filter(|change| change.timestamp >= one_second_ago)
             .count();
-        
+
         // Update change frequency
         if self.stats.total_changes > 0 {
             let total_time = current_time / 1000.0; // Convert to seconds
             self.stats.change_frequency = self.stats.total_changes as f64 / total_time;
         }
-        
+
         // Update impact distribution
         for change in changes {
-            let count = self.stats.impact_distribution.entry(change.performance_impact.clone()).or_insert(0);
+            let count = self
+                .stats
+                .impact_distribution
+                .entry(change.performance_impact.clone())
+                .or_insert(0);
             *count += 1;
         }
-        
+
         // Update frame rate
         self.stats.frame_rate = self.performance_monitor.get_frame_rate();
     }
@@ -365,7 +373,7 @@ impl LayoutTracker {
     /// Clean up old history
     fn cleanup_history(&mut self) {
         const MAX_HISTORY_SIZE: usize = 1000;
-        
+
         if self.change_history.len() > MAX_HISTORY_SIZE {
             let remove_count = self.change_history.len() - MAX_HISTORY_SIZE;
             self.change_history.drain(0..remove_count);
@@ -388,24 +396,24 @@ impl PerformanceMonitor {
     pub fn update(&mut self) -> Result<(), String> {
         let current_time = js_sys::Date::now();
         let frame_time = current_time - self.last_frame_time;
-        
+
         // Record frame time
         self.frame_times.push(frame_time);
-        
+
         // Keep only recent frame times (last 60 frames)
         if self.frame_times.len() > 60 {
             self.frame_times.remove(0);
         }
-        
+
         // Update last frame time
         self.last_frame_time = current_time;
-        
+
         // Update memory usage (placeholder for future implementation)
         self.memory_usage.push(0);
         if self.memory_usage.len() > 60 {
             self.memory_usage.remove(0);
         }
-        
+
         Ok(())
     }
 
@@ -414,10 +422,10 @@ impl PerformanceMonitor {
         if self.frame_times.is_empty() {
             return 60.0; // Default frame rate
         }
-        
+
         let total_time: f64 = self.frame_times.iter().sum();
         let frame_count = self.frame_times.len() as f64;
-        
+
         if total_time > 0.0 {
             1000.0 / (total_time / frame_count) // Convert to FPS
         } else {
@@ -482,25 +490,25 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_layout_change_type_determination() {
         let tracker = LayoutTracker::new();
-        
+
         // Create test rectangles
         let old = DomRect::new().unwrap();
         let new_position = DomRect::new().unwrap();
         let new_size = DomRect::new().unwrap();
         let new_both = DomRect::new().unwrap();
-        
+
         // Test position change
         let change_type = tracker.determine_change_type(&old, &new_position);
         assert!(matches!(change_type, LayoutChangeType::None));
-        
+
         // Test size change
         let change_type = tracker.determine_change_type(&old, &new_size);
         assert!(matches!(change_type, LayoutChangeType::None));
-        
+
         // Test both position and size change
         let change_type = tracker.determine_change_type(&old, &new_both);
         assert!(matches!(change_type, LayoutChangeType::None));
-        
+
         // Test no change
         let change_type = tracker.determine_change_type(&old, &old);
         assert!(matches!(change_type, LayoutChangeType::None));
@@ -509,16 +517,16 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_performance_impact_calculation() {
         let tracker = LayoutTracker::new();
-        
+
         // Create test rectangles
         let old = DomRect::new().unwrap();
         let small_change = DomRect::new().unwrap();
         let large_change = DomRect::new().unwrap();
-        
+
         // Test small change
         let impact = tracker.calculate_performance_impact(&old, &small_change);
         assert!(matches!(impact, PerformanceImpact::Low));
-        
+
         // Test large change
         let impact = tracker.calculate_performance_impact(&old, &large_change);
         assert!(matches!(impact, PerformanceImpact::Low));

@@ -1,5 +1,5 @@
 [package]
-name = "leptos-motion" 
+name = "leptos-motion"
 version.workspace = true
 authors.workspace = true
 license.workspace = true
@@ -16,7 +16,7 @@ categories.workspace = true
 default = ["raf", "waapi", "gestures", "layout", "scroll", "dom"]
 # Core features
 raf = ["leptos-motion-core/raf"]
-waapi = ["leptos-motion-core/waapi"] 
+waapi = ["leptos-motion-core/waapi"]
 spring = ["leptos-motion-core/spring"]
 easing = ["leptos-motion-core/easing"]
 gestures = ["leptos-motion-gestures"]

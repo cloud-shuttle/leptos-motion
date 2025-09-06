@@ -1,7 +1,5 @@
 //! Mathematical utilities for animations
 
-
-
 /// Clamp a value between min and max
 pub fn clamp(value: f64, min: f64, max: f64) -> f64 {
     if min > max {
@@ -14,11 +12,11 @@ pub fn clamp(value: f64, min: f64, max: f64) -> f64 {
 pub fn map_range(value: f64, from_min: f64, from_max: f64, to_min: f64, to_max: f64) -> f64 {
     let from_range = from_max - from_min;
     let to_range = to_max - to_min;
-    
+
     if from_range == 0.0 {
         return to_min;
     }
-    
+
     let normalized = (value - from_min) / from_range;
     to_min + (normalized * to_range)
 }
@@ -46,39 +44,39 @@ pub fn smoother_step(t: f64) -> f64 {
 mod tests {
     use super::*;
     use approx::assert_relative_eq;
-    
+
     #[test]
     fn test_clamp() {
         assert_eq!(clamp(5.0, 0.0, 10.0), 5.0);
         assert_eq!(clamp(-1.0, 0.0, 10.0), 0.0);
         assert_eq!(clamp(15.0, 0.0, 10.0), 10.0);
     }
-    
+
     #[test]
     fn test_map_range() {
         assert_relative_eq!(map_range(0.5, 0.0, 1.0, 0.0, 100.0), 50.0);
         assert_relative_eq!(map_range(2.0, 0.0, 4.0, 10.0, 20.0), 15.0);
         assert_relative_eq!(map_range(0.0, 0.0, 0.0, 0.0, 100.0), 0.0); // Edge case
     }
-    
+
     #[test]
     fn test_distance_2d() {
         assert_relative_eq!(distance_2d(0.0, 0.0, 3.0, 4.0), 5.0);
         assert_relative_eq!(distance_2d(0.0, 0.0, 0.0, 0.0), 0.0);
     }
-    
+
     #[test]
     fn test_smooth_step() {
         assert_eq!(smooth_step(0.0), 0.0);
         assert_eq!(smooth_step(1.0), 1.0);
         assert_relative_eq!(smooth_step(0.5), 0.5);
-        
+
         // Should be smoother than linear
         let linear_quarter = 0.25;
         let smooth_quarter = smooth_step(0.25);
         assert!(smooth_quarter < linear_quarter);
     }
-    
+
     #[test]
     fn test_smoother_step() {
         assert_eq!(smoother_step(0.0), 0.0);

@@ -200,10 +200,10 @@ mod tests {
     fn test_feature_name() {
         // Arrange
         let input = "test";
-        
+
         // Act
         let result = function_to_test(input);
-        
+
         // Assert
         assert_eq!(result, expected_output);
     }
@@ -227,10 +227,10 @@ wasm_bindgen_test_configure!(run_in_browser);
 async fn test_integration_scenario() {
     // Setup
     let test_app = TestApp::new();
-    
+
     // Execute
     let result = test_app.perform_action();
-    
+
     // Verify
     assert!(result.is_success());
 }
@@ -243,7 +243,7 @@ async fn test_integration_scenario() {
 async fn test_visual_consistency() {
     let helper = VisualTestHelper::new();
     let element = helper.create_test_element("test", "class");
-    
+
     // Apply animation
     let motion_div = view! {
         <MotionDiv
@@ -253,7 +253,7 @@ async fn test_visual_consistency() {
             )
         />
     };
-    
+
     // Wait and verify
     helper.wait_for_animation(150);
     let final_opacity = helper.get_opacity(&element);
@@ -268,14 +268,14 @@ async fn test_visual_consistency() {
 async fn test_user_workflow() {
     let helper = E2ETestHelper::new();
     let app = helper.create_test_app();
-    
+
     // Create UI elements
     let button = helper.create_button("test-button");
-    
+
     // Simulate user interaction
     helper.simulate_click(&button);
     helper.wait_for_animation(100);
-    
+
     // Verify results
     helper.assert_style_equals(&button, "background-color", "rgb(255, 0, 0)");
 }
@@ -396,7 +396,7 @@ cargo bench -- --verbose
 async fn test_animation_visual_consistency() {
     let helper = VisualTestHelper::new();
     let element = helper.create_test_element("test", "class");
-    
+
     // Apply animation
     let motion_div = view! {
         <MotionDiv
@@ -407,7 +407,7 @@ async fn test_animation_visual_consistency() {
             )
         />
     };
-    
+
     // Verify visual state
     helper.wait_for_animation(150);
     assert!((helper.get_opacity(&element) - 1.0).abs() < 0.01);
@@ -431,22 +431,22 @@ async fn test_animation_visual_consistency() {
 async fn test_complete_user_workflow() {
     let helper = E2ETestHelper::new();
     let app = helper.create_test_app();
-    
+
     // Setup UI
     let button = helper.create_button("trigger");
     let modal = helper.create_modal("content");
-    
+
     // Simulate user interaction
     helper.simulate_click(&button);
     helper.wait_for_animation(200);
-    
+
     // Verify modal is visible
     helper.assert_style_equals(&modal, "opacity", "1");
-    
+
     // Close modal
     helper.simulate_click(&button);
     helper.wait_for_animation(200);
-    
+
     // Verify modal is hidden
     helper.assert_style_equals(&modal, "opacity", "0");
 }
@@ -558,6 +558,7 @@ assert!((actual - expected).abs() < 0.01);
 This comprehensive testing strategy ensures Leptos Motion is reliable, performant, and maintainable. By following these guidelines, you can contribute to the project with confidence that your changes are well-tested and won't introduce regressions.
 
 Remember:
+
 - Write tests for new features
 - Update tests when changing existing code
 - Run the full test suite before submitting PRs

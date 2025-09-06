@@ -3,11 +3,11 @@
 #![warn(missing_docs)]
 
 pub mod drag;
-pub mod hover;
-pub mod tap;
-pub mod multi_touch;
 pub mod gesture_detector;
+pub mod hover;
+pub mod multi_touch;
 pub mod simplified_gesture_api;
+pub mod tap;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -171,34 +171,34 @@ impl Default for MultiTouchState {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum GestureEvent {
     /// Touch start event
-    TouchStart { 
+    TouchStart {
         /// The touch points that started
-        touches: Vec<TouchPoint> 
+        touches: Vec<TouchPoint>,
     },
     /// Touch move event
-    TouchMove { 
+    TouchMove {
         /// The touch points that moved
-        touches: Vec<TouchPoint> 
+        touches: Vec<TouchPoint>,
     },
     /// Touch end event
-    TouchEnd { 
+    TouchEnd {
         /// The touch points that ended
-        touches: Vec<TouchPoint> 
+        touches: Vec<TouchPoint>,
     },
     /// Gesture recognized event
-    GestureRecognized { 
+    GestureRecognized {
         /// The recognized gesture state
-        gesture: MultiTouchState 
+        gesture: MultiTouchState,
     },
     /// Gesture updated event
-    GestureUpdated { 
+    GestureUpdated {
         /// The updated gesture state
-        gesture: MultiTouchState 
+        gesture: MultiTouchState,
     },
     /// Gesture completed event
-    GestureCompleted { 
+    GestureCompleted {
         /// The completed gesture state
-        gesture: MultiTouchState 
+        gesture: MultiTouchState,
     },
 }
 
@@ -230,22 +230,22 @@ impl Default for GestureResult {
 pub trait GestureHandler {
     /// Handle gesture events
     fn handle_gesture(&mut self, event: GestureEvent) -> GestureResult;
-    
+
     /// Check if gesture is active
     fn is_active(&self) -> bool;
-    
+
     /// Reset gesture state
     fn reset(&mut self);
 }
 
+pub use gesture_detector::GestureDetector;
 /// Re-export commonly used types
 pub use multi_touch::MultiTouchGestureDetector;
-pub use gesture_detector::GestureDetector;
 
 // Re-export simplified gesture API (new public API)
 pub use simplified_gesture_api::{
-    SimplifiedGestureDetector, SimplifiedGestureConfig, SimplifiedGestureResult,
-    SimplifiedGestureType, SimplifiedVector2D, SimplifiedGestureBounds, SimplifiedGestureData
+    SimplifiedGestureBounds, SimplifiedGestureConfig, SimplifiedGestureData,
+    SimplifiedGestureDetector, SimplifiedGestureResult, SimplifiedGestureType, SimplifiedVector2D,
 };
 
 // Include simplified gesture tests

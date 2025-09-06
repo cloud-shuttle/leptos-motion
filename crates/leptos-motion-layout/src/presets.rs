@@ -1,5 +1,5 @@
 //! Layout animation presets for common transitions
-//! 
+//!
 //! This module provides predefined animation configurations for
 //! common layout changes like list reordering, grid resizing,
 //! responsive breakpoints, modal expansion, and card flipping.
@@ -87,10 +87,10 @@ impl LayoutPresetManager {
             built_in_presets: HashMap::new(),
             custom_presets: HashMap::new(),
         };
-        
+
         // Initialize built-in presets
         manager.initialize_built_in_presets();
-        
+
         manager
     }
 
@@ -108,26 +108,22 @@ impl LayoutPresetManager {
                 stagger: 50.0,
                 ..Default::default()
             },
-            required_parameters: vec![
-                PresetParameter {
-                    name: "direction".to_string(),
-                    description: "Reorder direction (horizontal/vertical)".to_string(),
-                    parameter_type: ParameterType::String,
-                    default_value: Some("vertical".to_string()),
-                    required: false,
-                },
-            ],
-            optional_parameters: vec![
-                PresetParameter {
-                    name: "stagger".to_string(),
-                    description: "Delay between item animations".to_string(),
-                    parameter_type: ParameterType::Duration,
-                    default_value: Some("50".to_string()),
-                    required: false,
-                },
-            ],
+            required_parameters: vec![PresetParameter {
+                name: "direction".to_string(),
+                description: "Reorder direction (horizontal/vertical)".to_string(),
+                parameter_type: ParameterType::String,
+                default_value: Some("vertical".to_string()),
+                required: false,
+            }],
+            optional_parameters: vec![PresetParameter {
+                name: "stagger".to_string(),
+                description: "Delay between item animations".to_string(),
+                parameter_type: ParameterType::Duration,
+                default_value: Some("50".to_string()),
+                required: false,
+            }],
         };
-        
+
         // Grid resize preset
         let grid_resize = LayoutPreset {
             name: "grid-resize".to_string(),
@@ -140,26 +136,22 @@ impl LayoutPresetManager {
                 stagger: 0.0,
                 ..Default::default()
             },
-            required_parameters: vec![
-                PresetParameter {
-                    name: "columns".to_string(),
-                    description: "Target number of columns".to_string(),
-                    parameter_type: ParameterType::Number,
-                    default_value: None,
-                    required: true,
-                },
-            ],
-            optional_parameters: vec![
-                PresetParameter {
-                    name: "maintain_aspect".to_string(),
-                    description: "Maintain item aspect ratios".to_string(),
-                    parameter_type: ParameterType::Boolean,
-                    default_value: Some("true".to_string()),
-                    required: false,
-                },
-            ],
+            required_parameters: vec![PresetParameter {
+                name: "columns".to_string(),
+                description: "Target number of columns".to_string(),
+                parameter_type: ParameterType::Number,
+                default_value: None,
+                required: true,
+            }],
+            optional_parameters: vec![PresetParameter {
+                name: "maintain_aspect".to_string(),
+                description: "Maintain item aspect ratios".to_string(),
+                parameter_type: ParameterType::Boolean,
+                default_value: Some("true".to_string()),
+                required: false,
+            }],
         };
-        
+
         // Responsive breakpoint preset
         let responsive_breakpoint = LayoutPreset {
             name: "responsive-breakpoint".to_string(),
@@ -172,26 +164,22 @@ impl LayoutPresetManager {
                 stagger: 0.0,
                 ..Default::default()
             },
-            required_parameters: vec![
-                PresetParameter {
-                    name: "breakpoint".to_string(),
-                    description: "Target breakpoint (sm/md/lg/xl)".to_string(),
-                    parameter_type: ParameterType::String,
-                    default_value: None,
-                    required: true,
-                },
-            ],
-            optional_parameters: vec![
-                PresetParameter {
-                    name: "preserve_content".to_string(),
-                    description: "Preserve content during transition".to_string(),
-                    parameter_type: ParameterType::Boolean,
-                    default_value: Some("true".to_string()),
-                    required: false,
-                },
-            ],
+            required_parameters: vec![PresetParameter {
+                name: "breakpoint".to_string(),
+                description: "Target breakpoint (sm/md/lg/xl)".to_string(),
+                parameter_type: ParameterType::String,
+                default_value: None,
+                required: true,
+            }],
+            optional_parameters: vec![PresetParameter {
+                name: "preserve_content".to_string(),
+                description: "Preserve content during transition".to_string(),
+                parameter_type: ParameterType::Boolean,
+                default_value: Some("true".to_string()),
+                required: false,
+            }],
         };
-        
+
         // Modal expand preset
         let modal_expand = LayoutPreset {
             name: "modal-expand".to_string(),
@@ -204,26 +192,22 @@ impl LayoutPresetManager {
                 stagger: 0.0,
                 ..Default::default()
             },
-            required_parameters: vec![
-                PresetParameter {
-                    name: "action".to_string(),
-                    description: "Action to perform (expand/collapse)".to_string(),
-                    parameter_type: ParameterType::String,
-                    default_value: None,
-                    required: true,
-                },
-            ],
-            optional_parameters: vec![
-                PresetParameter {
-                    name: "backdrop".to_string(),
-                    description: "Animate backdrop separately".to_string(),
-                    parameter_type: ParameterType::Boolean,
-                    default_value: Some("true".to_string()),
-                    required: false,
-                },
-            ],
+            required_parameters: vec![PresetParameter {
+                name: "action".to_string(),
+                description: "Action to perform (expand/collapse)".to_string(),
+                parameter_type: ParameterType::String,
+                default_value: None,
+                required: true,
+            }],
+            optional_parameters: vec![PresetParameter {
+                name: "backdrop".to_string(),
+                description: "Animate backdrop separately".to_string(),
+                parameter_type: ParameterType::Boolean,
+                default_value: Some("true".to_string()),
+                required: false,
+            }],
         };
-        
+
         // Card flip preset
         let card_flip = LayoutPreset {
             name: "card-flip".to_string(),
@@ -236,32 +220,33 @@ impl LayoutPresetManager {
                 stagger: 0.0,
                 ..Default::default()
             },
-            required_parameters: vec![
-                PresetParameter {
-                    name: "axis".to_string(),
-                    description: "Flip axis (x/y)".to_string(),
-                    parameter_type: ParameterType::String,
-                    default_value: Some("y".to_string()),
-                    required: false,
-                },
-            ],
-            optional_parameters: vec![
-                PresetParameter {
-                    name: "perspective".to_string(),
-                    description: "3D perspective distance".to_string(),
-                    parameter_type: ParameterType::Number,
-                    default_value: Some("1000".to_string()),
-                    required: false,
-                },
-            ],
+            required_parameters: vec![PresetParameter {
+                name: "axis".to_string(),
+                description: "Flip axis (x/y)".to_string(),
+                parameter_type: ParameterType::String,
+                default_value: Some("y".to_string()),
+                required: false,
+            }],
+            optional_parameters: vec![PresetParameter {
+                name: "perspective".to_string(),
+                description: "3D perspective distance".to_string(),
+                parameter_type: ParameterType::Number,
+                default_value: Some("1000".to_string()),
+                required: false,
+            }],
         };
-        
+
         // Add built-in presets
-        self.built_in_presets.insert("list-reorder".to_string(), list_reorder);
-        self.built_in_presets.insert("grid-resize".to_string(), grid_resize);
-        self.built_in_presets.insert("responsive-breakpoint".to_string(), responsive_breakpoint);
-        self.built_in_presets.insert("modal-expand".to_string(), modal_expand);
-        self.built_in_presets.insert("card-flip".to_string(), card_flip);
+        self.built_in_presets
+            .insert("list-reorder".to_string(), list_reorder);
+        self.built_in_presets
+            .insert("grid-resize".to_string(), grid_resize);
+        self.built_in_presets
+            .insert("responsive-breakpoint".to_string(), responsive_breakpoint);
+        self.built_in_presets
+            .insert("modal-expand".to_string(), modal_expand);
+        self.built_in_presets
+            .insert("card-flip".to_string(), card_flip);
     }
 
     /// Get a built-in preset by name
@@ -278,19 +263,19 @@ impl LayoutPresetManager {
     pub fn add_custom_preset(&mut self, preset: LayoutPreset) -> Result<(), String> {
         // Validate preset
         self.validate_preset(&preset)?;
-        
+
         // Check for name conflicts
         if self.built_in_presets.contains_key(&preset.name) {
             return Err("Cannot override built-in preset".to_string());
         }
-        
+
         if self.custom_presets.contains_key(&preset.name) {
             return Err("Custom preset with this name already exists".to_string());
         }
-        
+
         // Add preset
         self.custom_presets.insert(preset.name.clone(), preset);
-        
+
         Ok(())
     }
 
@@ -332,7 +317,7 @@ impl LayoutPresetManager {
                     .ok_or("Missing required parameter: columns")?
                     .parse::<f64>()
                     .map_err(|_| "Invalid column count")?;
-                
+
                 // For now, just return current layout as a placeholder
                 // In a real implementation, this would calculate new grid dimensions
                 let _new_width = current_layout.width() * column_count;
@@ -343,7 +328,7 @@ impl LayoutPresetManager {
                 let breakpoint = parameters
                     .get("breakpoint")
                     .ok_or("Missing required parameter: breakpoint")?;
-                
+
                 // For now, just return current layout as a placeholder
                 // In a real implementation, this would calculate new responsive layout
                 log::info!("Calculating layout for breakpoint: {}", breakpoint);
@@ -354,7 +339,7 @@ impl LayoutPresetManager {
                 let action = parameters
                     .get("action")
                     .ok_or("Missing required parameter: action")?;
-                
+
                 // For now, just return current layout as a placeholder
                 // In a real implementation, this would calculate new modal dimensions
                 log::info!("Calculating layout for modal action: {}", action);
@@ -377,10 +362,13 @@ impl LayoutPresetManager {
         // Check required parameters
         for param in &preset.required_parameters {
             if !param.required {
-                return Err(format!("Required parameter '{}' is marked as not required", param.name));
+                return Err(format!(
+                    "Required parameter '{}' is marked as not required",
+                    param.name
+                ));
             }
         }
-        
+
         // Check parameter names are unique
         let mut param_names = std::collections::HashSet::new();
         for param in &preset.required_parameters {
@@ -393,22 +381,27 @@ impl LayoutPresetManager {
                 return Err(format!("Duplicate parameter name: {}", param.name));
             }
         }
-        
+
         // Check for conflicts with required parameters
         for param in &preset.required_parameters {
             for opt_param in &preset.optional_parameters {
                 if param.name == opt_param.name {
-                    return Err(format!("Parameter '{}' appears in both required and optional lists", param.name));
+                    return Err(format!(
+                        "Parameter '{}' appears in both required and optional lists",
+                        param.name
+                    ));
                 }
             }
         }
-        
+
         Ok(())
     }
 
     /// Get preset by name (built-in or custom)
     pub fn get_preset(&self, name: &str) -> Option<&LayoutPreset> {
-        self.built_in_presets.get(name).or_else(|| self.custom_presets.get(name))
+        self.built_in_presets
+            .get(name)
+            .or_else(|| self.custom_presets.get(name))
     }
 
     /// Get all preset names
@@ -442,11 +435,15 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_built_in_presets() {
         let manager = LayoutPresetManager::new();
-        
+
         // Check that built-in presets exist
         assert!(manager.get_built_in_preset("list-reorder").is_some());
         assert!(manager.get_built_in_preset("grid-resize").is_some());
-        assert!(manager.get_built_in_preset("responsive-breakpoint").is_some());
+        assert!(
+            manager
+                .get_built_in_preset("responsive-breakpoint")
+                .is_some()
+        );
         assert!(manager.get_built_in_preset("modal-expand").is_some());
         assert!(manager.get_built_in_preset("card-flip").is_some());
     }
@@ -454,7 +451,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_custom_preset_management() {
         let mut manager = LayoutPresetManager::new();
-        
+
         // Create custom preset
         let custom_preset = LayoutPreset {
             name: "custom-test".to_string(),
@@ -464,16 +461,16 @@ mod tests {
             required_parameters: vec![],
             optional_parameters: vec![],
         };
-        
+
         // Add custom preset
         assert!(manager.add_custom_preset(custom_preset).is_ok());
-        
+
         // Check it exists
         assert!(manager.get_custom_preset("custom-test").is_some());
-        
+
         // Remove custom preset
         assert!(manager.remove_custom_preset("custom-test").is_ok());
-        
+
         // Check it's gone
         assert!(manager.get_custom_preset("custom-test").is_none());
     }
@@ -484,7 +481,7 @@ mod tests {
         let preset = manager.get_built_in_preset("list-reorder").unwrap();
         let current_layout = DomRect::new().unwrap();
         let parameters = HashMap::new();
-        
+
         let result = manager.calculate_target_layout(preset, &current_layout, &parameters);
         assert!(result.is_ok());
     }

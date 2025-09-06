@@ -1,12 +1,11 @@
 //! Shared element transitions for seamless view changes
-//! 
+//!
 //! This module provides functionality for creating smooth transitions
 //! where elements appear to move between different views or states.
 
-
 use std::collections::{HashMap, VecDeque};
-use web_sys::Element;
 use wasm_bindgen::prelude::*;
+use web_sys::Element;
 
 /// Shared element configuration
 #[derive(Debug, Clone)]
@@ -51,7 +50,10 @@ pub enum ZIndexStrategy {
 
 impl Default for ZIndexStrategy {
     fn default() -> Self {
-        ZIndexStrategy::Fixed { base: 1000, increment: 1 }
+        ZIndexStrategy::Fixed {
+            base: 1000,
+            increment: 1,
+        }
     }
 }
 
@@ -154,11 +156,15 @@ impl SharedElementManager {
     }
 
     /// Register a shared element
-    pub fn register_element(&mut self, _element: &Element, config: &SharedElementConfig) -> Result<(), String> {
+    pub fn register_element(
+        &mut self,
+        _element: &Element,
+        config: &SharedElementConfig,
+    ) -> Result<(), String> {
         // For now, just log the registration
         // In a real implementation, this would set up element tracking
         log::info!("Registering shared element with config: {:?}", config);
-        
+
         Ok(())
     }
 
@@ -167,7 +173,7 @@ impl SharedElementManager {
         // For now, just log the unregistration
         // In a real implementation, this would clean up element tracking
         log::info!("Unregistering shared element");
-        
+
         Ok(())
     }
 
@@ -180,7 +186,7 @@ impl SharedElementManager {
     ) -> Result<String, String> {
         // Generate transition ID
         let id = self.generate_transition_id();
-        
+
         // Create queued transition
         let queued = QueuedTransition {
             source_element: source_element.clone(),
@@ -188,13 +194,13 @@ impl SharedElementManager {
             config: config.clone(),
             priority: TransitionPriority::Normal,
         };
-        
+
         // Add to queue
         self.transition_queue.push_back(queued);
-        
+
         // Try to start transitions
         self.process_transition_queue()?;
-        
+
         Ok(id)
     }
 
@@ -204,7 +210,7 @@ impl SharedElementManager {
         if let Some(transition) = self.active_transitions.get_mut(transition_id) {
             transition.active = true;
             transition.start_time = js_sys::Date::now();
-            
+
             // Clone transition to avoid borrow checker issues
             let transition_clone = SharedElementTransition {
                 id: transition.id.clone(),
@@ -215,10 +221,10 @@ impl SharedElementManager {
                 active: transition.active,
                 start_time: transition.start_time,
             };
-            
+
             // Apply initial transforms
             self.apply_initial_transforms(&transition_clone)?;
-            
+
             Ok(())
         } else {
             Err("Transition not found".to_string())
@@ -229,7 +235,7 @@ impl SharedElementManager {
     pub fn update_transition(&mut self, transition_id: &str, progress: f64) -> Result<(), String> {
         if let Some(transition) = self.active_transitions.get_mut(transition_id) {
             transition.progress = progress.clamp(0.0, 1.0);
-            
+
             // Clone transition to avoid borrow checker issues
             let transition_clone = SharedElementTransition {
                 id: transition.id.clone(),
@@ -240,15 +246,15 @@ impl SharedElementManager {
                 active: transition.active,
                 start_time: transition.start_time,
             };
-            
+
             // Apply transforms based on progress
             self.apply_transition_transforms(&transition_clone)?;
-            
+
             // Check if transition is complete
             if progress >= 1.0 {
                 self.complete_transition(transition_id)?;
             }
-            
+
             Ok(())
         } else {
             Err("Transition not found".to_string())
@@ -261,10 +267,10 @@ impl SharedElementManager {
             // Reset element transforms
             self.reset_element_transforms(&transition.source_element)?;
             self.reset_element_transforms(&transition.target_element)?;
-            
+
             // Update metrics
             self.performance_metrics.total_transitions += 1;
-            
+
             Ok(())
         } else {
             Err("Transition not found".to_string())
@@ -290,15 +296,15 @@ impl SharedElementManager {
                 active: false,
                 start_time: 0.0,
             };
-            
+
             // Add to active transitions
             let id = transition.id.clone();
             self.active_transitions.insert(id.clone(), transition);
-            
+
             // Start the transition
             self.start_transition(&id)?;
         }
-        
+
         Ok(())
     }
 
@@ -307,59 +313,70 @@ impl SharedElementManager {
         // Set up initial transform state for both elements
         self.setup_transition_element(&transition.source_element, &transition.config)?;
         self.setup_transition_element(&transition.target_element, &transition.config)?;
-        
+
         log::info!(
             "Applied initial transforms for transition {}",
             transition.id
         );
-        
+
         Ok(())
     }
 
     /// Apply transforms during transition
-    fn apply_transition_transforms(&self, transition: &SharedElementTransition) -> Result<(), String> {
+    fn apply_transition_transforms(
+        &self,
+        transition: &SharedElementTransition,
+    ) -> Result<(), String> {
         // Interpolate transforms based on progress
         let progress = transition.progress;
         let inverse_progress = 1.0 - progress;
-        
+
         // Apply transforms to both source and target elements
         if let Some(source_html) = transition.source_element.dyn_ref::<web_sys::HtmlElement>() {
             let style = source_html.style();
             let opacity = inverse_progress;
-            style.set_property("opacity", &opacity.to_string())
+            style
+                .set_property("opacity", &opacity.to_string())
                 .map_err(|_| "Failed to set source opacity")?;
         }
-        
+
         if let Some(target_html) = transition.target_element.dyn_ref::<web_sys::HtmlElement>() {
             let style = target_html.style();
             let opacity = progress;
-            style.set_property("opacity", &opacity.to_string())
+            style
+                .set_property("opacity", &opacity.to_string())
                 .map_err(|_| "Failed to set target opacity")?;
         }
-        
+
         log::info!(
             "Applied transition transforms for {} at {}%",
             transition.id,
             (progress * 100.0) as i32
         );
-        
+
         Ok(())
     }
 
     /// Set up an element for transition
-    fn setup_transition_element(&self, element: &Element, _config: &SharedElementConfig) -> Result<(), String> {
+    fn setup_transition_element(
+        &self,
+        element: &Element,
+        _config: &SharedElementConfig,
+    ) -> Result<(), String> {
         if let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
             let style = html_element.style();
-            style.set_property("will-change", "transform, opacity")
+            style
+                .set_property("will-change", "transform, opacity")
                 .map_err(|_| "Failed to set will-change")?;
-            
+
             // Use default elevated z-index for transitions
-            style.set_property("z-index", "9999")
+            style
+                .set_property("z-index", "9999")
                 .map_err(|_| "Failed to set elevated z-index")?;
         } else {
             return Err("Element is not an HtmlElement".to_string());
         }
-        
+
         Ok(())
     }
 
@@ -369,11 +386,11 @@ impl SharedElementManager {
             // Reset element transforms
             self.reset_element_transforms(&transition.source_element)?;
             self.reset_element_transforms(&transition.target_element)?;
-            
+
             // Update performance metrics
             let duration = js_sys::Date::now() - transition.start_time;
             self.update_performance_metrics(duration);
-            
+
             Ok(())
         } else {
             Err("Transition not found".to_string())
@@ -385,16 +402,19 @@ impl SharedElementManager {
         // Reset CSS transforms on the element
         if let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
             let style = html_element.style();
-            style.remove_property("transform")
+            style
+                .remove_property("transform")
                 .map_err(|_| "Failed to remove transform")?;
-            style.remove_property("will-change")
+            style
+                .remove_property("will-change")
                 .map_err(|_| "Failed to remove will-change")?;
-            style.remove_property("z-index")
+            style
+                .remove_property("z-index")
                 .map_err(|_| "Failed to remove z-index")?;
         } else {
             return Err("Element is not an HtmlElement".to_string());
         }
-        
+
         log::info!("Reset element transforms");
         Ok(())
     }
@@ -408,11 +428,11 @@ impl SharedElementManager {
     fn update_performance_metrics(&mut self, duration: f64) {
         self.performance_metrics.total_transitions += 1;
         self.performance_metrics.successful_transitions += 1;
-        
+
         // Update average duration
         let total = self.performance_metrics.total_transitions as f64;
         let current_avg = self.performance_metrics.average_duration;
-        self.performance_metrics.average_duration = 
+        self.performance_metrics.average_duration =
             (current_avg * (total - 1.0) + duration) / total;
     }
 
@@ -466,14 +486,20 @@ mod tests {
     fn test_shared_element_config_default() {
         let config = SharedElementConfig::default();
         assert_eq!(config.duration, 0.3);
-        assert!(matches!(config.easing, crate::flip::EasingFunction::EaseOut));
+        assert!(matches!(
+            config.easing,
+            crate::flip::EasingFunction::EaseOut
+        ));
         assert!(!config.maintain_aspect_ratio);
         assert!(config.hardware_accelerated);
     }
 
     #[test]
     fn test_z_index_strategy_fixed() {
-        let strategy = ZIndexStrategy::Fixed { base: 1000, increment: 10 };
+        let strategy = ZIndexStrategy::Fixed {
+            base: 1000,
+            increment: 10,
+        };
         match strategy {
             ZIndexStrategy::Fixed { base, increment } => {
                 assert_eq!(base, 1000);
@@ -485,7 +511,10 @@ mod tests {
 
     #[test]
     fn test_z_index_strategy_dynamic() {
-        let strategy = ZIndexStrategy::Dynamic { base: 500, max: 2000 };
+        let strategy = ZIndexStrategy::Dynamic {
+            base: 500,
+            max: 2000,
+        };
         match strategy {
             ZIndexStrategy::Dynamic { base, max } => {
                 assert_eq!(base, 500);
@@ -497,7 +526,9 @@ mod tests {
 
     #[test]
     fn test_z_index_strategy_custom_property() {
-        let strategy = ZIndexStrategy::CustomProperty { property: "z-index".to_string() };
+        let strategy = ZIndexStrategy::CustomProperty {
+            property: "z-index".to_string(),
+        };
         match strategy {
             ZIndexStrategy::CustomProperty { property } => {
                 assert_eq!(property, "z-index");
@@ -510,7 +541,7 @@ mod tests {
     fn test_z_index_strategy_elevate() {
         let strategy = ZIndexStrategy::Elevate;
         match strategy {
-            ZIndexStrategy::Elevate => {},
+            ZIndexStrategy::Elevate => {}
             _ => panic!("Expected Elevate strategy"),
         }
     }
@@ -528,7 +559,7 @@ mod tests {
     fn test_z_index_strategy_maintain() {
         let strategy = ZIndexStrategy::Maintain;
         match strategy {
-            ZIndexStrategy::Maintain => {},
+            ZIndexStrategy::Maintain => {}
             _ => panic!("Expected Maintain strategy"),
         }
     }
@@ -540,7 +571,7 @@ mod tests {
             ZIndexStrategy::Fixed { base, increment } => {
                 assert_eq!(base, 1000);
                 assert_eq!(increment, 1);
-            },
+            }
             _ => panic!("Expected default Fixed strategy"),
         }
     }
@@ -611,14 +642,20 @@ mod tests {
 
     #[wasm_bindgen_test]
     fn test_shared_element_manager_with_fixed_strategy() {
-        let strategy = ZIndexStrategy::Fixed { base: 1000, increment: 10 };
+        let strategy = ZIndexStrategy::Fixed {
+            base: 1000,
+            increment: 10,
+        };
         let manager = SharedElementManager::new(strategy);
         assert_eq!(manager.get_active_transition_count(), 0);
     }
 
     #[wasm_bindgen_test]
     fn test_shared_element_manager_with_dynamic_strategy() {
-        let strategy = ZIndexStrategy::Dynamic { base: 500, max: 2000 };
+        let strategy = ZIndexStrategy::Dynamic {
+            base: 500,
+            max: 2000,
+        };
         let manager = SharedElementManager::new(strategy);
         assert_eq!(manager.get_active_transition_count(), 0);
     }
@@ -635,7 +672,7 @@ mod tests {
         let manager = SharedElementManager::new(ZIndexStrategy::default());
         let id1 = manager.generate_transition_id();
         let id2 = manager.generate_transition_id();
-        
+
         assert_ne!(id1, id2);
         assert!(id1.starts_with("shared_trans_"));
         assert!(id2.starts_with("shared_trans_"));

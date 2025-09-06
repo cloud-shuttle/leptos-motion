@@ -1,5 +1,5 @@
 // TDD Tests for Simplified Animation Engine API
-// 
+//
 // This module contains tests for the new simplified animation engine API
 // that hides implementation details and provides a clean, simple interface.
 
@@ -48,14 +48,14 @@ fn test_simplified_animation_engine_basic_animation() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start animation
     let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(handle.0 > 0);
-    
+
     // Check if animation is running
     assert!(engine.is_running(handle));
-    
+
     // Stop animation
     engine.stop(handle).unwrap();
     assert!(!engine.is_running(handle));
@@ -68,17 +68,17 @@ fn test_simplified_animation_engine_pause_resume() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     let handle = engine.animate(&element, &target, &transition).unwrap();
-    
+
     // Pause animation
     engine.pause(handle).unwrap();
     assert_eq!(engine.get_state(handle).unwrap(), PlaybackState::Paused);
-    
+
     // Resume animation
     engine.resume(handle).unwrap();
     assert_eq!(engine.get_state(handle).unwrap(), PlaybackState::Running);
-    
+
     // Stop animation
     engine.stop(handle).unwrap();
 }
@@ -91,20 +91,20 @@ fn test_simplified_animation_engine_multiple_animations() {
     let element2 = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start multiple animations
     let handle1 = engine.animate(&element1, &target, &transition).unwrap();
     let handle2 = engine.animate(&element2, &target, &transition).unwrap();
-    
+
     assert!(handle1.0 != handle2.0);
     assert!(engine.is_running(handle1));
     assert!(engine.is_running(handle2));
-    
+
     // Stop one animation
     engine.stop(handle1).unwrap();
     assert!(!engine.is_running(handle1));
     assert!(engine.is_running(handle2));
-    
+
     // Stop remaining animation
     engine.stop(handle2).unwrap();
     assert!(!engine.is_running(handle2));
@@ -117,16 +117,16 @@ fn test_simplified_animation_engine_error_handling() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     let handle = engine.animate(&element, &target, &transition).unwrap();
-    
+
     // Stop animation
     engine.stop(handle).unwrap();
-    
+
     // Try to stop already stopped animation (should handle gracefully)
     let result = engine.stop(handle);
     assert!(result.is_ok() || result.is_err()); // Should not panic
-    
+
     // Try to pause stopped animation (should handle gracefully)
     let result = engine.pause(handle);
     assert!(result.is_ok() || result.is_err()); // Should not panic
@@ -139,15 +139,15 @@ fn test_simplified_animation_engine_performance_metrics() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start and stop animation to generate metrics
     let handle = engine.animate(&element, &target, &transition).unwrap();
     engine.stop(handle).unwrap();
-    
+
     // Get performance metrics
     let metrics = engine.get_performance_metrics();
     assert!(metrics.is_some());
-    
+
     let metrics = metrics.unwrap();
     assert!(metrics.total_frames >= 1);
     assert!(metrics.avg_frame_time >= 0.0);
@@ -166,10 +166,10 @@ fn test_simplified_animation_engine_spring_animation() {
         mass: 1.0,
         ..Default::default()
     });
-    
+
     let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(engine.is_running(handle));
-    
+
     engine.stop(handle).unwrap();
 }
 
@@ -184,10 +184,10 @@ fn test_simplified_animation_engine_stagger_animation() {
         delay: 0.1,
         from: StaggerFrom::First,
     });
-    
+
     let handle = engine.animate(&element, &target, &transition).unwrap();
     assert!(engine.is_running(handle));
-    
+
     engine.stop(handle).unwrap();
 }
 
@@ -198,14 +198,14 @@ fn test_simplified_animation_engine_cleanup() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start multiple animations
     let handle1 = engine.animate(&element, &target, &transition).unwrap();
     let handle2 = engine.animate(&element, &target, &transition).unwrap();
-    
+
     // Cleanup all animations
     engine.cleanup().unwrap();
-    
+
     // All animations should be stopped
     assert!(!engine.is_running(handle1));
     assert!(!engine.is_running(handle2));
@@ -218,17 +218,17 @@ fn test_simplified_animation_engine_batch_operations() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start multiple animations
     let handles = vec![
         engine.animate(&element, &target, &transition).unwrap(),
         engine.animate(&element, &target, &transition).unwrap(),
         engine.animate(&element, &target, &transition).unwrap(),
     ];
-    
+
     // Batch stop all animations
     engine.stop_all().unwrap();
-    
+
     // All animations should be stopped
     for handle in handles {
         assert!(!engine.is_running(handle));
@@ -242,18 +242,18 @@ fn test_simplified_animation_engine_global_control() {
     let element = mock_element();
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     // Start animation
     let handle = engine.animate(&element, &target, &transition).unwrap();
-    
+
     // Pause all animations
     engine.pause_all().unwrap();
     assert_eq!(engine.get_state(handle).unwrap(), PlaybackState::Paused);
-    
+
     // Resume all animations
     engine.resume_all().unwrap();
     assert_eq!(engine.get_state(handle).unwrap(), PlaybackState::Running);
-    
+
     // Stop all animations
     engine.stop_all().unwrap();
     assert!(!engine.is_running(handle));

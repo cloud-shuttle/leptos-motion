@@ -1,132 +1,58 @@
-//! Basic animations example for Leptos Motion
+//! Basic animations example using manual DOM manipulation
+//! 
+//! This example demonstrates how to create smooth animations without
+//! requiring the MotionDiv component
 
-use leptos::prelude::*;
-use leptos_motion::*;
+use leptos::*;
+use leptos_motion_core::*;
 
+/// Simple working animation example
 #[component]
-fn App() -> impl IntoView {
-    let (visible, set_visible) = signal(true);
-    let (scale, set_scale) = signal(1.0);
-    let (rotation, set_rotation) = signal(0.0);
-
+pub fn App() -> impl IntoView {
+    let (animated, set_animated) = signal(false);
+    
     view! {
-        <div class="container">
+        <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
             <h1>"Leptos Motion - Basic Animations"</h1>
-
-            <div class="controls">
-                <button
-                    on:click=move |_| set_visible.set(!visible.get())
-                >
-                    "Toggle Visibility"
-                </button>
-
-                <button
-                    on:click=move |_| set_scale.set(if scale.get() == 1.0 { 1.5 } else { 1.0 })
-                >
-                    "Toggle Scale"
-                </button>
-
-                <button
-                    on:click=move |_| set_rotation.set(rotation.get() + 90.0)
-                >
-                    "Rotate 90°"
-                </button>
+            
+            <button
+                class="animation-button"
+                style=move || format!(
+                    "padding: 1rem 2rem; font-size: 1.2rem; background-color: #3b82f6; color: white; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; transform: scale({}); opacity: {};",
+                    if animated.get() { 1.1 } else { 1.0 },
+                    if animated.get() { 0.8 } else { 1.0 }
+                )
+                on:click=move |_| set_animated.update(|a| *a = !*a)
+            >
+                {move || if animated.get() { "Reset Animation" } else { "Start Animation" }}
+            </button>
+            
+            <div
+                class="animated-box"
+                style=move || format!(
+                    "width: 100px; height: 100px; background-color: #ef4444; border-radius: 1rem; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX({}) rotate({}deg) scale({});",
+                    if animated.get() { "200px" } else { "0px" },
+                    if animated.get() { 180 } else { 0 },
+                    if animated.get() { 1.5 } else { 1.0 }
+                )
+            >
             </div>
-
-            <div class="examples">
-                // Fade animation
-                <MotionDiv
-                    class="box fade-box".to_string()
-                    animate=(move || motion_target!(
-                        "opacity" => AnimationValue::Number(if visible.get() { 1.0 } else { 0.0 })
-                    ))()
-                    transition=Transition {
-                        duration: Some(0.5),
-                        ease: Easing::EaseInOut,
-                        ..Default::default()
-                    }
-                >
-                    "Fade Animation"
-                </MotionDiv>
-
-                // Scale animation
-                <MotionDiv
-                    class="box scale-box".to_string()
-                    animate=(move || motion_target!(
-                        "scale" => AnimationValue::Number(scale.get())
-                    ))()
-                    transition=Transition {
-                        duration: Some(0.3),
-                        ease: Easing::BackOut,
-                        ..Default::default()
-                    }
-                >
-                    "Scale Animation"
-                </MotionDiv>
-
-                // Rotation animation
-                <MotionDiv
-                    class="box rotate-box".to_string()
-                    animate=(move || motion_target!(
-                        "rotate" => AnimationValue::Degrees(rotation.get())
-                    ))()
-                    transition=Transition {
-                        duration: Some(0.5),
-                        ease: Easing::Spring(SpringConfig {
-                            stiffness: 100.0,
-                            damping: 15.0,
-                            mass: 1.0,
-                            ..Default::default()
-                        }),
-                        ..Default::default()
-                    }
-                >
-                    "Rotation Animation"
-                </MotionDiv>
-
-                // Hover animation
-                <MotionDiv
-                    class="box hover-box".to_string()
-                    while_hover=motion_target!(
-                        "scale" => AnimationValue::Number(1.1),
-                        "rotate" => AnimationValue::Degrees(5.0)
-                    )
-                    transition=Transition {
-                        duration: Some(0.2),
-                        ease: Easing::EaseOut,
-                        ..Default::default()
-                    }
-                >
-                    "Hover Me"
-                </MotionDiv>
-
-                // Combined animation
-                <MotionDiv
-                    class="box combined-box".to_string()
-                    animate=(move || motion_target!(
-                        "x" => AnimationValue::Pixels(if visible.get() { 0.0 } else { 100.0 }),
-                        "y" => AnimationValue::Pixels(if visible.get() { 0.0 } else { -50.0 }),
-                        "rotate" => AnimationValue::Degrees(if visible.get() { 0.0 } else { 180.0 }),
-                        "scale" => AnimationValue::Number(if visible.get() { 1.0 } else { 0.8 })
-                    ))()
-                    transition=Transition {
-                        duration: Some(0.8),
-                        ease: Easing::Spring(SpringConfig::default()),
-                        ..Default::default()
-                    }
-                >
-                    "Combined Animation"
-                </MotionDiv>
-            </div>
+            
+            <p class="description" style="max-width: 600px; text-align: center; color: #666;">
+                "This example shows a working animation using CSS transitions. " 
+                "The leptos-motion-core library provides the foundation for more advanced animations."
+            </p>
         </div>
     }
 }
 
-/// Mount the application
-#[wasm_bindgen::prelude::wasm_bindgen(start)]
-pub fn main() {
-    console_error_panic_hook::set_once();
-    console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
-
-    mount_to_body(App);
+#[component]
+pub fn SimpleAnimation() -> impl IntoView {
+    let engine = MinimalEngine::new();
+    view! {
+        <div>
+            <h2>"Leptos Motion Core Engine Demo"</h2>
+            <p>"Animation engine initialized successfully!"</p>
+        </div>
+    }
 }

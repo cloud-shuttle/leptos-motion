@@ -144,32 +144,32 @@
 <body>
     <div class="container">
         <h1>Leptos Motion Test App</h1>
-        
+
         <div class="test-section">
             <h2>Basic Animations</h2>
             <div class="test-element" data-testid="hover-animation"></div>
             <div class="test-element" data-testid="click-animation"></div>
             <div class="test-element" data-testid="animated"></div>
         </div>
-        
+
         <div class="test-section">
             <h2>Gesture Interactions</h2>
             <div class="test-element draggable" data-testid="draggable"></div>
             <div class="drop-zone" data-testid="drop-zone">Drop Zone</div>
         </div>
-        
+
         <div class="test-section">
             <h2>Layout Animations</h2>
             <button class="layout-trigger" data-testid="layout-trigger">Toggle Layout</button>
             <div class="layout-box" data-testid="layout-box"></div>
         </div>
-        
+
         <div class="test-section">
             <h2>Animation Triggers</h2>
             <button class="animation-trigger" data-testid="animation-trigger">Animate Box</button>
             <div class="animated-box" data-testid="animated-box"></div>
         </div>
-        
+
         <div class="test-section">
             <h2>Performance Tests</h2>
             <button class="performance-test" data-testid="performance-test">Test 1</button>
@@ -178,7 +178,7 @@
             <button class="performance-test" data-testid="performance-test">Test 4</button>
             <button class="performance-test" data-testid="performance-test">Test 5</button>
         </div>
-        
+
         <div class="test-section">
             <h2>List Items</h2>
             <div class="list-item" data-testid="list-item" data-index="0">Item 1</div>
@@ -194,31 +194,31 @@
             // Animation trigger
             const animationTrigger = document.querySelector('[data-testid="animation-trigger"]');
             const animatedBox = document.querySelector('[data-testid="animated-box"]');
-            
+
             if (animationTrigger && animatedBox) {
                 animationTrigger.addEventListener('click', function() {
                     animatedBox.classList.toggle('animate');
                 });
             }
-            
+
             // Layout trigger
             const layoutTrigger = document.querySelector('[data-testid="layout-trigger"]');
             const layoutBox = document.querySelector('[data-testid="layout-box"]');
-            
+
             if (layoutTrigger && layoutBox) {
                 layoutTrigger.addEventListener('click', function() {
                     layoutBox.classList.toggle('expanded');
                 });
             }
-            
+
             // Drag and drop simulation
             const draggable = document.querySelector('[data-testid="draggable"]');
             const dropZone = document.querySelector('[data-testid="drop-zone"]');
-            
+
             if (draggable && dropZone) {
                 let isDragging = false;
                 let startX, startY;
-                
+
                 draggable.addEventListener('mousedown', function(e) {
                     isDragging = true;
                     startX = e.clientX - draggable.offsetLeft;
@@ -226,32 +226,32 @@
                     draggable.style.position = 'absolute';
                     draggable.style.zIndex = 1000;
                 });
-                
+
                 document.addEventListener('mousemove', function(e) {
                     if (isDragging) {
                         draggable.style.left = (e.clientX - startX) + 'px';
                         draggable.style.top = (e.clientY - startY) + 'px';
                     }
                 });
-                
+
                 document.addEventListener('mouseup', function() {
                     isDragging = false;
                 });
-                
+
                 dropZone.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     dropZone.classList.add('drag-over');
                 });
-                
+
                 dropZone.addEventListener('dragleave', function() {
                     dropZone.classList.remove('drag-over');
                 });
             }
-            
+
             // Performance monitoring
             let frameCount = 0;
             let lastTime = performance.now();
-            
+
             function countFrames(currentTime) {
                 frameCount++;
                 if (currentTime - lastTime >= 1000) {
@@ -261,7 +261,7 @@
                 }
                 requestAnimationFrame(countFrames);
             }
-            
+
             requestAnimationFrame(countFrames);
         });
     </script>

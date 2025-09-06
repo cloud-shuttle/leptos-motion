@@ -1,5 +1,5 @@
 // TDD Tests for Simplified Gesture API
-// 
+//
 // This module contains tests for the new simplified gesture API
 // that provides a clean, simple interface for gesture handling.
 
@@ -15,7 +15,10 @@ fn mock_touch_point(id: u64, x: f64, y: f64) -> TouchPoint {
         x,
         y,
         pressure: 1.0,
-        timestamp: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as u64,
+        timestamp: std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis() as u64,
     }
 }
 
@@ -44,7 +47,7 @@ fn test_simplified_gesture_detector_with_config() {
     // Test gesture detector with custom configuration
     let config = simple_gesture_config();
     let detector = SimplifiedGestureDetector::with_config(config.clone());
-    
+
     assert!(!detector.is_active());
     assert_eq!(detector.touch_count(), 0);
     assert_eq!(detector.gesture_type(), SimplifiedGestureType::None);
@@ -55,7 +58,7 @@ fn test_simplified_gesture_detector_single_touch() {
     // Test single touch handling
     let mut detector = SimplifiedGestureDetector::new();
     let touch = mock_touch_point(1, 100.0, 100.0);
-    
+
     let result = detector.handle_touch_start(vec![touch.clone()]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::None);
     assert_eq!(detector.touch_count(), 1);
@@ -68,17 +71,17 @@ fn test_simplified_gesture_detector_pinch_gesture() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start pinch gesture
     let result = detector.handle_touch_start(vec![touch1, touch2]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Pinch);
     assert_eq!(detector.touch_count(), 2);
     assert!(detector.is_active());
-    
+
     // Move touches to create pinch
     let touch1_moved = mock_touch_point(1, 90.0, 100.0);
     let touch2_moved = mock_touch_point(2, 210.0, 100.0);
-    
+
     let result = detector.handle_touch_move(vec![touch1_moved, touch2_moved]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Pinch);
     assert!(result.scale.is_some());
@@ -91,15 +94,15 @@ fn test_simplified_gesture_detector_rotation_gesture() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start rotation gesture
     let result = detector.handle_touch_start(vec![touch1, touch2]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Pinch); // Initially detected as pinch
-    
+
     // Move touches to create rotation
     let touch1_rotated = mock_touch_point(1, 110.0, 90.0);
     let touch2_rotated = mock_touch_point(2, 190.0, 110.0);
-    
+
     let result = detector.handle_touch_move(vec![touch1_rotated, touch2_rotated]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Rotation);
     assert!(result.rotation.is_some());
@@ -112,15 +115,15 @@ fn test_simplified_gesture_detector_pan_gesture() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start pan gesture
     let result = detector.handle_touch_start(vec![touch1, touch2]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Pinch); // Initially detected as pinch
-    
+
     // Move touches to create pan
     let touch1_panned = mock_touch_point(1, 150.0, 150.0);
     let touch2_panned = mock_touch_point(2, 250.0, 150.0);
-    
+
     let result = detector.handle_touch_move(vec![touch1_panned, touch2_panned]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::Pan);
     assert!(result.translation.is_some());
@@ -134,11 +137,11 @@ fn test_simplified_gesture_detector_gesture_end() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
     assert!(detector.is_active());
-    
+
     // End gesture
     let result = detector.handle_touch_end(vec![1, 2]);
     assert_eq!(result.gesture_type, SimplifiedGestureType::None);
@@ -152,11 +155,11 @@ fn test_simplified_gesture_detector_gesture_cancel() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
     assert!(detector.is_active());
-    
+
     // Cancel gesture
     detector.cancel();
     assert!(!detector.is_active());
@@ -170,11 +173,11 @@ fn test_simplified_gesture_detector_gesture_reset() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
     assert!(detector.is_active());
-    
+
     // Reset gesture
     detector.reset();
     assert!(!detector.is_active());
@@ -188,10 +191,10 @@ fn test_simplified_gesture_detector_gesture_data() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get gesture data
     let data = detector.get_gesture_data();
     assert!(data.is_some());
@@ -206,10 +209,10 @@ fn test_simplified_gesture_detector_configuration() {
     // Test configuration management
     let mut detector = SimplifiedGestureDetector::new();
     let config = simple_gesture_config();
-    
+
     // Update configuration
     detector.update_config(config.clone());
-    
+
     // Verify configuration was updated
     let current_config = detector.get_config();
     assert_eq!(current_config.max_touches, config.max_touches);
@@ -226,10 +229,10 @@ fn test_simplified_gesture_detector_gesture_confidence() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get confidence
     let confidence = detector.get_confidence();
     assert!(confidence >= 0.0);
@@ -242,14 +245,14 @@ fn test_simplified_gesture_detector_gesture_velocity() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Move touches quickly
     let touch1_moved = mock_touch_point(1, 150.0, 150.0);
     let touch2_moved = mock_touch_point(2, 250.0, 150.0);
-    
+
     let result = detector.handle_touch_move(vec![touch1_moved, touch2_moved]);
     assert!(result.velocity.is_some());
     let velocity = result.velocity.unwrap();
@@ -262,10 +265,10 @@ fn test_simplified_gesture_detector_gesture_center() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get center
     let center = detector.get_center();
     assert!(center.is_some());
@@ -280,20 +283,20 @@ fn test_simplified_gesture_detector_gesture_duration() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get duration
     let duration = detector.get_duration();
     assert!(duration >= 0);
-    
+
     // Move touches
     let touch1_moved = mock_touch_point(1, 110.0, 110.0);
     let touch2_moved = mock_touch_point(2, 210.0, 110.0);
-    
+
     detector.handle_touch_move(vec![touch1_moved, touch2_moved]);
-    
+
     // Duration should have increased
     let new_duration = detector.get_duration();
     assert!(new_duration >= duration);
@@ -305,10 +308,10 @@ fn test_simplified_gesture_detector_gesture_bounds() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 200.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get bounds
     let bounds = detector.get_bounds();
     assert!(bounds.is_some());
@@ -325,10 +328,10 @@ fn test_simplified_gesture_detector_gesture_distance() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get distance
     let distance = detector.get_distance();
     assert!(distance.is_some());
@@ -342,10 +345,10 @@ fn test_simplified_gesture_detector_gesture_angle() {
     let mut detector = SimplifiedGestureDetector::new();
     let touch1 = mock_touch_point(1, 100.0, 100.0);
     let touch2 = mock_touch_point(2, 200.0, 100.0);
-    
+
     // Start gesture
     detector.handle_touch_start(vec![touch1, touch2]);
-    
+
     // Get angle
     let angle = detector.get_angle();
     assert!(angle.is_some());
@@ -358,7 +361,7 @@ fn test_simplified_gesture_detector_gesture_clone() {
     // Test that simplified gesture detector can be cloned
     let detector1 = SimplifiedGestureDetector::new();
     let detector2 = detector1.clone();
-    
+
     assert_eq!(detector1.is_active(), detector2.is_active());
     assert_eq!(detector1.touch_count(), detector2.touch_count());
     assert_eq!(detector1.gesture_type(), detector2.gesture_type());

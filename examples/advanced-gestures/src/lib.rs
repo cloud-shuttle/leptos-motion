@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::mount::mount_to_body;
+use leptos::prelude::*;
 
 #[component]
 fn App() -> impl IntoView {
@@ -13,7 +13,10 @@ fn App() -> impl IntoView {
     // Simple gesture handling without complex dependencies
     let handle_tap = move |_| {
         set_tap_count.update(|count| *count += 1);
-        set_gesture_info.set(format!("Tap detected! Count: {}", tap_count.get_untracked() + 1));
+        set_gesture_info.set(format!(
+            "Tap detected! Count: {}",
+            tap_count.get_untracked() + 1
+        ));
     };
 
     let handle_drag = move |event: web_sys::MouseEvent| {
@@ -31,32 +34,30 @@ fn App() -> impl IntoView {
         set_gesture_info.set(format!("Wheel zoom: Scale {:.2}", scale_change));
     };
 
-    let handle_keydown = move |event: web_sys::KeyboardEvent| {
-        match event.key().as_str() {
-            "r" => {
-                set_rotation.update(|r| *r += 15.0);
-                set_gesture_info.set("Key 'R': Rotate 15° clockwise".to_string());
-            }
-            "l" => {
-                set_rotation.update(|r| *r -= 15.0);
-                set_gesture_info.set("Key 'L': Rotate 15° counter-clockwise".to_string());
-            }
-            "z" => {
-                set_scale.update(|s| *s *= 1.1);
-                set_gesture_info.set(format!("Key 'Z': Zoom in, Scale {:.2}", scale.get()));
-            }
-            "x" => {
-                set_scale.update(|s| *s *= 0.9);
-                set_gesture_info.set(format!("Key 'X': Zoom out, Scale {:.2}", scale.get()));
-            }
-            " " => {
-                set_scale.set(1.0);
-                set_rotation.set(0.0);
-                set_position.set((0.0, 0.0));
-                set_gesture_info.set("Spacebar: Reset all transformations".to_string());
-            }
-            _ => {}
+    let handle_keydown = move |event: web_sys::KeyboardEvent| match event.key().as_str() {
+        "r" => {
+            set_rotation.update(|r| *r += 15.0);
+            set_gesture_info.set("Key 'R': Rotate 15° clockwise".to_string());
         }
+        "l" => {
+            set_rotation.update(|r| *r -= 15.0);
+            set_gesture_info.set("Key 'L': Rotate 15° counter-clockwise".to_string());
+        }
+        "z" => {
+            set_scale.update(|s| *s *= 1.1);
+            set_gesture_info.set(format!("Key 'Z': Zoom in, Scale {:.2}", scale.get()));
+        }
+        "x" => {
+            set_scale.update(|s| *s *= 0.9);
+            set_gesture_info.set(format!("Key 'X': Zoom out, Scale {:.2}", scale.get()));
+        }
+        " " => {
+            set_scale.set(1.0);
+            set_rotation.set(0.0);
+            set_position.set((0.0, 0.0));
+            set_gesture_info.set("Spacebar: Reset all transformations".to_string());
+        }
+        _ => {}
     };
 
     view! {
@@ -69,8 +70,8 @@ fn App() -> impl IntoView {
             <main class="gestures-content">
                 <section class="gesture-demo">
                     <h2>"Interactive Gesture Area"</h2>
-                    
-                    <div 
+
+                    <div
                         class="gesture-area"
                         on:click=handle_tap
                         on:mousemove=handle_drag
@@ -164,6 +165,6 @@ pub fn AdvancedGesturesApp() -> impl IntoView {
 fn main() {
     _ = console_log::init_with_level(log::Level::Info);
     console_error_panic_hook::set_once();
-    
+
     mount_to_body(|| view! { <AdvancedGesturesApp /> });
 }

@@ -1,6 +1,6 @@
 //! Tap gesture implementation
 
-use crate::{GestureEvent, GestureResult, GestureHandler};
+use crate::{GestureEvent, GestureHandler, GestureResult};
 use std::time::{Duration, Instant};
 
 /// Tap gesture handler
@@ -232,10 +232,10 @@ impl GestureHandler for TapGesture {
                     if let Some(touch) = touches.first() {
                         self.end_position = Some((touch.x, touch.y));
                         self.end_time = Some(Instant::now());
-                        
+
                         // Process the tap
                         self.update_tap_count();
-                        
+
                         self.active = false;
                     }
                 }
@@ -301,7 +301,7 @@ mod tests {
             .max_duration(Duration::from_millis(500))
             .max_distance(20.0)
             .multi_tap_timeout(Duration::from_millis(1000));
-        
+
         assert_eq!(tap.max_duration, Duration::from_millis(500));
         assert_eq!(tap.max_distance, 20.0);
         assert_eq!(tap.multi_tap_timeout, Duration::from_millis(1000));
@@ -312,15 +312,15 @@ mod tests {
         let mut tap = TapGesture::new()
             .max_duration(Duration::from_millis(100))
             .max_distance(5.0);
-        
+
         // Test valid tap
         tap.start_position = Some((0.0, 0.0));
         tap.end_position = Some((2.0, 2.0));
         tap.start_time = Some(Instant::now());
         tap.end_time = Some(Instant::now() + Duration::from_millis(50));
-        
+
         assert!(tap.is_valid_tap());
-        
+
         // Test invalid tap (too far)
         tap.end_position = Some((10.0, 10.0));
         assert!(!tap.is_valid_tap());

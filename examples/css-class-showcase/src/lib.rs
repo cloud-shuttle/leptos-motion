@@ -22,17 +22,17 @@ pub fn App() -> impl IntoView {
                 <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">
                     "Leptos Motion CSS Class Showcase"
                 </h1>
-                
+
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700">
                         "CSS Class-Based Animations"
                     </h2>
-                    
+
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-600 mb-2">
                             "Select Animation Type:"
                         </label>
-                        <select 
+                        <select
                             class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             on:change=move |ev| {
                                 let value = event_target_value(&ev);
@@ -57,7 +57,7 @@ pub fn App() -> impl IntoView {
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <AnimationCard 
+                    <AnimationCard
                         title="Fade In"
                         description="Smooth opacity transition"
                         animation_class="fade-in"
@@ -65,8 +65,8 @@ pub fn App() -> impl IntoView {
                         is_animating=is_animating
                         target_type="fadeIn"
                     />
-                    
-                    <AnimationCard 
+
+                    <AnimationCard
                         title="Slide In"
                         description="Slide from left with bounce"
                         animation_class="slide-in"
@@ -74,8 +74,8 @@ pub fn App() -> impl IntoView {
                         is_animating=is_animating
                         target_type="slideIn"
                     />
-                    
-                    <AnimationCard 
+
+                    <AnimationCard
                         title="Bounce In"
                         description="Bouncy scale animation"
                         animation_class="bounce-in"
@@ -83,8 +83,8 @@ pub fn App() -> impl IntoView {
                         is_animating=is_animating
                         target_type="bounceIn"
                     />
-                    
-                    <AnimationCard 
+
+                    <AnimationCard
                         title="Scale In"
                         description="Scale from center"
                         animation_class="scale-in"
@@ -92,8 +92,8 @@ pub fn App() -> impl IntoView {
                         is_animating=is_animating
                         target_type="scaleIn"
                     />
-                    
-                    <AnimationCard 
+
+                    <AnimationCard
                         title="Rotate In"
                         description="Rotate with scale"
                         animation_class="rotate-in"
@@ -101,8 +101,8 @@ pub fn App() -> impl IntoView {
                         is_animating=is_animating
                         target_type="rotateIn"
                     />
-                    
-                    <AnimationCard 
+
+                    <AnimationCard
                         title="Custom"
                         description="Tailwind CSS classes"
                         animation_class="animate-pulse"
@@ -118,7 +118,7 @@ pub fn App() -> impl IntoView {
                     </h3>
                     <div class="prose max-w-none text-gray-600">
                         <p class="mb-4">
-                            "This showcase demonstrates the new CSS class-based animation system in Leptos Motion. 
+                            "This showcase demonstrates the new CSS class-based animation system in Leptos Motion.
                             Instead of complex JavaScript animations, we use CSS classes for better performance and simplicity."
                         </p>
                         <ul class="list-disc list-inside space-y-2">
@@ -145,7 +145,7 @@ fn AnimationCard(
     target_type: &'static str,
 ) -> impl IntoView {
     let is_active = move || animation_type.get() == target_type && is_animating.get();
-    
+
     view! {
         <div class=move || {
             let base = "bg-white rounded-lg shadow-md p-6 border-2 transition-all duration-300";
@@ -157,7 +157,7 @@ fn AnimationCard(
         }>
             <h3 class="text-lg font-semibold mb-2 text-gray-800">{title}</h3>
             <p class="text-gray-600 mb-4">{description}</p>
-            
+
             <div class=move || {
                 let base = "w-full h-20 bg-gradient-to-r from-blue-400 to-purple-500 rounded-md flex items-center justify-center text-white font-semibold";
                 if is_active() {
@@ -168,7 +168,7 @@ fn AnimationCard(
             }>
                 {move || if is_active() { "Animating!" } else { "Ready" }}
             </div>
-            
+
             <div class="mt-4 text-sm text-gray-500">
                 <code class="bg-gray-100 px-2 py-1 rounded">{animation_class}</code>
             </div>

@@ -308,11 +308,11 @@ impl GestureRecognizer {
 
     fn attach_hover(&self) {
         let element = self.element.get().expect("Element not mounted");
-        
+
         let on_mouse_enter = move |_: MouseEvent| {
             // Trigger hover animation
         };
-        
+
         let on_mouse_leave = move |_: MouseEvent| {
             // Trigger hover exit animation
         };
@@ -347,28 +347,28 @@ impl LayoutAnimator {
             .get_computed_style(element)
             .expect("Failed to get computed styles")
             .expect("No styles found");
-        
+
         let measurement = LayoutMeasurement {
             rect,
             transform: self.parse_transform(&styles),
             border_radius: self.parse_border_radius(&styles),
         };
-        
+
         self.measurements.update(|m| {
             m.insert(id, measurement);
         });
     }
-    
+
     pub fn animate_layout_change(&self, id: String, element: &web_sys::Element) {
         let old_measurement = self.measurements.get().get(&id).cloned();
         self.measure(element, id.clone());
         let new_measurement = self.measurements.get().get(&id).cloned();
-        
+
         if let (Some(old), Some(new)) = (old_measurement, new_measurement) {
             self.perform_layout_animation(element, old, new);
         }
     }
-    
+
     fn perform_layout_animation(
         &self,
         element: &web_sys::Element,
@@ -380,7 +380,7 @@ impl LayoutAnimator {
         let scale_y = old.rect.height() / new.rect.height();
         let translate_x = old.rect.left() - new.rect.left();
         let translate_y = old.rect.top() - new.rect.top();
-        
+
         // Apply inverse transform immediately
         // Then animate back to identity
         let animation = Animation {
@@ -404,7 +404,7 @@ impl LayoutAnimator {
                 ..Default::default()
             },
         };
-        
+
         self.animation_engine.animate(animation);
     }
 }
@@ -426,9 +426,9 @@ pub fn AnimatePresence(
 ) -> impl IntoView {
     let mode = mode.unwrap_or(PresenceMode::Sync);
     let presence_context = PresenceContext::new(mode);
-    
+
     provide_context(presence_context.clone());
-    
+
     view! {
         <PresenceChild context=presence_context>
             {children()}
@@ -463,7 +463,7 @@ impl PresenceContext {
             elements.insert(element.key.clone(), element);
         });
     }
-    
+
     pub fn perform_exit_animations(&self) {
         let elements = self.exiting_elements.get();
         for (_, element) in elements.iter() {
@@ -520,23 +520,23 @@ pub fn use_scroll() -> ScrollValues {
     let scroll_y = create_rw_signal(0.0);
     let scroll_x_progress = create_rw_signal(0.0);
     let scroll_y_progress = create_rw_signal(0.0);
-    
+
     create_effect(move |_| {
         let handle_scroll = move |_| {
             let window = web_sys::window().unwrap();
             scroll_x.set(window.scroll_x().unwrap_or(0.0));
             scroll_y.set(window.scroll_y().unwrap_or(0.0));
-            
+
             // Calculate progress
             let doc = window.document().unwrap();
             let body = doc.body().unwrap();
             let doc_height = body.scroll_height() as f64;
             let window_height = window.inner_height().unwrap().as_f64().unwrap();
             let max_scroll = doc_height - window_height;
-            
+
             scroll_y_progress.set((scroll_y.get() / max_scroll).min(1.0).max(0.0));
         };
-        
+
         // Attach scroll listener
         window().add_event_listener_with_callback(
             "scroll",
@@ -545,7 +545,7 @@ pub fn use_scroll() -> ScrollValues {
                 .unchecked_ref(),
         );
     });
-    
+
     ScrollValues {
         scroll_x: scroll_x.into(),
         scroll_y: scroll_y.into(),
@@ -566,7 +566,7 @@ pub fn use_in_view(
     config: InViewConfig,
 ) -> ReadSignal<bool> {
     let in_view = create_rw_signal(false);
-    
+
     create_effect(move |_| {
         if let Some(element) = node_ref.get() {
             let observer = IntersectionObserver::new_with_options(
@@ -582,11 +582,11 @@ pub fn use_in_view(
                     .threshold(&JsValue::from_f64(config.threshold))
                     .root_margin(&config.margin),
             ).unwrap();
-            
+
             observer.observe(&element);
         }
     });
-    
+
     in_view.into()
 }
 ```
@@ -619,17 +619,17 @@ impl Variants {
             focus: None,
         }
     }
-    
+
     pub fn add_variant(mut self, name: impl Into<String>, target: AnimationTarget) -> Self {
         self.variants.insert(name.into(), target);
         self
     }
-    
+
     pub fn initial(mut self, name: impl Into<String>) -> Self {
         self.initial = Some(name.into());
         self
     }
-    
+
     pub fn animate(mut self, name: impl Into<String>) -> Self {
         self.animate = Some(name.into());
         self
@@ -658,18 +658,18 @@ impl AnimationOrchestrator {
             current_step: create_rw_signal(0),
         }
     }
-    
+
     pub fn add_step(&self, step: AnimationStep) {
         self.timeline.update(|t| t.push(step));
     }
-    
+
     pub fn play(&self) {
         let timeline = self.timeline.get();
         if let Some(step) = timeline.get(self.current_step.get()) {
             self.execute_step(step.clone());
         }
     }
-    
+
     fn execute_step(&self, step: AnimationStep) {
         match step {
             AnimationStep::Single(animation) => {
@@ -708,29 +708,29 @@ impl AnimationScheduler {
             raf_handle: Rc::new(RefCell::new(None)),
         }
     }
-    
+
     pub fn schedule(&self, animation: Animation) {
         self.pending_animations.borrow_mut().push(animation);
-        
+
         if self.raf_handle.borrow().is_none() {
             let pending = self.pending_animations.clone();
             let raf_handle = self.raf_handle.clone();
-            
+
             let callback = Closure::wrap(Box::new(move |_: f64| {
                 let animations = pending.borrow_mut().drain(..).collect::<Vec<_>>();
-                
+
                 // Batch process all animations
                 for animation in animations {
                     // Process animation
                 }
-                
+
                 *raf_handle.borrow_mut() = None;
             }) as Box<dyn FnMut(f64)>);
-            
+
             let handle = window()
                 .request_animation_frame(callback.as_ref().unchecked_ref())
                 .unwrap();
-            
+
             *self.raf_handle.borrow_mut() = Some(handle);
             callback.forget();
         }
@@ -745,10 +745,10 @@ pub struct WillChangeOptimizer {
 impl WillChangeOptimizer {
     pub fn optimize(&self, element: &web_sys::Element, properties: Vec<String>) {
         let will_change = properties.join(", ");
-        element.set_attribute("style", 
+        element.set_attribute("style",
             &format!("will-change: {}", will_change)
         ).unwrap();
-        
+
         // Remove will-change after animation
         set_timeout(move || {
             element.set_attribute("style", "will-change: auto").unwrap();
@@ -760,6 +760,7 @@ impl WillChangeOptimizer {
 ## Usage Examples
 
 ### Basic Animation
+
 ```rust
 use leptos::*;
 use leptos_motion::*;
@@ -785,6 +786,7 @@ fn App() -> impl IntoView {
 ```
 
 ### Gesture-Based Animation
+
 ```rust
 #[component]
 fn InteractiveBox() -> impl IntoView {
@@ -810,11 +812,12 @@ fn InteractiveBox() -> impl IntoView {
 ```
 
 ### Exit Animations
+
 ```rust
 #[component]
 fn ListWithExitAnimations() -> impl IntoView {
     let (items, set_items) = create_signal(vec![1, 2, 3, 4, 5]);
-    
+
     view! {
         <AnimatePresence mode=PresenceMode::Sync>
             <For
@@ -846,6 +849,7 @@ fn ListWithExitAnimations() -> impl IntoView {
 ```
 
 ### Scroll-Triggered Animations
+
 ```rust
 #[component]
 fn ScrollReveal() -> impl IntoView {
@@ -855,7 +859,7 @@ fn ScrollReveal() -> impl IntoView {
         margin: "0px".to_string(),
         once: true,
     });
-    
+
     view! {
         <MotionDiv
             node_ref=element_ref
@@ -880,30 +884,35 @@ fn ScrollReveal() -> impl IntoView {
 ## Implementation Phases
 
 ### Phase 1: Core Foundation (Weeks 1-3)
+
 - Implement basic animation engine with WAAPI and RAF support
 - Create MotionValue system
 - Build basic motion components for common HTML elements
 - Implement simple animations (transforms, opacity)
 
 ### Phase 2: Transitions & Easing (Weeks 4-5)
+
 - Implement full transition system
 - Add spring physics
 - Create custom easing functions
 - Build cubic bezier support
 
 ### Phase 3: Gestures (Weeks 6-7)
+
 - Implement hover and tap gestures
 - Build drag functionality with constraints
 - Add pan and pinch gestures
 - Create gesture composition system
 
 ### Phase 4: Advanced Features (Weeks 8-10)
+
 - Implement AnimatePresence for exit animations
 - Build layout animation system
 - Add scroll-triggered animations
 - Create variants and orchestration
 
 ### Phase 5: Optimization & Polish (Weeks 11-12)
+
 - Implement performance optimizations
 - Add will-change management
 - Build animation scheduler
@@ -917,22 +926,22 @@ fn ScrollReveal() -> impl IntoView {
 mod tests {
     use super::*;
     use wasm_bindgen_test::*;
-    
+
     #[wasm_bindgen_test]
     fn test_basic_animation() {
         // Test basic animation creation and execution
     }
-    
+
     #[wasm_bindgen_test]
     fn test_spring_physics() {
         // Test spring animation calculations
     }
-    
+
     #[wasm_bindgen_test]
     fn test_gesture_recognition() {
         // Test gesture detection and handling
     }
-    
+
     #[wasm_bindgen_test]
     fn test_animation_interruption() {
         // Test animation interruption and cleanup
@@ -951,6 +960,7 @@ mod tests {
 ## API Compatibility Notes
 
 The design maintains API familiarity with Motion while leveraging Rust's strengths:
+
 - Type safety for animation values and configurations
 - Compile-time validation of animation properties
 - Zero-cost abstractions where possible

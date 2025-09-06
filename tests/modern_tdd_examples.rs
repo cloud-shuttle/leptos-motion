@@ -1,13 +1,13 @@
 //! Modern TDD Examples using Rust 2024 Edition and latest crates
-//! 
+//!
 //! This file demonstrates modern Test-Driven Development practices
 //! using the latest Rust features and testing crates as of September 2025.
 
-use rstest::{fixture, rstest};
-use proptest::prelude::*;
-use test_case::test_case;
-use pretty_assertions::assert_eq;
 use leptos_motion_core::*;
+use pretty_assertions::assert_eq;
+use proptest::prelude::*;
+use rstest::{fixture, rstest};
+use test_case::test_case;
 
 // Modern fixture-based testing with rstest
 #[fixture]
@@ -43,17 +43,17 @@ async fn test_app() -> TestApp {
 #[case(0.75, 75.0)]
 #[case(1.0, 100.0)]
 fn test_linear_interpolation(
-    #[case] progress: f64, 
+    #[case] progress: f64,
     #[case] expected: f64,
-    animation_config: AnimationConfig
+    animation_config: AnimationConfig,
 ) {
     // Arrange
     let start = 0.0;
     let end = 100.0;
-    
+
     // Act
     let result = interpolate_linear(start, end, progress);
-    
+
     // Assert
     assert_eq!(result, expected);
 }
@@ -62,14 +62,14 @@ fn test_linear_interpolation(
 #[rstest]
 async fn test_async_animation_start(
     #[future] test_app: TestApp,
-    animation_config: AnimationConfig
+    animation_config: AnimationConfig,
 ) {
     // Arrange
     let app = test_app.await;
-    
+
     // Act
     let result = app.start_animation(animation_config).await;
-    
+
     // Assert
     assert!(result.is_success());
     assert!(result.handle().is_valid());
@@ -85,24 +85,24 @@ proptest! {
     ) {
         // Act
         let result = interpolate_linear(start, end, progress);
-        
+
         // Property: result should be between start and end
         prop_assert!(result >= start.min(end));
         prop_assert!(result <= start.max(end));
-        
+
         // Property: monotonic behavior
         let result_0 = interpolate_linear(start, end, 0.0);
         let result_1 = interpolate_linear(start, end, 1.0);
         prop_assert_eq!(result_0, start);
         prop_assert_eq!(result_1, end);
-        
+
         // Property: linearity
         let mid_progress = 0.5;
         let mid_result = interpolate_linear(start, end, mid_progress);
         let expected_mid = start + (end - start) * mid_progress;
         prop_assert!((mid_result - expected_mid).abs() < 1e-10);
     }
-    
+
     #[test]
     fn test_spring_physics_properties(
         stiffness in 10.0..1000.0f64,
@@ -115,17 +115,17 @@ proptest! {
             damping,
             mass,
         };
-        
+
         // Act
         let trajectory = spring.calculate_trajectory(0.0, 100.0, 0.1, 5.0);
-        
+
         // Property: trajectory should converge to target
         let final_position = trajectory.last().unwrap().position;
         prop_assert!((final_position - 100.0).abs() < 1.0);
-        
+
         // Property: trajectory should be non-empty
         prop_assert!(!trajectory.is_empty());
-        
+
         // Property: positions should be finite
         for point in &trajectory {
             prop_assert!(point.position.is_finite());
@@ -147,13 +147,10 @@ fn test_easing_functions(easing: Easing, input: f64) -> f64 {
 #[rstest]
 #[case("invalid_property", AnimationError::InvalidProperty { property: "invalid_property".to_string() })]
 #[case("", AnimationError::InvalidProperty { property: "".to_string() })]
-fn test_animation_error_handling(
-    #[case] property: &str,
-    #[case] expected_error: AnimationError
-) {
+fn test_animation_error_handling(#[case] property: &str, #[case] expected_error: AnimationError) {
     // Arrange
     let mut target = AnimationTarget::new();
-    
+
     // Act & Assert
     let result = target.set_property(property, AnimationValue::Number(1.0));
     assert!(matches!(result, Err(expected_error)));
@@ -163,20 +160,22 @@ fn test_animation_error_handling(
 #[rstest]
 async fn test_async_closure_animation(
     #[future] test_app: TestApp,
-    animation_config: AnimationConfig
+    animation_config: AnimationConfig,
 ) {
     // Arrange
     let app = test_app.await;
-    
+
     // Modern async closure syntax
     let animation_callback = async || {
         // Simulate animation completion
         AnimationResult::Success
     };
-    
+
     // Act
-    let result = app.start_animation_with_callback(animation_config, animation_callback).await;
-    
+    let result = app
+        .start_animation_with_callback(animation_config, animation_callback)
+        .await;
+
     // Assert
     assert!(result.is_success());
 }
@@ -194,17 +193,18 @@ fn test_let_chains_validation() {
         }),
         target: Some(AnimationTarget::new()),
     });
-    
+
     // Modern let chains syntax
-    let is_valid = if let Some(data) = data 
-        && let Some(config) = &data.config 
-        && let Some(duration) = config.duration 
-        && duration > 0.0 {
+    let is_valid = if let Some(data) = data
+        && let Some(config) = &data.config
+        && let Some(duration) = config.duration
+        && duration > 0.0
+    {
         true
     } else {
         false
     };
-    
+
     assert!(is_valid);
 }
 
@@ -213,10 +213,10 @@ fn test_let_chains_validation() {
 fn test_trait_upcasting() {
     // Arrange
     let advanced_animator = Box::new(AdvancedAnimator::new());
-    
+
     // Act - trait upcasting
     let base_animator: Box<dyn AnimationTrait> = advanced_animator;
-    
+
     // Assert
     assert!(base_animator.can_animate());
 }
@@ -225,7 +225,7 @@ fn test_trait_upcasting() {
 #[test]
 fn test_parallel_animation_processing() {
     use rayon::prelude::*;
-    
+
     // Arrange
     let animations: Vec<AnimationConfig> = (0..1000)
         .map(|i| AnimationConfig {
@@ -235,13 +235,13 @@ fn test_parallel_animation_processing() {
             repeat: RepeatConfig::None,
         })
         .collect();
-    
+
     // Act - parallel processing
     let results: Vec<f64> = animations
         .par_iter()
         .map(|config| config.duration.unwrap_or(0.0))
         .collect();
-    
+
     // Assert
     assert_eq!(results.len(), 1000);
     assert!(results.iter().all(|&duration| duration >= 0.0));
@@ -251,7 +251,7 @@ fn test_parallel_animation_processing() {
 #[divan::bench]
 fn bench_animation_interpolation() -> f64 {
     let values: Vec<f64> = (0..10000).map(|i| i as f64).collect();
-    
+
     values
         .iter()
         .map(|&x| interpolate_linear(0.0, 100.0, x / 10000.0))
@@ -261,9 +261,9 @@ fn bench_animation_interpolation() -> f64 {
 #[divan::bench]
 fn bench_parallel_animation_processing() -> f64 {
     use rayon::prelude::*;
-    
+
     let values: Vec<f64> = (0..10000).map(|i| i as f64).collect();
-    
+
     values
         .par_iter()
         .map(|&x| interpolate_linear(0.0, 100.0, x / 10000.0))
@@ -274,7 +274,7 @@ fn bench_parallel_animation_processing() -> f64 {
 #[cfg(test)]
 mod macro_tests {
     use trybuild::TestCases;
-    
+
     #[test]
     fn test_motion_macro_expansion() {
         let t = TestCases::new();
@@ -292,12 +292,16 @@ impl TestApp {
     async fn new() -> Self {
         Self {}
     }
-    
+
     async fn start_animation(&self, _config: AnimationConfig) -> AnimationResult {
         AnimationResult::Success
     }
-    
-    async fn start_animation_with_callback<F>(&self, _config: AnimationConfig, _callback: F) -> AnimationResult 
+
+    async fn start_animation_with_callback<F>(
+        &self,
+        _config: AnimationConfig,
+        _callback: F,
+    ) -> AnimationResult
     where
         F: FnOnce() -> impl std::future::Future<Output = AnimationResult>,
     {
@@ -350,23 +354,29 @@ struct SpringSimulator {
 }
 
 impl SpringSimulator {
-    fn calculate_trajectory(&self, start: f64, target: f64, dt: f64, duration: f64) -> Vec<SpringPoint> {
+    fn calculate_trajectory(
+        &self,
+        start: f64,
+        target: f64,
+        dt: f64,
+        duration: f64,
+    ) -> Vec<SpringPoint> {
         let mut trajectory = Vec::new();
         let mut position = start;
         let mut velocity = 0.0;
         let mut time = 0.0;
-        
+
         while time < duration {
             let force = -self.stiffness * (position - target) - self.damping * velocity;
             let acceleration = force / self.mass;
-            
+
             velocity += acceleration * dt;
             position += velocity * dt;
             time += dt;
-            
+
             trajectory.push(SpringPoint { position, velocity });
         }
-        
+
         trajectory
     }
 }
@@ -378,15 +388,22 @@ struct SpringPoint {
 
 // Extension trait for AnimationTarget
 trait AnimationTargetExt {
-    fn set_property(&mut self, property: &str, value: AnimationValue) -> Result<(), AnimationError>;
+    fn set_property(&mut self, property: &str, value: AnimationValue)
+    -> Result<(), AnimationError>;
 }
 
 impl AnimationTargetExt for AnimationTarget {
-    fn set_property(&mut self, property: &str, value: AnimationValue) -> Result<(), AnimationError> {
+    fn set_property(
+        &mut self,
+        property: &str,
+        value: AnimationValue,
+    ) -> Result<(), AnimationError> {
         if property.is_empty() {
-            return Err(AnimationError::InvalidProperty { property: property.to_string() });
+            return Err(AnimationError::InvalidProperty {
+                property: property.to_string(),
+            });
         }
-        
+
         self.insert(property.to_string(), value);
         Ok(())
     }

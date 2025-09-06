@@ -57,6 +57,7 @@ async fn test_ecommerce_product_workflow() {
 ```
 
 **What it tests:**
+
 - Product hover animations (scale, shadow effects)
 - Click feedback animations
 - State transitions (normal → hover → active → normal)
@@ -77,6 +78,7 @@ async fn test_form_validation_workflow() {
 ```
 
 **What it tests:**
+
 - Field focus animations (border color, box shadow)
 - Validation error animations (opacity, height transitions)
 - Form submission feedback
@@ -97,6 +99,7 @@ async fn test_image_gallery_workflow() {
 ```
 
 **What it tests:**
+
 - Thumbnail hover animations
 - Lightbox entrance/exit animations
 - Modal overlay animations
@@ -117,6 +120,7 @@ async fn test_dashboard_workflow() {
 ```
 
 **What it tests:**
+
 - Sidebar menu hover effects
 - Content section entrance animations
 - Navigation state transitions
@@ -137,6 +141,7 @@ async fn test_mobile_gesture_workflow() {
 ```
 
 **What it tests:**
+
 - Touch gesture recognition
 - Swipe navigation animations
 - Mobile-specific interactions
@@ -172,6 +177,7 @@ cargo install wasm-bindgen-cli
 ```
 
 This script:
+
 - Starts a test server
 - Runs WASM E2E tests
 - Runs Playwright tests across all browsers
@@ -278,7 +284,7 @@ test('Accessibility and Reduced Motion', async ({ page }) => {
   await page.addInitScript(() => {
     // Mock reduced motion preference
   });
-  
+
   // Test that animations are minimal or disabled
   const opacityChange = Math.abs(parseFloat(finalOpacity) - parseFloat(initialOpacity));
   expect(opacityChange).toBeLessThan(0.1);
@@ -323,7 +329,7 @@ test('Cross-Browser Compatibility', async ({ page, browserName }) => {
   // Test basic functionality
   await testElement.hover();
   await helper.assertAnimationCompleted(testElement, 'transform', 'scale(1.1)');
-  
+
   // Browser-specific assertions
   if (browserName === 'chromium') {
     // Chrome-specific tests
@@ -355,16 +361,16 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      
+
       - name: Install dependencies
         run: |
           npm install
           npx playwright install
           cargo install wasm-bindgen-cli
-      
+
       - name: Run E2E tests
         run: ./scripts/run-e2e-tests.sh
-      
+
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
@@ -437,6 +443,7 @@ jobs:
 ### Debug Tools
 
 1. **Playwright Inspector**
+
    ```bash
    npx playwright test --debug
    ```

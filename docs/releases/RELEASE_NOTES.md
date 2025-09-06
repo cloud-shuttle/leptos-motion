@@ -12,24 +12,28 @@
 ### ✨ Major Features
 
 #### **Multi-Touch Gesture Support**
+
 - **Pinch-to-Zoom**: Detect and respond to pinch gestures for scaling
 - **Rotation Detection**: Track rotation gestures with precise angle calculations
 - **Multi-Touch State Management**: Robust handling of multiple simultaneous touch points
 - **Gesture Confidence Scoring**: Intelligent gesture recognition with confidence thresholds
 
 #### **Advanced Animation Engine**
+
 - **Hybrid Animation System**: Combines RAF and WAAPI for optimal performance
 - **Spring Physics**: Natural, physics-based animations with configurable tension/friction
 - **Easing Functions**: Comprehensive easing library with custom curve support
 - **Performance Budgeting**: Smart animation scheduling to maintain 60fps
 
 #### **FLIP Layout Animations**
+
 - **Layout Change Detection**: Automatically detect position/size changes
 - **Smooth Transitions**: Animate between layout states seamlessly
 - **Performance Optimized**: GPU-accelerated layout animations
 - **Shared Element Support**: Animate elements across different views
 
 #### **DOM Integration**
+
 - **MotionDiv Component**: Animated div with full gesture support
 - **MotionSpan Component**: Inline text animations
 - **AnimatePresence**: Smooth enter/exit animations
@@ -40,18 +44,21 @@
 ## 🔧 Technical Improvements
 
 ### **Code Quality & Stability**
+
 - **TDD-Driven Development**: All gesture tests now passing with proper test coverage
 - **Error Handling**: Comprehensive error types with detailed messages
 - **Memory Management**: Efficient memory usage with object pooling
 - **Type Safety**: Strong typing throughout the animation system
 
 ### **Performance Optimizations**
+
 - **GPU Layer Management**: Smart promotion of animated elements to GPU layers
 - **Batch Processing**: Efficient DOM updates with batching
 - **Frame Budgeting**: Maintain consistent 60fps performance
 - **Memory Pooling**: Reduce allocations during animations
 
 ### **API Design**
+
 - **Motion-Inspired Syntax**: Familiar API for developers coming from Framer Motion
 - **Composable Components**: Build complex animations from simple building blocks
 - **Flexible Configuration**: Extensive customization options for all animation types
@@ -62,6 +69,7 @@
 ## 🚀 Getting Started
 
 ### **Basic Animation**
+
 ```rust
 use leptos::*;
 use leptos_motion::*;
@@ -82,6 +90,7 @@ pub fn AnimatedBox() -> impl IntoView {
 ```
 
 ### **Gesture Support**
+
 ```rust
 <MotionDiv
     while_hover=motion_target!("scale" => AnimationValue::Number(1.1))
@@ -93,6 +102,7 @@ pub fn AnimatedBox() -> impl IntoView {
 ```
 
 ### **Layout Animations**
+
 ```rust
 <MotionDiv
     layout=true
@@ -117,6 +127,7 @@ leptos-motion = { version = "0.2.0-beta.1", features = ["gestures", "layout"] }
 ```
 
 ### **Feature Flags**
+
 - `gestures` - Multi-touch and gesture support
 - `layout` - FLIP layout animations
 - `scroll` - Scroll-triggered animations
@@ -140,6 +151,7 @@ cargo test -p leptos-motion-core
 ```
 
 ### **Test Coverage**
+
 - ✅ **47 Core Tests** - Animation engine and utilities
 - ✅ **4 Gesture Tests** - Multi-touch and gesture detection
 - ✅ **3 Layout Tests** - FLIP animation system
@@ -151,6 +163,7 @@ cargo test -p leptos-motion-core
 ## 🔍 What's Working
 
 ### **Core Animation System**
+
 - ✅ RAF and WAAPI animation engines
 - ✅ Spring physics with configurable parameters
 - ✅ Easing functions and custom curves
@@ -158,6 +171,7 @@ cargo test -p leptos-motion-core
 - ✅ Memory management and object pooling
 
 ### **Gesture System**
+
 - ✅ Multi-touch detection and tracking
 - ✅ Pinch-to-zoom with scale calculations
 - ✅ Rotation detection with angle precision
@@ -165,6 +179,7 @@ cargo test -p leptos-motion-core
 - ✅ Touch point management
 
 ### **Layout System**
+
 - ✅ FLIP animation algorithm
 - ✅ Layout change detection
 - ✅ Shared element transitions
@@ -172,6 +187,7 @@ cargo test -p leptos-motion-core
 - ✅ GPU layer optimization
 
 ### **DOM Integration**
+
 - ✅ MotionDiv and MotionSpan components
 - ✅ AnimatePresence for enter/exit
 - ✅ Event handler integration
@@ -183,12 +199,14 @@ cargo test -p leptos-motion-core
 ## ⚠️ Known Limitations
 
 ### **Beta Status Considerations**
+
 - **API Stability**: Some APIs may change before 1.0 release
 - **Performance**: Further optimizations planned for production
 - **Browser Support**: Focused on modern browsers with WASM support
 - **Documentation**: Comprehensive docs coming in stable release
 
 ### **Current Limitations**
+
 - Advanced gesture combinations (work in progress)
 - Complex layout animation scenarios
 - Some edge cases in performance optimization
@@ -199,18 +217,21 @@ cargo test -p leptos-motion-core
 ## 🛣️ Roadmap to 1.0
 
 ### **Short Term (Next 2-4 weeks)**
+
 - [ ] Additional gesture types (swipe, long-press)
 - [ ] More animation presets and examples
 - [ ] Performance benchmarking and optimization
 - [ ] Comprehensive documentation
 
 ### **Medium Term (1-2 months)**
+
 - [ ] Advanced layout animation scenarios
 - [ ] Scroll-triggered animation improvements
 - [ ] Developer tools and debugging
 - [ ] Community examples and showcase
 
 ### **Long Term (3-6 months)**
+
 - [ ] 1.0 stable release
 - [ ] Ecosystem integration
 - [ ] Performance monitoring tools
@@ -229,6 +250,7 @@ We welcome contributions! Areas of focus:
 - **Examples**: Real-world use cases and demos
 
 ### **Getting Started**
+
 1. Fork the repository
 2. Create a feature branch
 3. Add tests for new functionality
@@ -248,6 +270,7 @@ We welcome contributions! Areas of focus:
 ## 🙏 Acknowledgments
 
 Special thanks to:
+
 - **Leptos Team** for the amazing framework
 - **Framer Motion** for API inspiration
 - **Community Contributors** for feedback and testing

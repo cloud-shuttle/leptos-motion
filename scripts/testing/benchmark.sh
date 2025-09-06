@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Performance Benchmarking Script for Leptos Motion
-# 
+#
 # This script runs comprehensive performance benchmarks and generates reports
 # to ensure the animation system maintains high performance standards.
 
@@ -79,7 +79,7 @@ cargo criterion --bench performance_benchmarks -- --html
 # Check if HTML report was generated
 if [ -d "$HTML_REPORT_DIR" ]; then
     print_success "HTML report generated at: $HTML_REPORT_DIR"
-    
+
     # Try to open the report (macOS)
     if command -v open >/dev/null 2>&1; then
         print_status "Opening HTML report in browser..."
@@ -167,7 +167,7 @@ if [ -d "$REPORT_DIR" ]; then
     echo "" >> "benchmark_summary.md"
     echo "| Benchmark | Mean Time | Std Dev |" >> "benchmark_summary.md"
     echo "|-----------|-----------|---------|" >> "benchmark_summary.md"
-    
+
     # This would parse the actual benchmark results
     # For now, we'll add a placeholder
     echo "| Motion Value Creation | < 1μs | < 0.1μs |" >> "benchmark_summary.md"

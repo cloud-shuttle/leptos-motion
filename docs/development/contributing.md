@@ -123,6 +123,7 @@ type(scope): description
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -132,6 +133,7 @@ Types:
 - `chore`: Maintenance tasks
 
 Examples:
+
 ```
 feat(gestures): add drag gesture support
 fix(core): resolve animation timing issue
@@ -174,10 +176,10 @@ mod tests {
     fn test_feature_name() {
         // Arrange
         let input = "test";
-        
+
         // Act
         let result = function_to_test(input);
-        
+
         // Assert
         assert_eq!(result, expected_output);
     }
@@ -295,6 +297,7 @@ We follow [Semantic Versioning](https://semver.org/):
    - Test documentation
 
 3. **Create Tag**
+
    ```bash
    git tag v0.1.0
    git push origin v0.1.0

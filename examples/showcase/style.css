@@ -1,308 +1,319 @@
 /* Modern, clean styling for the advanced animation demo */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
 }
 
 .app {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 h1 {
-    text-align: center;
-    color: white;
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-align: center;
+  color: white;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
-    color: #2d3748;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 h3 {
-    color: #4a5568;
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .demo-section {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .demo-section ul {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 .demo-section li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e2e8f0;
-    position: relative;
-    padding-left: 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+  padding-left: 1.5rem;
 }
 
 .demo-section li:before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: #48bb78;
-    font-weight: bold;
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #48bb78;
+  font-weight: bold;
 }
 
 .demo-section li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 /* Animation Boxes */
 .animated-box {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin: 1rem 0;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: transform 0.2s ease;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 1rem 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .animated-box:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .content-box {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin: 1rem 0;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 /* Button Group */
 .button-group {
-    display: flex;
-    gap: 1rem;
-    margin: 1rem 0;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
 }
 
 .button-group button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .button-group button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .button-group button:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 /* Button class for MotionDiv buttons */
 .button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: inline-block;
-    text-align: center;
-    min-width: 120px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  text-align: center;
+  min-width: 120px;
 }
 
 .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .button:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 /* Layout Demo */
 .layout-demo {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 .layout-demo button,
 .layout-demo .button {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    transition: all 0.2s ease;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
 }
 
 .layout-demo button:hover,
 .layout-demo .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .grid-layout {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
 }
 
 .list-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
 }
 
 .layout-item {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    color: #333;
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .layout-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* Gesture Box */
 .gesture-box {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-    color: #333;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin: 1rem 0;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    cursor: grab;
-    user-select: none;
-    touch-action: none;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #333;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 1rem 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
 }
 
 .gesture-box:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
 .gesture-box p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-    opacity: 0.8;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 /* Touch Box */
 .touch-box {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    color: #333;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin: 1rem 0;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 1rem 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .touch-box:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .touch-box p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-    opacity: 0.8;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .app {
-        padding: 1rem;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    .demo-section {
-        padding: 1.5rem;
-    }
-    
-    .button-group {
-        flex-direction: column;
-    }
-    
-    .button-group button {
-        width: 100%;
-    }
-    
-    .grid-layout {
-        grid-template-columns: 1fr;
-    }
+  .app {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .demo-section {
+    padding: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  .grid-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Animation Classes */
 .fade-in {
-    animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.5s ease-in;
 }
 
 .slide-up {
-    animation: slideUp 0.5s ease-out;
+  animation: slideUp 0.5s ease-out;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Performance Optimizations */
@@ -311,7 +322,7 @@ h3 {
 .layout-item,
 .gesture-box,
 .touch-box {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }

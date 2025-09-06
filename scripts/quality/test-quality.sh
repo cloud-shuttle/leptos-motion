@@ -56,45 +56,45 @@ measure_time() {
 # Check prerequisites
 check_prerequisites() {
     print_header "Checking prerequisites..."
-    
+
     local missing_tools=()
-    
+
     if ! command_exists cargo; then
         missing_tools+=("cargo")
     fi
-    
+
     if ! command_exists wasm-pack; then
         print_warning "wasm-pack is not installed. Installing..."
         cargo install wasm-pack
     fi
-    
+
     if ! command_exists cargo-nextest; then
         print_warning "cargo-nextest is not installed. Installing..."
         cargo install cargo-nextest
     fi
-    
+
     if ! command_exists cargo-tarpaulin; then
         print_warning "cargo-tarpaulin is not installed. Installing..."
         cargo install cargo-tarpaulin
     fi
-    
+
     if ! command_exists cargo-llvm-cov; then
         print_warning "cargo-llvm-cov is not installed. Installing..."
         cargo install cargo-llvm-cov
     fi
-    
+
     if [ ${#missing_tools[@]} -ne 0 ]; then
         print_error "Missing required tools: ${missing_tools[*]}"
         exit 1
     fi
-    
+
     print_success "Prerequisites check completed"
 }
 
 # Run code quality checks
 run_code_quality() {
     print_header "Running code quality checks..."
-    
+
     print_subheader "Formatting check..."
     if cargo fmt --all -- --check; then
         print_success "Code formatting is correct"
@@ -102,7 +102,7 @@ run_code_quality() {
         print_error "Code formatting issues found. Run 'cargo fmt --all' to fix."
         exit 1
     fi
-    
+
     print_subheader "Clippy linting..."
     if cargo clippy --all-targets --all-features -- -D warnings; then
         print_success "Clippy checks passed"
@@ -110,14 +110,14 @@ run_code_quality() {
         print_error "Clippy found issues"
         exit 1
     fi
-    
+
     print_subheader "Security audit..."
     if cargo audit; then
         print_success "Security audit passed"
     else
         print_warning "Security vulnerabilities found"
     fi
-    
+
     print_subheader "Check for console.log statements..."
     if grep -r "console\.log" src/ 2>/dev/null; then
         print_error "console.log statements found in source code"
@@ -130,58 +130,58 @@ run_code_quality() {
 # Run unit tests
 run_unit_tests() {
     print_header "Running unit tests..."
-    
+
     local total_duration=0
-    
+
     print_subheader "Testing leptos-motion-core..."
     duration=$(measure_time cargo test --package leptos-motion-core --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Core tests completed in ${duration}s"
-    
+
     print_subheader "Testing leptos-motion-dom..."
     duration=$(measure_time cargo test --package leptos-motion-dom --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "DOM tests completed in ${duration}s"
-    
+
     print_subheader "Testing leptos-motion-gestures..."
     duration=$(measure_time cargo test --package leptos-motion-gestures --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Gestures tests completed in ${duration}s"
-    
+
     print_subheader "Testing leptos-motion-layout..."
     duration=$(measure_time cargo test --package leptos-motion-layout --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Layout tests completed in ${duration}s"
-    
+
     print_subheader "Testing leptos-motion-scroll..."
     duration=$(measure_time cargo test --package leptos-motion-scroll --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Scroll tests completed in ${duration}s"
-    
+
     print_subheader "Testing leptos-motion-macros..."
     duration=$(measure_time cargo test --package leptos-motion-macros --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Macros tests completed in ${duration}s"
-    
+
     print_subheader "Testing main leptos-motion..."
     duration=$(measure_time cargo test --package leptos-motion --lib)
     total_duration=$(echo "$total_duration + $duration" | bc)
     print_success "Main tests completed in ${duration}s"
-    
+
     print_success "All unit tests completed in ${total_duration}s"
 }
 
 # Run integration tests
 run_integration_tests() {
     print_header "Running integration tests..."
-    
+
     print_subheader "Running WASM integration tests..."
     if wasm-pack test --headless --chrome; then
         print_success "WASM integration tests passed"
     else
         print_warning "WASM integration tests failed (may be due to browser issues)"
     fi
-    
+
     print_subheader "Running Rust integration tests..."
     if cargo test --test '*' --all-features; then
         print_success "Rust integration tests passed"
@@ -194,14 +194,14 @@ run_integration_tests() {
 # Run visual regression tests
 run_visual_tests() {
     print_header "Running visual regression tests..."
-    
+
     print_subheader "Running visual consistency tests..."
     if cargo test --test regression_tests --all-features; then
         print_success "Visual regression tests passed"
     else
         print_warning "Visual regression tests failed"
     fi
-    
+
     print_subheader "Running animation consistency tests..."
     if cargo test --test visual --all-features; then
         print_success "Animation consistency tests passed"
@@ -213,14 +213,14 @@ run_visual_tests() {
 # Run E2E tests
 run_e2e_tests() {
     print_header "Running end-to-end tests..."
-    
+
     print_subheader "Running browser E2E tests..."
     if cargo test --test browser_tests --all-features; then
         print_success "Browser E2E tests passed"
     else
         print_warning "Browser E2E tests failed"
     fi
-    
+
     print_subheader "Running user scenario tests..."
     if cargo test --test e2e --all-features; then
         print_success "User scenario tests passed"
@@ -232,21 +232,21 @@ run_e2e_tests() {
 # Run performance tests
 run_performance_tests() {
     print_header "Running performance tests..."
-    
+
     print_subheader "Running performance benchmarks..."
     if cargo bench --all-features; then
         print_success "Performance benchmarks completed"
     else
         print_warning "Performance benchmarks failed"
     fi
-    
+
     print_subheader "Running memory leak tests..."
     if cargo test --features leak-detection; then
         print_success "Memory leak tests passed"
     else
         print_warning "Memory leak tests failed"
     fi
-    
+
     print_subheader "Running bundle size check..."
     if cargo build --release --target wasm32-unknown-unknown; then
         local bundle_size=$(stat -f%z target/wasm32-unknown-unknown/release/leptos_motion.wasm 2>/dev/null || echo "0")
@@ -263,14 +263,14 @@ run_performance_tests() {
 # Run coverage tests
 run_coverage_tests() {
     print_header "Running coverage tests..."
-    
+
     print_subheader "Running code coverage with tarpaulin..."
     if cargo tarpaulin --all-features --out Html --output-dir coverage/tarpaulin; then
         print_success "Tarpaulin coverage completed"
     else
         print_warning "Tarpaulin coverage failed"
     fi
-    
+
     print_subheader "Running code coverage with llvm-cov..."
     if cargo llvm-cov --all-features --workspace --lcov --output-path coverage/llvm-cov.info; then
         print_success "LLVM coverage completed"
@@ -282,14 +282,14 @@ run_coverage_tests() {
 # Run stress tests
 run_stress_tests() {
     print_header "Running stress tests..."
-    
+
     print_subheader "Running concurrent animation tests..."
     if cargo test --test stress --all-features; then
         print_success "Concurrent animation tests passed"
     else
         print_warning "Concurrent animation tests failed"
     fi
-    
+
     print_subheader "Running memory stress tests..."
     if cargo test --test memory --all-features; then
         print_success "Memory stress tests passed"
@@ -301,9 +301,9 @@ run_stress_tests() {
 # Generate test report
 generate_report() {
     print_header "Generating test report..."
-    
+
     local report_file="test-report-$(date +%Y%m%d-%H%M%S).md"
-    
+
     cat > "$report_file" << EOF
 # Leptos Motion Test Report
 Generated: $(date)
@@ -372,10 +372,10 @@ EOF
 # Main execution
 main() {
     local start_time=$(date +%s)
-    
+
     print_header "Starting Leptos Motion Quality Test Suite"
     echo "=================================================="
-    
+
     check_prerequisites
     run_code_quality
     run_unit_tests
@@ -386,21 +386,21 @@ main() {
     run_coverage_tests
     run_stress_tests
     generate_report
-    
+
     local end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
-    
+
     print_header "Quality Test Suite Completed"
     echo "=================================="
     print_success "Total execution time: ${total_duration}s"
     print_success "All quality checks passed! 🎉"
-    
+
     echo ""
     print_status "Test artifacts:"
     echo "  - Coverage reports: coverage/"
     echo "  - Test report: test-report-*.md"
     echo "  - Benchmarks: target/criterion/"
-    
+
     echo ""
     print_status "Next steps:"
     echo "  1. Review coverage reports"

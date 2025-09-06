@@ -1,5 +1,5 @@
 // TDD Tests for Simplified Event Handling System
-// 
+//
 // This module contains tests for the new simplified event handling API
 // that removes complex event system and provides a clean, simple interface.
 
@@ -54,13 +54,13 @@ fn test_simplified_motion_props_with_animation() {
     // Test motion props with animation configuration
     let target = simple_animation_target();
     let transition = simple_transition();
-    
+
     let props = SimplifiedMotionProps::new()
         .animate(target.clone())
         .transition(transition.clone())
         .while_hover(target.clone())
         .while_tap(target.clone());
-    
+
     assert!(props.animate.is_some());
     assert!(props.transition.is_some());
     assert!(props.while_hover.is_some());
@@ -74,10 +74,9 @@ fn test_simplified_motion_props_with_drag() {
         .axis(DragAxis::Both)
         .elastic(0.2)
         .momentum(true);
-    
-    let props = SimplifiedMotionProps::new()
-        .drag(drag_config);
-    
+
+    let props = SimplifiedMotionProps::new().drag(drag_config);
+
     assert!(props.drag.is_some());
     let drag = props.drag.unwrap();
     assert_eq!(drag.axis, DragAxis::Both);
@@ -88,9 +87,8 @@ fn test_simplified_motion_props_with_drag() {
 #[wasm_bindgen_test]
 fn test_simplified_motion_props_with_layout() {
     // Test motion props with layout animation
-    let props = SimplifiedMotionProps::new()
-        .layout(true);
-    
+    let props = SimplifiedMotionProps::new().layout(true);
+
     assert!(props.layout.is_some());
     assert!(props.layout.unwrap());
 }
@@ -99,10 +97,9 @@ fn test_simplified_motion_props_with_layout() {
 fn test_simplified_motion_props_with_initial_state() {
     // Test motion props with initial state
     let initial_target = simple_animation_target();
-    
-    let props = SimplifiedMotionProps::new()
-        .initial(initial_target.clone());
-    
+
+    let props = SimplifiedMotionProps::new().initial(initial_target.clone());
+
     assert!(props.initial.is_some());
     assert_eq!(props.initial.unwrap(), initial_target);
 }
@@ -111,10 +108,9 @@ fn test_simplified_motion_props_with_initial_state() {
 fn test_simplified_motion_props_with_exit_state() {
     // Test motion props with exit state
     let exit_target = simple_animation_target();
-    
-    let props = SimplifiedMotionProps::new()
-        .exit(exit_target.clone());
-    
+
+    let props = SimplifiedMotionProps::new().exit(exit_target.clone());
+
     assert!(props.exit.is_some());
     assert_eq!(props.exit.unwrap(), exit_target);
 }
@@ -123,12 +119,15 @@ fn test_simplified_motion_props_with_exit_state() {
 fn test_simplified_motion_props_with_variants() {
     // Test motion props with variants
     let mut variants = Variants::new();
-    variants.variants.insert("visible".to_string(), simple_animation_target());
-    variants.variants.insert("hidden".to_string(), simple_animation_target());
-    
-    let props = SimplifiedMotionProps::new()
-        .variants(variants.clone());
-    
+    variants
+        .variants
+        .insert("visible".to_string(), simple_animation_target());
+    variants
+        .variants
+        .insert("hidden".to_string(), simple_animation_target());
+
+    let props = SimplifiedMotionProps::new().variants(variants.clone());
+
     assert!(props.variants.is_some());
     // Note: Variants doesn't implement PartialEq, so we can't use assert_eq!
     // We just check that it's set
@@ -140,7 +139,7 @@ fn test_simplified_motion_props_fluent_api() {
     let target = simple_animation_target();
     let transition = simple_transition();
     let drag_config = SimplifiedDragConfig::new().axis(DragAxis::X);
-    
+
     let props = SimplifiedMotionProps::new()
         .initial(target.clone())
         .animate(target.clone())
@@ -153,7 +152,7 @@ fn test_simplified_motion_props_fluent_api() {
         .drag(drag_config)
         .layout(true)
         .variants(Variants::new());
-    
+
     // All properties should be set
     assert!(props.initial.is_some());
     assert!(props.animate.is_some());
@@ -191,7 +190,7 @@ fn test_simplified_drag_config_fluent_api() {
             top: None,
             bottom: None,
         });
-    
+
     assert_eq!(drag_config.axis, DragAxis::X);
     assert_eq!(drag_config.elastic, 0.3);
     assert!(drag_config.momentum);
@@ -207,10 +206,9 @@ fn test_simplified_drag_config_constraints() {
         top: Some(0.0),
         bottom: Some(100.0),
     };
-    
-    let drag_config = SimplifiedDragConfig::new()
-        .constraints(constraints.clone());
-    
+
+    let drag_config = SimplifiedDragConfig::new().constraints(constraints.clone());
+
     assert!(drag_config.constraints.is_some());
     // Note: DragConstraints doesn't implement PartialEq, so we can't use assert_eq!
     // We just check that it's set
@@ -223,9 +221,9 @@ fn test_simplified_motion_props_clone() {
     let props1 = SimplifiedMotionProps::new()
         .animate(target.clone())
         .layout(true);
-    
+
     let props2 = props1.clone();
-    
+
     assert_eq!(props1.animate, props2.animate);
     assert_eq!(props1.layout, props2.layout);
 }
@@ -236,7 +234,7 @@ fn test_simplified_motion_props_debug() {
     let props = SimplifiedMotionProps::new()
         .animate(simple_animation_target())
         .layout(true);
-    
+
     let debug_str = format!("{:?}", props);
     assert!(debug_str.contains("SimplifiedMotionProps"));
     assert!(debug_str.contains("animate"));
@@ -246,12 +244,10 @@ fn test_simplified_motion_props_debug() {
 #[wasm_bindgen_test]
 fn test_simplified_drag_config_clone() {
     // Test that simplified drag config can be cloned
-    let drag_config1 = SimplifiedDragConfig::new()
-        .axis(DragAxis::Y)
-        .elastic(0.5);
-    
+    let drag_config1 = SimplifiedDragConfig::new().axis(DragAxis::Y).elastic(0.5);
+
     let drag_config2 = drag_config1.clone();
-    
+
     assert_eq!(drag_config1.axis, drag_config2.axis);
     assert_eq!(drag_config1.elastic, drag_config2.elastic);
 }
@@ -262,7 +258,7 @@ fn test_simplified_drag_config_debug() {
     let drag_config = SimplifiedDragConfig::new()
         .axis(DragAxis::Both)
         .elastic(0.2);
-    
+
     let debug_str = format!("{:?}", drag_config);
     assert!(debug_str.contains("SimplifiedDragConfig"));
     assert!(debug_str.contains("axis"));

@@ -13,19 +13,21 @@ This example demonstrates the new CSS class-based animation system in Leptos Mot
 ## Running the Example
 
 1. **Build the example**:
+
    ```bash
    cd examples/css-class-showcase
    wasm-pack build --target web --dev
    ```
 
 2. **Serve the files**:
+
    ```bash
    # Using Python
    python -m http.server 8000
-   
+
    # Or using Node.js
    npx serve .
-   
+
    # Or using any other static file server
    ```
 
@@ -40,15 +42,15 @@ The example defines several CSS animation classes:
 
 ```css
 .fade-in {
-    animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .slide-in {
-    animation: slideIn 0.8s ease-out;
+  animation: slideIn 0.8s ease-out;
 }
 
 .bounce-in {
-    animation: bounceIn 1s ease-out;
+  animation: bounceIn 1s ease-out;
 }
 ```
 

@@ -1,5 +1,5 @@
-use leptos::prelude::*;
 use leptos::mount::mount_to_body;
+use leptos::prelude::*;
 
 use wasm_bindgen::prelude::*;
 
@@ -10,7 +10,7 @@ pub fn App() -> impl IntoView {
     view! {
         <div class="app">
             <h1>"Leptos Motion - Ultra Minimal! 🚀"</h1>
-            
+
             <div class="demo-section">
                 <h2>"✅ Ultra Minimal Bundle Test:"</h2>
                 <ul>
@@ -23,7 +23,7 @@ pub fn App() -> impl IntoView {
 
             <div class="demo-section">
                 <h2>"🎬 Basic Leptos Demo:"</h2>
-                
+
                 <div class="animated-box">
                     "Basic Leptos Component"
                 </div>

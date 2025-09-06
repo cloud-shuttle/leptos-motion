@@ -5,7 +5,7 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
     // Listen for console messages to debug
     page.on('console', msg => console.log('PAGE LOG:', msg.text()));
     page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
-    
+
     await page.goto('/');
     // Wait for WASM to load
     await page.waitForTimeout(2000);
@@ -16,12 +16,12 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
     const hasLeptosRuntime = await page.evaluate(() => {
       return typeof (window as any).leptos !== 'undefined';
     });
-    
+
     console.log('Has Leptos runtime:', hasLeptosRuntime);
-    
+
     // Take screenshot for debugging
     await page.screenshot({ path: 'test-step1-leptos-runtime.png' });
-    
+
     // For now, we expect this to fail (TDD approach)
     expect(hasLeptosRuntime).toBe(true);
   });
@@ -36,11 +36,11 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
         hasLeptosView: typeof (window as any).leptos_view !== 'undefined',
       };
     });
-    
+
     console.log('WASM exports:', wasmExports);
-    
+
     await page.screenshot({ path: 'test-step2-wasm-exports.png' });
-    
+
     // We expect at least init to be available
     expect(wasmExports.hasInit).toBe(true);
   });
@@ -55,7 +55,7 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
         testDiv.style.color = 'white';
         testDiv.style.padding = '20px';
         document.body.appendChild(testDiv);
-        
+
         const found = document.body.contains(testDiv);
         document.body.removeChild(testDiv);
         return found;
@@ -64,11 +64,11 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
         return false;
       }
     });
-    
+
     console.log('DOM manipulation works:', domManipulationWorks);
-    
+
     await page.screenshot({ path: 'test-step3-dom-manipulation.png' });
-    
+
     expect(domManipulationWorks).toBe(true);
   });
 
@@ -79,14 +79,14 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
       const body = document.body;
       const hasContent = body.innerHTML.trim().length > 0;
       const hasTextContent = body.textContent && body.textContent.trim().length > 0;
-      
+
       return { hasContent, hasTextContent, bodyHTML: body.innerHTML, bodyText: body.textContent };
     });
-    
+
     console.log('View macro output:', hasViewMacroOutput);
-    
+
     await page.screenshot({ path: 'test-step4-view-macro.png' });
-    
+
     // We expect this to fail initially (TDD approach)
     expect(hasViewMacroOutput.hasContent).toBe(true);
   });
@@ -94,17 +94,17 @@ test.describe('Leptos v0.8.x Compatibility - TDD Approach', () => {
   test('Step 5: Check browser console for Leptos-specific errors', async ({ page }) => {
     // Wait a bit for any errors to appear
     await page.waitForTimeout(3000);
-    
+
     // Check if there are any Leptos-specific error messages
     const consoleMessages = await page.evaluate(() => {
       // This would normally capture console messages, but we're using page.on('console') above
       return 'Console messages captured via page.on("console")';
     });
-    
+
     console.log('Console messages check completed');
-    
+
     await page.screenshot({ path: 'test-step5-console-errors.png' });
-    
+
     // This test is more about observation than assertion
     expect(true).toBe(true);
   });

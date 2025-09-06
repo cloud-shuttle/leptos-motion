@@ -19,15 +19,17 @@ A static website showcasing the Leptos Motion animation library.
 ### Local Development
 
 1. **Build the website:**
+
    ```bash
    ./build.sh
    ```
 
 2. **Serve locally:**
+
    ```bash
    # Using Python
    cd dist && python3 -m http.server 8000
-   
+
    # Or using Node.js serve
    cd dist && npx serve .
    ```

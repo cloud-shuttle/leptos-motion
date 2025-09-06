@@ -1,5 +1,5 @@
 //! Simplified Gesture API
-//! 
+//!
 //! This module provides a simplified, user-friendly gesture API
 //! that provides a clean interface for gesture handling.
 
@@ -90,7 +90,7 @@ pub struct SimplifiedGestureData {
 }
 
 /// Simplified gesture detector that provides a clean, simple interface
-/// 
+///
 /// This is the main public API for gesture detection. It provides
 /// a clean, simple interface while hiding the complexity of the
 /// underlying multi-touch gesture detection system.
@@ -110,7 +110,7 @@ impl SimplifiedGestureDetector {
     pub fn new() -> Self {
         Self::with_config(SimplifiedGestureConfig::default())
     }
-    
+
     /// Create a new simplified gesture detector with custom configuration
     pub fn with_config(config: SimplifiedGestureConfig) -> Self {
         let internal_config = GestureConfig {
@@ -123,7 +123,7 @@ impl SimplifiedGestureDetector {
             max_touches: config.max_touches,
             timeout_ms: config.timeout,
         };
-        
+
         Self {
             internal_detector: MultiTouchGestureDetector::new(internal_config),
             current_gesture: SimplifiedGestureType::None,
@@ -131,48 +131,54 @@ impl SimplifiedGestureDetector {
             last_result: SimplifiedGestureResult::default(),
         }
     }
-    
+
     /// Handle touch start event
     pub fn handle_touch_start(&mut self, touches: Vec<TouchPoint>) -> SimplifiedGestureResult {
         let result = self.internal_detector.handle_touch_start(touches);
         self.current_gesture = self.convert_gesture_type(result.gesture_type.clone());
-        
+
         if self.current_gesture != SimplifiedGestureType::None {
             self.gesture_start = Some(Instant::now());
         }
-        
+
         self.last_result = self.create_simplified_result(result);
         self.last_result.clone()
     }
-    
+
     /// Handle touch move event
     pub fn handle_touch_move(&mut self, touches: Vec<TouchPoint>) -> SimplifiedGestureResult {
         let result = self.internal_detector.handle_touch_move(touches);
         self.current_gesture = self.convert_gesture_type(result.gesture_type.clone());
-        
+
         self.last_result = self.create_simplified_result(result);
         self.last_result.clone()
     }
-    
+
     /// Handle touch end event
     pub fn handle_touch_end(&mut self, touch_ids: Vec<u64>) -> SimplifiedGestureResult {
         // Create empty touch points for the touch IDs that ended
-        let touches: Vec<TouchPoint> = touch_ids.into_iter().map(|id| TouchPoint {
-            id,
-            x: 0.0,
-            y: 0.0,
-            pressure: 0.0,
-            timestamp: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as u64,
-        }).collect();
-        
+        let touches: Vec<TouchPoint> = touch_ids
+            .into_iter()
+            .map(|id| TouchPoint {
+                id,
+                x: 0.0,
+                y: 0.0,
+                pressure: 0.0,
+                timestamp: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis() as u64,
+            })
+            .collect();
+
         let result = self.internal_detector.handle_touch_end(touches);
         self.current_gesture = SimplifiedGestureType::None;
         self.gesture_start = None;
-        
+
         self.last_result = self.create_simplified_result(result);
         self.last_result.clone()
     }
-    
+
     /// Cancel current gesture
     pub fn cancel(&mut self) {
         self.internal_detector.reset();
@@ -180,7 +186,7 @@ impl SimplifiedGestureDetector {
         self.gesture_start = None;
         self.last_result = SimplifiedGestureResult::default();
     }
-    
+
     /// Reset gesture detector
     pub fn reset(&mut self) {
         self.internal_detector.reset();
@@ -188,28 +194,28 @@ impl SimplifiedGestureDetector {
         self.gesture_start = None;
         self.last_result = SimplifiedGestureResult::default();
     }
-    
+
     /// Check if a gesture is currently active
     pub fn is_active(&self) -> bool {
         self.internal_detector.is_active()
     }
-    
+
     /// Get the number of active touches
     pub fn touch_count(&self) -> usize {
         self.internal_detector.get_state().touches.len()
     }
-    
+
     /// Get the current gesture type
     pub fn gesture_type(&self) -> SimplifiedGestureType {
         self.current_gesture
     }
-    
+
     /// Get gesture data
     pub fn get_gesture_data(&self) -> Option<SimplifiedGestureData> {
         if !self.is_active() {
             return None;
         }
-        
+
         Some(SimplifiedGestureData {
             gesture_type: self.current_gesture,
             touch_count: self.touch_count(),
@@ -222,50 +228,59 @@ impl SimplifiedGestureDetector {
             duration: self.get_duration(),
         })
     }
-    
+
     /// Get gesture confidence
     pub fn get_confidence(&self) -> f64 {
         // For now, return a default confidence since it's not available in MultiTouchState
         0.8
     }
-    
+
     /// Get gesture center point
     pub fn get_center(&self) -> Option<SimplifiedVector2D> {
         if self.touch_count() < 2 {
             return None;
         }
-        
+
         let state = self.internal_detector.get_state();
         let touches: Vec<&TouchPoint> = state.touches.values().collect();
-        
+
         if touches.len() < 2 {
             return None;
         }
-        
+
         let center_x = touches.iter().map(|t| t.x).sum::<f64>() / touches.len() as f64;
         let center_y = touches.iter().map(|t| t.y).sum::<f64>() / touches.len() as f64;
-        
-        Some(SimplifiedVector2D { x: center_x, y: center_y })
+
+        Some(SimplifiedVector2D {
+            x: center_x,
+            y: center_y,
+        })
     }
-    
+
     /// Get gesture bounds
     pub fn get_bounds(&self) -> Option<SimplifiedGestureBounds> {
         if self.touch_count() < 2 {
             return None;
         }
-        
+
         let state = self.internal_detector.get_state();
         let touches: Vec<&TouchPoint> = state.touches.values().collect();
-        
+
         if touches.is_empty() {
             return None;
         }
-        
+
         let min_x = touches.iter().map(|t| t.x).fold(f64::INFINITY, f64::min);
-        let max_x = touches.iter().map(|t| t.x).fold(f64::NEG_INFINITY, f64::max);
+        let max_x = touches
+            .iter()
+            .map(|t| t.x)
+            .fold(f64::NEG_INFINITY, f64::max);
         let min_y = touches.iter().map(|t| t.y).fold(f64::INFINITY, f64::min);
-        let max_y = touches.iter().map(|t| t.y).fold(f64::NEG_INFINITY, f64::max);
-        
+        let max_y = touches
+            .iter()
+            .map(|t| t.y)
+            .fold(f64::NEG_INFINITY, f64::max);
+
         Some(SimplifiedGestureBounds {
             min_x,
             max_x,
@@ -273,43 +288,43 @@ impl SimplifiedGestureDetector {
             max_y,
         })
     }
-    
+
     /// Get gesture distance
     pub fn get_distance(&self) -> Option<f64> {
         if self.touch_count() < 2 {
             return None;
         }
-        
+
         let state = self.internal_detector.get_state();
         let touches: Vec<&TouchPoint> = state.touches.values().collect();
-        
+
         if touches.len() < 2 {
             return None;
         }
-        
+
         let dx = touches[1].x - touches[0].x;
         let dy = touches[1].y - touches[0].y;
         Some((dx * dx + dy * dy).sqrt())
     }
-    
+
     /// Get gesture angle
     pub fn get_angle(&self) -> Option<f64> {
         if self.touch_count() < 2 {
             return None;
         }
-        
+
         let state = self.internal_detector.get_state();
         let touches: Vec<&TouchPoint> = state.touches.values().collect();
-        
+
         if touches.len() < 2 {
             return None;
         }
-        
+
         let dx = touches[1].x - touches[0].x;
         let dy = touches[1].y - touches[0].y;
         Some(dy.atan2(dx).to_degrees())
     }
-    
+
     /// Get gesture duration
     pub fn get_duration(&self) -> u64 {
         if let Some(start) = self.gesture_start {
@@ -318,7 +333,7 @@ impl SimplifiedGestureDetector {
             0
         }
     }
-    
+
     /// Update configuration
     pub fn update_config(&mut self, config: SimplifiedGestureConfig) {
         let internal_config = GestureConfig {
@@ -331,17 +346,17 @@ impl SimplifiedGestureDetector {
             max_touches: config.max_touches,
             timeout_ms: config.timeout,
         };
-        
+
         self.internal_detector.update_config(internal_config);
     }
-    
+
     /// Get current configuration
     pub fn get_config(&self) -> SimplifiedGestureConfig {
         // For now, return default config since we can't access internal config
         // This could be improved by storing the config in the simplified detector
         SimplifiedGestureConfig::default()
     }
-    
+
     /// Convert internal gesture type to simplified gesture type
     fn convert_gesture_type(&self, gesture_type: MultiTouchGestureType) -> SimplifiedGestureType {
         match gesture_type {
@@ -353,15 +368,15 @@ impl SimplifiedGestureDetector {
             MultiTouchGestureType::MultiTap => SimplifiedGestureType::None,
         }
     }
-    
+
     /// Create simplified gesture result from internal result
     fn create_simplified_result(&self, result: GestureResult) -> SimplifiedGestureResult {
         SimplifiedGestureResult {
             gesture_type: self.convert_gesture_type(result.gesture_type),
-            scale: None, // Not available in GestureResult
-            rotation: None, // Not available in GestureResult
+            scale: None,       // Not available in GestureResult
+            rotation: None,    // Not available in GestureResult
             translation: None, // Not available in GestureResult
-            velocity: None, // Not available in GestureResult
+            velocity: None,    // Not available in GestureResult
             center: self.get_center(),
             confidence: result.confidence,
             duration: self.get_duration(),
@@ -425,37 +440,37 @@ impl SimplifiedGestureConfig {
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     /// Set maximum number of touches
     pub fn max_touches(mut self, max_touches: usize) -> Self {
         self.max_touches = max_touches;
         self
     }
-    
+
     /// Set minimum distance for gesture detection
     pub fn min_distance(mut self, min_distance: f64) -> Self {
         self.min_distance = min_distance;
         self
     }
-    
+
     /// Set gesture timeout
     pub fn timeout(mut self, timeout: u64) -> Self {
         self.timeout = timeout;
         self
     }
-    
+
     /// Enable pinch gesture detection
     pub fn enable_pinch(mut self, enable: bool) -> Self {
         self.enable_pinch = enable;
         self
     }
-    
+
     /// Enable rotation gesture detection
     pub fn enable_rotation(mut self, enable: bool) -> Self {
         self.enable_rotation = enable;
         self
     }
-    
+
     /// Enable pan gesture detection
     pub fn enable_pan(mut self, enable: bool) -> Self {
         self.enable_pan = enable;
@@ -481,7 +496,7 @@ impl Default for SimplifiedGestureResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_simplified_gesture_detector_creation() {
         let detector = SimplifiedGestureDetector::new();
@@ -489,18 +504,18 @@ mod tests {
         assert_eq!(detector.touch_count(), 0);
         assert_eq!(detector.gesture_type(), SimplifiedGestureType::None);
     }
-    
+
     #[test]
     fn test_simplified_gesture_detector_with_config() {
         let config = SimplifiedGestureConfig::new()
             .max_touches(3)
             .min_distance(5.0);
-        
+
         let detector = SimplifiedGestureDetector::with_config(config);
         assert!(!detector.is_active());
         assert_eq!(detector.touch_count(), 0);
     }
-    
+
     #[test]
     fn test_simplified_gesture_config_fluent_api() {
         let config = SimplifiedGestureConfig::new()
@@ -510,7 +525,7 @@ mod tests {
             .enable_pinch(true)
             .enable_rotation(false)
             .enable_pan(true);
-        
+
         assert_eq!(config.max_touches, 5);
         assert_eq!(config.min_distance, 10.0);
         assert_eq!(config.timeout, 1000);
@@ -518,17 +533,17 @@ mod tests {
         assert!(!config.enable_rotation);
         assert!(config.enable_pan);
     }
-    
+
     #[test]
     fn test_simplified_gesture_detector_clone() {
         let detector1 = SimplifiedGestureDetector::new();
         let detector2 = detector1.clone();
-        
+
         assert_eq!(detector1.is_active(), detector2.is_active());
         assert_eq!(detector1.touch_count(), detector2.touch_count());
         assert_eq!(detector1.gesture_type(), detector2.gesture_type());
     }
-    
+
     #[test]
     fn test_simplified_gesture_detector_debug() {
         let detector = SimplifiedGestureDetector::new();

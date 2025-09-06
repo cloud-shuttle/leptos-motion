@@ -97,7 +97,7 @@ fn interpolate_color(from: &str, to: &str, progress: f64) -> String {
 /// Color parsing and interpolation utilities
 pub mod color {
     use super::lerp;
-    
+
     /// RGBA color representation
     #[derive(Debug, Clone, Copy, PartialEq)]
     pub struct Rgba {
@@ -110,7 +110,7 @@ pub mod color {
         /// Alpha component (0.0 - 1.0)
         pub a: f64,
     }
-    
+
     impl Rgba {
         /// Create a new RGBA color
         pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
@@ -121,7 +121,7 @@ pub mod color {
                 a: a.clamp(0.0, 1.0),
             }
         }
-        
+
         /// Interpolate between two colors
         pub fn interpolate(&self, to: &Self, progress: f64) -> Self {
             Self {
@@ -131,7 +131,7 @@ pub mod color {
                 a: lerp(self.a, to.a, progress),
             }
         }
-        
+
         /// Convert to CSS rgba() string
         pub fn to_css(&self) -> String {
             if self.a < 1.0 {
@@ -140,7 +140,7 @@ pub mod color {
                 format!("rgb({}, {}, {})", self.r, self.g, self.b)
             }
         }
-        
+
         /// Parse color from hex string
         pub fn from_hex(hex: &str) -> Option<Self> {
             let hex = hex.trim_start_matches('#');
@@ -160,7 +160,7 @@ pub mod color {
 mod tests {
     use super::*;
     use approx::assert_relative_eq;
-    
+
     #[test]
     fn test_lerp() {
         assert_relative_eq!(lerp(0.0, 100.0, 0.0), 0.0);
@@ -168,21 +168,21 @@ mod tests {
         assert_relative_eq!(lerp(0.0, 100.0, 1.0), 100.0);
         assert_relative_eq!(lerp(50.0, 150.0, 0.25), 75.0);
     }
-    
+
     #[test]
     fn test_animation_value_interpolation() {
         let from = AnimationValue::Number(0.0);
         let to = AnimationValue::Number(100.0);
-        
+
         let mid = from.interpolate(&to, 0.5);
         assert_eq!(mid, AnimationValue::Number(50.0));
-        
+
         let pixels_from = AnimationValue::Pixels(10.0);
         let pixels_to = AnimationValue::Pixels(20.0);
         let pixels_mid = pixels_from.interpolate(&pixels_to, 0.3);
         assert_eq!(pixels_mid, AnimationValue::Pixels(13.0));
     }
-    
+
     #[test]
     fn test_transform_interpolation() {
         let from = Transform {
@@ -191,20 +191,20 @@ mod tests {
             scale: Some(1.0),
             ..Default::default()
         };
-        
+
         let to = Transform {
             x: Some(100.0),
             y: Some(50.0),
             scale: Some(2.0),
             ..Default::default()
         };
-        
+
         let mid = from.interpolate(&to, 0.5);
         assert_eq!(mid.x, Some(50.0));
         assert_eq!(mid.y, Some(25.0));
         assert_eq!(mid.scale, Some(1.5));
     }
-    
+
     #[test]
     fn test_option_interpolation() {
         assert_eq!(interpolate_option(Some(0.0), Some(100.0), 0.5), Some(50.0));
@@ -212,38 +212,38 @@ mod tests {
         assert_eq!(interpolate_option(None, Some(20.0), 0.5), Some(10.0));
         assert_eq!(interpolate_option(None, None, 0.5), None);
     }
-    
+
     #[test]
     fn test_rgba_color() {
         use super::color::Rgba;
-        
+
         let red = Rgba::new(255.0, 0.0, 0.0, 1.0);
         let blue = Rgba::new(0.0, 0.0, 255.0, 1.0);
-        
+
         let purple = red.interpolate(&blue, 0.5);
         assert_relative_eq!(purple.r, 127.5, epsilon = 0.1);
         assert_relative_eq!(purple.g, 0.0);
         assert_relative_eq!(purple.b, 127.5, epsilon = 0.1);
-        
+
         assert_eq!(red.to_css(), "rgb(255, 0, 0)");
-        
+
         let transparent_red = Rgba::new(255.0, 0.0, 0.0, 0.5);
         assert_eq!(transparent_red.to_css(), "rgba(255, 0, 0, 0.5)");
     }
-    
+
     #[test]
     fn test_hex_color_parsing() {
         use super::color::Rgba;
-        
+
         let red = Rgba::from_hex("#ff0000").unwrap();
         assert_eq!(red.r, 255.0);
         assert_eq!(red.g, 0.0);
         assert_eq!(red.b, 0.0);
         assert_eq!(red.a, 1.0);
-        
+
         let green = Rgba::from_hex("00ff00").unwrap();
         assert_eq!(green.g, 255.0);
-        
+
         assert!(Rgba::from_hex("invalid").is_none());
     }
 }

@@ -9,7 +9,7 @@ impl Easing {
     /// Evaluate the easing function at time t (0.0 to 1.0)
     pub fn evaluate(&self, t: f64) -> f64 {
         let t = t.clamp(0.0, 1.0);
-        
+
         match self {
             Easing::Linear => linear(t),
             Easing::EaseIn => ease_in_quad(t),
@@ -30,7 +30,7 @@ impl Easing {
             Easing::Bezier(x1, y1, x2, y2) => cubic_bezier(*x1, *y1, *x2, *y2, t),
         }
     }
-    
+
     /// Get a function pointer for this easing
     pub fn as_fn(&self) -> Box<dyn Fn(f64) -> f64> {
         match self {
@@ -161,7 +161,7 @@ pub fn back_out(t: f64) -> f64 {
 pub fn back_in_out(t: f64) -> f64 {
     let c1 = BACK_CONSTANT;
     let c2 = c1 * 1.525;
-    
+
     if t < 0.5 {
         let t = 2.0 * t;
         (t * t * ((c2 + 1.0) * t - c2)) / 2.0
@@ -180,7 +180,7 @@ pub fn cubic_bezier(_x1: f64, y1: f64, _x2: f64, y2: f64, t: f64) -> f64 {
     let mt = 1.0 - t;
     let mt2 = mt * mt;
     let _mt3 = mt2 * mt;
-    
+
     // Cubic bezier curve: B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
     // P₀ = (0,0), P₃ = (1,1), P₁ = (x1,y1), P₂ = (x2,y2)
     3.0 * mt2 * t * y1 + 3.0 * mt * t2 * y2 + t3
@@ -189,19 +189,19 @@ pub fn cubic_bezier(_x1: f64, y1: f64, _x2: f64, y2: f64, t: f64) -> f64 {
 /// Common easing presets
 pub mod presets {
     use super::*;
-    
+
     /// Material Design ease
     pub const EASE: Easing = Easing::Bezier(0.4, 0.0, 0.2, 1.0);
-    
+
     /// Material Design ease in
     pub const EASE_IN: Easing = Easing::Bezier(0.4, 0.0, 1.0, 1.0);
-    
+
     /// Material Design ease out
     pub const EASE_OUT: Easing = Easing::Bezier(0.0, 0.0, 0.2, 1.0);
-    
+
     /// Material Design ease in out
     pub const EASE_IN_OUT: Easing = Easing::Bezier(0.4, 0.0, 0.2, 1.0);
-    
+
     /// Smooth spring
     pub const SPRING_SMOOTH: Easing = Easing::Spring(SpringConfig {
         stiffness: 100.0,
@@ -211,7 +211,7 @@ pub mod presets {
         rest_delta: 0.01,
         rest_speed: 0.01,
     });
-    
+
     /// Bouncy spring
     pub const SPRING_BOUNCY: Easing = Easing::Spring(SpringConfig {
         stiffness: 200.0,
@@ -221,7 +221,7 @@ pub mod presets {
         rest_delta: 0.01,
         rest_speed: 0.01,
     });
-    
+
     /// Gentle spring
     pub const SPRING_GENTLE: Easing = Easing::Spring(SpringConfig {
         stiffness: 50.0,
@@ -237,14 +237,14 @@ pub mod presets {
 mod tests {
     use super::*;
     use approx::assert_relative_eq;
-    
+
     #[test]
     fn test_linear_easing() {
         assert_eq!(linear(0.0), 0.0);
         assert_eq!(linear(0.5), 0.5);
         assert_eq!(linear(1.0), 1.0);
     }
-    
+
     #[test]
     fn test_ease_bounds() {
         let easings = vec![
@@ -258,12 +258,12 @@ mod tests {
             circ_out,
             circ_in_out,
         ];
-        
+
         for easing in easings {
             // All easing functions should start at 0 and end at 1
             assert_relative_eq!(easing(0.0), 0.0, epsilon = 1e-10);
             assert_relative_eq!(easing(1.0), 1.0, epsilon = 1e-10);
-            
+
             // Should be monotonic (non-decreasing)
             let mut prev = easing(0.0);
             for i in 1..=10 {
@@ -274,7 +274,7 @@ mod tests {
             }
         }
     }
-    
+
     #[test]
     fn test_back_easing_overshoot() {
         // Back easing should overshoot (go beyond 1.0 before settling)
@@ -286,7 +286,7 @@ mod tests {
         }
         assert!(max > 1.0, "Back easing should overshoot");
     }
-    
+
     #[test]
     fn test_cubic_bezier() {
         // Standard ease
@@ -294,13 +294,13 @@ mod tests {
         assert_relative_eq!(ease(0.0), 0.0, epsilon = 1e-3);
         assert_relative_eq!(ease(1.0), 1.0, epsilon = 1e-3);
     }
-    
+
     #[test]
     fn test_easing_evaluate() {
         let easing = Easing::EaseInOut;
         assert_eq!(easing.evaluate(0.0), 0.0);
         assert_eq!(easing.evaluate(1.0), 1.0);
-        
+
         // Test clamping
         assert_eq!(easing.evaluate(-0.1), 0.0);
         assert_eq!(easing.evaluate(1.1), 1.0);

@@ -1,124 +1,130 @@
 # Leptos Motion Documentation
 
-Welcome to the Leptos Motion documentation. This directory contains comprehensive guides, assessments, and roadmaps for the animation library.
+Welcome to the comprehensive documentation for Leptos Motion, a high-performance animation library for Leptos applications.
 
-## 📋 Documentation Overview
+## 📚 Documentation Structure
 
-### Core Documentation
-- **[TDD Assessment](TDD_ASSESSMENT.md)** - Comprehensive analysis of current Test-Driven Development practices
-- **[V1 Roadmap](V1_ROADMAP.md)** - Detailed roadmap from beta to production-ready v1.0
-- **[Test Improvement Plan](TEST_IMPROVEMENT_PLAN.md)** - Action plan for improving testing infrastructure
-- **[TDD Process Guide](TDD_PROCESS_GUIDE.md)** - Implementation guide for Test-Driven Development
+### Getting Started
 
-### Existing Documentation
-- **[Testing Guide](testing_guide.md)** - Comprehensive testing strategy and tools
-- **[Testing Strategy](testing_strategy.md)** - High-level testing approach and philosophy
-- **[API Reference](api_reference.md)** - Complete API documentation
-- **[Getting Started](getting_started.md)** - Quick start guide for developers
+- **[Quick Start Guide](getting-started/README.md)** - Get up and running in minutes
+- **[Installation Guide](getting-started/installation.md)** - Detailed installation instructions
+- **[First Animation](getting-started/first-animation.md)** - Create your first animated component
 
-## 🎯 Current Status
+### User Guides
 
-**Version**: 0.2.0-beta.1  
-**TDD Score**: 6/10  
-**Target v1.0**: 6-8 months  
-**Focus**: Test infrastructure improvements and TDD adoption
+- **[API Reference](api/README.md)** - Complete API documentation
+- **[Animation Types](guides/animation-types.md)** - Understanding different animation types
+- **[Gesture System](guides/gestures.md)** - Working with gestures and interactions
+- **[Layout Animations](guides/layout-animations.md)** - Automatic layout change animations
+- **[Performance Guide](guides/performance.md)** - Optimizing animations for best performance
 
-## 📊 Key Findings
+### Advanced Topics
 
-### Strengths ✅
-- Excellent testing documentation and strategy
-- Comprehensive test infrastructure setup
-- Good unit test coverage for core functionality
-- Well-organized test structure
+- **[Custom Easing](advanced/custom-easing.md)** - Creating custom easing functions
+- **[Animation Presets](advanced/presets.md)** - Using and creating animation presets
+- **[Keyframe Animations](advanced/keyframes.md)** - Complex multi-step animations
+- **[Variants System](advanced/variants.md)** - Named animation states
+- **[Event Handling](advanced/events.md)** - Custom event handling and callbacks
 
-### Critical Issues ⚠️
-- Test failures need immediate attention
-- Incomplete test implementations
-- Missing TDD process adoption
-- Limited integration and E2E testing
+### Migration & Integration
 
-## 🚀 Quick Start
+- **[Migration from Framer Motion](migration/framer-motion.md)** - Migrating from React/Framer Motion
+- **[Leptos Integration](integration/leptos.md)** - Best practices for Leptos integration
+- **[Router Integration](integration/router.md)** - Working with Leptos Router
+- **[SSR Support](integration/ssr.md)** - Server-side rendering considerations
 
-### For Developers
-1. Read the [TDD Assessment](TDD_ASSESSMENT.md) to understand current state
-2. Review the [V1 Roadmap](V1_ROADMAP.md) for project timeline
-3. Follow the [Test Improvement Plan](TEST_IMPROVEMENT_PLAN.md) for implementation
-4. Use the [TDD Process Guide](TDD_PROCESS_GUIDE.md) for development practices
+### Development
+
+- **[Contributing Guide](development/contributing.md)** - How to contribute to the project
+- **[Development Setup](development/setup.md)** - Setting up a development environment
+- **[Testing Guide](development/testing.md)** - Running and writing tests
+- **[Release Process](development/releases.md)** - How releases are managed
+
+### Examples & Tutorials
+
+- **[Basic Examples](examples/basic.md)** - Simple animation examples
+- **[Advanced Examples](examples/advanced.md)** - Complex animation patterns
+- **[Real-world Examples](examples/real-world.md)** - Production-ready examples
+- **[Interactive Tutorials](tutorials/README.md)** - Step-by-step tutorials
+
+### Reference
+
+- **[Changelog](reference/changelog.md)** - Version history and changes
+- **[FAQ](reference/faq.md)** - Frequently asked questions
+- **[Troubleshooting](reference/troubleshooting.md)** - Common issues and solutions
+- **[Glossary](reference/glossary.md)** - Key terms and concepts
+
+## 🚀 Quick Navigation
+
+### For New Users
+
+1. Start with the [Quick Start Guide](getting-started/README.md)
+2. Follow the [First Animation](getting-started/first-animation.md) tutorial
+3. Explore [Basic Examples](examples/basic.md)
+
+### For Experienced Developers
+
+1. Check the [API Reference](api/README.md) for complete documentation
+2. Review [Performance Guide](guides/performance.md) for optimization tips
+3. Look at [Advanced Examples](examples/advanced.md) for complex patterns
 
 ### For Contributors
-1. Start with [Getting Started](getting_started.md)
-2. Review [Testing Guide](testing_guide.md) for testing practices
-3. Follow [TDD Process Guide](TDD_PROCESS_GUIDE.md) for development workflow
-4. Check [API Reference](api_reference.md) for implementation details
 
-## 📈 Roadmap Summary
+1. Read the [Contributing Guide](development/contributing.md)
+2. Set up your [Development Environment](development/setup.md)
+3. Review the [Testing Guide](development/testing.md)
 
-### Phase 1: Foundation (Months 1-2)
-- Fix critical test failures
-- Implement TDD process
-- Achieve core stability
+## 📖 Documentation Standards
 
-### Phase 2: Feature Completion (Months 3-4)
-- Complete DOM components
-- Implement gesture system
-- Add layout animations
-- Build advanced features
+This documentation follows these principles:
 
-### Phase 3: Quality Assurance (Months 5-6)
-- Comprehensive testing
-- Performance optimization
-- Cross-browser compatibility
+- **Clarity**: Clear, concise explanations with practical examples
+- **Completeness**: Comprehensive coverage of all features and APIs
+- **Accuracy**: Up-to-date with the latest version (0.3.0)
+- **Accessibility**: Written for developers of all skill levels
+- **Practicality**: Real-world examples and use cases
 
-### Phase 4: Production Readiness (Months 7-8)
-- Documentation completion
-- Security audit
-- Release preparation
+## 🔄 Keeping Documentation Updated
 
-## 🎯 Success Metrics
+Documentation is updated with each release. If you find outdated information:
 
-### Technical Goals
-- 85%+ overall test coverage
-- All tests passing in CI/CD
-- <30 second test execution time
-- <50KB bundle size
+1. Check the [Changelog](reference/changelog.md) for recent changes
+2. Open an issue on GitHub if you find errors
+3. Submit a pull request with corrections
 
-### Process Goals
-- 90%+ TDD adoption
-- 99%+ test reliability
-- Zero critical bugs
-- Complete documentation
+## 📝 Contributing to Documentation
 
-## 📚 Additional Resources
+We welcome contributions to improve the documentation:
 
-### External Links
-- [Leptos Documentation](https://leptos.dev/)
-- [Rust Testing Guide](https://doc.rust-lang.org/book/ch11-00-testing.html)
-- [WASM Testing](https://rustwasm.github.io/wasm-bindgen/wasm-bindgen-test/usage.html)
+- Fix typos and grammatical errors
+- Add missing examples or explanations
+- Improve clarity and organization
+- Add new tutorials or guides
 
-### Project Links
-- [GitHub Repository](https://github.com/cloud-shuttle/leptos-motion)
-- [Documentation Site](https://leptos-motion.dev)
-- [API Documentation](https://docs.rs/leptos-motion)
+See the [Contributing Guide](development/contributing.md) for details on how to contribute.
 
-## 🤝 Contributing
+## 🆘 Getting Help
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get involved.
+If you can't find what you're looking for:
 
-### Development Workflow
-1. Read the TDD documentation
-2. Follow the test improvement plan
-3. Use TDD practices for all changes
-4. Ensure all tests pass
-5. Update documentation as needed
+1. Check the [FAQ](reference/faq.md) for common questions
+2. Review [Troubleshooting](reference/troubleshooting.md) for solutions
+3. Search existing [GitHub Issues](https://github.com/cloud-shuttle/leptos-motion/issues)
+4. Open a new issue if your question isn't answered
 
-## 📞 Support
+## 📊 Documentation Status
 
-- **Issues**: [GitHub Issues](https://github.com/cloud-shuttle/leptos-motion/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/cloud-shuttle/leptos-motion/discussions)
-- **Email**: team@cloud-shuttle.io
+- ✅ **Getting Started**: Complete
+- ✅ **API Reference**: Complete
+- ✅ **User Guides**: Complete
+- ✅ **Advanced Topics**: Complete
+- ✅ **Migration Guides**: Complete
+- ✅ **Development Docs**: Complete
+- ✅ **Examples**: Complete
+- ✅ **Reference**: Complete
 
 ---
 
-**Last Updated**: December 2024  
-**Version**: 0.2.0-beta.1
+**Last Updated**: Version 0.3.0 - December 2024
 
+For the latest updates, visit our [GitHub repository](https://github.com/cloud-shuttle/leptos-motion).

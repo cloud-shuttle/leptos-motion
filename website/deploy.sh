@@ -11,18 +11,18 @@ echo "🚀 Deploying Leptos Motion website..."
 # Check if we're in a git repository
 if [ -d ".git" ]; then
     echo "📦 Git repository detected"
-    
+
     # Check if we're on the main branch
     CURRENT_BRANCH=$(git branch --show-current)
     if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
         echo "✅ On main branch ($CURRENT_BRANCH)"
-        
+
         # Check if there are uncommitted changes
         if [ -n "$(git status --porcelain)" ]; then
             echo "⚠️  Warning: There are uncommitted changes"
             echo "   Consider committing your changes before deploying"
         fi
-        
+
         echo "📤 Ready for deployment!"
         echo ""
         echo "Deployment options:"

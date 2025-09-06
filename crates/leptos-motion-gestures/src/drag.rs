@@ -1,6 +1,6 @@
 //! Drag gesture implementation
 
-use crate::{GestureEvent, GestureResult, GestureHandler};
+use crate::{GestureEvent, GestureHandler, GestureResult};
 use std::time::{Duration, Instant};
 
 /// Drag gesture handler
@@ -100,15 +100,18 @@ impl DragGesture {
 
     /// Calculate drag velocity
     fn calculate_velocity(&mut self) {
-        if let (Some(start_time), Some(last_update), Some(start_pos), Some(current_pos)) = 
-            (self.start_time, self.last_update, self.start_position, self.current_position) {
-            
+        if let (Some(start_time), Some(last_update), Some(start_pos), Some(current_pos)) = (
+            self.start_time,
+            self.last_update,
+            self.start_position,
+            self.current_position,
+        ) {
             let duration = last_update.duration_since(start_time);
             if duration > Duration::from_millis(0) {
                 let delta_x = current_pos.0 - start_pos.0;
                 let delta_y = current_pos.1 - start_pos.1;
                 let duration_secs = duration.as_secs_f64();
-                
+
                 self.velocity = (delta_x / duration_secs, delta_y / duration_secs);
             }
         }
@@ -134,7 +137,7 @@ impl GestureHandler for DragGesture {
                     if let Some(touch) = touches.first() {
                         self.current_position = Some((touch.x, touch.y));
                         self.last_update = Some(Instant::now());
-                        
+
                         if self.exceeds_threshold() {
                             self.update_direction();
                             self.calculate_velocity();
@@ -213,26 +216,26 @@ mod tests {
     #[test]
     fn test_drag_gesture_handling() {
         let mut drag = DragGesture::new().threshold(5.0);
-        
+
         // Start drag
         let start_event = GestureEvent::TouchStart {
-            touches: vec![create_touch_point(100.0, 100.0)]
+            touches: vec![create_touch_point(100.0, 100.0)],
         };
         let result = drag.handle_gesture(start_event);
         assert!(drag.active);
         assert!(!result.recognized); // Not yet above threshold
-        
+
         // Move drag
         let move_event = GestureEvent::TouchMove {
-            touches: vec![create_touch_point(110.0, 110.0)]
+            touches: vec![create_touch_point(110.0, 110.0)],
         };
         let result = drag.handle_gesture(move_event);
         assert!(drag.active);
         assert!(result.recognized); // Now above threshold
-        
+
         // End drag
         let end_event = GestureEvent::TouchEnd {
-            touches: vec![create_touch_point(110.0, 110.0)]
+            touches: vec![create_touch_point(110.0, 110.0)],
         };
         let _result = drag.handle_gesture(end_event);
         assert!(!drag.active);

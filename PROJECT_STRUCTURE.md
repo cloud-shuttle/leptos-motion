@@ -25,6 +25,7 @@ leptos-motion/
 ## 🗂️ Core Directories
 
 ### **`crates/`** - Rust Library Crates
+
 ```
 crates/
 ├── leptos-motion/           # Main library crate
@@ -37,6 +38,7 @@ crates/
 ```
 
 ### **`examples/`** - Example Applications
+
 ```
 examples/
 ├── basic-animations/        # Basic animation examples
@@ -50,6 +52,7 @@ examples/
 ```
 
 ### **`tests/`** - Testing Infrastructure
+
 ```
 tests/
 ├── component-mounting.spec.ts
@@ -72,6 +75,7 @@ tests/
 ## 📚 Documentation (`docs/`)
 
 ### **`docs/releases/`** - Release Documentation
+
 ```
 docs/releases/
 ├── RELEASE_NOTES.md         # Detailed release notes
@@ -79,6 +83,7 @@ docs/releases/
 ```
 
 ### **`docs/guides/`** - User Guides
+
 ```
 docs/guides/
 ├── getting_started.md       # Getting started guide
@@ -88,6 +93,7 @@ docs/guides/
 ```
 
 ### **`docs/api/`** - API Documentation
+
 ```
 docs/api/
 ├── api_reference.md         # API reference
@@ -96,6 +102,7 @@ docs/api/
 ```
 
 ### **`docs/examples/`** - Example Documentation
+
 ```
 docs/examples/
 ├── INDEX.md                 # Examples index
@@ -104,11 +111,13 @@ docs/examples/
 ```
 
 ### **`docs/book/`** - Book Documentation
+
 ```
 docs/book/                   # Comprehensive documentation book
 ```
 
 ### **Development Documentation**
+
 ```
 docs/
 ├── CONTRIBUTING.md          # Contribution guidelines
@@ -122,6 +131,7 @@ docs/
 ## 🎨 Assets (`assets/`)
 
 ### **`assets/screenshots/`** - Test Screenshots
+
 ```
 assets/screenshots/
 ├── test-step1-*.png         # Test step screenshots
@@ -132,6 +142,7 @@ assets/screenshots/
 ```
 
 ### **`assets/debug-screenshots/`** - Debug Screenshots
+
 ```
 assets/debug-screenshots/
 ├── debug-step1-*.png        # Debug step screenshots
@@ -142,16 +153,19 @@ assets/debug-screenshots/
 ```
 
 ### **`assets/test-results/`** - Test Results
+
 ```
 assets/test-results/          # Playwright test results
 ```
 
 ### **`assets/icons/`** - Project Icons
+
 ```
 assets/icons/                 # Project icon files
 ```
 
 ### **`assets/logos/`** - Project Logos
+
 ```
 assets/logos/                 # Project logo files
 ```
@@ -159,6 +173,7 @@ assets/logos/                 # Project logo files
 ## 🛠️ Development Tools
 
 ### **`scripts/`** - Development Scripts
+
 ```
 scripts/
 ├── test-all.sh              # Run all tests
@@ -166,11 +181,13 @@ scripts/
 ```
 
 ### **`website/`** - Project Website
+
 ```
 website/                     # Project website source
 ```
 
 ### **`.github/`** - GitHub Configuration
+
 ```
 .github/                     # GitHub Actions and templates
 ```
@@ -178,16 +195,19 @@ website/                     # Project website source
 ## 📦 Build and Dependencies
 
 ### **`target/`** - Build Output
+
 ```
 target/                      # Rust build artifacts
 ```
 
 ### **`node_modules/`** - Node.js Dependencies
+
 ```
 node_modules/                # Node.js packages
 ```
 
 ### **`playwright-report/`** - Test Reports
+
 ```
 playwright-report/           # Playwright test reports
 ```
@@ -202,6 +222,7 @@ playwright-report/           # Playwright test reports
 ## 📋 File Organization Principles
 
 ### **1. Clear Separation of Concerns**
+
 - **Code**: All Rust code in `crates/`
 - **Examples**: All examples in `examples/`
 - **Tests**: All tests in `tests/`
@@ -209,18 +230,21 @@ playwright-report/           # Playwright test reports
 - **Assets**: All media in `assets/`
 
 ### **2. Logical Grouping**
+
 - **Releases**: All release-related docs in `docs/releases/`
 - **Guides**: User-facing documentation in `docs/guides/`
 - **API**: Technical documentation in `docs/api/`
 - **Screenshots**: Organized by test step and debug status
 
 ### **3. Easy Navigation**
+
 - **README.md** at root for quick start
 - **CHANGELOG.md** at root for version history
 - **PROJECT_STRUCTURE.md** for navigation help
 - Clear folder names and organization
 
 ### **4. Development Workflow**
+
 - **Scripts** in `scripts/` for common tasks
 - **Configuration** files at root level
 - **Build artifacts** in `target/`
@@ -242,4 +266,5 @@ playwright-report/           # Playwright test reports
 - **Documentation**: Categorized by purpose and audience
 - **Assets**: Ready for future expansion (icons, logos, etc.)
 
-This organization makes the project much more professional and easier to navigate while maintaining all the functionality and information.
+This organization makes the project much more professional and easier to
+navigate while maintaining all the functionality and information.

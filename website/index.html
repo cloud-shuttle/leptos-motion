@@ -254,15 +254,15 @@
             .header h1 {
                 font-size: 2.5rem;
             }
-            
+
             .header p {
                 font-size: 1.1rem;
             }
-            
+
             .examples-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .button-group {
                 flex-direction: column;
                 align-items: center;
@@ -284,7 +284,7 @@
                     <h3>Interactive Button</h3>
                     <button class="demo-button" id="demo-button">Click me! ✨</button>
                 </div>
-                
+
                 <div class="example-card">
                     <h3>Animated Card</h3>
                     <div class="animated-card">
@@ -292,7 +292,7 @@
                         <p>This card animates in and lifts on hover</p>
                     </div>
                 </div>
-                
+
                 <div class="example-card">
                     <h3>Simple Animation</h3>
                     <div class="spinning-circle">🎯</div>
@@ -382,7 +382,7 @@ fn MyComponent() -> impl IntoView {
         // Simple interactive demo
         const demoButton = document.getElementById('demo-button');
         let isPressed = false;
-        
+
         demoButton.addEventListener('click', () => {
             isPressed = !isPressed;
             if (isPressed) {

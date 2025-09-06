@@ -73,6 +73,7 @@ leptos-motion/
 ### Week 1: Project Setup & Core Architecture
 
 **Tasks:**
+
 ```rust
 // Day 1-2: Repository and tooling setup
 - [ ] Initialize Git repository with proper .gitignore
@@ -94,6 +95,7 @@ leptos-motion/
 ```
 
 **Deliverables:**
+
 - Working repository with CI/CD
 - Core type definitions
 - Basic project documentation
@@ -101,6 +103,7 @@ leptos-motion/
 ### Week 2: Animation Engine Implementation
 
 **Tasks:**
+
 ```rust
 // Day 1-2: RAF-based animation engine
 impl RafEngine {
@@ -125,6 +128,7 @@ impl HybridEngine {
 ```
 
 **Deliverables:**
+
 - Working RAF animation engine
 - WAAPI integration
 - Feature detection system
@@ -132,6 +136,7 @@ impl HybridEngine {
 ### Week 3: Leptos Integration & Motion Values
 
 **Tasks:**
+
 ```rust
 // Day 1-2: Motion value implementation
 pub struct MotionValue<T> {
@@ -162,6 +167,7 @@ macro_rules! create_motion_component {
 ```
 
 **Testing Checklist:**
+
 - [ ] Unit tests for MotionValue
 - [ ] Integration tests for Leptos components
 - [ ] Performance benchmarks for value updates
@@ -171,6 +177,7 @@ macro_rules! create_motion_component {
 ### Week 4: Transition System
 
 **Tasks:**
+
 ```rust
 // Day 1-2: Easing functions
 pub mod easing {
@@ -206,6 +213,7 @@ impl Transition {
 ### Week 5: Advanced Transitions
 
 **Tasks:**
+
 - Implement stagger animations
 - Create timeline sequencing
 - Add repeat and yoyo configurations
@@ -213,6 +221,7 @@ impl Transition {
 - Implement custom easing curve editor types
 
 **Testing:**
+
 ```rust
 #[test]
 fn test_spring_physics() {
@@ -233,6 +242,7 @@ fn test_bezier_easing() {
 ### Week 6: Motion Components
 
 **Implementation Tasks:**
+
 ```rust
 // Generate motion components for all HTML elements
 motion_components! {
@@ -252,6 +262,7 @@ impl MotionComponent {
 ### Week 7: AnimatePresence
 
 **Tasks:**
+
 ```rust
 #[component]
 pub fn AnimatePresence(
@@ -271,6 +282,7 @@ impl ExitAnimationCoordinator {
 ```
 
 **Examples to Create:**
+
 - Todo list with enter/exit animations ✅
 - Tab switcher with mode="wait" ✅
 - Gallery with layout preservation ✅
@@ -280,6 +292,7 @@ impl ExitAnimationCoordinator {
 ### Week 8: Basic Gestures
 
 **Implementation:**
+
 ```rust
 // Gesture recognizer system
 pub struct GestureRecognizer {
@@ -305,6 +318,7 @@ impl TapGesture {
 ### Week 9: Advanced Gestures
 
 **Tasks:**
+
 ```rust
 // Drag implementation with constraints
 pub struct DragGesture {
@@ -329,6 +343,7 @@ impl PanGesture {
 ```
 
 **Testing Strategy:**
+
 - Mock pointer events for unit tests
 - E2E tests with real browser interactions
 - Performance tests for gesture recognition
@@ -338,6 +353,7 @@ impl PanGesture {
 ### Week 10: Layout Animations
 
 **Implementation:**
+
 ```rust
 // FLIP animation technique
 pub struct LayoutAnimator {
@@ -360,6 +376,7 @@ pub struct SharedElementTransition {
 ### Week 11: Scroll Animations
 
 **Tasks:**
+
 ```rust
 // Scroll hooks
 pub fn use_scroll() -> ScrollInfo {
@@ -385,6 +402,7 @@ pub fn Parallax(
 ### Week 12: Advanced Features
 
 **Implementation:**
+
 - Scroll-linked animations (scrubbing)
 - Velocity-based scroll animations
 - Scroll snapping with animations
@@ -395,6 +413,7 @@ pub fn Parallax(
 ### Week 13: Performance Optimization
 
 **Optimization Tasks:**
+
 ```rust
 // 1. Animation frame batching
 pub struct AnimationScheduler {
@@ -422,6 +441,7 @@ pub struct GPULayerManager {
 ```
 
 **Performance Benchmarks:**
+
 ```rust
 #[bench]
 fn bench_animate_100_elements(b: &mut Bencher) {
@@ -441,6 +461,7 @@ fn bench_spring_calculation(b: &mut Bencher) {
 ### Week 14: Testing & Documentation
 
 **Testing Coverage:**
+
 - [ ] Unit tests: >90% coverage
 - [ ] Integration tests: All major features
 - [ ] E2E tests: Critical user paths
@@ -448,6 +469,7 @@ fn bench_spring_calculation(b: &mut Bencher) {
 - [ ] WASM tests: Browser compatibility
 
 **Documentation:**
+
 - [ ] API reference with rustdoc
 - [ ] Getting started guide
 - [ ] Migration guide from React Motion
@@ -459,6 +481,7 @@ fn bench_spring_calculation(b: &mut Bencher) {
 ### Week 15: Example Applications
 
 **Example Projects:**
+
 1. **Basic Showcase**
    - All animation types
    - Interactive playground
@@ -482,6 +505,7 @@ fn bench_spring_calculation(b: &mut Bencher) {
 ### Week 16: Release Preparation
 
 **Release Checklist:**
+
 - [ ] Version 0.1.0-alpha release
 - [ ] Publish to crates.io
 - [ ] Documentation website live
@@ -491,13 +515,16 @@ fn bench_spring_calculation(b: &mut Bencher) {
 ## Resource Allocation
 
 ### Team Structure (Ideal)
+
 - **Lead Developer**: Architecture, core engine
 - **UI Developer**: Components, examples
 - **Performance Engineer**: Optimization, testing
 - **Documentation Writer**: Docs, tutorials
 
 ### Single Developer Approach
+
 If working solo, extend timeline to 24 weeks and prioritize:
+
 1. Core functionality (Weeks 1-8)
 2. Essential features (Weeks 9-16)
 3. Polish and examples (Weeks 17-24)
@@ -506,14 +533,15 @@ If working solo, extend timeline to 24 weeks and prioritize:
 
 ### Technical Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| WASM performance issues | Medium | High | Early benchmarking, profiling |
-| Browser compatibility | Low | High | Progressive enhancement |
-| Leptos API changes | Medium | Medium | Version pinning, abstraction layer |
-| Complex gesture conflicts | High | Medium | Gesture priority system |
+| Risk                      | Probability | Impact | Mitigation                         |
+| ------------------------- | ----------- | ------ | ---------------------------------- |
+| WASM performance issues   | Medium      | High   | Early benchmarking, profiling      |
+| Browser compatibility     | Low         | High   | Progressive enhancement            |
+| Leptos API changes        | Medium      | Medium | Version pinning, abstraction layer |
+| Complex gesture conflicts | High        | Medium | Gesture priority system            |
 
 ### Mitigation Strategies
+
 1. **Performance**: Continuous benchmarking from Week 1
 2. **Compatibility**: Test on multiple browsers weekly
 3. **API Stability**: Abstract Leptos internals
@@ -522,12 +550,14 @@ If working solo, extend timeline to 24 weeks and prioritize:
 ## Success Metrics
 
 ### Technical Metrics
+
 - Bundle size: <30KB (core), <50KB (full)
 - Performance: 60fps for 100+ simultaneous animations
 - Memory: <10MB for typical applications
 - API Coverage: 90% parity with Motion
 
 ### Community Metrics
+
 - GitHub stars: 500+ in first 3 months
 - Downloads: 1000+ monthly downloads
 - Contributors: 10+ contributors
@@ -536,6 +566,7 @@ If working solo, extend timeline to 24 weeks and prioritize:
 ## Continuous Integration
 
 ### GitHub Actions Workflow
+
 ```yaml
 name: CI
 
@@ -550,18 +581,18 @@ jobs:
         with:
           toolchain: stable
           target: wasm32-unknown-unknown
-      
+
       - name: Run tests
         run: |
           cargo test --all-features
           cargo test --target wasm32-unknown-unknown
-      
+
       - name: Check formatting
         run: cargo fmt -- --check
-      
+
       - name: Clippy
         run: cargo clippy -- -D warnings
-      
+
       - name: Build examples
         run: cargo build --examples
 ```
@@ -569,6 +600,7 @@ jobs:
 ## Release Strategy
 
 ### Version Planning
+
 - **0.1.0-alpha**: Core animations, basic components
 - **0.2.0-beta**: Gestures, transitions
 - **0.3.0-beta**: Layout animations, scroll
@@ -576,6 +608,7 @@ jobs:
 - **1.0.0**: Production ready with stability guarantee
 
 ### Release Process
+
 1. Feature freeze 1 week before release
 2. Release candidate testing
 3. Documentation review
@@ -586,6 +619,7 @@ jobs:
 ## Long-term Roadmap
 
 ### Post-1.0 Features
+
 - **1.1**: SVG animations and path morphing
 - **1.2**: 3D transforms and perspective
 - **1.3**: Animation devtools browser extension
@@ -596,6 +630,7 @@ jobs:
 ## Communication Plan
 
 ### Community Engagement
+
 - Weekly progress updates on GitHub
 - Bi-weekly blog posts
 - Discord/Matrix community channel
@@ -603,6 +638,7 @@ jobs:
 - Conference talks and workshops
 
 ### Documentation Strategy
+
 - Interactive examples with Stackblitz
 - Video tutorials for complex features
 - API migration guides
@@ -612,12 +648,14 @@ jobs:
 ## Budget Estimation
 
 ### Development Costs (4 months)
+
 - **Solo Developer**: $40,000 - $60,000
 - **Small Team (3)**: $120,000 - $180,000
 - **Infrastructure**: $500/month (CI, hosting, tools)
 - **Marketing**: $2,000 (website, launch)
 
 ### Open Source Sustainability
+
 - GitHub Sponsors
 - OpenCollective
 - Corporate sponsorships
@@ -628,6 +666,7 @@ jobs:
 This implementation plan provides a structured approach to building Leptos Motion over 16 weeks. The modular architecture allows for parallel development of features once the core is established. Regular testing and community feedback ensure the library meets real-world needs while maintaining high quality standards.
 
 ### Key Success Factors
+
 1. **Focus on Developer Experience**: Intuitive API, great docs
 2. **Performance First**: Continuous benchmarking and optimization
 3. **Community Driven**: Regular feedback and contributions

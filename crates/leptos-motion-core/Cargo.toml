@@ -37,7 +37,7 @@ approx.workspace = true
 web-sys = { workspace = true, features = [
     "console",
     "Window",
-    "Document", 
+    "Document",
     "Element",
     "HtmlElement",
     "CssStyleDeclaration",

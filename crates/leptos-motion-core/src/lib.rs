@@ -1,5 +1,5 @@
 //! Leptos Motion Core
-//! 
+//!
 //! Core animation engine providing hybrid RAF/WAAPI animation system,
 //! spring physics, easing functions, and motion value management.
 
@@ -15,38 +15,41 @@ pub mod time;
 pub mod types;
 pub mod values;
 
-pub mod performance;
-pub mod spring;
-pub mod simplified_engine;
-pub mod minimal_engine;
 pub mod lazy_loading;
+pub mod memory_optimization;
+pub mod minimal_engine;
+pub mod performance;
+pub mod simplified_engine;
+pub mod spring;
+
+#[cfg(test)]
+mod memory_optimization_tests;
 
 // Re-export animation presets
 pub use animation::presets::AnimationPresets;
 pub use animation::presets::SlideDirection;
-pub use animation::presets::springs;
 pub use animation::presets::easings;
+pub use animation::presets::springs;
 
 // Re-export core types
 pub use animation::{AnimationBuilder, AnimationConfig, Variants};
 pub use easing::EasingFn;
-pub use engine::{AnimationEngine, OptimizedHybridEngine, WaapiEngine, RafEngine, PlaybackState};
+pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine, WaapiEngine};
 pub use interpolation::Interpolate;
-pub use math::{clamp, map_range, distance_2d, smooth_step, smoother_step};
+pub use math::{clamp, distance_2d, map_range, smooth_step, smoother_step};
 pub use time::Timer;
 pub use types::{
-    AnimationHandle, AnimationValue, AnimationTarget, Transition,
-    Transform, ComplexValue, SpringConfig, RepeatConfig, StaggerConfig, StaggerFrom, Easing
+    AnimationHandle, AnimationTarget, AnimationValue, ComplexValue, Easing, RepeatConfig,
+    SpringConfig, StaggerConfig, StaggerFrom, Transform, Transition,
 };
-pub use values::{MotionValue, MotionNumber, MotionTransform, MotionValues};
+pub use values::{MotionNumber, MotionTransform, MotionValue, MotionValues};
 
-pub use spring::{SpringSimulator, SpringState};
-pub use simplified_engine::SimplifiedAnimationEngine;
-pub use minimal_engine::MinimalEngine;
 pub use lazy_loading::{
-    LazyModule, AnimationLazyLoader, FeatureModuleLoader, 
-    LazyLoadingConfig, get_lazy_loader
+    AnimationLazyLoader, FeatureModuleLoader, LazyLoadingConfig, LazyModule, get_lazy_loader,
 };
+pub use minimal_engine::MinimalEngine;
+pub use simplified_engine::SimplifiedAnimationEngine;
+pub use spring::{SpringSimulator, SpringState};
 
 // Note: Error handling types are defined in this file, not re-exported
 
@@ -76,13 +79,13 @@ impl ErrorContext {
             additional_info: std::collections::HashMap::new(),
         }
     }
-    
+
     /// Add component information
     pub fn with_component(mut self, component: impl Into<String>) -> Self {
         self.component = Some(component.into());
         self
     }
-    
+
     /// Add additional information
     pub fn with_info(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
         self.additional_info.insert(key.into(), value.into());
@@ -107,10 +110,10 @@ pub enum RecoveryStrategy {
 pub trait ErrorHandler {
     /// Handle an animation error
     fn handle_error(&self, error: &AnimationError, context: &ErrorContext) -> RecoveryStrategy;
-    
+
     /// Log error for debugging
     fn log_error(&self, error: &AnimationError, context: &ErrorContext);
-    
+
     /// Get user-friendly error message
     fn user_message(&self, error: &AnimationError) -> String;
 }
@@ -139,7 +142,7 @@ impl ErrorHandler for DefaultErrorHandler {
         if self.log_errors {
             self.log_error(error, context);
         }
-        
+
         // Determine recovery strategy based on error type
         match error {
             AnimationError::EngineUnavailable(_) => RecoveryStrategy::Fallback,
@@ -154,25 +157,33 @@ impl ErrorHandler for DefaultErrorHandler {
             AnimationError::TimingError(_) => RecoveryStrategy::Retry,
         }
     }
-    
+
     fn log_error(&self, error: &AnimationError, context: &ErrorContext) {
         eprintln!("Animation Error: {:?}", error);
         eprintln!("Context: {:?}", context);
     }
-    
+
     fn user_message(&self, error: &AnimationError) -> String {
         if !self.show_user_messages {
             return String::new();
         }
-        
+
         match error {
-            AnimationError::EngineUnavailable(_) => "Animation system temporarily unavailable".to_string(),
-            AnimationError::InvalidProperty { property: _ } => "Invalid animation property".to_string(),
-            AnimationError::AlreadyRunning { handle: _ } => "Animation already in progress".to_string(),
+            AnimationError::EngineUnavailable(_) => {
+                "Animation system temporarily unavailable".to_string()
+            }
+            AnimationError::InvalidProperty { property: _ } => {
+                "Invalid animation property".to_string()
+            }
+            AnimationError::AlreadyRunning { handle: _ } => {
+                "Animation already in progress".to_string()
+            }
             AnimationError::NotFound { handle: _ } => "Animation not found".to_string(),
             AnimationError::DomError(_) => "Animation display error".to_string(),
             AnimationError::MathError(_) => "Animation calculation error".to_string(),
-            AnimationError::PerformanceBudgetExceeded(_) => "Animation performance limit reached".to_string(),
+            AnimationError::PerformanceBudgetExceeded(_) => {
+                "Animation performance limit reached".to_string()
+            }
             AnimationError::InvalidConfig(_) => "Invalid animation configuration".to_string(),
             AnimationError::MemoryError(_) => "Animation memory error".to_string(),
             AnimationError::TimingError(_) => "Animation timing error".to_string(),
@@ -186,46 +197,46 @@ pub enum AnimationError {
     /// Animation engine not available
     #[error("Animation engine not available: {0}")]
     EngineUnavailable(String),
-    
+
     /// Invalid property error
     #[error("Invalid animation property: {property}")]
-    InvalidProperty { 
+    InvalidProperty {
         /// The name of the invalid property
-        property: String 
+        property: String,
     },
     /// Animation already running error
     #[error("Animation already running with handle: {handle:?}")]
-    AlreadyRunning { 
+    AlreadyRunning {
         /// The handle of the already running animation
-        handle: AnimationHandle 
+        handle: AnimationHandle,
     },
     /// Animation not found error
     #[error("Animation not found: {handle:?}")]
-    NotFound { 
+    NotFound {
         /// The handle of the animation that was not found
-        handle: AnimationHandle 
+        handle: AnimationHandle,
     },
-    
+
     /// DOM operation failed
     #[error("DOM operation failed: {0}")]
     DomError(String),
-    
+
     /// Mathematical error (division by zero, invalid range, etc.)
     #[error("Math error: {0}")]
     MathError(String),
-    
+
     /// Performance budget exceeded
     #[error("Performance budget exceeded: {0}")]
     PerformanceBudgetExceeded(String),
-    
+
     /// Invalid animation configuration
     #[error("Invalid animation configuration: {0}")]
     InvalidConfig(String),
-    
+
     /// Memory allocation failed
     #[error("Memory allocation failed: {0}")]
     MemoryError(String),
-    
+
     /// Animation timing error
     #[error("Animation timing error: {0}")]
     TimingError(String),

@@ -1,6 +1,9 @@
 //! Multi-touch gesture detection and recognition
 
-use crate::{GestureConfig, MultiTouchState, MultiTouchGestureType, TouchPoint, GestureEvent, GestureResult, GestureHandler};
+use crate::{
+    GestureConfig, GestureEvent, GestureHandler, GestureResult, MultiTouchGestureType,
+    MultiTouchState, TouchPoint,
+};
 
 use std::time::{Duration, Instant};
 
@@ -194,12 +197,11 @@ impl MultiTouchGestureDetector {
         }
 
         // Check for pinch gesture
-        let has_pinch = self.config.pinch_to_zoom && 
-            (self.state.scale - 1.0).abs() > self.config.min_distance / 1000.0;
+        let has_pinch = self.config.pinch_to_zoom
+            && (self.state.scale - 1.0).abs() > self.config.min_distance / 1000.0;
 
         // Check for rotation gesture
-        let has_rotation = self.config.rotation && 
-            self.state.rotation.abs() > 0.1; // ~5.7 degrees
+        let has_rotation = self.config.rotation && self.state.rotation.abs() > 0.1; // ~5.7 degrees
 
         // Determine gesture type
         self.state.gesture_type = match (has_pinch, has_rotation) {
@@ -264,8 +266,8 @@ impl MultiTouchGestureDetector {
         if let Some(start_time) = self.start_time {
             if let Some(last_update) = self.last_update {
                 let duration = last_update.duration_since(start_time);
-                duration > Duration::from_millis(self.config.timeout_ms) &&
-                self.state.average_distance > self.config.min_distance
+                duration > Duration::from_millis(self.config.timeout_ms)
+                    && self.state.average_distance > self.config.min_distance
             } else {
                 false
             }
@@ -311,17 +313,23 @@ impl MultiTouchGestureDetector {
     /// Create a gesture result from current state
     fn create_gesture_result(&self) -> GestureResult {
         let recognized = self.state.active && self.confidence >= self.min_confidence;
-        
+
         // Debug output
         if self.state.active {
-            println!("DEBUG: active={}, confidence={:.3}, min_confidence={:.3}, gesture_type={:?}", 
-                self.state.active, self.confidence, self.min_confidence, self.state.gesture_type);
+            println!(
+                "DEBUG: active={}, confidence={:.3}, min_confidence={:.3}, gesture_type={:?}",
+                self.state.active, self.confidence, self.min_confidence, self.state.gesture_type
+            );
         }
-        
+
         GestureResult {
             recognized,
             gesture_type: self.state.gesture_type.clone(),
-            data: if self.state.active { Some(self.state.clone()) } else { None },
+            data: if self.state.active {
+                Some(self.state.clone())
+            } else {
+                None
+            },
             confidence: self.confidence,
         }
     }
@@ -407,7 +415,7 @@ mod tests {
     #[test]
     fn test_pinch_gesture_detection() {
         let mut detector = MultiTouchGestureDetector::new(
-            GestureConfig::default().basic_only().enable_pinch_to_zoom()
+            GestureConfig::default().basic_only().enable_pinch_to_zoom(),
         );
 
         // Start with two touches
@@ -433,14 +441,13 @@ mod tests {
 
     #[test]
     fn test_rotation_gesture_detection() {
-        let mut detector = MultiTouchGestureDetector::new(
-            GestureConfig::default().basic_only().enable_rotation()
-        );
+        let mut detector =
+            MultiTouchGestureDetector::new(GestureConfig::default().basic_only().enable_rotation());
 
         // Start with two touches in a horizontal line
         let touches = vec![
-            create_touch_point(1, 100.0, 100.0),  // Left point
-            create_touch_point(2, 200.0, 100.0),  // Right point
+            create_touch_point(1, 100.0, 100.0), // Left point
+            create_touch_point(2, 200.0, 100.0), // Right point
         ];
 
         let result = detector.handle_touch_start(touches);
@@ -448,8 +455,8 @@ mod tests {
 
         // First move - establish previous state (still horizontal)
         let touches = vec![
-            create_touch_point(1, 100.0, 150.0),  // Left point moved down
-            create_touch_point(2, 200.0, 150.0),  // Right point moved down
+            create_touch_point(1, 100.0, 150.0), // Left point moved down
+            create_touch_point(2, 200.0, 150.0), // Right point moved down
         ];
 
         let result = detector.handle_touch_move(touches);
@@ -457,8 +464,8 @@ mod tests {
 
         // Second move - create actual rotation by moving left point diagonally
         let touches = vec![
-            create_touch_point(1, 150.0, 200.0),  // Left point moved diagonally (creates rotation)
-            create_touch_point(2, 200.0, 150.0),  // Right point stays at same height
+            create_touch_point(1, 150.0, 200.0), // Left point moved diagonally (creates rotation)
+            create_touch_point(2, 200.0, 150.0), // Right point stays at same height
         ];
 
         let result = detector.handle_touch_move(touches);
@@ -468,14 +475,13 @@ mod tests {
 
     #[test]
     fn test_rotation_calculation_debug() {
-        let mut detector = MultiTouchGestureDetector::new(
-            GestureConfig::default().basic_only().enable_rotation()
-        );
+        let mut detector =
+            MultiTouchGestureDetector::new(GestureConfig::default().basic_only().enable_rotation());
 
         // Start with two touches in a clear horizontal line
         let touches = vec![
-            create_touch_point(1, 0.0, 0.0),    // Origin
-            create_touch_point(2, 100.0, 0.0),  // Horizontal right
+            create_touch_point(1, 0.0, 0.0),   // Origin
+            create_touch_point(2, 100.0, 0.0), // Horizontal right
         ];
 
         let result = detector.handle_touch_start(touches);
@@ -483,20 +489,24 @@ mod tests {
 
         // Move to create a 45-degree rotation
         let touches = vec![
-            create_touch_point(1, 0.0, 0.0),    // Keep origin fixed
-            create_touch_point(2, 100.0, 100.0),  // Move to 45 degrees
+            create_touch_point(1, 0.0, 0.0),     // Keep origin fixed
+            create_touch_point(2, 100.0, 100.0), // Move to 45 degrees
         ];
 
         let result = detector.handle_touch_move(touches);
         assert!(result.recognized);
-        
+
         // The angle from (0,0) to (100,0) is 0 radians
         // The angle from (0,0) to (100,100) is atan2(100,100) = π/4 ≈ 0.785398 radians
         // So rotation should be approximately π/4 ≈ 0.785398
         let expected_rotation = std::f64::consts::PI / 4.0;
         let actual_rotation = detector.get_rotation();
-        
-        assert!(actual_rotation.abs() > 0.1, "Rotation should be significant, got: {}", actual_rotation);
+
+        assert!(
+            actual_rotation.abs() > 0.1,
+            "Rotation should be significant, got: {}",
+            actual_rotation
+        );
     }
 }
 

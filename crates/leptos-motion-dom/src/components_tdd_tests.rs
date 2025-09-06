@@ -1,5 +1,5 @@
 // Modern TDD Tests for DOM Components
-// 
+//
 // This module demonstrates Test-Driven Development practices for
 // DOM components using the latest Rust testing patterns.
 
@@ -17,6 +17,7 @@ fn motion_props_fixture() -> MotionProps {
         variants: None,
         layout: Some(false),
         drag: None,
+        drag_constraints: None,
         while_hover: None,
         while_tap: None,
         while_focus: None,
@@ -58,13 +59,14 @@ fn test_motion_props_creation_should_initialize_correctly() {
         variants: None,
         layout: Some(true),
         drag: None,
+        drag_constraints: None,
         while_hover: None,
         while_tap: None,
         while_focus: None,
         while_in_view: None,
         event_handlers: None,
     };
-    
+
     // Assert
     assert!(props.initial.is_some());
     assert!(props.animate.is_some());
@@ -91,12 +93,12 @@ fn test_motion_props_with_all_options_should_contain_all_values() {
     let drag_config = DragConfig::default();
     let event_handlers = EventHandlers {
         on_click: Some(ClickHandler::Counter),
-        state: Some(InteractiveState { 
+        state: Some(InteractiveState {
             initial: "default".to_string(),
             state_type: StateType::Counter,
         }),
     };
-    
+
     // Act
     let props = MotionProps {
         initial: Some(initial.clone()),
@@ -106,13 +108,14 @@ fn test_motion_props_with_all_options_should_contain_all_values() {
         variants: None,
         layout: Some(true),
         drag: Some(drag_config.clone()),
+        drag_constraints: None,
         while_hover: Some(animate.clone()),
         while_tap: Some(animate.clone()),
         while_focus: Some(animate.clone()),
         while_in_view: Some(animate.clone()),
         event_handlers: Some(event_handlers.clone()),
     };
-    
+
     // Assert
     assert_eq!(props.initial, Some(initial));
     assert_eq!(props.animate, Some(animate.clone()));
@@ -136,7 +139,7 @@ fn test_animation_target_creation_with_different_values() {
         (-50.0, -100.0, 0.5, -90.0, 0.0),
         (999.999, -999.999, 2.0, 180.0, 0.5),
     ];
-    
+
     for (x, y, scale, rotate, opacity) in test_cases {
         // Arrange & Act
         let mut target = HashMap::new();
@@ -145,13 +148,16 @@ fn test_animation_target_creation_with_different_values() {
         target.insert("scale".to_string(), AnimationValue::Number(scale));
         target.insert("rotate".to_string(), AnimationValue::Degrees(rotate));
         target.insert("opacity".to_string(), AnimationValue::Number(opacity));
-        
+
         // Assert
         assert_eq!(target.get("x"), Some(&AnimationValue::Pixels(x)));
         assert_eq!(target.get("y"), Some(&AnimationValue::Pixels(y)));
         assert_eq!(target.get("scale"), Some(&AnimationValue::Number(scale)));
         assert_eq!(target.get("rotate"), Some(&AnimationValue::Degrees(rotate)));
-        assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(opacity)));
+        assert_eq!(
+            target.get("opacity"),
+            Some(&AnimationValue::Number(opacity))
+        );
     }
 }
 
@@ -164,7 +170,7 @@ fn test_transition_configuration() {
         (1.0, 0.2, Easing::EaseOut),
         (2.0, 0.5, Easing::EaseInOut),
     ];
-    
+
     for (duration, delay, ease) in test_cases {
         // Arrange & Act
         let transition = Transition {
@@ -173,7 +179,7 @@ fn test_transition_configuration() {
             ease: ease.clone(),
             ..Default::default()
         };
-        
+
         // Assert
         assert_eq!(transition.duration, Some(duration));
         assert_eq!(transition.delay, Some(delay));
@@ -185,7 +191,7 @@ fn test_transition_configuration() {
 #[test]
 fn test_animation_target_properties() {
     let test_values = vec![0.0, 10.0, 100.0, 1000.0, -10.0, -100.0];
-    
+
     for x in &test_values {
         for y in &test_values {
             for scale in &test_values {
@@ -197,36 +203,42 @@ fn test_animation_target_properties() {
                         target.insert("scale".to_string(), AnimationValue::Number(*scale));
                         target.insert("rotate".to_string(), AnimationValue::Degrees(*rotate));
                         target.insert("opacity".to_string(), AnimationValue::Number(*opacity));
-                        
+
                         // Property: Values are preserved
                         assert_eq!(target.get("x"), Some(&AnimationValue::Pixels(*x)));
                         assert_eq!(target.get("y"), Some(&AnimationValue::Pixels(*y)));
                         assert_eq!(target.get("scale"), Some(&AnimationValue::Number(*scale)));
-                        assert_eq!(target.get("rotate"), Some(&AnimationValue::Degrees(*rotate)));
-                        assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(*opacity)));
-                        
+                        assert_eq!(
+                            target.get("rotate"),
+                            Some(&AnimationValue::Degrees(*rotate))
+                        );
+                        assert_eq!(
+                            target.get("opacity"),
+                            Some(&AnimationValue::Number(*opacity))
+                        );
+
                         // Property: Values are finite (except for special cases)
-                        if x.is_finite() { 
+                        if x.is_finite() {
                             if let Some(AnimationValue::Pixels(val)) = target.get("x") {
                                 assert!(val.is_finite());
                             }
                         }
-                        if y.is_finite() { 
+                        if y.is_finite() {
                             if let Some(AnimationValue::Pixels(val)) = target.get("y") {
                                 assert!(val.is_finite());
                             }
                         }
-                        if scale.is_finite() { 
+                        if scale.is_finite() {
                             if let Some(AnimationValue::Number(val)) = target.get("scale") {
                                 assert!(val.is_finite());
                             }
                         }
-                        if rotate.is_finite() { 
+                        if rotate.is_finite() {
                             if let Some(AnimationValue::Degrees(val)) = target.get("rotate") {
                                 assert!(val.is_finite());
                             }
                         }
-                        if opacity.is_finite() { 
+                        if opacity.is_finite() {
                             if let Some(AnimationValue::Number(val)) = target.get("opacity") {
                                 assert!(val.is_finite());
                             }
@@ -242,8 +254,13 @@ fn test_animation_target_properties() {
 fn test_transition_properties() {
     let duration_values = vec![0.0, 0.1, 0.5, 1.0, 2.0, 10.0];
     let delay_values = vec![0.0, 0.1, 0.5, 1.0, 2.0];
-    let ease_values = vec![Easing::Linear, Easing::EaseIn, Easing::EaseOut, Easing::EaseInOut];
-    
+    let ease_values = vec![
+        Easing::Linear,
+        Easing::EaseIn,
+        Easing::EaseOut,
+        Easing::EaseInOut,
+    ];
+
     for duration in &duration_values {
         for delay in &delay_values {
             for ease in &ease_values {
@@ -253,12 +270,12 @@ fn test_transition_properties() {
                     ease: ease.clone(),
                     ..Default::default()
                 };
-                
+
                 // Property: Values are preserved
                 assert_eq!(transition.duration, Some(*duration));
                 assert_eq!(transition.delay, Some(*delay));
                 assert_eq!(transition.ease, *ease);
-                
+
                 // Property: Duration and delay are non-negative
                 assert!(transition.duration.unwrap() >= 0.0);
                 assert!(transition.delay.unwrap() >= 0.0);
@@ -273,12 +290,12 @@ fn test_event_handlers_creation_should_initialize_correctly() {
     // Arrange & Act
     let event_handlers = EventHandlers {
         on_click: Some(ClickHandler::Counter),
-        state: Some(InteractiveState { 
+        state: Some(InteractiveState {
             initial: "default".to_string(),
             state_type: StateType::Counter,
         }),
     };
-    
+
     // Assert
     assert!(event_handlers.on_click.is_some());
     assert!(event_handlers.state.is_some());
@@ -289,12 +306,12 @@ fn test_event_handlers_without_click_should_have_none_click() {
     // Arrange & Act
     let event_handlers = EventHandlers {
         on_click: None,
-        state: Some(InteractiveState { 
+        state: Some(InteractiveState {
             initial: "default".to_string(),
             state_type: StateType::Counter,
         }),
     };
-    
+
     // Assert
     assert!(event_handlers.on_click.is_none());
     assert!(event_handlers.state.is_some());
@@ -312,13 +329,14 @@ fn test_motion_props_edge_cases() {
         variants: None,
         layout: None,
         drag: None,
+        drag_constraints: None,
         while_hover: None,
         while_tap: None,
         while_focus: None,
         while_in_view: None,
         event_handlers: None,
     };
-    
+
     assert!(empty_props.initial.is_none());
     assert!(empty_props.animate.is_none());
     assert!(empty_props.exit.is_none());
@@ -342,11 +360,23 @@ fn test_animation_target_edge_cases() {
     extreme_target.insert("scale".to_string(), AnimationValue::Number(0.0));
     extreme_target.insert("rotate".to_string(), AnimationValue::Degrees(f64::INFINITY));
     extreme_target.insert("opacity".to_string(), AnimationValue::Number(f64::NAN));
-    
-    assert_eq!(extreme_target.get("x"), Some(&AnimationValue::Pixels(f64::MAX)));
-    assert_eq!(extreme_target.get("y"), Some(&AnimationValue::Pixels(f64::MIN)));
-    assert_eq!(extreme_target.get("scale"), Some(&AnimationValue::Number(0.0)));
-    assert_eq!(extreme_target.get("rotate"), Some(&AnimationValue::Degrees(f64::INFINITY)));
+
+    assert_eq!(
+        extreme_target.get("x"),
+        Some(&AnimationValue::Pixels(f64::MAX))
+    );
+    assert_eq!(
+        extreme_target.get("y"),
+        Some(&AnimationValue::Pixels(f64::MIN))
+    );
+    assert_eq!(
+        extreme_target.get("scale"),
+        Some(&AnimationValue::Number(0.0))
+    );
+    assert_eq!(
+        extreme_target.get("rotate"),
+        Some(&AnimationValue::Degrees(f64::INFINITY))
+    );
     // Note: NaN comparison requires special handling
     if let Some(AnimationValue::Number(val)) = extreme_target.get("opacity") {
         assert!(val.is_nan());
@@ -363,21 +393,21 @@ fn test_motion_props_integration_with_animation_target() {
     initial.insert("scale".to_string(), AnimationValue::Number(1.0));
     initial.insert("rotate".to_string(), AnimationValue::Degrees(0.0));
     initial.insert("opacity".to_string(), AnimationValue::Number(1.0));
-    
+
     let mut animate = HashMap::new();
     animate.insert("x".to_string(), AnimationValue::Pixels(100.0));
     animate.insert("y".to_string(), AnimationValue::Pixels(200.0));
     animate.insert("scale".to_string(), AnimationValue::Number(1.5));
     animate.insert("rotate".to_string(), AnimationValue::Degrees(45.0));
     animate.insert("opacity".to_string(), AnimationValue::Number(0.8));
-    
+
     let transition = Transition {
         duration: Some(0.5),
         delay: Some(0.1),
         ease: Easing::EaseInOut,
         ..Default::default()
     };
-    
+
     // Act
     let props = MotionProps {
         initial: Some(initial.clone()),
@@ -387,13 +417,14 @@ fn test_motion_props_integration_with_animation_target() {
         variants: None,
         layout: Some(true),
         drag: None,
+        drag_constraints: None,
         while_hover: Some(animate.clone()),
         while_tap: Some(animate.clone()),
         while_focus: None,
         while_in_view: None,
         event_handlers: None,
     };
-    
+
     // Assert
     assert_eq!(props.initial, Some(initial));
     assert_eq!(props.animate, Some(animate.clone()));
@@ -413,7 +444,7 @@ fn test_animation_target_error_handling() {
     invalid_target.insert("scale".to_string(), AnimationValue::Number(-1.0)); // Negative scale
     invalid_target.insert("rotate".to_string(), AnimationValue::Degrees(f64::NAN));
     invalid_target.insert("opacity".to_string(), AnimationValue::Number(2.0)); // Opacity > 1.0
-    
+
     // Should handle gracefully
     if let Some(AnimationValue::Pixels(val)) = invalid_target.get("x") {
         assert!(val.is_nan());
@@ -436,21 +467,21 @@ fn test_animation_target_error_handling() {
 #[cfg(feature = "bench")]
 mod benches {
     use super::*;
-    
+
     #[test]
     fn bench_motion_props_creation() {
         for _ in 0..1000 {
             let _props = motion_props_fixture();
         }
     }
-    
+
     #[test]
     fn bench_animation_target_creation() {
         for _ in 0..1000 {
             let _target = animation_target_fixture();
         }
     }
-    
+
     #[test]
     fn bench_transition_creation() {
         for _ in 0..1000 {
@@ -464,7 +495,7 @@ mod benches {
 fn test_complex_motion_props_scenario() {
     // This test demonstrates a complex motion props scenario
     let props = motion_props_fixture();
-    
+
     // Verify the props are in the correct state
     assert!(props.initial.is_some());
     assert!(props.animate.is_some());
@@ -484,20 +515,21 @@ fn test_motion_props_state_transitions() {
         variants: None,
         layout: None,
         drag: None,
+        drag_constraints: None,
         while_hover: None,
         while_tap: None,
         while_focus: None,
         while_in_view: None,
         event_handlers: None,
     };
-    
+
     assert!(props.initial.is_some());
     assert!(props.animate.is_none());
-    
+
     // Test adding animate state
     props.animate = Some(animation_target_fixture());
     assert!(props.animate.is_some());
-    
+
     // Test adding transition
     props.transition = Some(transition_fixture());
     assert!(props.transition.is_some());
@@ -512,7 +544,7 @@ fn test_animation_target_validation() {
     valid_target.insert("scale".to_string(), AnimationValue::Number(1.5));
     valid_target.insert("rotate".to_string(), AnimationValue::Degrees(45.0));
     valid_target.insert("opacity".to_string(), AnimationValue::Number(0.8));
-    
+
     // All values should be valid
     if let Some(AnimationValue::Pixels(val)) = valid_target.get("x") {
         assert!(val.is_finite());
@@ -540,7 +572,7 @@ fn test_transition_validation() {
         ease: Easing::EaseInOut,
         ..Default::default()
     };
-    
+
     // All values should be valid
     assert!(valid_transition.duration.unwrap() > 0.0);
     assert!(valid_transition.delay.unwrap() >= 0.0);
@@ -552,12 +584,12 @@ fn test_transition_validation() {
 fn test_event_handlers_validation() {
     let event_handlers = EventHandlers {
         on_click: Some(ClickHandler::Counter),
-        state: Some(InteractiveState { 
+        state: Some(InteractiveState {
             initial: "default".to_string(),
             state_type: StateType::Counter,
         }),
     };
-    
+
     // Event handlers should be valid
     assert!(event_handlers.on_click.is_some());
     assert!(event_handlers.state.is_some());
@@ -573,7 +605,7 @@ fn test_motion_props_with_all_animation_states() {
     let while_tap = animation_target_fixture();
     let while_focus = animation_target_fixture();
     let while_in_view = animation_target_fixture();
-    
+
     let props = MotionProps {
         initial: Some(initial.clone()),
         animate: Some(animate.clone()),
@@ -582,13 +614,14 @@ fn test_motion_props_with_all_animation_states() {
         variants: None,
         layout: Some(true),
         drag: None,
+        drag_constraints: None,
         while_hover: Some(while_hover.clone()),
         while_tap: Some(while_tap.clone()),
         while_focus: Some(while_focus.clone()),
         while_in_view: Some(while_in_view.clone()),
         event_handlers: None,
     };
-    
+
     // All animation states should be present
     assert_eq!(props.initial, Some(initial));
     assert_eq!(props.animate, Some(animate));

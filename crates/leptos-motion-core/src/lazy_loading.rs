@@ -1,22 +1,22 @@
 //! Lazy Loading and Code Splitting
-//! 
+//!
 //! This module provides lazy loading capabilities for different parts of the
 //! animation system, allowing for better bundle size optimization and
 //! on-demand loading of features.
 
+use crate::Result;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex, OnceLock};
 use std::time::Instant;
-use crate::Result;
 
 /// Represents a lazy-loaded module
 pub trait LazyModule: Send + Sync {
     /// Get the module name
     fn name(&self) -> &str;
-    
+
     /// Get the module size estimate in bytes
     fn size_estimate(&self) -> usize;
-    
+
     /// Check if the module is loaded
     fn is_loaded(&self) -> bool;
 }
@@ -43,16 +43,19 @@ impl AnimationLazyLoader {
         let mut modules = self.loaded_modules.lock().unwrap();
         let mut times = self.load_times.lock().unwrap();
         let mut sizes = self.module_sizes.lock().unwrap();
-        
+
         if modules.contains_key(name) {
-            return Err(crate::AnimationError::EngineUnavailable(format!("Module {} already loaded", name)));
+            return Err(crate::AnimationError::EngineUnavailable(format!(
+                "Module {} already loaded",
+                name
+            )));
         }
-        
+
         let size = module.size_estimate();
         modules.insert(name.to_string(), module);
         times.insert(name.to_string(), Instant::now());
         sizes.insert(name.to_string(), size);
-        
+
         Ok(())
     }
 
@@ -93,15 +96,18 @@ impl AnimationLazyLoader {
         let mut modules = self.loaded_modules.lock().unwrap();
         let mut times = self.load_times.lock().unwrap();
         let mut sizes = self.module_sizes.lock().unwrap();
-        
+
         if !modules.contains_key(name) {
-            return Err(crate::AnimationError::EngineUnavailable(format!("Module {} not loaded", name)));
+            return Err(crate::AnimationError::EngineUnavailable(format!(
+                "Module {} not loaded",
+                name
+            )));
         }
-        
+
         modules.remove(name);
         times.remove(name);
         sizes.remove(name);
-        
+
         Ok(())
     }
 
@@ -110,7 +116,7 @@ impl AnimationLazyLoader {
         let mut modules = self.loaded_modules.lock().unwrap();
         let mut times = self.load_times.lock().unwrap();
         let mut sizes = self.module_sizes.lock().unwrap();
-        
+
         modules.clear();
         times.clear();
         sizes.clear();
@@ -218,8 +224,10 @@ impl FeatureModuleLoader {
         let loaded_count = self.loader.loaded_count();
         let total_size = self.loader.total_loaded_size();
 
-        let count_threshold = (self.config.max_loaded_modules as f64 * self.config.cleanup_threshold) as usize;
-        let size_threshold = (self.config.max_total_size as f64 * self.config.cleanup_threshold) as usize;
+        let count_threshold =
+            (self.config.max_loaded_modules as f64 * self.config.cleanup_threshold) as usize;
+        let size_threshold =
+            (self.config.max_total_size as f64 * self.config.cleanup_threshold) as usize;
 
         loaded_count > count_threshold || total_size > size_threshold
     }
@@ -238,10 +246,10 @@ impl FeatureModuleLoader {
 /// Dynamic import simulation for browser environments
 #[cfg(target_arch = "wasm32")]
 pub mod dynamic_import {
-    use wasm_bindgen::prelude::*;
     use js_sys::Promise;
     use std::future::Future;
     use std::pin::Pin;
+    use wasm_bindgen::prelude::*;
 
     /// Simulate dynamic import for WASM modules
     pub async fn import_module(module_name: &str) -> Result<JsValue, JsValue> {
@@ -353,10 +361,10 @@ mod tests {
     fn test_feature_loader_config() {
         let config = LazyLoadingConfig::default();
         let loader = FeatureModuleLoader::new(config);
-        
+
         // Test with no modules loaded
         assert!(!loader.needs_cleanup());
-        
+
         // Test cleanup
         let result = loader.cleanup_if_needed();
         assert!(result.is_ok());
@@ -366,7 +374,7 @@ mod tests {
     fn test_feature_loader_load_features() {
         let config = LazyLoadingConfig::default();
         let loader = FeatureModuleLoader::new(config);
-        
+
         let features = ["gestures", "layout", "scroll"];
         let result = loader.load_features(&features);
         assert!(result.is_ok());

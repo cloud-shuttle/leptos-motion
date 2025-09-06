@@ -4,38 +4,38 @@ use leptos_motion::*;
 #[component]
 fn App() -> impl IntoView {
     view! {
-        <div>
-            <header style="
+            <div>
+                <header style="
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
                 padding: 2rem;
                 text-align: center;
             ">
-                <h1 style="font-size: 3rem; margin-bottom: 1rem;">"🎭 Leptos Motion"</h1>
-                <p style="font-size: 1.2rem; opacity: 0.9;">
-                    "Animation library for Leptos with Motion-inspired API"
-                </p>
-            </header>
+                    <h1 style="font-size: 3rem; margin-bottom: 1rem;">"🎭 Leptos Motion"</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9;">
+                        "Animation library for Leptos with Motion-inspired API"
+                    </p>
+                </header>
 
-            <main style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
-                <section style="margin-bottom: 4rem;">
-                    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">
-                        "Interactive Examples"
-                    </h2>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                        <InteractiveButton />
-                        <AnimatedCard />
-                        <SimpleAnimation />
-                    </div>
-                </section>
+                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+                    <section style="margin-bottom: 4rem;">
+                        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">
+                            "Interactive Examples"
+                        </h2>
 
-                <section style="margin-bottom: 4rem;">
-                    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">
-                        "Installation"
-                    </h2>
-                    
-                    <div style="
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                            <InteractiveButton />
+                            <AnimatedCard />
+                            <SimpleAnimation />
+                        </div>
+                    </section>
+
+                    <section style="margin-bottom: 4rem;">
+                        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">
+                            "Installation"
+                        </h2>
+
+                        <div style="
                         background: #f8f9fa;
                         border-radius: 8px;
                         padding: 2rem;
@@ -43,43 +43,43 @@ fn App() -> impl IntoView {
                         font-size: 0.9rem;
                         overflow-x: auto;
                     ">
-                        <pre><code># Add to your Cargo.toml
-[dependencies]
-leptos = "0.7"
-leptos-motion = "0.1.0-alpha"
+                            <pre><code># Add to your Cargo.toml
+    [dependencies]
+    leptos = "0.7"
+    leptos-motion = "0.1.0-alpha"
 
-# Basic usage
-use leptos::prelude::*;
-use leptos_motion::*;
+    # Basic usage
+    use leptos::prelude::*;
+    use leptos_motion::*;
 
-#[component]
-fn MyComponent() -> impl IntoView {
-    view! {
-        <MotionDiv
-            animate=motion_target!(
-                "scale" => AnimationValue::Number(1.1)
-            )
-            while_hover=motion_target!(
-                "scale" => AnimationValue::Number(1.2)
-            )
-        >
-            "Hover me!"
-        </MotionDiv>
-    }
-}</code></pre>
-                    </div>
-                </section>
+    #[component]
+    fn MyComponent() -> impl IntoView {
+        view! {
+            <MotionDiv
+                animate=motion_target!(
+                    "scale" => AnimationValue::Number(1.1)
+                )
+                while_hover=motion_target!(
+                    "scale" => AnimationValue::Number(1.2)
+                )
+            >
+                "Hover me!"
+            </MotionDiv>
+        }
+    }</code></pre>
+                        </div>
+                    </section>
 
-                <section style="text-align: center;">
-                    <h2 style="margin-bottom: 1rem; color: #333;">
-                        "Ready to get started?"
-                    </h2>
-                    <p style="margin-bottom: 2rem; color: #666;">
-                        "Check out our documentation and examples to learn more."
-                    </p>
-                    <div style="display: flex; gap: 1rem; justify-content: center;">
-                        <a href="https://github.com/cloud-shuttle/leptos-motion" 
-                           style="
+                    <section style="text-align: center;">
+                        <h2 style="margin-bottom: 1rem; color: #333;">
+                            "Ready to get started?"
+                        </h2>
+                        <p style="margin-bottom: 2rem; color: #666;">
+                            "Check out our documentation and examples to learn more."
+                        </p>
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <a href="https://github.com/cloud-shuttle/leptos-motion"
+                               style="
                                background: #3b82f6;
                                color: white;
                                padding: 0.75rem 1.5rem;
@@ -87,11 +87,11 @@ fn MyComponent() -> impl IntoView {
                                text-decoration: none;
                                font-weight: 600;
                            "
-                           target="_blank">
-                            "View on GitHub"
-                        </a>
-                        <a href="https://crates.io/crates/leptos-motion"
-                           style="
+                               target="_blank">
+                                "View on GitHub"
+                            </a>
+                            <a href="https://crates.io/crates/leptos-motion"
+                               style="
                                background: #10b981;
                                color: white;
                                padding: 0.75rem 1.5rem;
@@ -99,31 +99,31 @@ fn MyComponent() -> impl IntoView {
                                text-decoration: none;
                                font-weight: 600;
                            "
-                           target="_blank">
-                            "Crates.io"
-                        </a>
-                    </div>
-                </section>
-            </main>
+                               target="_blank">
+                                "Crates.io"
+                            </a>
+                        </div>
+                    </section>
+                </main>
 
-            <footer style="
+                <footer style="
                 background: #1f2937;
                 color: white;
                 text-align: center;
                 padding: 2rem;
                 margin-top: 4rem;
             ">
-                <p>"Built with ❤️ for the Rust community"</p>
-                <p style="opacity: 0.8; margin-top: 0.5rem;">"Inspired by Framer Motion"</p>
-            </footer>
-        </div>
-    }
+                    <p>"Built with ❤️ for the Rust community"</p>
+                    <p style="opacity: 0.8; margin-top: 0.5rem;">"Inspired by Framer Motion"</p>
+                </footer>
+            </div>
+        }
 }
 
 #[component]
 fn InteractiveButton() -> impl IntoView {
     let (is_pressed, set_is_pressed) = create_signal(false);
-    
+
     view! {
         <div style="
             background: white;

@@ -1,18 +1,18 @@
 //! Comprehensive animation presets for common use cases
 
-use crate::{
-    AnimationBuilder, AnimationConfig, AnimationValue,
-    Transition, Easing, SpringConfig, RepeatConfig, StaggerConfig, StaggerFrom
-};
-use crate::animation::Keyframes;
 use crate::Variants;
+use crate::animation::Keyframes;
+use crate::{
+    AnimationBuilder, AnimationConfig, AnimationValue, Easing, RepeatConfig, SpringConfig,
+    StaggerConfig, StaggerFrom, Transition,
+};
 
 /// Animation presets for common UI patterns
 pub struct AnimationPresets;
 
 impl AnimationPresets {
     // ===== ENTRANCE ANIMATIONS =====
-    
+
     /// Fade in animation
     pub fn fade_in() -> AnimationConfig {
         AnimationBuilder::new()
@@ -25,7 +25,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Slide up animation
     pub fn slide_up(distance: f64) -> AnimationConfig {
         AnimationBuilder::new()
@@ -44,7 +44,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Scale in animation
     pub fn scale_in() -> AnimationConfig {
         AnimationBuilder::new()
@@ -63,7 +63,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Pop in animation
     pub fn pop_in() -> AnimationConfig {
         AnimationBuilder::new()
@@ -87,7 +87,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Rotate in animation
     pub fn rotate_in() -> AnimationConfig {
         AnimationBuilder::new()
@@ -106,7 +106,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Flip in animation
     pub fn flip_in() -> AnimationConfig {
         AnimationBuilder::new()
@@ -125,9 +125,9 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     // ===== EXIT ANIMATIONS =====
-    
+
     /// Fade out animation
     pub fn fade_out() -> AnimationConfig {
         AnimationBuilder::new()
@@ -139,7 +139,7 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     /// Scale out animation
     pub fn scale_out() -> AnimationConfig {
         AnimationBuilder::new()
@@ -154,9 +154,9 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     // ===== INTERACTION ANIMATIONS =====
-    
+
     /// Hover lift animation
     pub fn hover_lift() -> Variants {
         Variants::new()
@@ -164,7 +164,7 @@ impl AnimationPresets {
             .add_variant("hover", animate!("y" => AnimationValue::Pixels(-8.0)))
             .initial("initial")
     }
-    
+
     /// Hover scale animation
     pub fn hover_scale(scale: f64) -> Variants {
         Variants::new()
@@ -172,7 +172,7 @@ impl AnimationPresets {
             .add_variant("hover", animate!("scale" => AnimationValue::Number(scale)))
             .initial("initial")
     }
-    
+
     /// Tap press animation
     pub fn tap_press() -> Variants {
         Variants::new()
@@ -180,42 +180,94 @@ impl AnimationPresets {
             .add_variant("tap", animate!("scale" => AnimationValue::Number(0.95)))
             .initial("initial")
     }
-    
+
     // ===== ATTENTION ANIMATIONS =====
-    
+
     /// Pulse animation
     pub fn pulse() -> Keyframes {
         Keyframes::new()
-            .add(0.0, animate!("scale" => AnimationValue::Number(1.0)), Some(Easing::EaseInOut))
-            .add(0.5, animate!("scale" => AnimationValue::Number(1.05)), Some(Easing::EaseInOut))
+            .add(
+                0.0,
+                animate!("scale" => AnimationValue::Number(1.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.5,
+                animate!("scale" => AnimationValue::Number(1.05)),
+                Some(Easing::EaseInOut),
+            )
             .add(1.0, animate!("scale" => AnimationValue::Number(1.0)), None)
     }
-    
+
     /// Bounce animation
     pub fn bounce() -> Keyframes {
         Keyframes::new()
-            .add(0.0, animate!("y" => AnimationValue::Pixels(0.0)), Some(Easing::EaseOut))
-            .add(0.5, animate!("y" => AnimationValue::Pixels(-20.0)), Some(Easing::EaseIn))
+            .add(
+                0.0,
+                animate!("y" => AnimationValue::Pixels(0.0)),
+                Some(Easing::EaseOut),
+            )
+            .add(
+                0.5,
+                animate!("y" => AnimationValue::Pixels(-20.0)),
+                Some(Easing::EaseIn),
+            )
             .add(1.0, animate!("y" => AnimationValue::Pixels(0.0)), None)
     }
-    
+
     /// Shake animation
     pub fn shake() -> Keyframes {
         Keyframes::new()
-            .add(0.0, animate!("x" => AnimationValue::Pixels(0.0)), Some(Easing::EaseInOut))
-            .add(0.1, animate!("x" => AnimationValue::Pixels(-10.0)), Some(Easing::EaseInOut))
-            .add(0.2, animate!("x" => AnimationValue::Pixels(10.0)), Some(Easing::EaseInOut))
-            .add(0.3, animate!("x" => AnimationValue::Pixels(-10.0)), Some(Easing::EaseInOut))
-            .add(0.4, animate!("x" => AnimationValue::Pixels(10.0)), Some(Easing::EaseInOut))
-            .add(0.5, animate!("x" => AnimationValue::Pixels(-5.0)), Some(Easing::EaseInOut))
-            .add(0.6, animate!("x" => AnimationValue::Pixels(5.0)), Some(Easing::EaseInOut))
-            .add(0.7, animate!("x" => AnimationValue::Pixels(-2.0)), Some(Easing::EaseInOut))
-            .add(0.8, animate!("x" => AnimationValue::Pixels(2.0)), Some(Easing::EaseInOut))
+            .add(
+                0.0,
+                animate!("x" => AnimationValue::Pixels(0.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.1,
+                animate!("x" => AnimationValue::Pixels(-10.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.2,
+                animate!("x" => AnimationValue::Pixels(10.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.3,
+                animate!("x" => AnimationValue::Pixels(-10.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.4,
+                animate!("x" => AnimationValue::Pixels(10.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.5,
+                animate!("x" => AnimationValue::Pixels(-5.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.6,
+                animate!("x" => AnimationValue::Pixels(5.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.7,
+                animate!("x" => AnimationValue::Pixels(-2.0)),
+                Some(Easing::EaseInOut),
+            )
+            .add(
+                0.8,
+                animate!("x" => AnimationValue::Pixels(2.0)),
+                Some(Easing::EaseInOut),
+            )
             .add(1.0, animate!("x" => AnimationValue::Pixels(0.0)), None)
     }
-    
+
     // ===== LOADING ANIMATIONS =====
-    
+
     /// Spin animation
     pub fn spin() -> AnimationConfig {
         AnimationBuilder::new()
@@ -228,9 +280,9 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     // ===== PAGE TRANSITIONS =====
-    
+
     /// Page fade transition
     pub fn page_fade() -> AnimationConfig {
         AnimationBuilder::new()
@@ -244,9 +296,9 @@ impl AnimationPresets {
             })
             .build()
     }
-    
+
     // ===== LIST ANIMATIONS =====
-    
+
     /// Stagger children animation
     pub fn stagger_children(delay: f64) -> Transition {
         Transition {
@@ -273,7 +325,7 @@ pub enum SlideDirection {
 /// Spring configuration presets
 pub mod springs {
     use super::*;
-    
+
     /// Gentle spring (smooth, minimal overshoot)
     pub const GENTLE: SpringConfig = SpringConfig {
         stiffness: 100.0,
@@ -283,7 +335,7 @@ pub mod springs {
         rest_delta: 0.01,
         rest_speed: 0.01,
     };
-    
+
     /// Bouncy spring (more oscillation)
     pub const BOUNCY: SpringConfig = SpringConfig {
         stiffness: 200.0,
@@ -293,7 +345,7 @@ pub mod springs {
         rest_delta: 0.01,
         rest_speed: 0.01,
     };
-    
+
     /// Snappy spring (fast response)
     pub const SNAPPY: SpringConfig = SpringConfig {
         stiffness: 300.0,
@@ -303,7 +355,7 @@ pub mod springs {
         rest_delta: 0.01,
         rest_speed: 0.01,
     };
-    
+
     /// Wobbly spring (very bouncy)
     pub const WOBBLY: SpringConfig = SpringConfig {
         stiffness: 180.0,
@@ -313,7 +365,7 @@ pub mod springs {
         rest_delta: 0.01,
         rest_speed: 0.01,
     };
-    
+
     /// Slow spring (smooth and slow)
     pub const SLOW: SpringConfig = SpringConfig {
         stiffness: 50.0,
@@ -328,19 +380,19 @@ pub mod springs {
 /// Easing presets
 pub mod easings {
     use super::*;
-    
+
     /// Material Design ease
     pub const EASE: Easing = Easing::Bezier(0.4, 0.0, 0.2, 1.0);
-    
+
     /// Material Design ease in
     pub const EASE_IN: Easing = Easing::Bezier(0.4, 0.0, 1.0, 1.0);
-    
+
     /// Material Design ease out
     pub const EASE_OUT: Easing = Easing::Bezier(0.0, 0.0, 0.2, 1.0);
-    
+
     /// Material Design ease in out
     pub const EASE_IN_OUT: Easing = Easing::Bezier(0.4, 0.0, 0.2, 1.0);
-    
+
     /// Smooth spring
     pub const SPRING_SMOOTH: Easing = Easing::Spring(SpringConfig {
         stiffness: 100.0,
@@ -350,7 +402,7 @@ pub mod easings {
         rest_delta: 0.01,
         rest_speed: 0.01,
     });
-    
+
     /// Bouncy spring
     pub const SPRING_BOUNCY: Easing = Easing::Spring(SpringConfig {
         stiffness: 200.0,
@@ -360,7 +412,7 @@ pub mod easings {
         rest_delta: 0.01,
         rest_speed: 0.01,
     });
-    
+
     /// Gentle spring
     pub const SPRING_GENTLE: Easing = Easing::Spring(SpringConfig {
         stiffness: 50.0,
@@ -375,25 +427,37 @@ pub mod easings {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_fade_in_preset() {
         let config = AnimationPresets::fade_in();
-        assert_eq!(config.initial.get("opacity"), Some(&AnimationValue::Number(0.0)));
-        assert_eq!(config.animate.get("opacity"), Some(&AnimationValue::Number(1.0)));
+        assert_eq!(
+            config.initial.get("opacity"),
+            Some(&AnimationValue::Number(0.0))
+        );
+        assert_eq!(
+            config.animate.get("opacity"),
+            Some(&AnimationValue::Number(1.0))
+        );
     }
-    
+
     #[test]
     fn test_slide_up_preset() {
         let config = AnimationPresets::slide_up(50.0);
         assert_eq!(config.initial.get("y"), Some(&AnimationValue::Pixels(50.0)));
         assert_eq!(config.animate.get("y"), Some(&AnimationValue::Pixels(0.0)));
     }
-    
+
     #[test]
     fn test_hover_lift_variants() {
         let variants = AnimationPresets::hover_lift();
-        assert_eq!(variants.get_variant("initial").unwrap().get("y"), Some(&AnimationValue::Pixels(0.0)));
-        assert_eq!(variants.get_variant("hover").unwrap().get("y"), Some(&AnimationValue::Pixels(-8.0)));
+        assert_eq!(
+            variants.get_variant("initial").unwrap().get("y"),
+            Some(&AnimationValue::Pixels(0.0))
+        );
+        assert_eq!(
+            variants.get_variant("hover").unwrap().get("y"),
+            Some(&AnimationValue::Pixels(-8.0))
+        );
     }
 }

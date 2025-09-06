@@ -1,5 +1,5 @@
 //! Basic animations example using manual DOM manipulation
-//! 
+//!
 //! This example demonstrates how to create smooth animations without
 //! requiring the MotionDiv component
 
@@ -10,11 +10,11 @@ use leptos_motion_core::*;
 #[component]
 pub fn App() -> impl IntoView {
     let (animated, set_animated) = signal(false);
-    
+
     view! {
         <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
             <h1>"Leptos Motion - Basic Animations"</h1>
-            
+
             <button
                 class="animation-button"
                 style=move || format!(
@@ -26,7 +26,7 @@ pub fn App() -> impl IntoView {
             >
                 {move || if animated.get() { "Reset Animation" } else { "Start Animation" }}
             </button>
-            
+
             <div
                 class="animated-box"
                 style=move || format!(
@@ -37,9 +37,9 @@ pub fn App() -> impl IntoView {
                 )
             >
             </div>
-            
+
             <p class="description" style="max-width: 600px; text-align: center; color: #666;">
-                "This example shows a working animation using CSS transitions. " 
+                "This example shows a working animation using CSS transitions. "
                 "The leptos-motion-core library provides the foundation for more advanced animations."
             </p>
         </div>

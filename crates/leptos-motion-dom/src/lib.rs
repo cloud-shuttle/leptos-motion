@@ -29,13 +29,13 @@ pub use utils::*;
 #[cfg(feature = "css-animations")]
 pub use css_animations::*;
 
-
 // Re-export components
 pub use components::{MotionDiv, MotionSpan};
 
 // Re-export simplified event handling (new public API)
 pub use simplified_event_handling::{
-    SimplifiedDragConfig, SimplifiedMotionProps, DragAxis, DragConstraints, DragConfig, MotionProps, EventHandlers
+    DragAxis, DragConfig, DragConstraints, EventHandlers, MotionProps, SimplifiedDragConfig,
+    SimplifiedMotionProps,
 };
 
 // Re-export core types for convenience

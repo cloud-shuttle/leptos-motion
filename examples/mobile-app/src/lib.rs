@@ -1,5 +1,5 @@
 //! Mobile app example with smooth transitions and responsive design
-//! 
+//!
 //! This example demonstrates mobile-friendly animations and interactions
 
 use leptos::*;
@@ -10,12 +10,12 @@ use leptos_motion_core::*;
 pub fn App() -> impl IntoView {
     let (current_page, set_current_page) = signal(0);
     let (menu_open, set_menu_open) = signal(false);
-    
+
     let pages = vec!["Home", "Profile", "Messages", "Settings"];
-    
+
     view! {
         <div style="min-height: 100vh; background: linear-gradient(to bottom, #1e3a8a, #3730a3); color: white; font-family: system-ui; position: relative; overflow-x: hidden;">
-            
+
             // Header
             <header style="padding: 1rem; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between;">
                 <h1 style="margin: 0; font-size: 1.5rem; font-weight: bold;">"Mobile App"</h1>
@@ -30,9 +30,9 @@ pub fn App() -> impl IntoView {
                     "☰"
                 </button>
             </header>
-            
+
             // Slide-out Menu
-            <div 
+            <div
                 style=move || format!(
                     "position: fixed; top: 0; right: 0; height: 100vh; width: 280px; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX({}px); z-index: 50; padding: 1rem;",
                     if menu_open.get() { 0 } else { 280 }
@@ -47,7 +47,7 @@ pub fn App() -> impl IntoView {
                         "×"
                     </button>
                 </div>
-                
+
                 <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
                     {pages.iter().enumerate().map(|(index, page)| {
                         let is_current = move || current_page.get() == index;
@@ -69,7 +69,7 @@ pub fn App() -> impl IntoView {
                     }).collect::<Vec<_>>()}
                 </nav>
             </div>
-            
+
             // Overlay
             {move || if menu_open.get() {
                 view! {
@@ -82,7 +82,7 @@ pub fn App() -> impl IntoView {
             } else {
                 view! {}.into_any()
             }}
-            
+
             // Main Content
             <main style="padding: 2rem 1rem; min-height: calc(100vh - 140px);">
                 {move || match current_page.get() {
@@ -93,19 +93,19 @@ pub fn App() -> impl IntoView {
                     _ => view! { <div>"Unknown page"</div> }.into_any(),
                 }}
             </main>
-            
+
             // Bottom Navigation
             <nav style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); padding: 1rem; display: flex; justify-content: space-around;">
                 {pages.iter().enumerate().map(|(index, page)| {
                     let is_current = move || current_page.get() == index;
                     let icon = match index {
                         0 => "🏠",
-                        1 => "👤", 
+                        1 => "👤",
                         2 => "💬",
                         3 => "⚙️",
                         _ => "📱"
                     };
-                    
+
                     view! {
                         <button
                             style=move || format!(
@@ -121,7 +121,7 @@ pub fn App() -> impl IntoView {
                     }
                 }).collect::<Vec<_>>()}
             </nav>
-            
+
         </div>
     }
 }
@@ -129,11 +129,11 @@ pub fn App() -> impl IntoView {
 #[component]
 fn HomePage() -> impl IntoView {
     let (counter, set_counter) = signal(0);
-    
+
     view! {
         <div style="text-align: center;">
             <h2 style="margin: 0 0 2rem 0; font-size: 2rem;">"Welcome Home"</h2>
-            
+
             <div style="background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(10px);">
                 <h3 style="margin: 0 0 1rem 0;">"Quick Stats"</h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
@@ -141,7 +141,7 @@ fn HomePage() -> impl IntoView {
                     <StatCard title="Status".to_string() value=move || "Active".to_string() />
                 </div>
             </div>
-            
+
             <button
                 style="background: #3b82f6; color: white; border: none; padding: 1rem 2rem; border-radius: 2rem; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: all 0.3s ease; transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);"
                 on:click=move |_| set_counter.update(|c| *c += 1)
@@ -157,7 +157,7 @@ fn ProfilePage() -> impl IntoView {
     view! {
         <div>
             <h2 style="margin: 0 0 2rem 0; text-align: center;">"Profile"</h2>
-            
+
             <div style="text-align: center; margin-bottom: 2rem;">
                 <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #f59e0b, #ef4444); border-radius: 50%; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
                     "👤"
@@ -165,7 +165,7 @@ fn ProfilePage() -> impl IntoView {
                 <h3 style="margin: 0 0 0.5rem 0;">"John Doe"</h3>
                 <p style="margin: 0; opacity: 0.8;">"Mobile App User"</p>
             </div>
-            
+
             <div style="background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; backdrop-filter: blur(10px);">
                 <ProfileStat label="Joined".to_string() value="January 2024".to_string() />
                 <ProfileStat label="Posts".to_string() value="42".to_string() />
@@ -183,17 +183,17 @@ fn MessagesPage() -> impl IntoView {
         ("Bob", "Meeting at 3pm today", "1 hour ago"),
         ("Team", "New project update", "3 hours ago"),
     ];
-    
+
     view! {
         <div>
             <h2 style="margin: 0 0 2rem 0; text-align: center;">"Messages"</h2>
-            
+
             <div style="display: flex; flex-direction: column; gap: 1rem;">
                 {messages.into_iter().map(|(sender, message, time)| {
                     view! {
-                        <MessageCard 
+                        <MessageCard
                             sender=sender.to_string()
-                            message=message.to_string() 
+                            message=message.to_string()
                             time=time.to_string()
                         />
                     }
@@ -207,24 +207,24 @@ fn MessagesPage() -> impl IntoView {
 fn SettingsPage() -> impl IntoView {
     let (notifications, set_notifications) = signal(true);
     let (location, set_location) = signal(false);
-    
+
     view! {
         <div>
             <h2 style="margin: 0 0 2rem 0; text-align: center;">"Settings"</h2>
-            
+
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <ToggleSetting 
+                <ToggleSetting
                     label="Push Notifications".to_string()
                     checked=notifications
                     on_change=move |value| set_notifications.set(value)
                 />
-                <ToggleSetting 
+                <ToggleSetting
                     label="Location Services".to_string()
                     checked=location
                     on_change=move |value| set_location.set(value)
                 />
             </div>
-            
+
             <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 1rem; border: 1px solid rgba(239, 68, 68, 0.3);">
                 <h3 style="margin: 0 0 0.5rem 0; color: #fca5a5;">"Danger Zone"</h3>
                 <p style="margin: 0 0 1rem 0; opacity: 0.8; font-size: 0.9rem;">"These actions cannot be undone."</p>
@@ -263,7 +263,7 @@ fn ProfileStat(label: String, value: String) -> impl IntoView {
 #[component]
 fn MessageCard(sender: String, message: String, time: String) -> impl IntoView {
     let (hovered, set_hovered) = signal(false);
-    
+
     view! {
         <div
             style=move || format!(
@@ -284,13 +284,9 @@ fn MessageCard(sender: String, message: String, time: String) -> impl IntoView {
 }
 
 #[component]
-fn ToggleSetting<F>(
-    label: String,
-    checked: ReadSignal<bool>,
-    on_change: F
-) -> impl IntoView 
+fn ToggleSetting<F>(label: String, checked: ReadSignal<bool>, on_change: F) -> impl IntoView
 where
-    F: Fn(bool) + 'static
+    F: Fn(bool) + 'static,
 {
     view! {
         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1rem; backdrop-filter: blur(10px);">

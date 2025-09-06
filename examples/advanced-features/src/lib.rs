@@ -1,5 +1,5 @@
 //! Advanced features example with gesture detection and animations
-//! 
+//!
 //! This example demonstrates advanced motion features using manual DOM manipulation
 
 use leptos::*;
@@ -10,13 +10,13 @@ use leptos_motion_core::*;
 pub fn App() -> impl IntoView {
     let (hover_state, set_hover_state) = signal(false);
     let (drag_state, set_drag_state) = signal(false);
-    
+
     view! {
         <div style="min-height: 100vh; padding: 2rem; font-family: system-ui;">
             <h1>"Leptos Motion - Advanced Features"</h1>
-            
+
             <div style="display: grid; gap: 2rem; margin-top: 2rem;">
-                
+
                 // Hover Animation Demo
                 <section>
                     <h2>"Hover Animations"</h2>
@@ -35,7 +35,7 @@ pub fn App() -> impl IntoView {
                         "Hover me!"
                     </div>
                 </section>
-                
+
                 // Drag Simulation Demo
                 <section>
                     <h2>"Drag Interactions"</h2>
@@ -52,19 +52,19 @@ pub fn App() -> impl IntoView {
                         {move || if drag_state.get() { "Dragging!" } else { "Drag me!" }}
                     </div>
                 </section>
-                
+
                 // Animation Engine Demo
                 <section>
                     <h2>"Animation Engine"</h2>
                     <AnimationEngineDemo />
                 </section>
-                
+
                 // Performance Demo
                 <section>
                     <h2>"Performance Features"</h2>
                     <PerformanceDemo />
                 </section>
-                
+
             </div>
         </div>
     }
@@ -74,7 +74,7 @@ pub fn App() -> impl IntoView {
 fn AnimationEngineDemo() -> impl IntoView {
     let engine = MinimalEngine::new();
     let (running, set_running) = signal(false);
-    
+
     view! {
         <div style="background: #f8fafc; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0;">
             <p>"Animation engine status: " <strong>"Ready"</strong></p>
@@ -95,10 +95,10 @@ fn AnimationEngineDemo() -> impl IntoView {
     }
 }
 
-#[component]  
+#[component]
 fn PerformanceDemo() -> impl IntoView {
     let (stats_visible, set_stats_visible) = signal(false);
-    
+
     view! {
         <div style="background: #fef3c7; padding: 1.5rem; border-radius: 1rem; border: 1px solid #f59e0b;">
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -110,7 +110,7 @@ fn PerformanceDemo() -> impl IntoView {
                     {move || if stats_visible.get() { "Hide Stats" } else { "Show Stats" }}
                 </button>
             </div>
-            
+
             {move || if stats_visible.get() {
                 view! {
                     <div style="margin-top: 1rem; grid-template-columns: repeat(3, 1fr); gap: 1rem; display: grid; font-size: 0.875rem;">

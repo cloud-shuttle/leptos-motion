@@ -1,5 +1,5 @@
 //! Dashboard app example with smooth transitions and animations
-//! 
+//!
 //! This example demonstrates a dashboard interface with working animations
 
 use leptos::*;
@@ -10,19 +10,19 @@ use leptos_motion_core::*;
 pub fn App() -> impl IntoView {
     let (active_tab, set_active_tab) = signal(0);
     let (loading, set_loading) = signal(false);
-    
+
     let tabs = vec!["Overview", "Analytics", "Reports", "Settings"];
-    
+
     view! {
         <div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <div style="container: mx-auto; padding: 2rem;">
-                
+
                 // Header
                 <header style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.2);">
                     <h1 style="color: white; font-size: 2rem; font-weight: bold; margin: 0;">"Dashboard Analytics"</h1>
                     <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0 0;">"Real-time data visualization and insights"</p>
                 </header>
-                
+
                 // Tab Navigation
                 <nav style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
                     {tabs.into_iter().enumerate().map(|(index, tab)| {
@@ -42,7 +42,7 @@ pub fn App() -> impl IntoView {
                         }
                     }).collect::<Vec<_>>()}
                 </nav>
-                
+
                 // Content Area
                 <main style="background: rgba(255,255,255,0.95); border-radius: 1rem; padding: 2rem; min-height: 400px;">
                     {move || match active_tab.get() {
@@ -53,7 +53,7 @@ pub fn App() -> impl IntoView {
                         _ => view! { <div>"Unknown tab"</div> }.into_any(),
                     }}
                 </main>
-                
+
             </div>
         </div>
     }
@@ -103,10 +103,7 @@ fn AnalyticsContent() -> impl IntoView {
 }
 
 #[component]
-fn ReportsContent(
-    loading: ReadSignal<bool>,
-    set_loading: WriteSignal<bool>
-) -> impl IntoView {
+fn ReportsContent(loading: ReadSignal<bool>, set_loading: WriteSignal<bool>) -> impl IntoView {
     view! {
         <div>
             <h2 style="color: #1f2937; margin-bottom: 1.5rem;">"Reports"</h2>
@@ -126,7 +123,7 @@ fn ReportsContent(
                     {move || if loading.get() { "Generating..." } else { "Generate Report" }}
                 </button>
             </div>
-            
+
             {move || if loading.get() {
                 view! {
                     <div style="background: #fef3c7; padding: 2rem; border-radius: 0.5rem; border: 1px solid #f59e0b; text-align: center;">
@@ -150,19 +147,19 @@ fn ReportsContent(
 fn SettingsContent() -> impl IntoView {
     let (notifications, set_notifications) = signal(true);
     let (dark_mode, set_dark_mode) = signal(false);
-    
+
     view! {
         <div>
             <h2 style="color: #1f2937; margin-bottom: 1.5rem;">"Settings"</h2>
             <div style="space-y: 1rem;">
-                <SettingToggle 
+                <SettingToggle
                     label="Enable Notifications".to_string()
                     checked=notifications
                     on_change=move |value| set_notifications.set(value)
                 />
-                <SettingToggle 
+                <SettingToggle
                     label="Dark Mode".to_string()
-                    checked=dark_mode  
+                    checked=dark_mode
                     on_change=move |value| set_dark_mode.set(value)
                 />
             </div>
@@ -171,13 +168,9 @@ fn SettingsContent() -> impl IntoView {
 }
 
 #[component]
-fn MetricCard(
-    title: String,
-    value: String, 
-    color: String
-) -> impl IntoView {
+fn MetricCard(title: String, value: String, color: String) -> impl IntoView {
     let (hovered, set_hovered) = signal(false);
-    
+
     view! {
         <div
             style=move || format!(
@@ -202,13 +195,9 @@ fn MetricCard(
 }
 
 #[component]
-fn SettingToggle<F>(
-    label: String,
-    checked: ReadSignal<bool>,
-    on_change: F
-) -> impl IntoView 
+fn SettingToggle<F>(label: String, checked: ReadSignal<bool>, on_change: F) -> impl IntoView
 where
-    F: Fn(bool) + 'static
+    F: Fn(bool) + 'static,
 {
     view! {
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0;">

@@ -31,7 +31,7 @@ pub fn create_motion_elements(_input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn motion_target(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as syn::Expr);
-    
+
     let expanded = quote! {
         {
             let mut target = leptos_motion_core::AnimationTarget::new();
@@ -40,6 +40,6 @@ pub fn motion_target(input: TokenStream) -> TokenStream {
             target
         }
     };
-    
+
     TokenStream::from(expanded)
 }

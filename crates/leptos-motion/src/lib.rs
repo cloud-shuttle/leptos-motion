@@ -118,7 +118,8 @@ pub use leptos_motion_core::{
 
 // Re-export DOM functionality
 pub use leptos_motion_dom::{
-    AnimatePresence, DragAxis, DragConfig, DragConstraints, MotionDiv, MotionProps, MotionSpan, PresenceMode,
+    AnimatePresence, DragAxis, DragConfig, DragConstraints, MotionDiv, MotionProps, MotionSpan,
+    PresenceMode,
 };
 
 // Re-export macros

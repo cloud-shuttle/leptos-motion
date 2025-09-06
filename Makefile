@@ -26,6 +26,9 @@ help:
 	@echo "🔍 Quality & Linting:"
 	@echo "  format           Format Rust code"
 	@echo "  lint             Run clippy and other linters"
+	@echo "  pre-commit       Run pre-commit hooks"
+	@echo "  pre-commit-install Install pre-commit hooks"
+	@echo "  pre-commit-update Update pre-commit hooks"
 	@echo "  check-all        Run all quality checks"
 	@echo ""
 	@echo "🧹 Maintenance:"
@@ -109,7 +112,20 @@ lint:
 	cargo clippy --workspace -- -D warnings
 	cargo audit
 
-check-all: format lint test
+pre-commit:
+	@echo "🔍 Running pre-commit hooks..."
+	./scripts/run-pre-commit.sh
+
+pre-commit-install:
+	@echo "🔧 Installing pre-commit hooks..."
+	pre-commit install
+	pre-commit install --hook-type commit-msg
+
+pre-commit-update:
+	@echo "🔄 Updating pre-commit hooks..."
+	pre-commit autoupdate
+
+check-all: format lint test pre-commit
 	@echo "✅ All quality checks passed!"
 
 # Documentation

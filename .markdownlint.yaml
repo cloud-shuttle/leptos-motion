@@ -1,0 +1,54 @@
+# Markdownlint configuration for leptos-motion
+# Consistent markdown formatting across the project
+
+# Disable rules that conflict with our documentation style
+MD013: false # Line length - allow long lines in documentation
+MD033: false # Inline HTML - allow HTML in markdown for complex formatting
+MD041: false # First line should be a top-level heading - allow frontmatter
+MD024: false # Multiple headers with same content - allow in documentation
+MD029: false # Ordered list item prefix - be flexible with numbering
+MD026: false # Trailing punctuation in header - allow flexibility
+MD036: false # Emphasis used instead of header - allow in documentation
+MD012: false # Multiple consecutive blank lines - allow for readability
+MD022: false # Headers should be surrounded by blank lines - be flexible
+MD025: false # Multiple top-level headers - allow in documentation
+MD030: false # Spaces after list markers - be flexible
+MD031: false # Fenced code blocks should be surrounded by blank lines
+MD032: false # Lists should be surrounded by blank lines
+MD034: false # Bare URL used - allow in documentation
+MD035: false # Horizontal rule style - be flexible
+MD038: false # Spaces inside code span elements - be flexible
+MD039: false # Spaces inside link text - be flexible
+MD040: false # Fenced code blocks should have a language specified - be flexible
+
+# Enable rules that improve documentation quality
+MD001: true # Header levels should only increment by one level at a time
+MD002: true # First header should be a top-level header
+MD003: true # Header style - use ATX style (#)
+MD004: true # Unordered list style - use dash (-)
+MD005: true # Inconsistent indentation for list items under the same parent
+MD007: true # Unordered list indentation - use 2 spaces
+MD009: true # Trailing spaces - remove them
+MD010: true # Hard tabs - use spaces instead
+MD011: true # Reversed link syntax - fix reversed links
+MD014: true # Dollar signs used before commands without showing output
+MD018: true # No space after hash on atx style header
+MD019: true # Multiple spaces after hash on atx style header
+MD020: true # No space inside hashes on closed atx style header
+MD021: true # Multiple spaces inside hashes on closed atx style header
+MD023: true # Headers must start at the beginning of the line
+MD027: true # Multiple spaces after blockquote symbol
+MD028: true # Blank line inside blockquote
+MD037: true # Spaces inside emphasis markers
+MD042: true # No empty links
+MD043: true # Required header structure - be flexible but consistent
+MD044: true # Proper names should have the correct capitalization
+MD045: true # Images should have alternate text (alt text)
+MD046: true # Code block style - use fenced code blocks
+MD047: true # Files should end with a single newline character
+MD048: true # Code fence style - use consistent backticks
+MD049: true # Emphasis style should be consistent - use asterisks
+MD050: true # Strong style should be consistent - use asterisks
+MD051: true # Link fragments should be valid
+MD052: true # Reference links should be valid
+MD053: true # Link and image reference definitions should be valid

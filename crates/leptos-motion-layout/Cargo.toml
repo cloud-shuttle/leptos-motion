@@ -27,7 +27,7 @@ advanced-layout = []
 
 [dependencies]
 # Core motion
-leptos-motion-core.workspace = true
+leptos-motion-core = "0.3.2"
 
 # Web APIs
 web-sys = { workspace = true, features = [

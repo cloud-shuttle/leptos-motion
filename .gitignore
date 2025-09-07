@@ -120,3 +120,39 @@ benchmarks/results/
 *.tmp
 *.temp
 .temp/
+
+# Test executables and artifacts
+bundle_test
+code_splitting_tests
+css_class_animation_tests
+dependency_audit_tests
+wasm_optimization_tests
+*_test
+*_tests
+
+# WebGPU/Graphics specific
+*.spv
+*.wgsl
+*.glsl
+*.hlsl
+*.metal
+*.dxil
+
+# Performance profiling
+*.prof
+*.trace
+*.perf
+perf.data*
+
+# Bundle analysis
+bundle-analyzer/
+webpack-bundle-analyzer/
+
+# WebAssembly specific
+*.wasm.map
+*.wasm.dbg
+*.wasm.dwo
+
+# Leptos specific
+leptos-dist/
+leptos-pkg/

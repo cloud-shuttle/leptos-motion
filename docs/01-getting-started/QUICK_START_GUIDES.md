@@ -71,7 +71,7 @@ fn SimpleFadeIn() -> impl IntoView {
 
 **Best for**: Most production applications, interactive UIs, complex animations
 
-**Bundle Size**: ~75KB (ultra-minimal)
+**Bundle Size**: ~75KB (production preset)
 **Complexity**: Medium
 **Performance**: Excellent (Rust + WASM)
 
@@ -130,7 +130,7 @@ fn StandardAnimation() -> impl IntoView {
 
 **Best for**: Enterprise applications, games, data visualization, performance-critical apps
 
-**Bundle Size**: ~120KB (full library)
+**Bundle Size**: ~125KB (standard preset)
 **Complexity**: High
 **Performance**: Excellent (optimized Rust + WASM)
 
@@ -246,7 +246,7 @@ fn AdvancedAnimation() -> impl IntoView {
 | ------------ | ----------- | ----------- | ---------- | ----------------- |
 | **CSS-only** | ~15KB       | Excellent   | Low        | Simple effects    |
 | **Standard** | ~75KB       | Excellent   | Medium     | Most applications |
-| **Advanced** | ~120KB      | Excellent   | High       | Enterprise apps   |
+| **Advanced** | ~125KB      | Excellent   | High       | Enterprise apps   |
 
 ## Recommendations
 

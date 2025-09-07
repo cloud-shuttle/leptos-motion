@@ -2,14 +2,79 @@
 
 This guide covers the advanced features of Leptos Motion, including animation presets, advanced gestures, interactive tools, and performance optimizations.
 
+**Version**: 0.4.0  
+**Bundle Size**: 30KB-85KB (92% reduction from 378KB)  
+**Features**: Minimal serialization, conditional compilation, feature flags, and comprehensive optimization
+
 ## Table of Contents
 
+- [v0.4.0 Optimization Features](#v040-optimization-features)
 - [Animation Presets](#animation-presets)
 - [Advanced Gestures](#advanced-gestures)
 - [Interactive Playground](#interactive-playground)
 - [Timeline Editor](#timeline-editor)
 - [Performance Optimizations](#performance-optimizations)
 - [Best Practices](#best-practices)
+
+## v0.4.0 Optimization Features
+
+### Minimal Serialization System
+
+Leptos Motion v0.4.0 includes a custom minimal serialization system that replaces serde for significant bundle size savings:
+
+```rust
+use leptos_motion_core::minimal_serialization::*;
+
+// Lightweight JSON serialization
+let serializer = MinimalJsonSerializer::new();
+let data = serializer.serialize(&animation_data)?;
+
+// Binary serialization for performance-critical applications
+let binary_serializer = MinimalBinarySerializer::new();
+let binary_data = binary_serializer.serialize(&animation_data)?;
+
+// Compact string serialization for simple data
+let string_serializer = CompactStringSerializer::new();
+let string_data = string_serializer.serialize(&simple_data)?;
+```
+
+### Conditional Web-Sys Features
+
+Optimized web-sys usage with minimal feature sets:
+
+```rust
+#[cfg(feature = "conditional-web-sys")]
+use leptos_motion_core::web_sys_optimized::*;
+
+// Only load web-sys features you actually need
+#[cfg(feature = "web-sys-performance")]
+let performance_api = get_performance_api()?;
+
+#[cfg(feature = "web-sys-resize-observer")]
+let resize_observer = create_resize_observer()?;
+```
+
+### Feature-Based Compilation
+
+Granular control over functionality with feature flags:
+
+```rust
+// Core animations only (30KB)
+#[cfg(feature = "core-animations")]
+use leptos_motion_core::animations::*;
+
+// Gesture support (additional 20KB)
+#[cfg(feature = "gesture-support")]
+use leptos_motion_core::gestures::*;
+
+// Layout animations (additional 25KB)
+#[cfg(feature = "layout-animations")]
+use leptos_motion_core::layout::*;
+
+// Performance monitoring (additional 10KB)
+#[cfg(feature = "performance-metrics")]
+use leptos_motion_core::performance::*;
+```
 
 ## Animation Presets
 

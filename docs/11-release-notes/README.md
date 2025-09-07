@@ -10,6 +10,8 @@ This directory contains all release notes and release planning documents.
 - `RELEASE_NOTES_v0.3.0-beta.2.md` - Release notes for v0.3.0-beta.2
 - `RELEASE_NOTES_v0.3.0.md` - Release notes for v0.3.0
 - `RELEASE_NOTES_v0.3.2.md` - Release notes for v0.3.2
+- `RELEASE_NOTES_v0.3.3.md` - Release notes for v0.3.3
+- `RELEASE_NOTES_v0.4.0.md` - Release notes for v0.4.0 (Major optimization release)
 - `RELEASE_PLAN.md` - Overall release planning document
 
 ## Navigation

@@ -1,27 +1,27 @@
 # 🚀 Leptos Motion Production Roadmap
 
-**Current Status:** 0.2.0-beta.1 (Beta Release)  
-**Target:** 1.0.0 (Production Release)  
-**Timeline:** 3-6 months
+**Current Status:** 0.4.0 (Production Release with Major Optimizations)  
+**Target:** 1.0.0 (Stable Release)  
+**Timeline:** 1-2 months
 
 ---
 
 ## 🎯 Roadmap Overview
 
-This roadmap outlines the strategic path from our current beta release to a
-production-ready 1.0.0 release. The focus is on **stability**, **performance**,
+This roadmap outlines the strategic path from our current production release (v0.4.0) to a
+stable 1.0.0 release. The focus is on **API stability**, **final features**,
 **ecosystem integration**, and **community adoption**.
 
 ---
 
-## 📅 Phase 1: Beta Stabilization (Weeks 1-4)
+## 📅 Phase 1: v1.0.0 Preparation (Weeks 1-4)
 
 ### **🎯 Primary Goals**
 
-- Stabilize the beta release
+- Finalize API stability
+- Complete remaining features
 - Gather community feedback
-- Fix critical issues
-- Establish performance baselines
+- Prepare for stable release
 
 ### **✅ Deliverables**
 

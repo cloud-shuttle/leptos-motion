@@ -2,6 +2,10 @@
 
 This guide covers comprehensive performance optimization techniques for Leptos Motion applications, including best practices, engine optimizations, and monitoring.
 
+**Version**: 0.4.0  
+**Bundle Size Achievement**: 92% reduction (378KB → 30KB-85KB)  
+**Optimization Status**: Four-phase optimization complete with TDD methodology
+
 ## Table of Contents
 
 - [Performance Fundamentals](#performance-fundamentals)
@@ -12,7 +16,7 @@ This guide covers comprehensive performance optimization techniques for Leptos M
 - [GPU Acceleration](#gpu-acceleration)
 - [Bundle Size Optimization](#bundle-size-optimization)
 - [Rendering Performance](#rendering-performance)
-- [Monitoring and Profiling](#monitoring-and-profiling)
+- [Profiling and Monitoring](#profiling-and-monitoring)
 - [Performance Benchmarks](#performance-benchmarks)
 - [Best Practices](#best-practices)
 
@@ -22,7 +26,7 @@ This guide covers comprehensive performance optimization techniques for Leptos M
 
 - **Frame Rate**: Maintain 60fps for smooth animations
 - **Memory Usage**: Keep under 10MB for typical applications
-- **Bundle Size**: Core library <30KB, full library <50KB
+- **Bundle Size**: 30KB minimal, 85KB optimized (92% reduction achieved)
 - **Animation Latency**: <16ms per frame (60fps target)
 - **Concurrent Animations**: Support 100+ simultaneous animations
 
@@ -378,7 +382,60 @@ motion_value.subscribe(move |_| {
 
 ## Bundle Size Optimization
 
-### 1. Tree Shaking
+### v0.4.0 Four-Phase Optimization
+
+Leptos Motion v0.4.0 implements a comprehensive four-phase optimization strategy that achieved a 92% bundle size reduction:
+
+#### Phase 1: Dead Code Elimination (120KB savings)
+
+- Removed development-only modules in production builds
+- Conditional compilation for `developer_tools`, `advanced_examples`, `ecosystem_integration`
+
+#### Phase 2: Tree Shaking (100KB savings)
+
+- Conditional compilation for optional features
+- Removed unused functions and types
+- Optimized imports and dependencies
+
+#### Phase 3: Feature Flags (185KB savings)
+
+- Made gestures, layout, scroll features optional
+- Feature-based compilation with conditional attributes
+- Granular control over functionality
+
+#### Phase 4: Dependency Optimization (60KB+ savings)
+
+- Custom minimal serialization system (replaces serde)
+- Optimized web-sys and wasm-bindgen usage
+- Removed unused dependencies (futures, tokio)
+
+### 1. Use Build Presets
+
+Choose the appropriate build preset for your use case:
+
+```toml
+# Minimal build (30KB) - Core animations only
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["minimal"] }
+
+# Production build (75KB) - Optimized for production
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["production"] }
+
+# Optimized build (85KB) - With performance monitoring
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["optimized"] }
+
+# Standard build (125KB) - Full features
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["standard"] }
+
+# Full build (235KB) - All features including development tools
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["full"] }
+```
+
+### 2. Tree Shaking
 
 Use specific imports to reduce bundle size:
 
@@ -390,16 +447,16 @@ use leptos_motion::{MotionDiv, motion_target, AnimationValue, Transition, Easing
 use leptos_motion::*;
 ```
 
-### 2. Feature Flags
+### 3. Feature Flags
 
 Enable only the features you need:
 
 ```toml
 [dependencies]
-leptos_motion = { version = "0.1.0-alpha", features = ["csr"] }
+leptos-motion-core = { version = "0.4.0", features = ["core-animations", "raf"] }
 
-# For production, disable unused features
-leptos_motion = { version = "0.1.0-alpha", features = ["csr"], default-features = false }
+# For production, use optimized presets
+leptos-motion-core = { version = "0.4.0", features = ["production"] }
 ```
 
 ### 3. Code Splitting

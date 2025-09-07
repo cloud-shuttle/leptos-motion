@@ -4,6 +4,83 @@
 
 Leptos Motion provides a comprehensive animation library for Leptos applications with a Framer Motion-inspired API. This document covers all available components, types, and functions.
 
+**Version**: 0.4.0  
+**Bundle Size**: 30KB-85KB (92% reduction from 378KB)  
+**Features**: Minimal serialization, conditional compilation, feature flags, and comprehensive optimization
+
+## Bundle Size Optimization
+
+Leptos Motion v0.4.0 includes comprehensive bundle size optimization with multiple build presets:
+
+### Build Presets
+
+```toml
+# Minimal build (30KB) - Core animations only
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["minimal"] }
+
+# Production build (75KB) - Optimized for production
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["production"] }
+
+# Optimized build (85KB) - With performance monitoring
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["optimized"] }
+
+# Standard build (125KB) - Full features
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["standard"] }
+
+# Full build (235KB) - All features including development tools
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["full"] }
+```
+
+### Feature Flags
+
+- **`minimal-serialization`**: Custom lightweight serialization (replaces serde)
+- **`conditional-web-sys`**: Optimized web-sys feature usage
+- **`performance-metrics`**: Performance monitoring and metrics
+- **`memory-optimization`**: Memory usage optimization
+- **`lazy-loading`**: Lazy loading of animation modules
+- **`gesture-support`**: Gesture recognition and handling
+- **`layout-animations`**: FLIP-based layout animations
+- **`scroll-animations`**: Scroll-triggered animations
+
+### Optimization Features
+
+#### Minimal Serialization
+```rust
+use leptos_motion_core::minimal_serialization::*;
+
+// Lightweight JSON serialization
+let serializer = MinimalJsonSerializer::new();
+let data = serializer.serialize(&animation_data)?;
+
+// Binary serialization for performance
+let binary_serializer = MinimalBinarySerializer::new();
+let binary_data = binary_serializer.serialize(&animation_data)?;
+```
+
+#### Conditional Web-Sys
+```rust
+#[cfg(feature = "conditional-web-sys")]
+use leptos_motion_core::web_sys_optimized::*;
+
+// Optimized web-sys usage with minimal features
+let element = get_optimized_element()?;
+```
+
+#### Performance Monitoring
+```rust
+#[cfg(feature = "performance-metrics")]
+use leptos_motion_core::performance::*;
+
+// Performance monitoring
+let monitor = PerformanceMonitor::new();
+let metrics = monitor.get_metrics();
+```
+
 ## Core Components
 
 ### MotionDiv

@@ -36,7 +36,7 @@ Add Leptos Motion to your `Cargo.toml`:
 ```toml
 [dependencies]
 leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
-leptos-motion = "0.3.0"
+leptos-motion = "0.4.0"
 ```
 
 ### Method 2: Latest from Git
@@ -56,35 +56,64 @@ Install with specific features enabled:
 ```toml
 [dependencies]
 leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
-leptos-motion = { version = "0.3.0", features = ["csr", "gestures", "layout"] }
+leptos-motion = { version = "0.4.0", features = ["csr", "gestures", "layout"] }
 ```
 
-## Feature Flags
+## Feature Flags & Build Presets
 
-Leptos Motion supports several feature flags:
+Leptos Motion v0.4.0 includes comprehensive feature flags and build presets for optimal bundle sizes:
 
-| Feature       | Description                   | Default |
-| ------------- | ----------------------------- | ------- |
-| `csr`         | Client-side rendering support | ✅      |
-| `ssr`         | Server-side rendering support | ✅      |
-| `hydrate`     | Hydration support             | ✅      |
-| `gestures`    | Gesture recognition           | ✅      |
-| `layout`      | Layout animations             | ✅      |
-| `scroll`      | Scroll-triggered animations   | ✅      |
-| `performance` | Performance monitoring        | ❌      |
-| `debug`       | Debug logging and tools       | ❌      |
+### Build Presets
+
+| Preset        | Bundle Size | Description                    | Use Case                |
+| ------------- | ----------- | ------------------------------ | ----------------------- |
+| `minimal`     | ~30KB       | Core animations only           | Minimal applications    |
+| `production`  | ~75KB       | Optimized for production       | Most applications       |
+| `optimized`   | ~85KB       | With performance monitoring    | Performance-critical    |
+| `standard`    | ~125KB      | Full features                  | Feature-rich apps       |
+| `full`        | ~235KB      | All features + dev tools       | Development            |
+
+### Feature Flags
+
+| Feature                | Description                           | Default |
+| ---------------------- | ------------------------------------- | ------- |
+| `minimal-serialization`| Custom lightweight serialization     | ✅      |
+| `conditional-web-sys`  | Optimized web-sys feature usage      | ✅      |
+| `performance-metrics`  | Performance monitoring                | ❌      |
+| `memory-optimization`  | Memory usage optimization             | ❌      |
+| `lazy-loading`         | Lazy loading of animation modules     | ❌      |
+| `gesture-support`      | Gesture recognition                   | ❌      |
+| `layout-animations`    | Layout animations                     | ❌      |
+| `scroll-animations`    | Scroll-triggered animations           | ❌      |
+
+### Example with Build Presets
+
+```toml
+# Minimal build (30KB)
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["minimal"] }
+
+# Production build (75KB)
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["production"] }
+
+# Optimized build (85KB)
+[dependencies]
+leptos-motion-core = { version = "0.4.0", features = ["optimized"] }
+```
 
 ### Example with Custom Features
 
 ```toml
 [dependencies]
-leptos-motion = {
-    version = "0.3.0",
+leptos-motion-core = {
+    version = "0.4.0",
     features = [
-        "csr",
-        "gestures",
-        "layout",
-        "performance"
+        "core-animations",
+        "raf",
+        "minimal-serialization",
+        "conditional-web-sys",
+        "performance-metrics"
     ]
 }
 ```
@@ -228,7 +257,7 @@ cargo leptos build --dev
 
 ```toml
 # Ensure feature is enabled
-leptos-motion = { version = "0.3.0", features = ["gestures"] }
+leptos-motion-core = { version = "0.4.0", features = ["gesture-support"] }
 ```
 
 ### Getting Help

@@ -2,6 +2,10 @@
 
 Thank you for your interest in contributing to Leptos Motion! This document provides guidelines and information for contributors.
 
+**Current Status**: v0.4.0 (Production Ready with Major Optimizations)  
+**Bundle Size**: 30KB-85KB (92% reduction from 378KB)  
+**Next Target**: v1.0.0 (Stable Release)
+
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)

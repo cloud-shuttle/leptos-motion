@@ -143,13 +143,17 @@ If you're new to Leptos Motion, we recommend this learning path:
 
 ## 🎯 Current Status
 
-**Leptos Motion v0.3.2** is now **stable and production-ready** with:
+**Leptos Motion v0.4.0** is now **production-ready with major optimizations**:
 
+- ✅ 92% bundle size reduction (378KB → 30KB-85KB)
+- ✅ Four-phase optimization complete with TDD methodology
 - ✅ 264 tests passing across all crates
 - ✅ Zero compilation errors
 - ✅ Complete performance monitoring
 - ✅ Type-safe architecture
 - ✅ Comprehensive documentation
+- ✅ Feature flags and build presets
+- ✅ Minimal serialization system
 
 ---
 

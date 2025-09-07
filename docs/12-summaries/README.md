@@ -8,6 +8,8 @@ This directory contains release summaries and project status documents.
 - `RELEASE_SUMMARY_v0.3.0-beta.2.md` - Summary for v0.3.0-beta.2
 - `RELEASE_SUMMARY_v0.3.0.md` - Summary for v0.3.0
 - `RELEASE_SUMMARY_v0.3.2.md` - Summary for v0.3.2
+- `RELEASE_SUMMARY_v0.3.3.md` - Summary for v0.3.3
+- `RELEASE_SUMMARY_v0.4.0.md` - Summary for v0.4.0 (Major optimization release)
 
 ## Navigation
 

@@ -79,11 +79,11 @@ mod bundle_size_optimization_tests;
 #[cfg(test)]
 mod dead_code_elimination_tests;
 #[cfg(test)]
+mod dependency_optimization_phase4_tests;
+#[cfg(test)]
 mod feature_flags_optimization_tests;
 #[cfg(test)]
 mod feature_flags_phase3_tests;
-#[cfg(test)]
-mod dependency_optimization_phase4_tests;
 #[cfg(test)]
 mod tree_shaking_optimization_tests;
 #[cfg(test)]
@@ -121,6 +121,10 @@ pub use types::{
     AnimationHandle, AnimationTarget, AnimationValue, ComplexValue, Easing, RepeatConfig,
     StaggerConfig, StaggerFrom, Transform, Transition,
 };
+
+// Re-export Leptos v0.8 compatibility helpers
+#[cfg(feature = "leptos-integration")]
+pub use types::leptos_helpers::*;
 #[cfg(feature = "leptos-integration")]
 pub use values::{MotionNumber, MotionTransform, MotionValue, MotionValues};
 

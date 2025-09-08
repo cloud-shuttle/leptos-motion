@@ -15,6 +15,7 @@ This document outlines a comprehensive design for implementing Motion's animatio
 The v0.4.0 release implements a comprehensive four-phase optimization strategy:
 
 #### Phase 1: Dead Code Elimination (120KB savings)
+
 ```rust
 // Conditional compilation for development-only modules
 #[cfg(feature = "developer-tools")]
@@ -28,6 +29,7 @@ pub mod ecosystem_integration;
 ```
 
 #### Phase 2: Tree Shaking (100KB savings)
+
 ```rust
 // Conditional compilation for optional features
 #[cfg(feature = "performance-metrics")]
@@ -41,6 +43,7 @@ pub mod lazy_loading;
 ```
 
 #### Phase 3: Feature Flags (185KB savings)
+
 ```rust
 // Feature-based compilation
 #[cfg(feature = "gesture-support")]
@@ -54,6 +57,7 @@ pub mod scroll;
 ```
 
 #### Phase 4: Dependency Optimization (60KB+ savings)
+
 ```rust
 // Minimal serialization system
 pub mod minimal_serialization;

@@ -25,6 +25,18 @@ mod components_tests;
 #[cfg(test)]
 mod motion_div_tdd_tests;
 
+#[cfg(test)]
+mod phase1_engine_integration_tests;
+
+#[cfg(test)]
+mod phase2_leptos_compatibility_tests;
+
+// #[cfg(test)]
+// mod phase3_feature_completion_tests;
+
+// #[cfg(test)]
+// mod phase4_performance_polish_tests;
+
 // Re-export commonly used items
 // pub use components::*; // Temporarily disabled due to unused imports
 pub use elements::*;

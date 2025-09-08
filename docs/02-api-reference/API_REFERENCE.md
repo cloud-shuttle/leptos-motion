@@ -50,6 +50,7 @@ leptos-motion-core = { version = "0.4.0", features = ["full"] }
 ### Optimization Features
 
 #### Minimal Serialization
+
 ```rust
 use leptos_motion_core::minimal_serialization::*;
 
@@ -63,6 +64,7 @@ let binary_data = binary_serializer.serialize(&animation_data)?;
 ```
 
 #### Conditional Web-Sys
+
 ```rust
 #[cfg(feature = "conditional-web-sys")]
 use leptos_motion_core::web_sys_optimized::*;
@@ -72,6 +74,7 @@ let element = get_optimized_element()?;
 ```
 
 #### Performance Monitoring
+
 ```rust
 #[cfg(feature = "performance-metrics")]
 use leptos_motion_core::performance::*;

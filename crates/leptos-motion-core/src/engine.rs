@@ -42,7 +42,7 @@ pub trait AnimationEngine {
     /// Get performance metrics
     #[cfg(feature = "performance-metrics")]
     fn get_performance_metrics(&self) -> Option<crate::performance::PerformanceReport>;
-    
+
     /// Get performance metrics (no-op when feature disabled)
     #[cfg(not(feature = "performance-metrics"))]
     fn get_performance_metrics(&self) -> Option<()>;

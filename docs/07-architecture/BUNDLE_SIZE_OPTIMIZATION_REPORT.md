@@ -6,37 +6,41 @@ We have successfully implemented TDD-driven bundle size optimization for Leptos 
 
 ## Bundle Size Results (v0.4.0)
 
-| Configuration        | Size  | Reduction | Status                  |
-| -------------------- | ----- | --------- | ----------------------- |
-| **Original (v0.3.x)**| 378KB | -         | ❌ Exceeds target       |
-| **Minimal**          | 30KB  | 92%       | ✅ Exceeds target       |
-| **Production**       | 75KB  | 80%       | ✅ Under 100KB target   |
-| **Optimized**        | 85KB  | 78%       | ✅ Under 100KB target   |
-| **Standard**         | 125KB | 67%       | ✅ Under 150KB target   |
-| **Full**             | 235KB | 38%       | ✅ Under 250KB target   |
+| Configuration         | Size  | Reduction | Status                |
+| --------------------- | ----- | --------- | --------------------- |
+| **Original (v0.3.x)** | 378KB | -         | ❌ Exceeds target     |
+| **Minimal**           | 30KB  | 92%       | ✅ Exceeds target     |
+| **Production**        | 75KB  | 80%       | ✅ Under 100KB target |
+| **Optimized**         | 85KB  | 78%       | ✅ Under 100KB target |
+| **Standard**          | 125KB | 67%       | ✅ Under 150KB target |
+| **Full**              | 235KB | 38%       | ✅ Under 250KB target |
 
 ## Key Achievements (v0.4.0)
 
 ### ✅ **Four-Phase Optimization Strategy**
 
 #### Phase 1: Dead Code Elimination (120KB savings)
+
 - Removed development-only modules in production builds
 - Conditional compilation for `developer_tools`, `advanced_examples`, `ecosystem_integration`
 - Eliminated unused development utilities
 
 #### Phase 2: Tree Shaking (100KB savings)
+
 - Conditional compilation for optional features
 - Removed unused functions and types
 - Optimized imports and dependencies
 - Implemented minimal engine variants
 
 #### Phase 3: Feature Flags (185KB savings)
+
 - Made gestures, layout, scroll features optional
 - Feature-based compilation with conditional attributes
 - Granular control over functionality
 - Created comprehensive feature flag system
 
 #### Phase 4: Dependency Optimization (60KB+ savings)
+
 - Custom minimal serialization system (replaces serde)
 - Optimized web-sys and wasm-bindgen usage
 - Removed unused dependencies (futures, tokio)

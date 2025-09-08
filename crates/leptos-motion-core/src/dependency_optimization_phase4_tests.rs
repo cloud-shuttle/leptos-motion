@@ -1,5 +1,5 @@
 //! Phase 4: Dependency Optimization Tests
-//! 
+//!
 //! TDD tests for removing unused dependencies, optimizing web-sys/wasm-bindgen usage,
 //! and implementing minimal serialization to achieve 60KB bundle size savings.
 
@@ -103,13 +103,13 @@ impl DependencyOptimizationAnalyzer {
     pub fn analyze_dependencies(&mut self) {
         // Initialize dependency analysis
         self.initialize_dependency_analysis();
-        
+
         // Analyze web-sys optimizations
         self.analyze_web_sys_optimizations();
-        
+
         // Analyze serialization optimizations
         self.analyze_serialization_optimizations();
-        
+
         // Calculate total optimization potential
         self.calculate_optimization_potential();
     }
@@ -117,59 +117,77 @@ impl DependencyOptimizationAnalyzer {
     /// Initialize dependency analysis
     fn initialize_dependency_analysis(&mut self) {
         // Analyze major dependencies
-        self.dependency_analysis.insert("serde".to_string(), DependencyInfo {
-            name: "serde".to_string(),
-            size_bytes: 25_000, // 25KB
-            is_used: true,
-            can_remove: false, // Core serialization
-            lightweight_replacement: Some("minimal-serialization".to_string()),
-            potential_savings: 15_000, // 15KB savings with minimal serialization
-        });
+        self.dependency_analysis.insert(
+            "serde".to_string(),
+            DependencyInfo {
+                name: "serde".to_string(),
+                size_bytes: 25_000, // 25KB
+                is_used: true,
+                can_remove: false, // Core serialization
+                lightweight_replacement: Some("minimal-serialization".to_string()),
+                potential_savings: 15_000, // 15KB savings with minimal serialization
+            },
+        );
 
-        self.dependency_analysis.insert("serde_json".to_string(), DependencyInfo {
-            name: "serde_json".to_string(),
-            size_bytes: 20_000, // 20KB
-            is_used: true,
-            can_remove: false, // JSON serialization
-            lightweight_replacement: Some("minimal-json".to_string()),
-            potential_savings: 12_000, // 12KB savings with minimal JSON
-        });
+        self.dependency_analysis.insert(
+            "serde_json".to_string(),
+            DependencyInfo {
+                name: "serde_json".to_string(),
+                size_bytes: 20_000, // 20KB
+                is_used: true,
+                can_remove: false, // JSON serialization
+                lightweight_replacement: Some("minimal-json".to_string()),
+                potential_savings: 12_000, // 12KB savings with minimal JSON
+            },
+        );
 
-        self.dependency_analysis.insert("futures".to_string(), DependencyInfo {
-            name: "futures".to_string(),
-            size_bytes: 18_000, // 18KB
-            is_used: false, // Not actually used in core
-            can_remove: true,
-            lightweight_replacement: None,
-            potential_savings: 18_000, // Full removal
-        });
+        self.dependency_analysis.insert(
+            "futures".to_string(),
+            DependencyInfo {
+                name: "futures".to_string(),
+                size_bytes: 18_000, // 18KB
+                is_used: false,     // Not actually used in core
+                can_remove: true,
+                lightweight_replacement: None,
+                potential_savings: 18_000, // Full removal
+            },
+        );
 
-        self.dependency_analysis.insert("tokio".to_string(), DependencyInfo {
-            name: "tokio".to_string(),
-            size_bytes: 15_000, // 15KB
-            is_used: false, // Not used in WASM
-            can_remove: true,
-            lightweight_replacement: None,
-            potential_savings: 15_000, // Full removal
-        });
+        self.dependency_analysis.insert(
+            "tokio".to_string(),
+            DependencyInfo {
+                name: "tokio".to_string(),
+                size_bytes: 15_000, // 15KB
+                is_used: false,     // Not used in WASM
+                can_remove: true,
+                lightweight_replacement: None,
+                potential_savings: 15_000, // Full removal
+            },
+        );
 
-        self.dependency_analysis.insert("num-traits".to_string(), DependencyInfo {
-            name: "num-traits".to_string(),
-            size_bytes: 8_000, // 8KB
-            is_used: true,
-            can_remove: false, // Used for numeric operations
-            lightweight_replacement: None,
-            potential_savings: 0, // Keep as is
-        });
+        self.dependency_analysis.insert(
+            "num-traits".to_string(),
+            DependencyInfo {
+                name: "num-traits".to_string(),
+                size_bytes: 8_000, // 8KB
+                is_used: true,
+                can_remove: false, // Used for numeric operations
+                lightweight_replacement: None,
+                potential_savings: 0, // Keep as is
+            },
+        );
 
-        self.dependency_analysis.insert("approx".to_string(), DependencyInfo {
-            name: "approx".to_string(),
-            size_bytes: 6_000, // 6KB
-            is_used: true,
-            can_remove: false, // Used for floating point comparisons
-            lightweight_replacement: None,
-            potential_savings: 0, // Keep as is
-        });
+        self.dependency_analysis.insert(
+            "approx".to_string(),
+            DependencyInfo {
+                name: "approx".to_string(),
+                size_bytes: 6_000, // 6KB
+                is_used: true,
+                can_remove: false, // Used for floating point comparisons
+                lightweight_replacement: None,
+                potential_savings: 0, // Keep as is
+            },
+        );
     }
 
     /// Analyze web-sys optimizations
@@ -186,7 +204,7 @@ impl DependencyOptimizationAnalyzer {
         self.web_sys_optimizations.push(WebSysOptimization {
             feature: "Performance".to_string(),
             size_impact: 5_000, // 5KB
-            is_used: false, // Only used in performance-metrics feature
+            is_used: false,     // Only used in performance-metrics feature
             strategy: WebSysStrategy::ConditionalCompilation,
             savings: 5_000, // Full savings when performance-metrics disabled
         });
@@ -194,7 +212,7 @@ impl DependencyOptimizationAnalyzer {
         self.web_sys_optimizations.push(WebSysOptimization {
             feature: "ResizeObserver".to_string(),
             size_impact: 4_000, // 4KB
-            is_used: false, // Only used in layout-animations feature
+            is_used: false,     // Only used in layout-animations feature
             strategy: WebSysStrategy::ConditionalCompilation,
             savings: 4_000, // Full savings when layout-animations disabled
         });
@@ -202,7 +220,7 @@ impl DependencyOptimizationAnalyzer {
         self.web_sys_optimizations.push(WebSysOptimization {
             feature: "IntersectionObserver".to_string(),
             size_impact: 4_500, // 4.5KB
-            is_used: false, // Only used in scroll-animations feature
+            is_used: false,     // Only used in scroll-animations feature
             strategy: WebSysStrategy::ConditionalCompilation,
             savings: 4_500, // Full savings when scroll-animations disabled
         });
@@ -227,93 +245,118 @@ impl DependencyOptimizationAnalyzer {
     /// Analyze serialization optimizations
     fn analyze_serialization_optimizations(&mut self) {
         // Types that can use minimal serialization
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "Transition".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::MinimalCustom,
-            savings: 3_000, // 3KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "Transition".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::MinimalCustom,
+                savings: 3_000, // 3KB savings
+            });
 
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "AnimationValue".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::MinimalCustom,
-            savings: 2_500, // 2.5KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "AnimationValue".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::MinimalCustom,
+                savings: 2_500, // 2.5KB savings
+            });
 
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "SpringConfig".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::MinimalCustom,
-            savings: 2_000, // 2KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "SpringConfig".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::MinimalCustom,
+                savings: 2_000, // 2KB savings
+            });
 
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "StaggerConfig".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::MinimalCustom,
-            savings: 1_500, // 1.5KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "StaggerConfig".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::MinimalCustom,
+                savings: 1_500, // 1.5KB savings
+            });
 
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "RepeatConfig".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::MinimalCustom,
-            savings: 1_000, // 1KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "RepeatConfig".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::MinimalCustom,
+                savings: 1_000, // 1KB savings
+            });
 
         // Types that don't need serialization at all
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "AnimationHandle".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::NoSerialization,
-            savings: 1_500, // 1.5KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "AnimationHandle".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::NoSerialization,
+                savings: 1_500, // 1.5KB savings
+            });
 
-        self.serialization_optimizations.push(SerializationOptimization {
-            type_name: "PlaybackState".to_string(),
-            current_method: SerializationMethod::FullSerde,
-            optimized_method: SerializationMethod::NoSerialization,
-            savings: 1_000, // 1KB savings
-        });
+        self.serialization_optimizations
+            .push(SerializationOptimization {
+                type_name: "PlaybackState".to_string(),
+                current_method: SerializationMethod::FullSerde,
+                optimized_method: SerializationMethod::NoSerialization,
+                savings: 1_000, // 1KB savings
+            });
     }
 
     /// Calculate total optimization potential
     fn calculate_optimization_potential(&self) {
-        let dependency_savings: u64 = self.dependency_analysis.values()
+        let dependency_savings: u64 = self
+            .dependency_analysis
+            .values()
             .map(|dep| dep.potential_savings)
             .sum();
 
-        let web_sys_savings: u64 = self.web_sys_optimizations.iter()
+        let web_sys_savings: u64 = self
+            .web_sys_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
-        let serialization_savings: u64 = self.serialization_optimizations.iter()
+        let serialization_savings: u64 = self
+            .serialization_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
         let total_savings = dependency_savings + web_sys_savings + serialization_savings;
 
         println!("Phase 4 Dependency Optimization Analysis:");
-        println!("- Current bundle size: {}KB", self.current_size_bytes / 1000);
+        println!(
+            "- Current bundle size: {}KB",
+            self.current_size_bytes / 1000
+        );
         println!("- Dependency savings: {}KB", dependency_savings / 1000);
         println!("- Web-sys savings: {}KB", web_sys_savings / 1000);
-        println!("- Serialization savings: {}KB", serialization_savings / 1000);
+        println!(
+            "- Serialization savings: {}KB",
+            serialization_savings / 1000
+        );
         println!("- Total potential savings: {}KB", total_savings / 1000);
         println!("- Target savings: 60KB");
     }
 
     /// Get total optimization potential
     pub fn get_total_optimization_potential(&self) -> u64 {
-        let dependency_savings: u64 = self.dependency_analysis.values()
+        let dependency_savings: u64 = self
+            .dependency_analysis
+            .values()
             .map(|dep| dep.potential_savings)
             .sum();
 
-        let web_sys_savings: u64 = self.web_sys_optimizations.iter()
+        let web_sys_savings: u64 = self
+            .web_sys_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
-        let serialization_savings: u64 = self.serialization_optimizations.iter()
+        let serialization_savings: u64 = self
+            .serialization_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
@@ -329,7 +372,7 @@ impl DependencyOptimizationAnalyzer {
     pub fn get_optimization_effectiveness(&self) -> f64 {
         let potential_savings = self.get_total_optimization_potential();
         let target_savings = 60_000.0;
-        
+
         if target_savings > 0.0 {
             (potential_savings as f64 / target_savings * 100.0).min(100.0)
         } else {
@@ -339,28 +382,38 @@ impl DependencyOptimizationAnalyzer {
 
     /// Get dependencies that can be removed
     pub fn get_removable_dependencies(&self) -> Vec<&DependencyInfo> {
-        self.dependency_analysis.values()
+        self.dependency_analysis
+            .values()
             .filter(|dep| dep.can_remove)
             .collect()
     }
 
     /// Get dependencies that can be replaced
     pub fn get_replaceable_dependencies(&self) -> Vec<&DependencyInfo> {
-        self.dependency_analysis.values()
+        self.dependency_analysis
+            .values()
             .filter(|dep| dep.lightweight_replacement.is_some())
             .collect()
     }
 
     /// Get web-sys optimizations by strategy
-    pub fn get_web_sys_optimizations_by_strategy(&self, strategy: WebSysStrategy) -> Vec<&WebSysOptimization> {
-        self.web_sys_optimizations.iter()
+    pub fn get_web_sys_optimizations_by_strategy(
+        &self,
+        strategy: WebSysStrategy,
+    ) -> Vec<&WebSysOptimization> {
+        self.web_sys_optimizations
+            .iter()
             .filter(|opt| opt.strategy == strategy)
             .collect()
     }
 
     /// Get serialization optimizations by method
-    pub fn get_serialization_optimizations_by_method(&self, method: SerializationMethod) -> Vec<&SerializationOptimization> {
-        self.serialization_optimizations.iter()
+    pub fn get_serialization_optimizations_by_method(
+        &self,
+        method: SerializationMethod,
+    ) -> Vec<&SerializationOptimization> {
+        self.serialization_optimizations
+            .iter()
             .filter(|opt| opt.optimized_method == method)
             .collect()
     }
@@ -418,7 +471,9 @@ mod tests {
         assert!(!analyzer.web_sys_optimizations.is_empty());
 
         // Test specific optimizations
-        let console_opt = analyzer.web_sys_optimizations.iter()
+        let console_opt = analyzer
+            .web_sys_optimizations
+            .iter()
             .find(|opt| opt.feature == "console")
             .unwrap();
         assert_eq!(console_opt.feature, "console");
@@ -426,13 +481,18 @@ mod tests {
         assert!(console_opt.is_used);
         assert_eq!(console_opt.strategy, WebSysStrategy::ConditionalCompilation);
 
-        let performance_opt = analyzer.web_sys_optimizations.iter()
+        let performance_opt = analyzer
+            .web_sys_optimizations
+            .iter()
             .find(|opt| opt.feature == "Performance")
             .unwrap();
         assert_eq!(performance_opt.feature, "Performance");
         assert!(performance_opt.size_impact > 0);
         assert!(!performance_opt.is_used);
-        assert_eq!(performance_opt.strategy, WebSysStrategy::ConditionalCompilation);
+        assert_eq!(
+            performance_opt.strategy,
+            WebSysStrategy::ConditionalCompilation
+        );
     }
 
     /// Test serialization optimization analysis
@@ -445,20 +505,33 @@ mod tests {
         assert!(!analyzer.serialization_optimizations.is_empty());
 
         // Test specific optimizations
-        let transition_opt = analyzer.serialization_optimizations.iter()
+        let transition_opt = analyzer
+            .serialization_optimizations
+            .iter()
             .find(|opt| opt.type_name == "Transition")
             .unwrap();
         assert_eq!(transition_opt.type_name, "Transition");
-        assert_eq!(transition_opt.current_method, SerializationMethod::FullSerde);
-        assert_eq!(transition_opt.optimized_method, SerializationMethod::MinimalCustom);
+        assert_eq!(
+            transition_opt.current_method,
+            SerializationMethod::FullSerde
+        );
+        assert_eq!(
+            transition_opt.optimized_method,
+            SerializationMethod::MinimalCustom
+        );
         assert!(transition_opt.savings > 0);
 
-        let handle_opt = analyzer.serialization_optimizations.iter()
+        let handle_opt = analyzer
+            .serialization_optimizations
+            .iter()
             .find(|opt| opt.type_name == "AnimationHandle")
             .unwrap();
         assert_eq!(handle_opt.type_name, "AnimationHandle");
         assert_eq!(handle_opt.current_method, SerializationMethod::FullSerde);
-        assert_eq!(handle_opt.optimized_method, SerializationMethod::NoSerialization);
+        assert_eq!(
+            handle_opt.optimized_method,
+            SerializationMethod::NoSerialization
+        );
         assert!(handle_opt.savings > 0);
     }
 
@@ -470,7 +543,7 @@ mod tests {
 
         let total_potential = analyzer.get_total_optimization_potential();
         assert!(total_potential > 0);
-        
+
         // Should be able to save at least 60KB through dependency optimization
         assert!(total_potential >= 60_000);
     }
@@ -494,7 +567,7 @@ mod tests {
         let effectiveness = analyzer.get_optimization_effectiveness();
         assert!(effectiveness > 0.0);
         assert!(effectiveness <= 100.0);
-        
+
         // Should achieve at least 100% of the 60KB target
         assert!(effectiveness >= 100.0);
     }
@@ -509,12 +582,10 @@ mod tests {
         assert!(!removable_deps.is_empty());
 
         // Should identify futures and tokio as removable
-        let futures_removable = removable_deps.iter()
-            .any(|dep| dep.name == "futures");
+        let futures_removable = removable_deps.iter().any(|dep| dep.name == "futures");
         assert!(futures_removable);
 
-        let tokio_removable = removable_deps.iter()
-            .any(|dep| dep.name == "tokio");
+        let tokio_removable = removable_deps.iter().any(|dep| dep.name == "tokio");
         assert!(tokio_removable);
     }
 
@@ -528,12 +599,10 @@ mod tests {
         assert!(!replaceable_deps.is_empty());
 
         // Should identify serde and serde_json as replaceable
-        let serde_replaceable = replaceable_deps.iter()
-            .any(|dep| dep.name == "serde");
+        let serde_replaceable = replaceable_deps.iter().any(|dep| dep.name == "serde");
         assert!(serde_replaceable);
 
-        let serde_json_replaceable = replaceable_deps.iter()
-            .any(|dep| dep.name == "serde_json");
+        let serde_json_replaceable = replaceable_deps.iter().any(|dep| dep.name == "serde_json");
         assert!(serde_json_replaceable);
     }
 
@@ -544,11 +613,13 @@ mod tests {
         analyzer.analyze_dependencies();
 
         // Test conditional compilation optimizations
-        let conditional_opts = analyzer.get_web_sys_optimizations_by_strategy(WebSysStrategy::ConditionalCompilation);
+        let conditional_opts =
+            analyzer.get_web_sys_optimizations_by_strategy(WebSysStrategy::ConditionalCompilation);
         assert!(!conditional_opts.is_empty());
 
         // Test lazy load optimizations
-        let lazy_load_opts = analyzer.get_web_sys_optimizations_by_strategy(WebSysStrategy::LazyLoad);
+        let lazy_load_opts =
+            analyzer.get_web_sys_optimizations_by_strategy(WebSysStrategy::LazyLoad);
         assert!(!lazy_load_opts.is_empty());
     }
 
@@ -559,11 +630,13 @@ mod tests {
         analyzer.analyze_dependencies();
 
         // Test minimal custom serialization optimizations
-        let minimal_custom_opts = analyzer.get_serialization_optimizations_by_method(SerializationMethod::MinimalCustom);
+        let minimal_custom_opts =
+            analyzer.get_serialization_optimizations_by_method(SerializationMethod::MinimalCustom);
         assert!(!minimal_custom_opts.is_empty());
 
         // Test no serialization optimizations
-        let no_serialization_opts = analyzer.get_serialization_optimizations_by_method(SerializationMethod::NoSerialization);
+        let no_serialization_opts = analyzer
+            .get_serialization_optimizations_by_method(SerializationMethod::NoSerialization);
         assert!(!no_serialization_opts.is_empty());
     }
 
@@ -575,27 +648,31 @@ mod tests {
 
         // Simulate removing unused dependencies
         let removable_deps = analyzer.get_removable_dependencies();
-        let removal_savings: u64 = removable_deps.iter()
-            .map(|dep| dep.potential_savings)
-            .sum();
+        let removal_savings: u64 = removable_deps.iter().map(|dep| dep.potential_savings).sum();
 
         // Simulate replacing heavy dependencies
         let replaceable_deps = analyzer.get_replaceable_dependencies();
-        let replacement_savings: u64 = replaceable_deps.iter()
+        let replacement_savings: u64 = replaceable_deps
+            .iter()
             .map(|dep| dep.potential_savings)
             .sum();
 
         // Simulate web-sys optimizations
-        let web_sys_savings: u64 = analyzer.web_sys_optimizations.iter()
+        let web_sys_savings: u64 = analyzer
+            .web_sys_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
         // Simulate serialization optimizations
-        let serialization_savings: u64 = analyzer.serialization_optimizations.iter()
+        let serialization_savings: u64 = analyzer
+            .serialization_optimizations
+            .iter()
             .map(|opt| opt.savings)
             .sum();
 
-        let total_simulated_savings = removal_savings + replacement_savings + web_sys_savings + serialization_savings;
+        let total_simulated_savings =
+            removal_savings + replacement_savings + web_sys_savings + serialization_savings;
 
         // Verify significant savings
         assert!(total_simulated_savings >= 60_000); // At least 60KB savings

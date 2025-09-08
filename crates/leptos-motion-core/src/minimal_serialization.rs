@@ -1,5 +1,5 @@
 //! Minimal serialization implementation for Phase 4 optimization
-//! 
+//!
 //! This module provides lightweight serialization alternatives to reduce
 //! bundle size by replacing heavy serde usage with custom minimal implementations.
 
@@ -33,7 +33,9 @@ impl fmt::Display for MinimalSerializationError {
         match self {
             MinimalSerializationError::InvalidFormat(msg) => write!(f, "Invalid format: {}", msg),
             MinimalSerializationError::MissingField(field) => write!(f, "Missing field: {}", field),
-            MinimalSerializationError::TypeConversion(msg) => write!(f, "Type conversion error: {}", msg),
+            MinimalSerializationError::TypeConversion(msg) => {
+                write!(f, "Type conversion error: {}", msg)
+            }
         }
     }
 }
@@ -74,12 +76,14 @@ impl MinimalJsonSerializer {
         if let Some(colon_pos) = s.find(':') {
             let key_part = &s[..colon_pos];
             let value_part = &s[colon_pos + 1..];
-            
+
             // Remove quotes from key
             let key = if key_part.starts_with('"') && key_part.ends_with('"') {
                 key_part[1..key_part.len() - 1].to_string()
             } else {
-                return Err(MinimalSerializationError::InvalidFormat("Key must be quoted".to_string()));
+                return Err(MinimalSerializationError::InvalidFormat(
+                    "Key must be quoted".to_string(),
+                ));
             };
 
             // Remove quotes from value if present
@@ -91,7 +95,9 @@ impl MinimalJsonSerializer {
 
             Ok((key, value))
         } else {
-            Err(MinimalSerializationError::InvalidFormat("Missing colon".to_string()))
+            Err(MinimalSerializationError::InvalidFormat(
+                "Missing colon".to_string(),
+            ))
         }
     }
 
@@ -99,7 +105,9 @@ impl MinimalJsonSerializer {
     pub fn parse_object(s: &str) -> Result<Vec<(String, String)>, MinimalSerializationError> {
         let trimmed = s.trim();
         if !trimmed.starts_with('{') || !trimmed.ends_with('}') {
-            return Err(MinimalSerializationError::InvalidFormat("Not an object".to_string()));
+            return Err(MinimalSerializationError::InvalidFormat(
+                "Not an object".to_string(),
+            ));
         }
 
         let content = &trimmed[1..trimmed.len() - 1];
@@ -115,8 +123,16 @@ impl MinimalJsonSerializer {
         for ch in content.chars() {
             match ch {
                 '"' => in_quotes = !in_quotes,
-                '{' | '[' => if !in_quotes { brace_count += 1; },
-                '}' | ']' => if !in_quotes { brace_count -= 1; },
+                '{' | '[' => {
+                    if !in_quotes {
+                        brace_count += 1;
+                    }
+                }
+                '}' | ']' => {
+                    if !in_quotes {
+                        brace_count -= 1;
+                    }
+                }
                 ',' => {
                     if !in_quotes && brace_count == 0 {
                         result.push(Self::parse_kv(&current.trim())?);
@@ -171,7 +187,9 @@ impl MinimalBinarySerializer {
         match byte {
             0 => Ok(false),
             1 => Ok(true),
-            _ => Err(MinimalSerializationError::TypeConversion("Invalid boolean value".to_string())),
+            _ => Err(MinimalSerializationError::TypeConversion(
+                "Invalid boolean value".to_string(),
+            )),
         }
     }
 }
@@ -184,26 +202,30 @@ impl CompactStringSerializer {
     pub fn serialize_string(s: &str) -> Vec<u8> {
         let bytes = s.as_bytes();
         let mut result = Vec::with_capacity(4 + bytes.len());
-        
+
         // Add length as u32 (4 bytes)
         result.extend_from_slice(&(bytes.len() as u32).to_le_bytes());
-        
+
         // Add string bytes
         result.extend_from_slice(bytes);
-        
+
         result
     }
 
     /// Deserialize a string with length prefix
     pub fn deserialize_string(data: &[u8]) -> Result<String, MinimalSerializationError> {
         if data.len() < 4 {
-            return Err(MinimalSerializationError::InvalidFormat("Data too short".to_string()));
+            return Err(MinimalSerializationError::InvalidFormat(
+                "Data too short".to_string(),
+            ));
         }
 
         let length = u32::from_le_bytes([data[0], data[1], data[2], data[3]]) as usize;
-        
+
         if data.len() < 4 + length {
-            return Err(MinimalSerializationError::InvalidFormat("Incomplete string data".to_string()));
+            return Err(MinimalSerializationError::InvalidFormat(
+                "Incomplete string data".to_string(),
+            ));
         }
 
         let string_bytes = &data[4..4 + length];
@@ -293,7 +315,8 @@ mod tests {
 
         let empty = "";
         let serialized_empty = CompactStringSerializer::serialize_string(empty);
-        let deserialized_empty = CompactStringSerializer::deserialize_string(&serialized_empty).unwrap();
+        let deserialized_empty =
+            CompactStringSerializer::deserialize_string(&serialized_empty).unwrap();
         assert_eq!(empty, deserialized_empty);
     }
 

@@ -602,3 +602,56 @@ mod tests {
         assert!(css.contains("scale(1.5)"));
     }
 }
+
+// Leptos v0.8 compatibility helper functions
+#[cfg(feature = "leptos-integration")]
+pub mod leptos_helpers {
+    use super::*;
+
+    /// Convert AnimationTarget to a CSS class string
+    pub fn animation_target_to_class_string(target: &AnimationTarget) -> String {
+        target
+            .iter()
+            .map(|(key, value)| format!("{}-{}", key, value.to_string().replace(" ", "-")))
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+
+    /// Convert AnimationValue to a string for attributes
+    pub fn animation_value_to_attribute_string(value: &AnimationValue) -> String {
+        value.to_string()
+    }
+
+    /// Convert Transition to CSS properties string
+    pub fn transition_to_css_properties(transition: &Transition) -> String {
+        let mut properties = Vec::new();
+
+        if let Some(duration) = transition.duration {
+            properties.push(format!("transition-duration: {}s", duration));
+        }
+
+        if let Some(delay) = transition.delay {
+            properties.push(format!("transition-delay: {}s", delay));
+        }
+
+        let ease_string = match transition.ease {
+            Easing::Linear => "linear",
+            Easing::EaseIn => "ease-in",
+            Easing::EaseOut => "ease-out",
+            Easing::EaseInOut => "ease-in-out",
+            Easing::CircIn => "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+            Easing::CircOut => "cubic-bezier(0.215, 0.61, 0.355, 1)",
+            Easing::CircInOut => "cubic-bezier(0.645, 0.045, 0.355, 1)",
+            Easing::BackIn => "cubic-bezier(0.6, -0.28, 0.735, 0.045)",
+            Easing::BackOut => "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            Easing::BackInOut => "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+            Easing::Spring(_) => "cubic-bezier(0.68, -0.55, 0.265, 1.55)", // Simplified
+            Easing::Bezier(a, b, c, d) => {
+                return format!("cubic-bezier({}, {}, {}, {})", a, b, c, d);
+            }
+        };
+
+        properties.push(format!("transition-timing-function: {}", ease_string));
+        properties.join("; ")
+    }
+}

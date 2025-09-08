@@ -39,9 +39,9 @@ css-animations = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = "0.3.2"
-leptos-motion-gestures = "0.3.2"
-leptos-motion-layout = "0.3.2"
+leptos-motion-core = { workspace = true }
+leptos-motion-gestures = { workspace = true }
+leptos-motion-layout = { workspace = true }
 
 # Leptos
 leptos.workspace = true

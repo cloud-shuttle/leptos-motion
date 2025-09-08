@@ -310,7 +310,7 @@ fn test_lazy_loading_after_wasm_optimization() {
         assert_eq!(config.max_loaded_modules, 10);
         assert_eq!(config.max_total_size, 1024 * 1024); // 1MB
     }
-    
+
     #[cfg(not(feature = "lazy-loading"))]
     {
         // When lazy loading is disabled, just verify the test passes

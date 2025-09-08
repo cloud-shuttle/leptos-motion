@@ -1,5 +1,5 @@
 //! Phase 3: Feature Flags Optimization Tests
-//! 
+//!
 //! TDD tests for making gestures, layout, and scroll features optional
 //! to achieve 80KB bundle size savings through feature-based compilation.
 
@@ -61,10 +61,10 @@ impl FeatureFlagsPhase3Analyzer {
     pub fn analyze_feature_flags(&mut self) {
         // Initialize feature configurations
         self.initialize_feature_configs();
-        
+
         // Calculate feature sizes
         self.calculate_feature_sizes();
-        
+
         // Analyze optimization potential
         self.analyze_optimization_potential();
     }
@@ -72,72 +72,96 @@ impl FeatureFlagsPhase3Analyzer {
     /// Initialize feature configurations
     fn initialize_feature_configs(&mut self) {
         // Core features (always required)
-        self.feature_configs.insert("core-animations".to_string(), FeatureConfig {
-            name: "core-animations".to_string(),
-            default_enabled: true,
-            dependencies: vec![],
-            size_impact: 0, // Core features don't add size
-            category: FeatureCategory::Core,
-        });
+        self.feature_configs.insert(
+            "core-animations".to_string(),
+            FeatureConfig {
+                name: "core-animations".to_string(),
+                default_enabled: true,
+                dependencies: vec![],
+                size_impact: 0, // Core features don't add size
+                category: FeatureCategory::Core,
+            },
+        );
 
         // Gesture features (optional for 80KB savings)
-        self.feature_configs.insert("gesture-support".to_string(), FeatureConfig {
-            name: "gesture-support".to_string(),
-            default_enabled: true,
-            dependencies: vec!["core-animations".to_string()],
-            size_impact: 35_000, // 35KB for gesture system
-            category: FeatureCategory::Gestures,
-        });
+        self.feature_configs.insert(
+            "gesture-support".to_string(),
+            FeatureConfig {
+                name: "gesture-support".to_string(),
+                default_enabled: true,
+                dependencies: vec!["core-animations".to_string()],
+                size_impact: 35_000, // 35KB for gesture system
+                category: FeatureCategory::Gestures,
+            },
+        );
 
-        self.feature_configs.insert("drag-gestures".to_string(), FeatureConfig {
-            name: "drag-gestures".to_string(),
-            default_enabled: true,
-            dependencies: vec!["gesture-support".to_string()],
-            size_impact: 15_000, // 15KB for drag gestures
-            category: FeatureCategory::Gestures,
-        });
+        self.feature_configs.insert(
+            "drag-gestures".to_string(),
+            FeatureConfig {
+                name: "drag-gestures".to_string(),
+                default_enabled: true,
+                dependencies: vec!["gesture-support".to_string()],
+                size_impact: 15_000, // 15KB for drag gestures
+                category: FeatureCategory::Gestures,
+            },
+        );
 
-        self.feature_configs.insert("multi-touch".to_string(), FeatureConfig {
-            name: "multi-touch".to_string(),
-            default_enabled: true,
-            dependencies: vec!["gesture-support".to_string()],
-            size_impact: 20_000, // 20KB for multi-touch
-            category: FeatureCategory::Gestures,
-        });
+        self.feature_configs.insert(
+            "multi-touch".to_string(),
+            FeatureConfig {
+                name: "multi-touch".to_string(),
+                default_enabled: true,
+                dependencies: vec!["gesture-support".to_string()],
+                size_impact: 20_000, // 20KB for multi-touch
+                category: FeatureCategory::Gestures,
+            },
+        );
 
         // Layout features (optional for 80KB savings)
-        self.feature_configs.insert("layout-animations".to_string(), FeatureConfig {
-            name: "layout-animations".to_string(),
-            default_enabled: true,
-            dependencies: vec!["core-animations".to_string()],
-            size_impact: 40_000, // 40KB for layout animations
-            category: FeatureCategory::Layout,
-        });
+        self.feature_configs.insert(
+            "layout-animations".to_string(),
+            FeatureConfig {
+                name: "layout-animations".to_string(),
+                default_enabled: true,
+                dependencies: vec!["core-animations".to_string()],
+                size_impact: 40_000, // 40KB for layout animations
+                category: FeatureCategory::Layout,
+            },
+        );
 
-        self.feature_configs.insert("flip-animations".to_string(), FeatureConfig {
-            name: "flip-animations".to_string(),
-            default_enabled: true,
-            dependencies: vec!["layout-animations".to_string()],
-            size_impact: 25_000, // 25KB for FLIP animations
-            category: FeatureCategory::Layout,
-        });
+        self.feature_configs.insert(
+            "flip-animations".to_string(),
+            FeatureConfig {
+                name: "flip-animations".to_string(),
+                default_enabled: true,
+                dependencies: vec!["layout-animations".to_string()],
+                size_impact: 25_000, // 25KB for FLIP animations
+                category: FeatureCategory::Layout,
+            },
+        );
 
         // Scroll features (optional for 80KB savings)
-        self.feature_configs.insert("scroll-animations".to_string(), FeatureConfig {
-            name: "scroll-animations".to_string(),
-            default_enabled: true,
-            dependencies: vec!["core-animations".to_string()],
-            size_impact: 30_000, // 30KB for scroll animations
-            category: FeatureCategory::Scroll,
-        });
+        self.feature_configs.insert(
+            "scroll-animations".to_string(),
+            FeatureConfig {
+                name: "scroll-animations".to_string(),
+                default_enabled: true,
+                dependencies: vec!["core-animations".to_string()],
+                size_impact: 30_000, // 30KB for scroll animations
+                category: FeatureCategory::Scroll,
+            },
+        );
 
-        self.feature_configs.insert("parallax-effects".to_string(), FeatureConfig {
-            name: "parallax-effects".to_string(),
-            default_enabled: true,
-            dependencies: vec!["scroll-animations".to_string()],
-            size_impact: 20_000, // 20KB for parallax
-            category: FeatureCategory::Scroll,
-        });
+        self.feature_configs.insert(
+            "parallax-effects".to_string(),
+            FeatureConfig {
+                name: "parallax-effects".to_string(),
+                default_enabled: true,
+                dependencies: vec!["scroll-animations".to_string()],
+                size_impact: 20_000, // 20KB for parallax
+                category: FeatureCategory::Scroll,
+            },
+        );
     }
 
     /// Calculate feature sizes
@@ -150,16 +174,22 @@ impl FeatureFlagsPhase3Analyzer {
     /// Analyze optimization potential
     fn analyze_optimization_potential(&self) {
         // Calculate potential savings by making optional features conditional
-        let optional_features = self.feature_configs.values()
+        let optional_features = self
+            .feature_configs
+            .values()
             .filter(|config| config.category != FeatureCategory::Core)
             .collect::<Vec<_>>();
 
-        let total_optional_size: u64 = optional_features.iter()
+        let total_optional_size: u64 = optional_features
+            .iter()
             .map(|config| config.size_impact)
             .sum();
 
         println!("Phase 3 Feature Flags Analysis:");
-        println!("- Current bundle size: {}KB", self.current_size_bytes / 1000);
+        println!(
+            "- Current bundle size: {}KB",
+            self.current_size_bytes / 1000
+        );
         println!("- Optional features size: {}KB", total_optional_size / 1000);
         println!("- Potential savings: {}KB", total_optional_size / 1000);
         println!("- Target savings: 80KB");
@@ -167,7 +197,9 @@ impl FeatureFlagsPhase3Analyzer {
 
     /// Get minimal bundle size (core features only)
     pub fn get_minimal_bundle_size(&self) -> u64 {
-        let core_size = self.feature_configs.values()
+        let core_size = self
+            .feature_configs
+            .values()
             .filter(|config| config.category == FeatureCategory::Core)
             .map(|config| config.size_impact)
             .sum::<u64>();
@@ -179,7 +211,8 @@ impl FeatureFlagsPhase3Analyzer {
     /// Get bundle size with specific features enabled
     pub fn get_bundle_size_with_features(&self, enabled_features: &[String]) -> u64 {
         let base_size = 50_000; // 50KB base
-        let feature_size: u64 = enabled_features.iter()
+        let feature_size: u64 = enabled_features
+            .iter()
             .filter_map(|feature| self.feature_sizes.get(feature))
             .sum();
 
@@ -189,17 +222,23 @@ impl FeatureFlagsPhase3Analyzer {
     /// Get optimization potential for Phase 3
     pub fn get_phase3_optimization_potential(&self) -> u64 {
         // Calculate savings from making gestures, layout, scroll optional
-        let gestures_size: u64 = self.feature_configs.values()
+        let gestures_size: u64 = self
+            .feature_configs
+            .values()
             .filter(|config| config.category == FeatureCategory::Gestures)
             .map(|config| config.size_impact)
             .sum();
 
-        let layout_size: u64 = self.feature_configs.values()
+        let layout_size: u64 = self
+            .feature_configs
+            .values()
             .filter(|config| config.category == FeatureCategory::Layout)
             .map(|config| config.size_impact)
             .sum();
 
-        let scroll_size: u64 = self.feature_configs.values()
+        let scroll_size: u64 = self
+            .feature_configs
+            .values()
             .filter(|config| config.category == FeatureCategory::Scroll)
             .map(|config| config.size_impact)
             .sum();
@@ -217,7 +256,7 @@ impl FeatureFlagsPhase3Analyzer {
     pub fn get_feature_flag_effectiveness(&self) -> f64 {
         let potential_savings = self.get_phase3_optimization_potential();
         let target_savings = 80_000.0;
-        
+
         if target_savings > 0.0 {
             (potential_savings as f64 / target_savings * 100.0).min(100.0)
         } else {
@@ -247,7 +286,7 @@ mod tests {
 
         // Test that core features are configured
         assert!(analyzer.feature_configs.contains_key("core-animations"));
-        
+
         // Test that optional features are configured
         assert!(analyzer.feature_configs.contains_key("gesture-support"));
         assert!(analyzer.feature_configs.contains_key("layout-animations"));
@@ -275,7 +314,8 @@ mod tests {
         assert!(minimal_size < 100_000); // Should be under 100KB
 
         // Test bundle size with specific features
-        let core_only_size = analyzer.get_bundle_size_with_features(&["core-animations".to_string()]);
+        let core_only_size =
+            analyzer.get_bundle_size_with_features(&["core-animations".to_string()]);
         assert!(core_only_size >= minimal_size);
 
         let with_gestures_size = analyzer.get_bundle_size_with_features(&[
@@ -293,7 +333,7 @@ mod tests {
 
         let potential_savings = analyzer.get_phase3_optimization_potential();
         assert!(potential_savings > 0);
-        
+
         // Should be able to save at least 80KB through feature flags
         assert!(potential_savings >= 80_000);
     }
@@ -317,7 +357,7 @@ mod tests {
         let effectiveness = analyzer.get_feature_flag_effectiveness();
         assert!(effectiveness > 0.0);
         assert!(effectiveness <= 100.0);
-        
+
         // Should achieve at least 100% of the 80KB target
         assert!(effectiveness >= 100.0);
     }
@@ -330,10 +370,18 @@ mod tests {
 
         // Test that features have proper dependencies
         let drag_config = analyzer.feature_configs.get("drag-gestures").unwrap();
-        assert!(drag_config.dependencies.contains(&"gesture-support".to_string()));
+        assert!(
+            drag_config
+                .dependencies
+                .contains(&"gesture-support".to_string())
+        );
 
         let flip_config = analyzer.feature_configs.get("flip-animations").unwrap();
-        assert!(flip_config.dependencies.contains(&"layout-animations".to_string()));
+        assert!(
+            flip_config
+                .dependencies
+                .contains(&"layout-animations".to_string())
+        );
     }
 
     /// Test feature categorization
@@ -367,14 +415,11 @@ mod tests {
         // Simulate minimal build (core only)
         let minimal_features = vec!["core-animations".to_string()];
         let minimal_size = analyzer.get_bundle_size_with_features(&minimal_features);
-        
+
         // Simulate standard build (core + basic features)
-        let standard_features = vec![
-            "core-animations".to_string(),
-            "gesture-support".to_string(),
-        ];
+        let standard_features = vec!["core-animations".to_string(), "gesture-support".to_string()];
         let standard_size = analyzer.get_bundle_size_with_features(&standard_features);
-        
+
         // Simulate full build (all features)
         let full_features = vec![
             "core-animations".to_string(),
@@ -391,7 +436,7 @@ mod tests {
         // Verify size progression
         assert!(minimal_size < standard_size);
         assert!(standard_size < full_size);
-        
+
         // Verify significant size difference
         let size_difference = full_size - minimal_size;
         assert!(size_difference >= 80_000); // At least 80KB difference

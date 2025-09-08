@@ -65,26 +65,26 @@ Leptos Motion v0.4.0 includes comprehensive feature flags and build presets for 
 
 ### Build Presets
 
-| Preset        | Bundle Size | Description                    | Use Case                |
-| ------------- | ----------- | ------------------------------ | ----------------------- |
-| `minimal`     | ~30KB       | Core animations only           | Minimal applications    |
-| `production`  | ~75KB       | Optimized for production       | Most applications       |
-| `optimized`   | ~85KB       | With performance monitoring    | Performance-critical    |
-| `standard`    | ~125KB      | Full features                  | Feature-rich apps       |
-| `full`        | ~235KB      | All features + dev tools       | Development            |
+| Preset       | Bundle Size | Description                 | Use Case             |
+| ------------ | ----------- | --------------------------- | -------------------- |
+| `minimal`    | ~30KB       | Core animations only        | Minimal applications |
+| `production` | ~75KB       | Optimized for production    | Most applications    |
+| `optimized`  | ~85KB       | With performance monitoring | Performance-critical |
+| `standard`   | ~125KB      | Full features               | Feature-rich apps    |
+| `full`       | ~235KB      | All features + dev tools    | Development          |
 
 ### Feature Flags
 
-| Feature                | Description                           | Default |
-| ---------------------- | ------------------------------------- | ------- |
-| `minimal-serialization`| Custom lightweight serialization     | ✅      |
-| `conditional-web-sys`  | Optimized web-sys feature usage      | ✅      |
-| `performance-metrics`  | Performance monitoring                | ❌      |
-| `memory-optimization`  | Memory usage optimization             | ❌      |
-| `lazy-loading`         | Lazy loading of animation modules     | ❌      |
-| `gesture-support`      | Gesture recognition                   | ❌      |
-| `layout-animations`    | Layout animations                     | ❌      |
-| `scroll-animations`    | Scroll-triggered animations           | ❌      |
+| Feature                 | Description                       | Default |
+| ----------------------- | --------------------------------- | ------- |
+| `minimal-serialization` | Custom lightweight serialization  | ✅      |
+| `conditional-web-sys`   | Optimized web-sys feature usage   | ✅      |
+| `performance-metrics`   | Performance monitoring            | ❌      |
+| `memory-optimization`   | Memory usage optimization         | ❌      |
+| `lazy-loading`          | Lazy loading of animation modules | ❌      |
+| `gesture-support`       | Gesture recognition               | ❌      |
+| `layout-animations`     | Layout animations                 | ❌      |
+| `scroll-animations`     | Scroll-triggered animations       | ❌      |
 
 ### Example with Build Presets
 

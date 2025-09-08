@@ -26,7 +26,7 @@ mod components_tests;
 mod motion_div_tdd_tests;
 
 #[cfg(test)]
-mod drag_animation_tests {
+`mod drag_animation_tests {
     include!("drag_animation_tests.rs");
 }
 
@@ -109,9 +109,10 @@ pub use css_animations::*;
 
 // Re-export components
 pub use components::{MotionDiv, MotionSpan};
-pub use improved_motion_div::{
-    ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,
-};
+// Improved motion div module is not yet implemented
+// pub use improved_motion_div::{
+//     ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,
+// };
 
 // Re-export simplified event handling (new public API)
 pub use simplified_event_handling::{

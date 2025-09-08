@@ -40,7 +40,9 @@
 //!             transition=Some(Transition {
 //!                 duration: Some(0.5),
 //!                 ease: Easing::EaseOut,
-//!                 ..Default::default()
+//!                 delay: None,
+//!                 repeat: RepeatConfig::Never,
+//!                 stagger: None,
 //!             })
 //!         >
 //!             "Hello Leptos Motion!"

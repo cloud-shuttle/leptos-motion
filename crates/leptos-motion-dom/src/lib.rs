@@ -26,10 +26,30 @@ mod components_tests;
 mod motion_div_tdd_tests;
 
 #[cfg(test)]
-mod phase1_engine_integration_tests;
+mod drag_animation_tests {
+    include!("drag_animation_tests.rs");
+}
 
 #[cfg(test)]
-mod phase2_leptos_compatibility_tests;
+mod drag_integration_tests {
+    include!("drag_integration_tests.rs");
+}
+
+#[cfg(test)]
+mod momentum_animation_tests {
+    include!("momentum_animation_tests.rs");
+}
+
+#[cfg(test)]
+mod momentum_integration_tests {
+    include!("momentum_integration_tests.rs");
+}
+
+// #[cfg(test)]
+// mod phase1_engine_integration_tests;
+
+// #[cfg(test)]
+// mod phase2_leptos_compatibility_tests;
 
 // #[cfg(test)]
 // mod phase3_feature_completion_tests;
@@ -60,7 +80,11 @@ pub use simplified_event_handling::{
 };
 
 // Re-export core types for convenience
-pub use leptos_motion_core::*;
+pub use leptos_motion_core::{
+    AnimationConfig, AnimationEngine, AnimationHandle, AnimationTarget, AnimationValue, 
+    Easing, RepeatConfig, SpringConfig, StaggerConfig, StaggerFrom, Transition,
+    Transform, ComplexValue, Variants, MotionValue, MotionNumber, MotionTransform, MotionValues
+};
 
 // Include simplified event handling tests
 #[cfg(test)]

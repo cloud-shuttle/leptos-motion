@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug WASM Loading</title>
+</head>
+<body>
+    <h1>Debug WASM Loading</h1>
+    <div id="status">Loading...</div>
+    <div id="content"></div>
+    
+    <script type="module">
+        const statusDiv = document.getElementById('status');
+        const contentDiv = document.getElementById('content');
+        
+        try {
+            statusDiv.textContent = 'Importing WASM module...';
+            console.log('Starting WASM import...');
+            
+            const init = await import('./pkg/comprehensive_demo.js');
+            console.log('WASM module imported:', init);
+            
+            statusDiv.textContent = 'Initializing WASM...';
+            console.log('Initializing WASM...');
+            
+            await init.default();
+            console.log('WASM initialized successfully');
+            
+            statusDiv.textContent = 'Calling main function...';
+            console.log('Calling main function...');
+            
+            init.main();
+            console.log('Main function called successfully');
+            
+            statusDiv.textContent = 'WASM loaded and main called!';
+            contentDiv.innerHTML = '<p>✅ WASM module loaded, initialized, and main function called successfully!</p>';
+            
+        } catch (error) {
+            console.error('Error loading WASM:', error);
+            statusDiv.textContent = 'Error loading WASM: ' + error.message;
+            contentDiv.innerHTML = '<p>❌ Error: ' + error.message + '</p>';
+        }
+    </script>
+</body>
+</html>

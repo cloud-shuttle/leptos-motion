@@ -1,0 +1,31 @@
+[package]
+name = "comprehensive-demo"
+version = "0.1.0"
+edition = "2021"
+authors = ["Leptos Motion Team"]
+license = "MIT"
+description = "Comprehensive demo showcasing all leptos-motion capabilities"
+
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = { version = "0.8.8", features = ["csr"] }
+leptos-motion = { path = "../../crates/leptos-motion", features = ["default"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["default"] }
+leptos-motion-gestures = { path = "../../crates/leptos-motion-gestures", features = ["default"] }
+leptos-motion-layout = { path = "../../crates/leptos-motion-layout", features = ["default"] }
+leptos-motion-scroll = { path = "../../crates/leptos-motion-scroll" }
+leptos-motion-macros = { path = "../../crates/leptos-motion-macros" }
+leptos-motion-core = { path = "../../crates/leptos-motion-core", features = ["default"] }
+
+# Web dependencies
+wasm-bindgen = "0.2"
+web-sys = "0.3"
+console_error_panic_hook = "0.1"
+console_log = "0.2"
+
+# Utilities
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

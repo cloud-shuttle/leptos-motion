@@ -17,12 +17,13 @@ members = [
     "examples/dashboard-app",
     "examples/e-commerce-gallery",
     "examples/advanced-features",
+    "examples/comprehensive-demo",
     "benches",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.4.1"
+version = "0.5.0"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2024"  # Latest edition as of September 2025
@@ -42,12 +43,12 @@ leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
 leptos-motion = { path = "crates/leptos-motion" }
-leptos-motion-core = { version = "0.4.1", path = "crates/leptos-motion-core" }
-leptos-motion-dom = { version = "0.4.1", path = "crates/leptos-motion-dom" }
-leptos-motion-gestures = { version = "0.4.1", path = "crates/leptos-motion-gestures" }
-leptos-motion-layout = { version = "0.4.1", path = "crates/leptos-motion-layout" }
-leptos-motion-scroll = { version = "0.4.1", path = "crates/leptos-motion-scroll" }
-leptos-motion-macros = { version = "0.4.1", path = "crates/leptos-motion-macros" }
+leptos-motion-core = { version = "0.5.0", path = "crates/leptos-motion-core" }
+leptos-motion-dom = { version = "0.5.0", path = "crates/leptos-motion-dom" }
+leptos-motion-gestures = { version = "0.5.0", path = "crates/leptos-motion-gestures" }
+leptos-motion-layout = { version = "0.5.0", path = "crates/leptos-motion-layout" }
+leptos-motion-scroll = { version = "0.5.0", path = "crates/leptos-motion-scroll" }
+leptos-motion-macros = { version = "0.5.0", path = "crates/leptos-motion-macros" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }

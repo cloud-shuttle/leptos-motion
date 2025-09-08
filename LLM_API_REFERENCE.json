@@ -1,0 +1,381 @@
+{
+  "leptos_motion_api": {
+    "version": "0.4.0",
+    "status": "production_ready",
+    "bundle_size": "30KB-85KB",
+    "description": "High-performance animation library for Leptos with Framer Motion-inspired API",
+    
+    "core_concepts": {
+      "animation_target": {
+        "type": "HashMap<String, AnimationValue>",
+        "description": "Maps CSS property names to animation values",
+        "example": {
+          "opacity": "AnimationValue::Number(1.0)",
+          "x": "AnimationValue::Pixels(100.0)",
+          "scale": "AnimationValue::Number(1.5)"
+        }
+      },
+      "animation_lifecycle": {
+        "initial": "Starting state when component mounts",
+        "animate": "Target state to animate to",
+        "exit": "State when component unmounts (with AnimatePresence)"
+      }
+    },
+
+    "animation_values": {
+      "AnimationValue": {
+        "type": "enum",
+        "variants": {
+          "Number": {
+            "type": "f64",
+            "description": "Unitless numeric values (opacity, scale)",
+            "example": "AnimationValue::Number(1.0)"
+          },
+          "Pixels": {
+            "type": "f64", 
+            "description": "Pixel values (x, y, width, height)",
+            "example": "AnimationValue::Pixels(100.0)"
+          },
+          "Percentage": {
+            "type": "f64",
+            "description": "Percentage values",
+            "example": "AnimationValue::Percentage(50.0)"
+          },
+          "Degrees": {
+            "type": "f64",
+            "description": "Degree values for rotations",
+            "example": "AnimationValue::Degrees(45.0)"
+          },
+          "Radians": {
+            "type": "f64",
+            "description": "Radian values for rotations",
+            "example": "AnimationValue::Radians(1.57)"
+          },
+          "Color": {
+            "type": "String",
+            "description": "CSS color values",
+            "example": "AnimationValue::Color(\"linear-gradient(45deg, #ff6b6b, #4ecdc4)\".to_string())"
+          },
+          "Transform": {
+            "type": "Transform",
+            "description": "Transform matrix for complex transforms",
+            "example": "AnimationValue::Transform(Transform { x: Some(100.0), scale: Some(1.5), ..Default::default() })"
+          },
+          "String": {
+            "type": "String",
+            "description": "String values for non-numeric properties",
+            "example": "AnimationValue::String(\"block\".to_string())"
+          }
+        }
+      }
+    },
+
+    "components": {
+      "MotionDiv": {
+        "description": "Primary animation component for div elements",
+        "props": {
+          "class": {
+            "type": "Option<String>",
+            "required": false,
+            "description": "CSS class name"
+          },
+          "initial": {
+            "type": "Option<AnimationTarget>",
+            "required": false,
+            "description": "Initial animation state"
+          },
+          "animate": {
+            "type": "Option<AnimationTarget>",
+            "required": false,
+            "description": "Target animation state"
+          },
+          "_transition": {
+            "type": "Option<Transition>",
+            "required": false,
+            "description": "Transition configuration"
+          },
+          "_while_hover": {
+            "type": "Option<AnimationTarget>",
+            "required": false,
+            "description": "Animation state while hovering"
+          },
+          "_while_tap": {
+            "type": "Option<AnimationTarget>",
+            "required": false,
+            "description": "Animation state while tapping"
+          },
+          "_layout": {
+            "type": "Option<bool>",
+            "required": false,
+            "description": "Enable layout animations"
+          },
+          "_drag": {
+            "type": "Option<DragConfig>",
+            "required": false,
+            "description": "Drag configuration"
+          },
+          "_drag_constraints": {
+            "type": "Option<DragConstraints>",
+            "required": false,
+            "description": "Drag constraints"
+          }
+        },
+        "usage_example": {
+          "code": "<MotionDiv\n    class=Some(\"my-class\".to_string())\n    initial=Some(initial_state)\n    animate=Some(target_state)\n    _transition=Some(transition_config)\n>\n    \"Content\"\n</MotionDiv>"
+        }
+      },
+      "MotionSpan": {
+        "description": "Animation component for span elements",
+        "props": "Same as MotionDiv"
+      },
+      "AnimatePresence": {
+        "description": "Manages enter/exit animations",
+        "props": {
+          "mode": {
+            "type": "Option<PresenceMode>",
+            "required": false,
+            "description": "Presence animation mode"
+          }
+        },
+        "usage_example": {
+          "code": "<AnimatePresence mode=Some(PresenceMode::Sync)>\n    {move || is_visible.get().then(|| view! {\n        <MotionDiv\n            initial=Some(exit_state)\n            animate=Some(enter_state)\n            exit=Some(exit_state)\n        >\n            \"Animated content\"\n        </MotionDiv>\n    })}\n</AnimatePresence>"
+        }
+      }
+    },
+
+    "transitions": {
+      "Transition": {
+        "type": "struct",
+        "fields": {
+          "duration": {
+            "type": "Option<f64>",
+            "description": "Duration in seconds"
+          },
+          "ease": {
+            "type": "Easing",
+            "description": "Easing function"
+          },
+          "delay": {
+            "type": "Option<f64>",
+            "description": "Delay in seconds"
+          },
+          "repeat": {
+            "type": "RepeatConfig",
+            "description": "Repeat configuration"
+          },
+          "stagger": {
+            "type": "Option<StaggerConfig>",
+            "description": "Stagger configuration for multiple elements"
+          }
+        }
+      },
+      "Easing": {
+        "type": "enum",
+        "variants": {
+          "Linear": "Linear interpolation",
+          "EaseIn": "Ease in curve",
+          "EaseOut": "Ease out curve", 
+          "EaseInOut": "Ease in-out curve",
+          "Spring": {
+            "type": "SpringConfig",
+            "description": "Physics-based spring animation"
+          },
+          "Bezier": {
+            "type": "(f64, f64, f64, f64)",
+            "description": "Cubic bezier curve"
+          }
+        }
+      },
+      "RepeatConfig": {
+        "type": "enum",
+        "variants": {
+          "Never": "No repetition",
+          "Count": {
+            "type": "u32",
+            "description": "Repeat N times"
+          },
+          "Infinite": "Infinite repetition",
+          "InfiniteReverse": "Infinite with alternating direction"
+        }
+      }
+    },
+
+    "gestures": {
+      "DragConfig": {
+        "type": "struct",
+        "fields": {
+          "axis": {
+            "type": "Option<DragAxis>",
+            "description": "Drag axis constraint"
+          },
+          "constraints": {
+            "type": "Option<DragConstraints>",
+            "description": "Drag boundaries"
+          }
+        }
+      },
+      "DragAxis": {
+        "type": "enum",
+        "variants": {
+          "X": "Horizontal only",
+          "Y": "Vertical only",
+          "Both": "Both axes"
+        }
+      },
+      "DragConstraints": {
+        "type": "struct",
+        "fields": {
+          "left": "Option<f64>",
+          "right": "Option<f64>",
+          "top": "Option<f64>",
+          "bottom": "Option<f64>"
+        }
+      }
+    },
+
+    "common_patterns": {
+      "fade_animation": {
+        "description": "Fade in/out animation",
+        "code": {
+          "initial": "{\n    let mut map = HashMap::new();\n    map.insert(\"opacity\".to_string(), AnimationValue::Number(0.0));\n    map\n}",
+          "animate": "{\n    let mut map = HashMap::new();\n    map.insert(\"opacity\".to_string(), AnimationValue::Number(1.0));\n    map\n}"
+        }
+      },
+      "scale_animation": {
+        "description": "Scale up/down animation",
+        "code": {
+          "initial": "{\n    let mut map = HashMap::new();\n    map.insert(\"scale\".to_string(), AnimationValue::Number(0.5));\n    map\n}",
+          "animate": "{\n    let mut map = HashMap::new();\n    map.insert(\"scale\".to_string(), AnimationValue::Number(1.0));\n    map\n}"
+        }
+      },
+      "slide_animation": {
+        "description": "Slide in/out animation",
+        "code": {
+          "initial": "{\n    let mut map = HashMap::new();\n    map.insert(\"x\".to_string(), AnimationValue::Pixels(-100.0));\n    map\n}",
+          "animate": "{\n    let mut map = HashMap::new();\n    map.insert(\"x\".to_string(), AnimationValue::Pixels(0.0));\n    map\n}"
+        }
+      },
+      "hover_effect": {
+        "description": "Hover animation effect",
+        "code": {
+          "while_hover": "{\n    let mut map = HashMap::new();\n    map.insert(\"scale\".to_string(), AnimationValue::Number(1.1));\n    map.insert(\"y\".to_string(), AnimationValue::Pixels(-2.0));\n    map\n}"
+        }
+      }
+    },
+
+    "imports": {
+      "required": [
+        "use leptos::*;",
+        "use leptos_motion::*;",
+        "use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};",
+        "use std::collections::HashMap;"
+      ],
+      "optional": [
+        "use leptos_motion_core::{DragConfig, DragConstraints, DragAxis};",
+        "use leptos_motion_core::{SpringConfig, StaggerConfig};"
+      ]
+    },
+
+    "common_properties": {
+      "transform": {
+        "x": "AnimationValue::Pixels(f64)",
+        "y": "AnimationValue::Pixels(f64)",
+        "z": "AnimationValue::Pixels(f64)",
+        "scale": "AnimationValue::Number(f64)",
+        "scaleX": "AnimationValue::Number(f64)",
+        "scaleY": "AnimationValue::Number(f64)",
+        "rotate": "AnimationValue::Degrees(f64)",
+        "rotateX": "AnimationValue::Degrees(f64)",
+        "rotateY": "AnimationValue::Degrees(f64)",
+        "rotateZ": "AnimationValue::Degrees(f64)",
+        "skewX": "AnimationValue::Degrees(f64)",
+        "skewY": "AnimationValue::Degrees(f64)"
+      },
+      "style": {
+        "opacity": "AnimationValue::Number(f64)",
+        "background": "AnimationValue::Color(String)",
+        "borderRadius": "AnimationValue::Pixels(f64)",
+        "width": "AnimationValue::Pixels(f64)",
+        "height": "AnimationValue::Pixels(f64)",
+        "boxShadow": "AnimationValue::String(String)"
+      }
+    },
+
+    "best_practices": {
+      "performance": [
+        "Use hardware-accelerated properties (transform, opacity)",
+        "Avoid animating layout properties (width, height, margin, padding)",
+        "Use will-change CSS property for optimization",
+        "Limit simultaneous animations to maintain 60fps"
+      ],
+      "api_usage": [
+        "Always wrap optional props in Some()",
+        "Use correct AnimationValue variants for property types",
+        "Import types from leptos_motion_core for core functionality",
+        "Use reactive closures for dynamic animations"
+      ],
+      "common_mistakes": [
+        "Forgetting Some() wrappers for optional props",
+        "Using wrong AnimationValue types (e.g., Number instead of Pixels)",
+        "Not importing required types from leptos_motion_core",
+        "Animating too many properties simultaneously"
+      ]
+    },
+
+    "troubleshooting": {
+      "animations_not_working": {
+        "causes": [
+          "Missing Some() wrappers for optional props",
+          "Incorrect AnimationValue types",
+          "Invalid transition configuration",
+          "Component not properly mounted"
+        ],
+        "solutions": [
+          "Check prop types and Some() wrappers",
+          "Verify AnimationValue variants match property types",
+          "Validate transition configuration",
+          "Ensure component is properly mounted"
+        ]
+      },
+      "type_errors": {
+        "causes": [
+          "Missing imports from leptos_motion_core",
+          "Type mismatches in AnimationValue usage",
+          "Incorrect prop types"
+        ],
+        "solutions": [
+          "Import required types from leptos_motion_core",
+          "Use correct AnimationValue variants",
+          "Check prop type definitions"
+        ]
+      },
+      "performance_issues": {
+        "causes": [
+          "Animating layout properties",
+          "Too many simultaneous animations",
+          "Missing CSS optimizations"
+        ],
+        "solutions": [
+          "Use transform and opacity instead of layout properties",
+          "Reduce number of concurrent animations",
+          "Add will-change CSS property"
+        ]
+      }
+    },
+
+    "examples": {
+      "basic_fade": {
+        "description": "Simple fade in animation",
+        "code": "let initial = {\n    let mut map = HashMap::new();\n    map.insert(\"opacity\".to_string(), AnimationValue::Number(0.0));\n    map\n};\n\nlet animate = {\n    let mut map = HashMap::new();\n    map.insert(\"opacity\".to_string(), AnimationValue::Number(1.0));\n    map\n};\n\n<MotionDiv\n    initial=Some(initial)\n    animate=Some(animate)\n    _transition=Some(Transition {\n        duration: Some(0.5),\n        ease: Easing::EaseOut,\n        delay: None,\n        repeat: RepeatConfig::Never,\n        stagger: None,\n    })\n>\n    \"Fading in...\"\n</MotionDiv>"
+      },
+      "conditional_animation": {
+        "description": "Animation that changes based on state",
+        "code": "let (is_visible, set_is_visible) = signal(true);\n\nlet animate = move || {\n    let mut map = HashMap::new();\n    let visible = is_visible.get();\n    map.insert(\"opacity\".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.0 }));\n    map.insert(\"scale\".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.8 }));\n    map\n};\n\n<MotionDiv animate=Some(animate())>\n    \"Conditional content\"\n</MotionDiv>"
+      },
+      "staggered_list": {
+        "description": "Staggered animation for list items",
+        "code": "let stagger_transition = Transition {\n    duration: Some(0.3),\n    ease: Easing::EaseOut,\n    delay: None,\n    repeat: RepeatConfig::Never,\n    stagger: Some(StaggerConfig {\n        delay: 0.1,\n        from: StaggerFrom::First,\n    }),\n};\n\n{items.into_iter().enumerate().map(|(i, item)| {\n    view! {\n        <MotionDiv\n            key=i\n            initial=Some(initial.clone())\n            animate=Some(animate.clone())\n            _transition=Some(stagger_transition.clone())\n        >\n            {item}\n        </MotionDiv>\n    }\n}).collect_view()}"
+      }
+    }
+  }
+}

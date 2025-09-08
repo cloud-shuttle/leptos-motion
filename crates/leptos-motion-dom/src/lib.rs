@@ -36,6 +36,36 @@ mod drag_integration_tests {
 }
 
 #[cfg(test)]
+mod drag_constraint_tests {
+    include!("drag_constraint_tests.rs");
+}
+
+#[cfg(test)]
+mod performance_benchmark_tests {
+    include!("performance_benchmark_tests.rs");
+}
+
+#[cfg(test)]
+mod drag_constraint_integration_tests {
+    include!("drag_constraint_integration_tests.rs");
+}
+
+#[cfg(test)]
+mod flip_animation_tests {
+    include!("flip_animation_tests.rs");
+}
+
+#[cfg(test)]
+mod keyframe_animation_tests {
+    include!("keyframe_animation_tests.rs");
+}
+
+#[cfg(test)]
+mod stagger_animation_tests {
+    include!("stagger_animation_tests.rs");
+}
+
+#[cfg(test)]
 mod momentum_animation_tests {
     include!("momentum_animation_tests.rs");
 }
@@ -43,6 +73,16 @@ mod momentum_animation_tests {
 #[cfg(test)]
 mod momentum_integration_tests {
     include!("momentum_integration_tests.rs");
+}
+
+#[cfg(test)]
+mod advanced_performance_tests {
+    include!("advanced_performance_tests.rs");
+}
+
+#[cfg(test)]
+mod cross_browser_tests {
+    include!("cross_browser_tests.rs");
 }
 
 // #[cfg(test)]

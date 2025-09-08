@@ -9,21 +9,24 @@
 
 Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance.
 
-> **🚀 Latest Release!** Version 0.5.0 with continuous momentum animations is now available.
+> **🚀 Latest Release!** Version 0.6.0 with Phase 2 features is now available.
 
 ## 🎉 Latest Release Status
 
-**Version 0.5.0** is now available with major momentum animation improvements!
+**Version 0.6.0** is now available with comprehensive Phase 2 features!
 
 - ✅ **Solid Foundation**: Core animation engine, gestures, layout animations
-- ✅ **Comprehensive Testing**: 100+ tests passing with full coverage
+- ✅ **Comprehensive Testing**: 500+ tests passing with full coverage
 - ✅ **Type Safety**: Full Rust compile-time guarantees
 - ✅ **Simplified APIs**: Clean, user-friendly interfaces
 - ✅ **All Examples Working**: Advanced features, mobile app, dashboard, e-commerce
 - ✅ **API Compatibility**: Consistent and stable API across all components
 - ✅ **Production Ready**: Optimized for real-world applications
-- ✅ **Continuous Momentum**: Fully functional momentum animations with physics simulation
-- ✅ **Enhanced MotionDiv**: New style prop support for flexible styling
+- ✅ **🎨 FLIP Layout Animations**: Complete FLIP animation system with element tracking
+- ✅ **🎬 Keyframe Animations**: Multi-step animations with precise control
+- ✅ **⚡ Stagger Animations**: Sequential animations with configurable delays
+- ✅ **🚀 Performance Benchmarking**: Advanced performance testing and optimization
+- ✅ **🌐 Cross-Browser Testing**: Comprehensive compatibility validation
 
 > **Note**: This is a stable release ready for production use.
 
@@ -44,7 +47,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-leptos-motion = "0.3.0"
+leptos-motion = "0.6.0"
 ```
 
 ## 🚀 Quick Start

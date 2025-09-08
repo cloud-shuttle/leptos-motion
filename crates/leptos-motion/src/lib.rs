@@ -34,16 +34,16 @@
 //!
 //!     view! {
 //!         <MotionDiv
-//!             class=Some("my-element".to_string())
-//!             initial=Some(initial)
-//!             animate=Some(animate)
-//!             transition=Some(Transition {
+//!             class="my-element".to_string()
+//!             initial=initial
+//!             animate=animate
+//!             transition=Transition {
 //!                 duration: Some(0.5),
 //!                 ease: Easing::EaseOut,
 //!                 delay: None,
 //!                 repeat: RepeatConfig::Never,
 //!                 stagger: None,
-//!             })
+//!             }
 //!         >
 //!             "Hello Leptos Motion!"
 //!         </MotionDiv>
@@ -109,9 +109,9 @@
 //!
 //! let _view = view! {
 //!     <MotionDiv
-//!         while_hover=Some(hover_target)
-//!         while_tap=Some(tap_target)
-//!         drag=Some(DragConfig::default())
+//!         while_hover=hover_target
+//!         while_tap=tap_target
+//!         drag=DragConfig::default()
 //!     >
 //!         "Interactive element"
 //!     </MotionDiv>

@@ -48,11 +48,17 @@ fn benchmark_animation_loop_efficiency() {
     // Performance requirements:
     // - Should handle at least 500 animation loops per second
     // - Should complete 1,000 animations in under 2 seconds
-    assert!(animations_per_second > 500.0, 
-        "Animation loop performance too slow: {} animations/sec (expected > 500)", animations_per_second);
-    assert!(duration.as_millis() < 2_000, 
-        "Animation loops too slow: {}ms for {} animations (expected < 2,000ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        animations_per_second > 500.0,
+        "Animation loop performance too slow: {} animations/sec (expected > 500)",
+        animations_per_second
+    );
+    assert!(
+        duration.as_millis() < 2_000,
+        "Animation loops too slow: {}ms for {} animations (expected < 2,000ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for concurrent animation handling
@@ -64,13 +70,13 @@ fn benchmark_concurrent_animations() {
 
     for _ in 0..iterations {
         let mut animations: Vec<(f64, f64, f64, f64)> = Vec::with_capacity(concurrent_animations);
-        
+
         // Initialize concurrent animations
         for i in 0..concurrent_animations {
             animations.push((
-                0.0, // position x
-                0.0, // position y
-                50.0 + i as f64, // velocity x
+                0.0,                   // position x
+                0.0,                   // position y
+                50.0 + i as f64,       // velocity x
                 25.0 + i as f64 * 0.5, // velocity y
             ));
         }
@@ -79,7 +85,8 @@ fn benchmark_concurrent_animations() {
         let mut frame_count = 0;
 
         // Simulate concurrent animation updates
-        while frame_count < 60 { // 1 second at 60fps
+        while frame_count < 60 {
+            // 1 second at 60fps
             frame_count += 1;
 
             for animation in &mut animations {
@@ -101,11 +108,17 @@ fn benchmark_concurrent_animations() {
     // Performance requirements:
     // - Should handle at least 1,000 concurrent animations per second
     // - Should complete 1,000 concurrent animations in under 1 second
-    assert!(animations_per_second > 1_000.0, 
-        "Concurrent animation performance too slow: {} animations/sec (expected > 1,000)", animations_per_second);
-    assert!(duration.as_millis() < 1_000, 
-        "Concurrent animations too slow: {}ms for {} animations (expected < 1,000ms)", 
-        duration.as_millis(), total_animations);
+    assert!(
+        animations_per_second > 1_000.0,
+        "Concurrent animation performance too slow: {} animations/sec (expected > 1,000)",
+        animations_per_second
+    );
+    assert!(
+        duration.as_millis() < 1_000,
+        "Concurrent animations too slow: {}ms for {} animations (expected < 1,000ms)",
+        duration.as_millis(),
+        total_animations
+    );
 }
 
 /// Performance benchmark for memory allocation patterns
@@ -122,8 +135,14 @@ fn benchmark_memory_allocation_patterns() {
         data.insert("x".to_string(), AnimationValue::Pixels(i as f64));
         data.insert("y".to_string(), AnimationValue::Pixels(i as f64 * 0.5));
         data.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        data.insert("scale".to_string(), AnimationValue::Number(1.0 + i as f64 * 0.001));
-        data.insert("rotate".to_string(), AnimationValue::Degrees(i as f64 * 0.1));
+        data.insert(
+            "scale".to_string(),
+            AnimationValue::Number(1.0 + i as f64 * 0.001),
+        );
+        data.insert(
+            "rotate".to_string(),
+            AnimationValue::Degrees(i as f64 * 0.1),
+        );
         animation_data.push(data);
     }
 
@@ -133,11 +152,17 @@ fn benchmark_memory_allocation_patterns() {
     // Performance requirements:
     // - Should handle at least 100,000 allocations per second
     // - Should complete 10,000 allocations in under 100ms
-    assert!(allocations_per_second > 100_000.0, 
-        "Memory allocation performance too slow: {} allocations/sec (expected > 100,000)", allocations_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Memory allocations too slow: {}ms for {} allocations (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        allocations_per_second > 100_000.0,
+        "Memory allocation performance too slow: {} allocations/sec (expected > 100,000)",
+        allocations_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Memory allocations too slow: {}ms for {} allocations (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 
     // Test memory cleanup
     drop(animation_data);
@@ -204,11 +229,17 @@ fn benchmark_constraint_calculation_optimization() {
     // Performance requirements:
     // - Should handle at least 2,000,000 constraint operations per second
     // - Should complete 100,000 operations in under 50ms
-    assert!(operations_per_second > 2_000_000.0, 
-        "Constraint optimization performance too slow: {} ops/sec (expected > 2,000,000)", operations_per_second);
-    assert!(duration.as_millis() < 50, 
-        "Constraint optimization too slow: {}ms for {} operations (expected < 50ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        operations_per_second > 2_000_000.0,
+        "Constraint optimization performance too slow: {} ops/sec (expected > 2,000,000)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 50,
+        "Constraint optimization too slow: {}ms for {} operations (expected < 50ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for easing function calculations
@@ -219,7 +250,7 @@ fn benchmark_easing_function_calculations() {
 
     for i in 0..iterations {
         let progress = (i as f64) / iterations as f64;
-        
+
         // Test different easing functions
         let _linear = progress;
         let _ease_in = progress * progress;
@@ -237,11 +268,17 @@ fn benchmark_easing_function_calculations() {
     // Performance requirements:
     // - Should handle at least 5,000,000 easing calculations per second
     // - Should complete 100,000 calculations in under 20ms
-    assert!(calculations_per_second > 5_000_000.0, 
-        "Easing function performance too slow: {} calculations/sec (expected > 5,000,000)", calculations_per_second);
-    assert!(duration.as_millis() < 20, 
-        "Easing calculations too slow: {}ms for {} calculations (expected < 20ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        calculations_per_second > 5_000_000.0,
+        "Easing function performance too slow: {} calculations/sec (expected > 5,000,000)",
+        calculations_per_second
+    );
+    assert!(
+        duration.as_millis() < 20,
+        "Easing calculations too slow: {}ms for {} calculations (expected < 20ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for drag event processing
@@ -280,11 +317,17 @@ fn benchmark_drag_event_processing() {
     // Performance requirements:
     // - Should handle at least 2,500,000 drag events per second
     // - Should complete 50,000 events in under 20ms
-    assert!(events_per_second > 2_500_000.0, 
-        "Drag event processing performance too slow: {} events/sec (expected > 2,500,000)", events_per_second);
-    assert!(duration.as_millis() < 20, 
-        "Drag event processing too slow: {}ms for {} events (expected < 20ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        events_per_second > 2_500_000.0,
+        "Drag event processing performance too slow: {} events/sec (expected > 2,500,000)",
+        events_per_second
+    );
+    assert!(
+        duration.as_millis() < 20,
+        "Drag event processing too slow: {}ms for {} events (expected < 20ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for animation interpolation
@@ -295,7 +338,7 @@ fn benchmark_animation_interpolation() {
 
     for i in 0..iterations {
         let progress = (i as f64) / iterations as f64;
-        
+
         // Test interpolation between values
         let start_x = 0.0;
         let end_x = 100.0;
@@ -321,11 +364,17 @@ fn benchmark_animation_interpolation() {
     // Performance requirements:
     // - Should handle at least 5,000,000 interpolations per second
     // - Should complete 100,000 interpolations in under 20ms
-    assert!(interpolations_per_second > 5_000_000.0, 
-        "Animation interpolation performance too slow: {} interpolations/sec (expected > 5,000,000)", interpolations_per_second);
-    assert!(duration.as_millis() < 20, 
-        "Animation interpolation too slow: {}ms for {} interpolations (expected < 20ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        interpolations_per_second > 5_000_000.0,
+        "Animation interpolation performance too slow: {} interpolations/sec (expected > 5,000,000)",
+        interpolations_per_second
+    );
+    assert!(
+        duration.as_millis() < 20,
+        "Animation interpolation too slow: {}ms for {} interpolations (expected < 20ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for memory pool usage
@@ -353,11 +402,17 @@ fn benchmark_memory_pool_usage() {
     // Performance requirements:
     // - Should handle at least 200,000 pool allocations per second
     // - Should complete 10,000 allocations in under 50ms
-    assert!(allocations_per_second > 200_000.0, 
-        "Memory pool performance too slow: {} allocations/sec (expected > 200,000)", allocations_per_second);
-    assert!(duration.as_millis() < 50, 
-        "Memory pool allocations too slow: {}ms for {} allocations (expected < 50ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        allocations_per_second > 200_000.0,
+        "Memory pool performance too slow: {} allocations/sec (expected > 200,000)",
+        allocations_per_second
+    );
+    assert!(
+        duration.as_millis() < 50,
+        "Memory pool allocations too slow: {}ms for {} allocations (expected < 50ms)",
+        duration.as_millis(),
+        iterations
+    );
 
     // Test pool cleanup
     pool.clear();
@@ -374,14 +429,14 @@ fn benchmark_batch_operations() {
     for _ in 0..iterations {
         // Simulate batch processing of animations
         let mut batch: Vec<(f64, f64, f64, f64)> = Vec::with_capacity(batch_size);
-        
+
         // Fill batch
         for i in 0..batch_size {
             batch.push((
-                i as f64, // position x
+                i as f64,       // position x
                 i as f64 * 0.5, // position y
-                10.0, // velocity x
-                5.0, // velocity y
+                10.0,           // velocity x
+                5.0,            // velocity y
             ));
         }
 
@@ -401,9 +456,15 @@ fn benchmark_batch_operations() {
     // Performance requirements:
     // - Should handle at least 1,000,000 batch operations per second
     // - Should complete 100,000 operations in under 100ms
-    assert!(operations_per_second > 1_000_000.0, 
-        "Batch operations performance too slow: {} ops/sec (expected > 1,000,000)", operations_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Batch operations too slow: {}ms for {} operations (expected < 100ms)", 
-        duration.as_millis(), total_operations);
+    assert!(
+        operations_per_second > 1_000_000.0,
+        "Batch operations performance too slow: {} ops/sec (expected > 1,000,000)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Batch operations too slow: {}ms for {} operations (expected < 100ms)",
+        duration.as_millis(),
+        total_operations
+    );
 }

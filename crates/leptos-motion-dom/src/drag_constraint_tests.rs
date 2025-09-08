@@ -484,7 +484,8 @@ fn test_drag_constraint_elastic_factors() {
         }
 
         // Verify elastic factor scaling
-        let expected_position = right_boundary + ((test_position - right_boundary) * elastic_factor);
+        let expected_position =
+            right_boundary + ((test_position - right_boundary) * elastic_factor);
         assert_eq!(constrained_position, expected_position);
     }
 }

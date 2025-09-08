@@ -153,7 +153,7 @@ fn test_browser_easing_compatibility() {
     for easing in easing_functions {
         // Test easing calculation at different progress points
         let progress_points = vec![0.0, 0.25, 0.5, 0.75, 1.0];
-        
+
         for progress in progress_points {
             let eased_value = match easing {
                 Easing::Linear => progress,
@@ -165,14 +165,18 @@ fn test_browser_easing_compatibility() {
                     } else {
                         1.0 - 2.0 * (1.0 - progress) * (1.0 - progress)
                     }
-                },
+                }
                 _ => progress, // Default to linear for other types
             };
 
             // Verify eased value is within valid range
-            assert!(eased_value >= 0.0 && eased_value <= 1.0, 
-                "Eased value {} out of range for progress {} with easing {:?}", 
-                eased_value, progress, easing);
+            assert!(
+                eased_value >= 0.0 && eased_value <= 1.0,
+                "Eased value {} out of range for progress {} with easing {:?}",
+                eased_value,
+                progress,
+                easing
+            );
         }
     }
 }
@@ -229,7 +233,7 @@ fn test_browser_transition_compatibility() {
                 } else {
                     1.0 - 2.0 * (1.0 - progress) * (1.0 - progress)
                 }
-            },
+            }
             _ => progress,
         };
 
@@ -279,7 +283,7 @@ fn test_browser_axis_constraint_compatibility() {
 
     for config in axis_configs {
         let constraints = config.constraints.as_ref().unwrap();
-        
+
         // Test movement in different directions
         let test_movements = vec![
             (10.0, 5.0),   // Both axes
@@ -302,7 +306,7 @@ fn test_browser_axis_constraint_compatibility() {
                         new_x = constraints.right.unwrap();
                     }
                     // Y should remain unchanged
-                },
+                }
                 Some(DragAxis::Y) => {
                     // Only apply Y constraints
                     if new_y < constraints.top.unwrap() {
@@ -311,7 +315,7 @@ fn test_browser_axis_constraint_compatibility() {
                         new_y = constraints.bottom.unwrap();
                     }
                     // X should remain unchanged
-                },
+                }
                 Some(DragAxis::Both) => {
                     // Apply both constraints
                     if new_x < constraints.left.unwrap() {
@@ -324,7 +328,7 @@ fn test_browser_axis_constraint_compatibility() {
                     } else if new_y > constraints.bottom.unwrap() {
                         new_y = constraints.bottom.unwrap();
                     }
-                },
+                }
                 None => {
                     // No constraints applied
                 }
@@ -336,18 +340,18 @@ fn test_browser_axis_constraint_compatibility() {
                     assert!(new_x >= constraints.left.unwrap());
                     assert!(new_x <= constraints.right.unwrap());
                     assert_eq!(new_y, delta_y); // Y should be unchanged
-                },
+                }
                 Some(DragAxis::Y) => {
                     assert!(new_y >= constraints.top.unwrap());
                     assert!(new_y <= constraints.bottom.unwrap());
                     assert_eq!(new_x, delta_x); // X should be unchanged
-                },
+                }
                 Some(DragAxis::Both) => {
                     assert!(new_x >= constraints.left.unwrap());
                     assert!(new_x <= constraints.right.unwrap());
                     assert!(new_y >= constraints.top.unwrap());
                     assert!(new_y <= constraints.bottom.unwrap());
-                },
+                }
                 None => {
                     // No constraints to verify
                 }
@@ -380,20 +384,35 @@ fn test_browser_momentum_compatibility() {
     }
 
     // Verify momentum calculation results
-    assert!(frame_count > 0, "Momentum should have run for at least one frame");
+    assert!(
+        frame_count > 0,
+        "Momentum should have run for at least one frame"
+    );
     assert!(frame_count <= 100, "Momentum should not run indefinitely");
-    
+
     // Check if momentum stopped due to low velocity or frame limit
     if frame_count < 100 {
         // If it stopped early, velocity should be near zero
-        assert!(velocity.0.abs() <= 0.1_f64, "X velocity should be near zero when momentum stops early");
-        assert!(velocity.1.abs() <= 0.1_f64, "Y velocity should be near zero when momentum stops early");
+        assert!(
+            velocity.0.abs() <= 0.1_f64,
+            "X velocity should be near zero when momentum stops early"
+        );
+        assert!(
+            velocity.1.abs() <= 0.1_f64,
+            "Y velocity should be near zero when momentum stops early"
+        );
     } else {
         // If it hit the frame limit, velocity should be reduced but not necessarily near zero
-        assert!(velocity.0.abs() < initial_velocity.0.abs(), "X velocity should be reduced");
-        assert!(velocity.1.abs() < initial_velocity.1.abs(), "Y velocity should be reduced");
+        assert!(
+            velocity.0.abs() < initial_velocity.0.abs(),
+            "X velocity should be reduced"
+        );
+        assert!(
+            velocity.1.abs() < initial_velocity.1.abs(),
+            "Y velocity should be reduced"
+        );
     }
-    
+
     assert!(position.0.abs() > 0.0, "Position should have changed");
     assert!(position.1.abs() > 0.0, "Position should have changed");
 }
@@ -495,9 +514,12 @@ fn test_browser_animation_interpolation_compatibility() {
 
         // Test cubic interpolation
         let t = progress;
-        let cubic_x = start_values.0 + (end_values.0 - start_values.0) * (3.0 * t * t - 2.0 * t * t * t);
-        let cubic_y = start_values.1 + (end_values.1 - start_values.1) * (3.0 * t * t - 2.0 * t * t * t);
-        let cubic_opacity = start_values.2 + (end_values.2 - start_values.2) * (3.0 * t * t - 2.0 * t * t * t);
+        let cubic_x =
+            start_values.0 + (end_values.0 - start_values.0) * (3.0 * t * t - 2.0 * t * t * t);
+        let cubic_y =
+            start_values.1 + (end_values.1 - start_values.1) * (3.0 * t * t - 2.0 * t * t * t);
+        let cubic_opacity =
+            start_values.2 + (end_values.2 - start_values.2) * (3.0 * t * t - 2.0 * t * t * t);
 
         // Verify cubic interpolation results
         assert!(cubic_x >= start_values.0 && cubic_x <= end_values.0);
@@ -510,7 +532,7 @@ fn test_browser_animation_interpolation_compatibility() {
 #[test]
 fn test_browser_edge_case_compatibility() {
     // Test edge cases that should be handled consistently across browsers
-    
+
     // Test zero values
     let zero_config = DragConfig {
         axis: Some(DragAxis::Both),

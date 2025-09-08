@@ -453,8 +453,8 @@ fn test_drag_constraint_multiple_elements_integration() {
 
     // Simulate multiple elements with drag constraints
     let mut elements: Vec<((f64, f64), (f64, f64))> = vec![
-        ((0.0, 0.0), (50.0, 25.0)), // Element 1: position, velocity
-        ((10.0, 5.0), (40.0, 20.0)), // Element 2: position, velocity
+        ((0.0, 0.0), (50.0, 25.0)),   // Element 1: position, velocity
+        ((10.0, 5.0), (40.0, 20.0)),  // Element 2: position, velocity
         ((-5.0, -2.0), (60.0, 30.0)), // Element 3: position, velocity
     ];
 
@@ -463,7 +463,10 @@ fn test_drag_constraint_multiple_elements_integration() {
     let friction = 0.95;
     let mut frame_count = 0;
 
-    while elements.iter().any(|(_, (vx, vy))| vx.abs() > 0.1_f64 || vy.abs() > 0.1_f64) {
+    while elements
+        .iter()
+        .any(|(_, (vx, vy))| vx.abs() > 0.1_f64 || vy.abs() > 0.1_f64)
+    {
         frame_count += 1;
 
         for (position, velocity) in &mut elements {

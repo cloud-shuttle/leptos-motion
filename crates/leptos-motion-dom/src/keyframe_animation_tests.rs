@@ -8,9 +8,36 @@ use std::collections::HashMap;
 fn test_basic_keyframe_animation() {
     // Create keyframes for a simple position animation
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 0.5, values: AnimationValues { x: 100.0, y: 50.0, scale: 1.2, rotation: 45.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 200.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 0.5,
+            values: AnimationValues {
+                x: 100.0,
+                y: 50.0,
+                scale: 1.2,
+                rotation: 45.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 200.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
     ];
 
     let animation = KeyframeAnimation::new(keyframes, 1000.0);
@@ -41,8 +68,26 @@ fn test_basic_keyframe_animation() {
 #[test]
 fn test_keyframe_interpolation() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 2.0, rotation: 180.0 }, easing: EasingType::Linear },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 2.0,
+                rotation: 180.0,
+            },
+            easing: EasingType::Linear,
+        },
     ];
 
     let animation = KeyframeAnimation::new(keyframes, 1000.0);
@@ -66,19 +111,34 @@ fn test_keyframe_interpolation() {
 #[test]
 fn test_keyframe_with_easing() {
     let keyframes = vec![
-        Keyframe { 
-            time: 0.0, 
-            values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
             easing: EasingType::Linear,
         },
-        Keyframe { 
-            time: 0.5, 
-            values: AnimationValues { x: 50.0, y: 50.0, scale: 1.5, rotation: 90.0 },
+        Keyframe {
+            time: 0.5,
+            values: AnimationValues {
+                x: 50.0,
+                y: 50.0,
+                scale: 1.5,
+                rotation: 90.0,
+            },
             easing: EasingType::EaseIn,
         },
-        Keyframe { 
-            time: 1.0, 
-            values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
             easing: EasingType::EaseOut,
         },
     ];
@@ -97,8 +157,26 @@ fn test_keyframe_with_easing() {
 #[test]
 fn test_keyframe_animation_state_management() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ];
 
     let mut animation = KeyframeAnimation::new(keyframes, 1000.0);
@@ -119,8 +197,26 @@ fn test_keyframe_animation_state_management() {
 #[test]
 fn test_keyframe_animation_loops() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ];
 
     let mut animation = KeyframeAnimation::with_loops(keyframes, 1000.0, 3);
@@ -147,8 +243,26 @@ fn test_keyframe_animation_loops() {
 #[test]
 fn test_keyframe_animation_infinite_loops() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ];
 
     let mut animation = KeyframeAnimation::with_infinite_loops(keyframes, 1000.0);
@@ -173,11 +287,30 @@ fn test_keyframe_animation_infinite_loops() {
 #[test]
 fn test_keyframe_animation_direction_control() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ];
 
-    let mut animation = KeyframeAnimation::with_direction(keyframes, 1000.0, AnimationDirection::Alternate);
+    let mut animation =
+        KeyframeAnimation::with_direction(keyframes, 1000.0, AnimationDirection::Alternate);
 
     // Test forward direction
     animation.start();
@@ -194,18 +327,63 @@ fn test_keyframe_animation_direction_control() {
 #[test]
 fn test_keyframe_animation_performance() {
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 0.25, values: AnimationValues { x: 25.0, y: 25.0, scale: 1.25, rotation: 45.0 }, easing: EasingType::Linear },
-        Keyframe { time: 0.5, values: AnimationValues { x: 50.0, y: 50.0, scale: 1.5, rotation: 90.0 }, easing: EasingType::EaseIn },
-        Keyframe { time: 0.75, values: AnimationValues { x: 75.0, y: 75.0, scale: 1.25, rotation: 135.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 180.0 }, easing: EasingType::Linear },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 0.25,
+            values: AnimationValues {
+                x: 25.0,
+                y: 25.0,
+                scale: 1.25,
+                rotation: 45.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 0.5,
+            values: AnimationValues {
+                x: 50.0,
+                y: 50.0,
+                scale: 1.5,
+                rotation: 90.0,
+            },
+            easing: EasingType::EaseIn,
+        },
+        Keyframe {
+            time: 0.75,
+            values: AnimationValues {
+                x: 75.0,
+                y: 75.0,
+                scale: 1.25,
+                rotation: 135.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 180.0,
+            },
+            easing: EasingType::Linear,
+        },
     ];
 
     let animation = KeyframeAnimation::new(keyframes, 1000.0);
 
     // Test that calculations are fast
     let start_time = 0.0;
-    
+
     for i in 0..1000 {
         let progress = (i as f64) / 1000.0;
         let _values = animation.calculate_values(progress);
@@ -222,9 +400,16 @@ fn test_keyframe_animation_performance() {
 #[test]
 fn test_keyframe_animation_edge_cases() {
     // Test single keyframe
-    let single_keyframe = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 50.0, y: 50.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-    ];
+    let single_keyframe = vec![Keyframe {
+        time: 0.0,
+        values: AnimationValues {
+            x: 50.0,
+            y: 50.0,
+            scale: 1.0,
+            rotation: 0.0,
+        },
+        easing: EasingType::Linear,
+    }];
 
     let animation = KeyframeAnimation::new(single_keyframe, 1000.0);
     let values = animation.calculate_values(0.5);
@@ -232,8 +417,26 @@ fn test_keyframe_animation_edge_cases() {
 
     // Test zero duration
     let keyframes = vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ];
 
     let instant_animation = KeyframeAnimation::new(keyframes, 0.0);
@@ -246,11 +449,29 @@ fn test_keyframe_animation_edge_cases() {
 fn test_keyframe_animation_motion_div_integration() {
     // This test will verify that keyframe animations work with the MotionDiv component
     // We'll test the keyframes prop and automatic keyframe detection
-    
+
     let (animation_enabled, _set_animation_enabled) = signal(true);
     let (keyframe_data, _set_keyframe_data) = signal(vec![
-        Keyframe { time: 0.0, values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::Linear },
-        Keyframe { time: 1.0, values: AnimationValues { x: 100.0, y: 100.0, scale: 1.0, rotation: 0.0 }, easing: EasingType::EaseOut },
+        Keyframe {
+            time: 0.0,
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::Linear,
+        },
+        Keyframe {
+            time: 1.0,
+            values: AnimationValues {
+                x: 100.0,
+                y: 100.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
+            easing: EasingType::EaseOut,
+        },
     ]);
 
     // Test that keyframe animation is properly configured
@@ -278,7 +499,12 @@ impl Default for Keyframe {
     fn default() -> Self {
         Self {
             time: 0.0,
-            values: AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 },
+            values: AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            },
             easing: EasingType::Linear,
         }
     }
@@ -359,7 +585,11 @@ impl KeyframeAnimation {
         }
     }
 
-    pub fn with_direction(keyframes: Vec<Keyframe>, duration: f64, direction: AnimationDirection) -> Self {
+    pub fn with_direction(
+        keyframes: Vec<Keyframe>,
+        duration: f64,
+        direction: AnimationDirection,
+    ) -> Self {
         Self {
             keyframes,
             duration,
@@ -373,7 +603,12 @@ impl KeyframeAnimation {
 
     pub fn calculate_values(&self, progress: f64) -> AnimationValues {
         if self.keyframes.is_empty() {
-            return AnimationValues { x: 0.0, y: 0.0, scale: 1.0, rotation: 0.0 };
+            return AnimationValues {
+                x: 0.0,
+                y: 0.0,
+                scale: 1.0,
+                rotation: 0.0,
+            };
         }
 
         if self.keyframes.len() == 1 {
@@ -407,8 +642,16 @@ impl KeyframeAnimation {
         AnimationValues {
             x: self.interpolate(from_keyframe.values.x, to_keyframe.values.x, eased_progress),
             y: self.interpolate(from_keyframe.values.y, to_keyframe.values.y, eased_progress),
-            scale: self.interpolate(from_keyframe.values.scale, to_keyframe.values.scale, eased_progress),
-            rotation: self.interpolate(from_keyframe.values.rotation, to_keyframe.values.rotation, eased_progress),
+            scale: self.interpolate(
+                from_keyframe.values.scale,
+                to_keyframe.values.scale,
+                eased_progress,
+            ),
+            rotation: self.interpolate(
+                from_keyframe.values.rotation,
+                to_keyframe.values.rotation,
+                eased_progress,
+            ),
         }
     }
 
@@ -444,7 +687,9 @@ impl KeyframeAnimation {
                 if progress < 0.5 {
                     (2.0 * progress).powi(2) * ((c2 + 1.0) * 2.0 * progress - c2) / 2.0
                 } else {
-                    ((2.0 * progress - 2.0).powi(2) * ((c2 + 1.0) * (2.0 * progress - 2.0) + c2) + 2.0) / 2.0
+                    ((2.0 * progress - 2.0).powi(2) * ((c2 + 1.0) * (2.0 * progress - 2.0) + c2)
+                        + 2.0)
+                        / 2.0
                 }
             }
         }

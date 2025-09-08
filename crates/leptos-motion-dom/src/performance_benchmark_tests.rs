@@ -90,11 +90,17 @@ fn benchmark_drag_constraint_operations() {
     // Performance requirements:
     // - Should handle at least 100,000 constraint operations per second
     // - Should complete 10,000 operations in under 100ms
-    assert!(operations_per_second > 100_000.0, 
-        "Performance too slow: {} ops/sec (expected > 100,000)", operations_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Operations too slow: {}ms for {} operations (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        operations_per_second > 100_000.0,
+        "Performance too slow: {} ops/sec (expected > 100,000)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Operations too slow: {}ms for {} operations (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for momentum animation calculations
@@ -134,11 +140,17 @@ fn benchmark_momentum_animation_calculations() {
     // Performance requirements:
     // - Should handle at least 1,000 momentum animations per second
     // - Should complete 1,000 animations in under 1 second
-    assert!(animations_per_second > 1_000.0, 
-        "Momentum performance too slow: {} animations/sec (expected > 1,000)", animations_per_second);
-    assert!(duration.as_millis() < 1_000, 
-        "Momentum calculations too slow: {}ms for {} animations (expected < 1000ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        animations_per_second > 1_000.0,
+        "Momentum performance too slow: {} animations/sec (expected > 1,000)",
+        animations_per_second
+    );
+    assert!(
+        duration.as_millis() < 1_000,
+        "Momentum calculations too slow: {}ms for {} animations (expected < 1000ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for drag configuration creation
@@ -167,11 +179,17 @@ fn benchmark_drag_config_creation() {
     // Performance requirements:
     // - Should create at least 1,000,000 drag configs per second
     // - Should complete 100,000 configs in under 100ms
-    assert!(configs_per_second > 1_000_000.0, 
-        "Config creation too slow: {} configs/sec (expected > 1,000,000)", configs_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Config creation too slow: {}ms for {} configs (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        configs_per_second > 1_000_000.0,
+        "Config creation too slow: {} configs/sec (expected > 1,000,000)",
+        configs_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Config creation too slow: {}ms for {} configs (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for animation target creation
@@ -185,8 +203,14 @@ fn benchmark_animation_target_creation() {
         target.insert("x".to_string(), AnimationValue::Pixels(i as f64));
         target.insert("y".to_string(), AnimationValue::Pixels(i as f64 * 0.5));
         target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        target.insert("scale".to_string(), AnimationValue::Number(1.0 + i as f64 * 0.001));
-        target.insert("rotate".to_string(), AnimationValue::Degrees(i as f64 * 0.1));
+        target.insert(
+            "scale".to_string(),
+            AnimationValue::Number(1.0 + i as f64 * 0.001),
+        );
+        target.insert(
+            "rotate".to_string(),
+            AnimationValue::Degrees(i as f64 * 0.1),
+        );
     }
 
     let duration = start_time.elapsed();
@@ -195,11 +219,17 @@ fn benchmark_animation_target_creation() {
     // Performance requirements:
     // - Should create at least 200,000 animation targets per second
     // - Should complete 50,000 targets in under 250ms
-    assert!(targets_per_second > 200_000.0, 
-        "Animation target creation too slow: {} targets/sec (expected > 200,000)", targets_per_second);
-    assert!(duration.as_millis() < 250, 
-        "Animation target creation too slow: {}ms for {} targets (expected < 250ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        targets_per_second > 200_000.0,
+        "Animation target creation too slow: {} targets/sec (expected > 200,000)",
+        targets_per_second
+    );
+    assert!(
+        duration.as_millis() < 250,
+        "Animation target creation too slow: {}ms for {} targets (expected < 250ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for transition creation
@@ -224,11 +254,17 @@ fn benchmark_transition_creation() {
     // Performance requirements:
     // - Should create at least 1,000,000 transitions per second
     // - Should complete 100,000 transitions in under 100ms
-    assert!(transitions_per_second > 1_000_000.0, 
-        "Transition creation too slow: {} transitions/sec (expected > 1,000,000)", transitions_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Transition creation too slow: {}ms for {} transitions (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        transitions_per_second > 1_000_000.0,
+        "Transition creation too slow: {} transitions/sec (expected > 1,000,000)",
+        transitions_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Transition creation too slow: {}ms for {} transitions (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for complex drag operations
@@ -331,11 +367,17 @@ fn benchmark_complex_drag_operations() {
     // Performance requirements:
     // - Should handle at least 100 complex drag operations per second
     // - Should complete 1,000 operations in under 10 seconds
-    assert!(operations_per_second > 100.0, 
-        "Complex drag performance too slow: {} ops/sec (expected > 100)", operations_per_second);
-    assert!(duration.as_millis() < 10_000, 
-        "Complex drag operations too slow: {}ms for {} operations (expected < 10,000ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        operations_per_second > 100.0,
+        "Complex drag performance too slow: {} ops/sec (expected > 100)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 10_000,
+        "Complex drag operations too slow: {}ms for {} operations (expected < 10,000ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Memory usage benchmark for drag configurations
@@ -370,9 +412,12 @@ fn benchmark_memory_usage() {
     // Performance requirements:
     // - Should create 10,000 configs in under 50ms
     // - Memory usage should be reasonable (no excessive allocations)
-    assert!(duration.as_millis() < 50, 
-        "Memory allocation too slow: {}ms for {} configs (expected < 50ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        duration.as_millis() < 50,
+        "Memory allocation too slow: {}ms for {} configs (expected < 50ms)",
+        duration.as_millis(),
+        iterations
+    );
 
     // Test memory cleanup
     drop(configs);
@@ -424,11 +469,17 @@ fn benchmark_axis_constraint_enforcement() {
     // Performance requirements:
     // - Should handle at least 1,000,000 axis constraint operations per second
     // - Should complete 100,000 operations in under 100ms
-    assert!(operations_per_second > 1_000_000.0, 
-        "Axis constraint performance too slow: {} ops/sec (expected > 1,000,000)", operations_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Axis constraint operations too slow: {}ms for {} operations (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        operations_per_second > 1_000_000.0,
+        "Axis constraint performance too slow: {} ops/sec (expected > 1,000,000)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Axis constraint operations too slow: {}ms for {} operations (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 }
 
 /// Performance benchmark for elastic behavior calculations
@@ -483,9 +534,15 @@ fn benchmark_elastic_behavior_calculations() {
     // Performance requirements:
     // - Should handle at least 1,000,000 elastic calculations per second
     // - Should complete 100,000 operations in under 100ms
-    assert!(operations_per_second > 1_000_000.0, 
-        "Elastic behavior performance too slow: {} ops/sec (expected > 1,000,000)", operations_per_second);
-    assert!(duration.as_millis() < 100, 
-        "Elastic behavior operations too slow: {}ms for {} operations (expected < 100ms)", 
-        duration.as_millis(), iterations);
+    assert!(
+        operations_per_second > 1_000_000.0,
+        "Elastic behavior performance too slow: {} ops/sec (expected > 1,000,000)",
+        operations_per_second
+    );
+    assert!(
+        duration.as_millis() < 100,
+        "Elastic behavior operations too slow: {}ms for {} operations (expected < 100ms)",
+        duration.as_millis(),
+        iterations
+    );
 }

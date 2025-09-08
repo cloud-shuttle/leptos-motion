@@ -86,7 +86,7 @@ fn test_stagger_animation_center_direction() {
 
     let center_stagger = StaggerAnimation::new(elements, center_config);
     let center_times = center_stagger.calculate_start_times();
-    
+
     // Center element (index 2) should start first
     assert_eq!(center_times[2], 0.0); // Center element
     assert_eq!(center_times[1], 0.1); // One step from center
@@ -113,7 +113,7 @@ fn test_stagger_animation_different_delays() {
 
     let stagger = StaggerAnimation::new(elements, config);
     let times = stagger.calculate_start_times();
-    
+
     // Should have 0.2s intervals (with floating point tolerance)
     assert_eq!(times[0], 0.0);
     assert_eq!(times[1], 0.2);
@@ -124,10 +124,7 @@ fn test_stagger_animation_different_delays() {
 // Test 5: Stagger Animation State Management
 #[test]
 fn test_stagger_animation_state_management() {
-    let elements = vec![
-        "element1".to_string(),
-        "element2".to_string(),
-    ];
+    let elements = vec!["element1".to_string(), "element2".to_string()];
 
     let config = StaggerConfig {
         delay: 0.1,
@@ -166,7 +163,7 @@ fn test_stagger_animation_element_types() {
 
     let stagger_animation = StaggerAnimation::with_elements(elements, config);
     let start_times = stagger_animation.calculate_start_times();
-    
+
     // Should respect stagger delay (element-specific delays not implemented yet)
     assert_eq!(start_times[0], 0.0); // 0.0
     assert_eq!(start_times[1], 0.05); // 0.05
@@ -188,7 +185,7 @@ fn test_stagger_animation_performance() {
 
     // Test that calculations are fast
     let start_time = 0.0;
-    
+
     let _start_times = stagger_animation.calculate_start_times();
     let _total_duration = stagger_animation.total_duration();
 
@@ -263,7 +260,7 @@ fn test_stagger_animation_complex_scenarios() {
 
     let complex_stagger = StaggerAnimation::new(elements, config);
     let complex_times = complex_stagger.calculate_start_times();
-    
+
     // Should respect stagger direction (center out)
     assert_eq!(complex_times[2], 0.0); // main (center) starts first
     assert_eq!(complex_times[1], 0.15); // nav
@@ -341,7 +338,9 @@ impl StaggerAnimation {
         for (index, _element) in self.elements.iter().enumerate() {
             let base_delay = match self.config.stagger_direction {
                 StaggerDirection::Forward => index as f64 * self.config.delay,
-                StaggerDirection::Reverse => (total_elements - 1 - index) as f64 * self.config.delay,
+                StaggerDirection::Reverse => {
+                    (total_elements - 1 - index) as f64 * self.config.delay
+                }
                 StaggerDirection::Center => {
                     let center_index = total_elements / 2;
                     let distance_from_center = (index as i32 - center_index as i32).abs() as f64;

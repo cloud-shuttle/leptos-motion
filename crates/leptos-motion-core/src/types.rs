@@ -35,7 +35,7 @@ pub enum AnimationValue {
 
 impl AnimationValue {
     /// Convert animation value to string representation
-    pub fn to_string(&self) -> String {
+    pub fn to_string_value(&self) -> String {
         match self {
             AnimationValue::Number(n) => n.to_string(),
             AnimationValue::Pixels(p) => format!("{}px", p),
@@ -218,6 +218,7 @@ pub struct ComplexValue {
     #[cfg(feature = "serde-support")]
     pub data: serde_json::Value,
     #[cfg(not(feature = "serde-support"))]
+    /// The string data content
     pub data: String,
     /// Type identifier for custom interpolation
     pub value_type: String,
@@ -605,6 +606,7 @@ mod tests {
 
 // Leptos v0.8 compatibility helper functions
 #[cfg(feature = "leptos-integration")]
+/// Helper functions for Leptos v0.8 compatibility
 pub mod leptos_helpers {
     use super::*;
 
@@ -612,14 +614,14 @@ pub mod leptos_helpers {
     pub fn animation_target_to_class_string(target: &AnimationTarget) -> String {
         target
             .iter()
-            .map(|(key, value)| format!("{}-{}", key, value.to_string().replace(" ", "-")))
+            .map(|(key, value)| format!("{}-{}", key, value.to_string_value().replace(" ", "-")))
             .collect::<Vec<_>>()
             .join(" ")
     }
 
     /// Convert AnimationValue to a string for attributes
     pub fn animation_value_to_attribute_string(value: &AnimationValue) -> String {
-        value.to_string()
+        value.to_string_value()
     }
 
     /// Convert Transition to CSS properties string

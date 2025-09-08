@@ -59,7 +59,7 @@ pub fn MotionDiv(
     if let Some(initial_target) = initial {
         let mut styles = HashMap::new();
         for (key, value) in initial_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
     }
@@ -70,7 +70,7 @@ pub fn MotionDiv(
         // For now, we'll do direct style manipulation to make tests pass
         let mut styles = current_styles.get();
         for (key, value) in animate_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
     }
@@ -129,7 +129,7 @@ pub fn MotionSpan(
     if let Some(initial_target) = initial {
         let mut styles = HashMap::new();
         for (key, value) in initial_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
     }
@@ -138,7 +138,7 @@ pub fn MotionSpan(
     if let Some(animate_target) = animate {
         let mut styles = current_styles.get();
         for (key, value) in animate_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
     }

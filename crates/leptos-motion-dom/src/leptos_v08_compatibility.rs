@@ -72,7 +72,12 @@ impl IntoAttributeValue for AnimationValue {
             AnimationValue::Color(c) => AttributeValue::String(c),
             AnimationValue::String(s) => AttributeValue::String(s),
             AnimationValue::Transform(t) => AttributeValue::String(t.to_css_string()),
-            AnimationValue::Complex(c) => AttributeValue::String(c.to_string()),
+            AnimationValue::Complex(c) => AttributeValue::String(match &c.data {
+                #[cfg(feature = "serde-support")]
+                data => serde_json::to_string(data).unwrap_or_default(),
+                #[cfg(not(feature = "serde-support"))]
+                data => data.clone(),
+            }),
         }
     }
 }
@@ -197,7 +202,12 @@ impl IntoProperty for AnimationTarget {
                     AnimationValue::Color(c) => c.clone(),
                     AnimationValue::String(s) => s.clone(),
                     AnimationValue::Transform(t) => t.to_css_string(),
-                    AnimationValue::Complex(c) => c.to_string(),
+                    AnimationValue::Complex(c) => match &c.data {
+                        #[cfg(feature = "serde-support")]
+                        data => serde_json::to_string(data).unwrap_or_default(),
+                        #[cfg(not(feature = "serde-support"))]
+                        data => data.clone(),
+                    },
                 };
 
                 format!("{}: {}", css_property, css_value)
@@ -316,11 +326,11 @@ impl ComplexValueExt for ComplexValue {
 
 /// Extension trait for AnimationValue to provide string conversion
 pub trait AnimationValueExt {
-    fn to_string(&self) -> String;
+    fn to_string_value(&self) -> String;
 }
 
 impl AnimationValueExt for AnimationValue {
-    fn to_string(&self) -> String {
+    fn to_string_value(&self) -> String {
         match self {
             AnimationValue::Number(n) => n.to_string(),
             AnimationValue::Pixels(p) => format!("{}px", p),
@@ -330,7 +340,12 @@ impl AnimationValueExt for AnimationValue {
             AnimationValue::Color(c) => c.clone(),
             AnimationValue::String(s) => s.clone(),
             AnimationValue::Transform(t) => t.to_css_string(),
-            AnimationValue::Complex(c) => c.to_string(),
+            AnimationValue::Complex(c) => match &c.data {
+                #[cfg(feature = "serde-support")]
+                data => serde_json::to_string(data).unwrap_or_default(),
+                #[cfg(not(feature = "serde-support"))]
+                data => data.clone(),
+            },
         }
     }
 }

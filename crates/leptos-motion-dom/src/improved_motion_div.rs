@@ -55,7 +55,7 @@ pub fn ImprovedMotionDiv(
     if let Some(initial_target) = initial {
         let mut styles = HashMap::new();
         for (key, value) in initial_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
     }
@@ -78,7 +78,7 @@ pub fn ImprovedMotionDiv(
         // For now, we'll simulate the animation by updating styles directly
         let mut styles = current_styles.get();
         for (key, value) in animate_target {
-            styles.insert(key, value.to_string());
+            styles.insert(key, value.to_string_value());
         }
         set_styles.set(styles);
         set_animating.set(false);
@@ -90,7 +90,7 @@ pub fn ImprovedMotionDiv(
             if is_hovered.get() {
                 let mut styles = current_styles.get();
                 for (key, value) in hover_target {
-                    styles.insert(key, value.to_string());
+                    styles.insert(key, value.to_string_value());
                 }
                 styles
             } else {
@@ -109,7 +109,7 @@ pub fn ImprovedMotionDiv(
             if is_tapped.get() {
                 let mut styles = current_styles.get();
                 for (key, value) in tap_target {
-                    styles.insert(key, value.to_string());
+                    styles.insert(key, value.to_string_value());
                 }
                 styles
             } else {

@@ -30,9 +30,9 @@ fn test_core_types_after_serde_replacement() {
     });
 
     // Test that we can still create and use these values
-    assert_eq!(num_value.to_string(), "42");
-    assert_eq!(pixel_value.to_string(), "100px");
-    assert!(transform_value.to_string().contains("translateX(10px)"));
+    assert_eq!(num_value.to_string_value(), "42");
+    assert_eq!(pixel_value.to_string_value(), "100px");
+    assert!(transform_value.to_string_value().contains("translateX(10px)"));
 
     // Test AnimationTarget creation
     let mut target = HashMap::new();

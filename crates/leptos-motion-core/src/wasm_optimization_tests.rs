@@ -19,7 +19,7 @@ fn test_core_functionality_after_wasm_optimization() {
 
     // Test that basic types still work
     let animation_value = AnimationValue::Number(42.0);
-    assert_eq!(animation_value.to_string(), "42");
+    assert_eq!(animation_value.to_string_value(), "42");
 
     // Test animation target creation
     let mut target = HashMap::new();
@@ -83,11 +83,11 @@ fn test_animation_values_after_wasm_optimization() {
 
     // Test numeric values
     let num_value = AnimationValue::Number(42.0);
-    assert_eq!(num_value.to_string(), "42");
+    assert_eq!(num_value.to_string_value(), "42");
 
     // Test pixel values
     let pixel_value = AnimationValue::Pixels(100.0);
-    assert_eq!(pixel_value.to_string(), "100px");
+    assert_eq!(pixel_value.to_string_value(), "100px");
 
     // Test transform values
     let transform_value = AnimationValue::Transform(Transform {
@@ -98,7 +98,7 @@ fn test_animation_values_after_wasm_optimization() {
         rotate_z: Some(45.0),
         ..Default::default()
     });
-    assert!(transform_value.to_string().contains("translateX(10px)"));
+    assert!(transform_value.to_string_value().contains("translateX(10px)"));
 }
 
 /// Test that easing functions still work after WASM optimization

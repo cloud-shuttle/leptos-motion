@@ -88,7 +88,7 @@ mod tests {
     fn test_minimal_serialization() {
         // Test that minimal serialization traits are available
         let value = AnimationValue::Number(1.0);
-        let _json = value.to_string();
+        let _json = value.to_string_value();
 
         // Test that we can still work with JSON-like data
         let _data = "{\"type\":\"number\",\"value\":1.0}";

@@ -103,7 +103,11 @@ fn test_animation_values_after_tree_shaking() {
         rotate_z: Some(45.0),
         ..Default::default()
     });
-    assert!(transform_value.to_string_value().contains("translateX(10px)"));
+    assert!(
+        transform_value
+            .to_string_value()
+            .contains("translateX(10px)")
+    );
 }
 
 /// Test that easing functions still work after tree shaking

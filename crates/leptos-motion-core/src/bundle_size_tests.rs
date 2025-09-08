@@ -88,7 +88,11 @@ fn test_animation_values_after_serde_replacement() {
         rotate_z: Some(45.0),
         ..Default::default()
     });
-    assert!(transform_value.to_string_value().contains("translateX(10px)"));
+    assert!(
+        transform_value
+            .to_string_value()
+            .contains("translateX(10px)")
+    );
 }
 
 /// Test that gesture system still works after web-sys optimization

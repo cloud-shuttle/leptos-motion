@@ -98,7 +98,11 @@ fn test_animation_values_after_wasm_optimization() {
         rotate_z: Some(45.0),
         ..Default::default()
     });
-    assert!(transform_value.to_string_value().contains("translateX(10px)"));
+    assert!(
+        transform_value
+            .to_string_value()
+            .contains("translateX(10px)")
+    );
 }
 
 /// Test that easing functions still work after WASM optimization

@@ -1,0 +1,28 @@
+[package]
+name = "capability-showcase"
+version = "0.6.0"
+edition = "2021"
+authors = ["Leptos Motion Team"]
+description = "Comprehensive showcase of Leptos Motion capabilities"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+leptos-motion = "0.6.0"
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+console_error_panic_hook = "0.1"
+console_log = "0.2"
+log = "0.4"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+  "Document",
+  "Element",
+  "HtmlElement",
+  "Window",
+]

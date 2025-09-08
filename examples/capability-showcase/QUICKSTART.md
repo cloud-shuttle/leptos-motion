@@ -5,7 +5,7 @@
 This showcase demonstrates **all the major capabilities** of Leptos Motion v0.6.0:
 
 - **🎨 Basic Animations** - Scale, rotate, fade, and color transitions
-- **🖱️ Gesture Interactions** - Hover, tap, and drag interactions  
+- **🖱️ Gesture Interactions** - Hover, tap, and drag interactions
 - **📱 Layout Animations** - FLIP-based smooth layout transitions
 - **🎬 Keyframe Animations** - Multi-step animations with precise control
 - **⚡ Stagger Animations** - Sequential animations with configurable delays
@@ -16,16 +16,20 @@ This showcase demonstrates **all the major capabilities** of Leptos Motion v0.6.
 ## 🛠️ Running the Showcase
 
 ### Option 1: Python Server (Recommended)
+
 ```bash
 # From the showcase directory
 python3 serve.py
 ```
+
 This will:
+
 - Start a local server at `http://localhost:8000`
 - Automatically open your browser
 - Serve the showcase with proper CORS headers
 
 ### Option 2: Manual Server
+
 ```bash
 # From the showcase directory
 python3 -m http.server 8000
@@ -33,6 +37,7 @@ python3 -m http.server 8000
 ```
 
 ### Option 3: Other Servers
+
 Any HTTP server will work. Just serve the files from this directory.
 
 ## 🔧 Building from Source
@@ -53,6 +58,7 @@ python3 serve.py
 ## 📱 Browser Compatibility
 
 The showcase works in all modern browsers:
+
 - ✅ Chrome 80+
 - ✅ Firefox 75+
 - ✅ Safari 13+
@@ -61,36 +67,44 @@ The showcase works in all modern browsers:
 ## 🎮 Interactive Features
 
 ### Basic Animations
+
 - Click "Hide/Show" to toggle visibility
 - Click "Mode 1/2/3" to switch animation types
 
 ### Gesture Interactions
+
 - Hover over the element to see hover effects
 - Click to see tap animations
 - Watch the tap counter increment
 
 ### Layout Animations
+
 - Click "Add Item" to add new elements
 - Click "Remove Item" to remove elements
 - Click "Shuffle" to reorder elements
 
 ### Keyframe Animations
+
 - Click "Play/Stop" to control the animation
 
 ### Stagger Animations
+
 - Click "Show/Hide Staggered" to see sequential animations
 
 ### Drag Constraints
+
 - Drag the element around
 - Click the mode button to change constraints
 - Try "Free Drag", "X Only", and "Constrained" modes
 
 ### Performance Demo
+
 - Click "Start/Stop" to control animations
 - Click "Count" to change the number of concurrent animations
 - Watch the smooth 60fps performance
 
 ### Advanced Features
+
 - Click the mode button to see different advanced animations
 - Try "Spring Physics", "Color Transitions", and "3D Transforms"
 
@@ -114,13 +128,17 @@ This showcase demonstrates that Leptos Motion is:
 ## 🆘 Troubleshooting
 
 ### "pkg directory not found"
+
 Run `wasm-pack build --target web --out-dir pkg` first
 
 ### "Module not found" errors
+
 Make sure you're serving from the showcase directory with an HTTP server
 
 ### Animations not working
+
 Check browser console for errors and ensure you're using a modern browser
 
 ### Performance issues
+
 Try reducing the animation count in the Performance Demo section

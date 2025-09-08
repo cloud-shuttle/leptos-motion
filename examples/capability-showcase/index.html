@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leptos Motion Capability Showcase</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
     <style>
         body {
             margin: 0;
@@ -13,96 +14,165 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
         }
-        
+
         .header h1 {
             font-size: 3rem;
             margin: 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        
+
         .header p {
             font-size: 1.2rem;
             opacity: 0.9;
             margin: 10px 0;
         }
-        
+
         .showcase-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
-        
+
         .showcase-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
+        .showcase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .showcase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.3);
+        }
+
         .showcase-card h3 {
             margin: 0 0 20px 0;
             color: #333;
             font-size: 1.5rem;
         }
-        
+
         .demo-area {
             min-height: 200px;
-            border: 2px dashed #ddd;
-            border-radius: 10px;
+            border: 2px solid transparent;
+            border-radius: 15px;
             padding: 20px;
             margin: 20px 0;
-            background: #f9f9f9;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            overflow: hidden;
         }
         
+        .demo-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            background-size: 20px 20px;
+            animation: shimmer 2s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
         .controls {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin: 20px 0;
         }
-        
+
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
-            background: #667eea;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
         }
         
         .btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
         .btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .btn.secondary {
-            background: #6c757d;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
         }
         
         .btn.secondary:hover {
-            background: #5a6268;
+            background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
         }
-        
+
         .stats {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -110,31 +180,79 @@
             color: white;
             margin-top: 40px;
         }
-        
+
         .stats h3 {
             margin: 0 0 15px 0;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
-        
+
         .stat-item {
             text-align: center;
         }
-        
+
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
             display: block;
         }
-        
+
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.8;
         }
+        
+        /* Animation element styles */
+        .bg-gradient-to-br {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .from-blue-500 {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        
+        .to-purple-600 {
+            background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+        }
+        
+        .from-pink-400 {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+        }
+        
+        .to-red-500 {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .from-orange-200 {
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+        }
+        
+        .to-orange-400 {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+        }
+        
+        .color-1 { background: linear-gradient(135deg, hsl(0, 70%, 60%) 0%, hsl(0, 70%, 40%) 100%); }
+        .color-2 { background: linear-gradient(135deg, hsl(60, 70%, 60%) 0%, hsl(60, 70%, 40%) 100%); }
+        .color-3 { background: linear-gradient(135deg, hsl(120, 70%, 60%) 0%, hsl(120, 70%, 40%) 100%); }
+        .color-4 { background: linear-gradient(135deg, hsl(180, 70%, 60%) 0%, hsl(180, 70%, 40%) 100%); }
+        .color-5 { background: linear-gradient(135deg, hsl(240, 70%, 60%) 0%, hsl(240, 70%, 40%) 100%); }
+        .color-6 { background: linear-gradient(135deg, hsl(300, 70%, 60%) 0%, hsl(300, 70%, 40%) 100%); }
+        
+        .stagger-1 { background: linear-gradient(135deg, hsl(0, 70%, 60%) 0%, hsl(0, 70%, 40%) 100%); }
+        .stagger-2 { background: linear-gradient(135deg, hsl(72, 70%, 60%) 0%, hsl(72, 70%, 40%) 100%); }
+        .stagger-3 { background: linear-gradient(135deg, hsl(144, 70%, 60%) 0%, hsl(144, 70%, 40%) 100%); }
+        .stagger-4 { background: linear-gradient(135deg, hsl(216, 70%, 60%) 0%, hsl(216, 70%, 40%) 100%); }
+        .stagger-5 { background: linear-gradient(135deg, hsl(288, 70%, 60%) 0%, hsl(288, 70%, 40%) 100%); }
+        
+        .perf-1 { background: linear-gradient(135deg, hsl(0, 70%, 60%) 0%, hsl(0, 70%, 40%) 100%); }
+        .perf-2 { background: linear-gradient(135deg, hsl(36, 70%, 60%) 0%, hsl(36, 70%, 40%) 100%); }
+        .perf-3 { background: linear-gradient(135deg, hsl(72, 70%, 60%) 0%, hsl(72, 70%, 40%) 100%); }
+        .perf-4 { background: linear-gradient(135deg, hsl(108, 70%, 60%) 0%, hsl(108, 70%, 40%) 100%); }
+        .perf-5 { background: linear-gradient(135deg, hsl(144, 70%, 60%) 0%, hsl(144, 70%, 40%) 100%); }
     </style>
 </head>
 <body>
@@ -144,9 +262,9 @@
             <p>Comprehensive Animation Capability Showcase</p>
             <p>Version 0.6.0 - Production Ready</p>
         </div>
-        
+
         <div id="showcase-root"></div>
-        
+
         <div class="stats">
             <h3>📊 Performance Metrics</h3>
             <div class="stats-grid">
@@ -169,7 +287,7 @@
             </div>
         </div>
     </div>
-    
+
     <script type="module">
         import init from './pkg/capability_showcase.js';
         init();

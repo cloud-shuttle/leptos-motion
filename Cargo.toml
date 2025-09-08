@@ -18,6 +18,7 @@ members = [
     "examples/e-commerce-gallery",
     "examples/advanced-features",
     "examples/comprehensive-demo",
+    "examples/capability-showcase",
     "benches",
 ]
 resolver = "2"

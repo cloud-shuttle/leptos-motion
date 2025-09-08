@@ -5,41 +5,49 @@ A comprehensive demonstration of all the animation capabilities available in the
 ## 🚀 Features Demonstrated
 
 ### 🎨 Basic Animations
+
 - **Scale & Fade**: Smooth opacity and scale transitions
 - **Rotate & Slide**: Rotation and translation animations
 - **Color & Border**: Background color and border radius changes
 
 ### 🖱️ Gesture Interactions
+
 - **Hover Effects**: Scale, rotate, and shadow changes on hover
 - **Tap Animations**: Scale feedback on tap/click
 - **Interactive Counters**: Real-time interaction tracking
 
 ### 📱 Layout Animations
+
 - **FLIP Technique**: Smooth layout transitions when items are added/removed
 - **Dynamic Lists**: Animated item management
 - **Shuffle Effects**: Smooth reordering animations
 
 ### 🎬 Keyframe Animations
+
 - **Multi-step Animations**: Complex sequences with multiple properties
 - **Infinite Loops**: Continuous animation cycles
 - **Precise Control**: Fine-tuned timing and easing
 
 ### ⚡ Stagger Animations
+
 - **Sequential Delays**: Elements animate with configurable delays
 - **Wave Effects**: Cascading animation patterns
 - **Synchronized Timing**: Coordinated multi-element animations
 
 ### 🎯 Drag Constraints
+
 - **Free Drag**: Unconstrained dragging with momentum
 - **Axis Constraints**: X-only or Y-only movement
 - **Boundary Constraints**: Elastic boundaries with bounce effects
 
 ### 🚀 Performance Demo
+
 - **Concurrent Animations**: Multiple elements animating simultaneously
 - **60fps Target**: Smooth performance with many animations
 - **Scalable Count**: Adjustable number of concurrent animations
 
 ### 🔧 Advanced Features
+
 - **Spring Physics**: Natural motion with spring-like behavior
 - **3D Transforms**: Complex 3D rotation and translation
 - **Color Transitions**: Smooth gradient and color changes
@@ -47,6 +55,7 @@ A comprehensive demonstration of all the animation capabilities available in the
 ## 🛠️ Building and Running
 
 ### Prerequisites
+
 - Rust 1.70+
 - wasm-pack
 - A modern web browser
@@ -74,6 +83,7 @@ wasm-pack build --target web --out-dir pkg --dev --watch
 ## 📊 Performance Metrics
 
 The showcase demonstrates:
+
 - **60 FPS** target performance
 - **100+ concurrent animations** capability
 - **500+ tests** passing in the library
@@ -82,6 +92,7 @@ The showcase demonstrates:
 ## 🎯 Use Cases
 
 This showcase is perfect for:
+
 - **Developers** evaluating Leptos Motion capabilities
 - **Designers** understanding animation possibilities
 - **Product Managers** seeing real-world performance
@@ -117,6 +128,7 @@ use leptos_motion::*;
 ## 🎉 Version 0.6.0
 
 This showcase demonstrates the latest features in Leptos Motion v0.6.0:
+
 - Complete FLIP layout animations
 - Advanced keyframe animations
 - Stagger animation support

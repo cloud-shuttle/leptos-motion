@@ -1,10 +1,10 @@
 // Drag Animation Tests
-// 
+//
 // These tests verify that MotionDiv components properly handle drag animations
 // with constraints and smooth transitions.
 
-use crate::{DragConfig, DragConstraints, DragAxis};
-use leptos_motion_core::{AnimationValue, Transition, Easing, RepeatConfig};
+use crate::{DragAxis, DragConfig, DragConstraints};
+use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
 use std::collections::HashMap;
 
 /// Test basic drag configuration creation
@@ -193,15 +193,17 @@ fn test_drag_gesture_recognition() {
     let start_position: (f64, f64) = (0.0, 0.0);
     let current_position: (f64, f64) = (3.0, 2.0);
 
-    let distance: f64 = ((current_position.0 - start_position.0).powi(2) + 
-                   (current_position.1 - start_position.1).powi(2)).sqrt();
+    let distance: f64 = ((current_position.0 - start_position.0).powi(2)
+        + (current_position.1 - start_position.1).powi(2))
+    .sqrt();
 
     assert!(distance < drag_threshold);
 
     // Test drag activation
     let drag_position: (f64, f64) = (10.0, 8.0);
-    let drag_distance: f64 = ((drag_position.0 - start_position.0).powi(2) + 
-                        (drag_position.1 - start_position.1).powi(2)).sqrt();
+    let drag_distance: f64 = ((drag_position.0 - start_position.0).powi(2)
+        + (drag_position.1 - start_position.1).powi(2))
+    .sqrt();
 
     assert!(drag_distance >= drag_threshold);
 }

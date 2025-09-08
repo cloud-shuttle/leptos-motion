@@ -4,7 +4,7 @@
     "status": "production_ready",
     "bundle_size": "30KB-85KB",
     "description": "High-performance animation library for Leptos with Framer Motion-inspired API",
-    
+
     "core_concepts": {
       "animation_target": {
         "type": "HashMap<String, AnimationValue>",
@@ -32,7 +32,7 @@
             "example": "AnimationValue::Number(1.0)"
           },
           "Pixels": {
-            "type": "f64", 
+            "type": "f64",
             "description": "Pixel values (x, y, width, height)",
             "example": "AnimationValue::Pixels(100.0)"
           },
@@ -174,7 +174,7 @@
         "variants": {
           "Linear": "Linear interpolation",
           "EaseIn": "Ease in curve",
-          "EaseOut": "Ease out curve", 
+          "EaseOut": "Ease out curve",
           "EaseInOut": "Ease in-out curve",
           "Spring": {
             "type": "SpringConfig",
@@ -350,11 +350,7 @@
         ]
       },
       "performance_issues": {
-        "causes": [
-          "Animating layout properties",
-          "Too many simultaneous animations",
-          "Missing CSS optimizations"
-        ],
+        "causes": ["Animating layout properties", "Too many simultaneous animations", "Missing CSS optimizations"],
         "solutions": [
           "Use transform and opacity instead of layout properties",
           "Reduce number of concurrent animations",

@@ -81,9 +81,9 @@ pub use simplified_event_handling::{
 
 // Re-export core types for convenience
 pub use leptos_motion_core::{
-    AnimationConfig, AnimationEngine, AnimationHandle, AnimationTarget, AnimationValue, 
-    Easing, RepeatConfig, SpringConfig, StaggerConfig, StaggerFrom, Transition,
-    Transform, ComplexValue, Variants, MotionValue, MotionNumber, MotionTransform, MotionValues
+    AnimationConfig, AnimationEngine, AnimationHandle, AnimationTarget, AnimationValue,
+    ComplexValue, Easing, MotionNumber, MotionTransform, MotionValue, MotionValues, RepeatConfig,
+    SpringConfig, StaggerConfig, StaggerFrom, Transform, Transition, Variants,
 };
 
 // Include simplified event handling tests

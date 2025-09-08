@@ -57,7 +57,7 @@ pub fn MotionDiv(
     let (is_hovered, set_hovered) = signal(false);
     let (is_tapped, set_tapped) = signal(false);
     let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
-    
+
         // Create signals for drag state
         let (is_dragging, set_dragging) = signal(false);
         let (drag_position, set_drag_position) = signal((0.0, 0.0));
@@ -65,7 +65,7 @@ pub fn MotionDiv(
         let (drag_velocity, set_drag_velocity) = signal((0.0, 0.0));
         let (last_drag_time, set_last_drag_time) = signal(0.0);
         let (is_animating_momentum, set_animating_momentum) = signal(false);
-        
+
         // Clone drag config for use in multiple closures
         let drag_config = drag.clone();
         let drag_config_mousemove = drag.clone();
@@ -89,20 +89,20 @@ pub fn MotionDiv(
     // Effect that applies styles based on current animation state
     Effect::new(move |_| {
         let mut styles = HashMap::new();
-        
+
         // Apply initial styles
         if let Some(initial_target) = &initial {
             for (key, value) in initial_target {
                 styles.insert(key.clone(), value.to_string_value());
             }
         }
-        
+
         // Apply current animation styles
         let animation_target = current_animation.get();
         for (key, value) in &animation_target {
             styles.insert(key.clone(), value.to_string_value());
         }
-        
+
         // Apply hover styles
         if is_hovered.get() {
             if let Some(hover_target) = &while_hover {
@@ -111,7 +111,7 @@ pub fn MotionDiv(
                 }
             }
         }
-        
+
         // Apply tap styles
         if is_tapped.get() {
             if let Some(tap_target) = &while_tap {
@@ -120,7 +120,7 @@ pub fn MotionDiv(
                 }
             }
         }
-        
+
                 // Apply drag styles
                 if is_dragging.get() || is_animating_momentum.get() {
                     let (x, y) = drag_position.get();
@@ -129,19 +129,19 @@ pub fn MotionDiv(
                         styles.insert("cursor".to_string(), "grabbing".to_string());
                     }
                 }
-        
+
         set_styles.set(styles);
     });
 
     // Convert styles to CSS string
     let style_string = move || {
         let mut styles = current_styles.get();
-        
+
         // Add inline styles if provided
         if let Some(inline_style) = &style {
             styles.insert("inline".to_string(), inline_style.clone());
         }
-        
+
         styles
             .iter()
             .filter(|(key, _)| key != &"inline")
@@ -180,7 +180,7 @@ pub fn MotionDiv(
                         let client_y = event.client_y() as f64;
                         let mut delta_x = client_x - start_x;
                         let mut delta_y = client_y - start_y;
-                        
+
                         // Calculate velocity for momentum
                         let current_time = js_sys::Date::now();
                         let time_delta = current_time - last_drag_time.get();
@@ -192,7 +192,7 @@ pub fn MotionDiv(
                             set_drag_velocity.set((velocity_x, velocity_y));
                         }
                         set_last_drag_time.set(current_time);
-                        
+
                         // Apply drag constraints if configured
                         if let Some(drag_config) = &drag_config_mousemove {
                             if let Some(constraints) = &drag_config.constraints {
@@ -202,7 +202,7 @@ pub fn MotionDiv(
                                     Some(DragAxis::Y) => delta_x = 0.0,
                                     _ => {} // Both or None - no axis constraint
                                 }
-                                
+
                                 // Apply elastic boundary constraints
                                 if let Some(elastic) = drag_config.elastic {
                                     if let Some(left) = constraints.left {
@@ -246,7 +246,7 @@ pub fn MotionDiv(
                                 }
                             }
                         }
-                        
+
                         set_drag_position.set((delta_x, delta_y));
                     }
                 }
@@ -254,16 +254,16 @@ pub fn MotionDiv(
                 set_tapped.set(false);
                 if is_dragging.get() {
                     set_dragging.set(false);
-                    
+
                     // Start momentum animation if enabled
                     if let Some(drag_config) = &drag_config_mouseup {
                         if drag_config.momentum.unwrap_or(false) {
                             let (velocity_x, velocity_y) = drag_velocity.get();
                             let velocity_magnitude = (velocity_x * velocity_x + velocity_y * velocity_y).sqrt();
-                            
+
                             if velocity_magnitude > 0.1 { // Minimum velocity threshold
                                 set_animating_momentum.set(true);
-                                
+
                                 // Start continuous momentum animation loop
                                 let set_drag_position = set_drag_position.clone();
                                 let set_drag_velocity = set_drag_velocity.clone();
@@ -272,7 +272,7 @@ pub fn MotionDiv(
                                 let drag_position = drag_position.clone();
                                 let drag_velocity = drag_velocity.clone();
                                 let is_animating_momentum = is_animating_momentum.clone();
-                                
+
                                 // Start momentum animation with proper continuous loop
                                 let start_momentum_animation = move || {
                                     // Create a simple momentum animation loop
@@ -281,34 +281,34 @@ pub fn MotionDiv(
                                         if !is_animating_momentum.get() {
                                             return;
                                         }
-                                        
+
                                         let (current_x, current_y) = drag_position.get();
                                         let (velocity_x, velocity_y) = drag_velocity.get();
-                                        
+
                                         // Apply friction (0.95 = 5% friction per frame)
                                         let friction = 0.95;
                                         let new_velocity_x = velocity_x * friction;
                                         let new_velocity_y = velocity_y * friction;
-                                        
+
                                         // Update position based on velocity
                                         let new_x = current_x + new_velocity_x;
                                         let new_y = current_y + new_velocity_y;
-                                        
+
                                         // Apply constraints during momentum with elastic behavior
                                         let (final_x, final_y) = if let Some(constraints) = &drag_config.constraints {
                                             let mut constrained_x = new_x;
                                             let mut constrained_y = new_y;
-                                            
+
                                             // Apply axis constraints
                                             match drag_config.axis {
                                                 Some(DragAxis::X) => constrained_y = current_y,
                                                 Some(DragAxis::Y) => constrained_x = current_x,
                                                 _ => {} // Both or None - no axis constraint
                                             }
-                                            
+
                                             // Apply boundary constraints with elastic behavior
                                             let elastic_factor = drag_config.elastic.unwrap_or(0.0);
-                                            
+
                                             if let Some(left) = constraints.left {
                                                 if constrained_x < left {
                                                     if elastic_factor > 0.0 {
@@ -349,16 +349,16 @@ pub fn MotionDiv(
                                                     }
                                                 }
                                             }
-                                            
+
                                             (constrained_x, constrained_y)
                                         } else {
                                             (new_x, new_y)
                                         };
-                                        
+
                                         // Update position and velocity
                                         set_drag_position.set((final_x, final_y));
                                         set_drag_velocity.set((new_velocity_x, new_velocity_y));
-                                        
+
                                         // Check if we should stop (velocity too low)
                                         let velocity_magnitude = (new_velocity_x * new_velocity_x + new_velocity_y * new_velocity_y).sqrt();
                                         if velocity_magnitude < 0.1 {
@@ -372,7 +372,7 @@ pub fn MotionDiv(
                                             let drag_position = drag_position.clone();
                                             let drag_velocity = drag_velocity.clone();
                                             let is_animating_momentum = is_animating_momentum.clone();
-                                            
+
                                             // Schedule next frame using a simple timeout for now
                                             // This will be enhanced with proper requestAnimationFrame scheduling
                                             let _ = web_sys::window()
@@ -387,16 +387,16 @@ pub fn MotionDiv(
                                                 .unwrap();
                                         }
                                     };
-                                    
+
                                     // Start the momentum animation loop
                                     momentum_step();
                                 };
-                                
+
                                 // Start the momentum animation loop
                                 start_momentum_animation();
                                             let drag_velocity = drag_velocity.clone();
                                             let is_animating_momentum = is_animating_momentum.clone();
-                                            
+
                                             // Schedule next frame
                                             let _ = web_sys::window()
                                                 .unwrap()
@@ -405,31 +405,31 @@ pub fn MotionDiv(
                                                         // Continue momentum animation
                                                         let (current_x, current_y) = drag_position.get();
                                                         let (velocity_x, velocity_y) = drag_velocity.get();
-                                                        
+
                                                         // Apply friction
                                                         let friction = 0.95;
                                                         let new_velocity_x = velocity_x * friction;
                                                         let new_velocity_y = velocity_y * friction;
-                                                        
+
                                                         // Update position based on velocity
                                                         let new_x = current_x + new_velocity_x;
                                                         let new_y = current_y + new_velocity_y;
-                                                        
+
                                                         // Apply constraints during momentum with elastic behavior
                                                         let (final_x, final_y) = if let Some(constraints) = &drag_config.constraints {
                                                             let mut constrained_x = new_x;
                                                             let mut constrained_y = new_y;
-                                                            
+
                                                             // Apply axis constraints
                                                             match drag_config.axis {
                                                                 Some(DragAxis::X) => constrained_y = current_y,
                                                                 Some(DragAxis::Y) => constrained_x = current_x,
                                                                 _ => {} // Both or None - no axis constraint
                                                             }
-                                                            
+
                                                             // Apply boundary constraints with elastic behavior
                                                             let elastic_factor = drag_config.elastic.unwrap_or(0.0);
-                                                            
+
                                                             if let Some(left) = constraints.left {
                                                                 if constrained_x < left {
                                                                     if elastic_factor > 0.0 {
@@ -474,16 +474,16 @@ pub fn MotionDiv(
                                                                     }
                                                                 }
                                                             }
-                                                            
+
                                                             (constrained_x, constrained_y)
                                                         } else {
                                                             (new_x, new_y)
                                                         };
-                                                        
+
                                                         // Update position and velocity
                                                         set_drag_position.set((final_x, final_y));
                                                         set_drag_velocity.set((new_velocity_x, new_velocity_y));
-                                                        
+
                                                         // Check if we should stop momentum
                                                         let velocity_magnitude = (new_velocity_x * new_velocity_x + new_velocity_y * new_velocity_y).sqrt();
                                                         if velocity_magnitude < 0.1 {
@@ -497,7 +497,7 @@ pub fn MotionDiv(
                                                             let drag_position = drag_position.clone();
                                                             let drag_velocity = drag_velocity.clone();
                                                             let is_animating_momentum = is_animating_momentum.clone();
-                                                            
+
                                                             // Schedule next frame
                                                             let _ = web_sys::window()
                                                                 .unwrap()
@@ -506,31 +506,31 @@ pub fn MotionDiv(
                                                                         // Continue momentum animation
                                                                         let (current_x, current_y) = drag_position.get();
                                                                         let (velocity_x, velocity_y) = drag_velocity.get();
-                                                                        
+
                                                                         // Apply friction
                                                                         let friction = 0.95;
                                                                         let new_velocity_x = velocity_x * friction;
                                                                         let new_velocity_y = velocity_y * friction;
-                                                                        
+
                                                                         // Update position based on velocity
                                                                         let new_x = current_x + new_velocity_x;
                                                                         let new_y = current_y + new_velocity_y;
-                                                                        
+
                                                                         // Apply constraints during momentum with elastic behavior
                                                                         let (final_x, final_y) = if let Some(constraints) = &drag_config.constraints {
                                                                             let mut constrained_x = new_x;
                                                                             let mut constrained_y = new_y;
-                                                                            
+
                                                                             // Apply axis constraints
                                                                             match drag_config.axis {
                                                                                 Some(DragAxis::X) => constrained_y = current_y,
                                                                                 Some(DragAxis::Y) => constrained_x = current_x,
                                                                                 _ => {} // Both or None - no axis constraint
                                                                             }
-                                                                            
+
                                                                             // Apply boundary constraints with elastic behavior
                                                                             let elastic_factor = drag_config.elastic.unwrap_or(0.0);
-                                                                            
+
                                                                             if let Some(left) = constraints.left {
                                                                                 if constrained_x < left {
                                                                                     if elastic_factor > 0.0 {
@@ -575,16 +575,16 @@ pub fn MotionDiv(
                                                                                     }
                                                                                 }
                                                                             }
-                                                                            
+
                                                                             (constrained_x, constrained_y)
                                                                         } else {
                                                                             (new_x, new_y)
                                                                         };
-                                                                        
+
                                                                         // Update position and velocity
                                                                         set_drag_position.set((final_x, final_y));
                                                                         set_drag_velocity.set((new_velocity_x, new_velocity_y));
-                                                                        
+
                                                                         // Check if we should stop momentum
                                                                         let velocity_magnitude = (new_velocity_x * new_velocity_x + new_velocity_y * new_velocity_y).sqrt();
                                                                         if velocity_magnitude < 0.1 {
@@ -602,7 +602,7 @@ pub fn MotionDiv(
                                         }
                                     }
                                 };
-                                
+
                                 // Start the momentum animation loop
                                 start_momentum_animation();
                             }
@@ -663,20 +663,20 @@ pub fn MotionSpan(
     // Effect that applies styles based on current animation state
     Effect::new(move |_| {
         let mut styles = HashMap::new();
-        
+
         // Apply initial styles
         if let Some(initial_target) = &initial {
             for (key, value) in initial_target {
                 styles.insert(key.clone(), value.to_string_value());
             }
         }
-        
+
         // Apply current animation styles
         let animation_target = current_animation.get();
         for (key, value) in &animation_target {
             styles.insert(key.clone(), value.to_string_value());
         }
-        
+
         // Apply hover styles
         if is_hovered.get() {
             if let Some(hover_target) = &while_hover {
@@ -685,7 +685,7 @@ pub fn MotionSpan(
                 }
             }
         }
-        
+
         // Apply tap styles
         if is_tapped.get() {
             if let Some(tap_target) = &while_tap {
@@ -694,19 +694,19 @@ pub fn MotionSpan(
                 }
             }
         }
-        
+
         set_styles.set(styles);
     });
 
     // Convert styles to CSS string
     let style_string = move || {
         let mut styles = current_styles.get();
-        
+
         // Add inline styles if provided
         if let Some(inline_style) = &style {
             styles.insert("inline".to_string(), inline_style.clone());
         }
-        
+
         styles
             .iter()
             .filter(|(key, _)| key != &"inline")

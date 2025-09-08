@@ -2,16 +2,16 @@
 //!
 //! This module provides motion components that integrate with Leptos
 
-use crate::{DragConfig, DragConstraints, DragAxis};
+use crate::{DragAxis, DragConfig, DragConstraints};
 use leptos::prelude::{
-    Children, ClassAttribute, ElementChild, Get, NodeRef, NodeRefAttribute, Set, StyleAttribute,
-    signal, OnAttribute,
+    Children, ClassAttribute, ElementChild, Get, NodeRef, NodeRefAttribute, OnAttribute, Set,
+    StyleAttribute, signal,
 };
 use leptos::*;
 use leptos_motion_core::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::cell::RefCell;
 use wasm_bindgen::prelude::*;
 use web_sys;
 
@@ -58,7 +58,7 @@ pub fn MotionDiv(
     let (_is_hovered, _set_hovered) = signal(false);
     let (_is_tapped, _set_tapped) = signal(false);
     let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
-    
+
     // Create signals for drag and momentum animation
     let (is_dragging, set_dragging) = signal(false);
     let (drag_position, set_drag_position) = signal((0.0, 0.0));
@@ -91,27 +91,30 @@ pub fn MotionDiv(
     // Convert styles to CSS string
     let style_string = move || {
         let mut styles = current_styles.get();
-        
+
         // Add drag position to styles
         let (drag_x, drag_y) = drag_position.get();
         if drag_x != 0.0 || drag_y != 0.0 {
-            styles.insert("transform".to_string(), format!("translate({}px, {}px)", drag_x, drag_y));
+            styles.insert(
+                "transform".to_string(),
+                format!("translate({}px, {}px)", drag_x, drag_y),
+            );
         }
-        
+
         // Combine with the style prop if provided
         let mut style_parts = styles
             .iter()
             .map(|(key, value)| format!("{}: {}", key, value))
             .collect::<Vec<_>>();
-        
+
         // Add the style prop if provided
         if let Some(style_prop) = &style {
             style_parts.push(style_prop.clone());
         }
-        
+
         style_parts.join("; ")
     };
-    
+
     // Clone drag config for use in multiple closures
     let drag_config_clone = drag.clone();
     let drag_config_mousemove = drag.clone();
@@ -135,7 +138,7 @@ pub fn MotionDiv(
                         let new_x = current_x + event.movement_x() as f64;
                         let new_y = current_y + event.movement_y() as f64;
                         set_drag_position.set((new_x, new_y));
-                        
+
                         // Update velocity based on mouse movement
                         let velocity_x = event.movement_x() as f64;
                         let velocity_y = event.movement_y() as f64;
@@ -146,16 +149,16 @@ pub fn MotionDiv(
             on:mouseup=move |_event| {
                 if let Some(drag_config) = &drag_config_mouseup {
                     set_dragging.set(false);
-                    
+
                     // Start momentum animation if enabled
                     if drag_config.momentum.unwrap_or(false) {
                         set_animating_momentum.set(true);
-                        
+
                         // Start momentum animation with proper continuous loop using Rc<RefCell<>>
                         let start_momentum = move || {
                             // Create a momentum step function using Rc<RefCell<>> to avoid circular references
                             let momentum_step: Rc<RefCell<Option<Box<dyn FnMut()>>>> = Rc::new(RefCell::new(None));
-                            
+
                             let momentum_step_ref = momentum_step.clone();
                             let set_drag_position_clone = set_drag_position.clone();
                             let set_drag_velocity_clone = set_drag_velocity.clone();
@@ -164,40 +167,40 @@ pub fn MotionDiv(
                             let drag_position_clone = drag_position.clone();
                             let drag_velocity_clone = drag_velocity.clone();
                             let is_animating_momentum_clone = is_animating_momentum.clone();
-                            
+
                             *momentum_step.borrow_mut() = Some(Box::new(move || {
                                 // Check if we should continue animating
                                 if !is_animating_momentum_clone.get() {
                                     return;
                                 }
-                                
+
                                 let (current_x, current_y) = drag_position_clone.get();
                                 let (velocity_x, velocity_y) = drag_velocity_clone.get();
-                                
+
                                 // Apply friction (0.95 = 5% friction per frame)
                                 let friction = 0.95;
                                 let new_velocity_x = velocity_x * friction;
                                 let new_velocity_y = velocity_y * friction;
-                                
+
                                 // Update position based on velocity
                                 let new_x = current_x + new_velocity_x;
                                 let new_y = current_y + new_velocity_y;
-                                
+
                                 // Apply constraints during momentum with elastic behavior
                                 let (final_x, final_y) = if let Some(constraints) = &drag_config_clone.constraints {
                                     let mut constrained_x = new_x;
                                     let mut constrained_y = new_y;
-                                    
+
                                     // Apply axis constraints
                                     match drag_config_clone.axis {
                                         Some(DragAxis::X) => constrained_y = current_y,
                                         Some(DragAxis::Y) => constrained_x = current_x,
                                         _ => {} // Both or None - no axis constraint
                                     }
-                                    
+
                                     // Apply boundary constraints with elastic behavior
                                     let elastic_factor = drag_config_clone.elastic.unwrap_or(0.0);
-                                    
+
                                     if let Some(left) = constraints.left {
                                         if constrained_x < left {
                                             if elastic_factor > 0.0 {
@@ -238,16 +241,16 @@ pub fn MotionDiv(
                                             }
                                         }
                                     }
-                                    
+
                                     (constrained_x, constrained_y)
                                 } else {
                                     (new_x, new_y)
                                 };
-                                
+
                                 // Update position and velocity
                                 set_drag_position_clone.set((final_x, final_y));
                                 set_drag_velocity_clone.set((new_velocity_x, new_velocity_y));
-                                
+
                                 // Check if we should stop (velocity too low)
                                 let velocity_magnitude = (new_velocity_x * new_velocity_x + new_velocity_y * new_velocity_y).sqrt();
                                 if velocity_magnitude < 0.1 {
@@ -269,13 +272,13 @@ pub fn MotionDiv(
                                         .unwrap();
                                 }
                             }));
-                            
+
                             // Start the momentum animation
                             if let Some(ref mut step) = *momentum_step.borrow_mut() {
                                 step();
                             }
                         };
-                        
+
                         // Start the momentum animation
                         start_momentum();
                     }

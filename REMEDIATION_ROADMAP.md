@@ -2,11 +2,15 @@
 
 ## Executive Summary
 
-This roadmap provides a structured approach to fixing the `leptos-motion` library and bringing it to production readiness. The library currently has one critical issue preventing animations from working, along with several areas for improvement.
+This roadmap provides a structured approach to fixing the `leptos-motion`
+library and bringing it to production readiness. The library currently has one
+critical issue preventing animations from working, along with several areas for
+improvement.
 
 ## Current Status Assessment
 
 ### ✅ Completed Fixes
+
 - Type system conflicts resolved
 - Prop consistency issues fixed
 - Component architecture improved
@@ -14,9 +18,11 @@ This roadmap provides a structured approach to fixing the `leptos-motion` librar
 - Testing infrastructure established
 
 ### ❌ Critical Issue
+
 - **Animation Reactivity**: MotionDiv component doesn't react to state changes
 
 ### 🔄 Areas for Improvement
+
 - Missing animation features
 - Performance optimization needed
 - Documentation gaps
@@ -26,7 +32,8 @@ This roadmap provides a structured approach to fixing the `leptos-motion` librar
 
 ### 1.1 Fix Animation Reactivity Issue
 
-**Problem**: The `Effect::new` in MotionDiv doesn't properly track dependencies on signals used by animation closures.
+**Problem**: The `Effect::new` in MotionDiv doesn't properly track dependencies
+on signals used by animation closures.
 
 **Solution**: Implement enhanced effect system with proper dependency tracking.
 
@@ -35,18 +42,19 @@ This roadmap provides a structured approach to fixing the `leptos-motion` librar
 **File**: `crates/leptos-motion-dom/src/components.rs`
 
 **Current Code** (lines 60-90):
+
 ```rust
 // Update styles when dependencies change - make it reactive
 Effect::new(move |_| {
     let mut styles = HashMap::new();
-    
+
     // Apply initial styles
     if let Some(initial_target) = &initial {
         for (key, value) in initial_target {
             styles.insert(key.clone(), value.to_string_value());
         }
     }
-    
+
     // Apply animate styles (reactive) - call the closure to get current values
     if let Some(animate_closure) = &animate {
         let animate_target = animate_closure();
@@ -54,12 +62,13 @@ Effect::new(move |_| {
             styles.insert(key.clone(), value.to_string_value());
         }
     }
-    
+
     // ... rest of effect
 });
 ```
 
 **Replace With**:
+
 ```rust
 // Create a reactive signal for the current animation state
 let (current_animation, set_current_animation) = signal(HashMap::new());
@@ -76,20 +85,20 @@ Effect::new(move |_| {
 // Effect that applies styles
 Effect::new(move |_| {
     let mut styles = HashMap::new();
-    
+
     // Apply initial styles
     if let Some(initial_target) = &initial {
         for (key, value) in initial_target {
             styles.insert(key.clone(), value.to_string_value());
         }
     }
-    
+
     // Apply current animation styles
     let animation_target = current_animation.get();
     for (key, value) in &animation_target {
         styles.insert(key.clone(), value.to_string_value());
     }
-    
+
     // Apply hover styles
     if is_hovered.get() {
         if let Some(hover_target) = &while_hover {
@@ -98,7 +107,7 @@ Effect::new(move |_| {
             }
         }
     }
-    
+
     // Apply tap styles
     if is_tapped.get() {
         if let Some(tap_target) = &while_tap {
@@ -107,7 +116,7 @@ Effect::new(move |_| {
             }
         }
     }
-    
+
     set_styles.set(styles);
 });
 ```
@@ -115,6 +124,7 @@ Effect::new(move |_| {
 #### Step 1.1.2: Test the Fix
 
 **Commands to Run**:
+
 ```bash
 # Rebuild the library
 wasm-pack build --target web --out-dir pkg
@@ -123,11 +133,13 @@ wasm-pack build --target web --out-dir pkg
 curl -s http://localhost:8085/ | grep -A 5 -B 5 "animated-box"
 ```
 
-**Expected Result**: The HTML should show inline styles being applied instead of CSS classes.
+**Expected Result**: The HTML should show inline styles being applied instead of
+CSS classes.
 
 #### Step 1.1.3: Add Debugging
 
 **Add to MotionDiv component**:
+
 ```rust
 // Add console logging for debugging
 use web_sys::console;
@@ -162,6 +174,7 @@ create_effect(move |_| {
 ### 1.3 Validation
 
 **Test Cases**:
+
 1. Button click changes animation state
 2. Animation styles are visually applied
 3. Multiple animation modes work
@@ -169,6 +182,7 @@ create_effect(move |_| {
 5. No console errors
 
 **Success Criteria**:
+
 - ✅ Animations are visually applied
 - ✅ State changes trigger animation updates
 - ✅ No performance issues
@@ -181,6 +195,7 @@ create_effect(move |_| {
 **Timeline**: 1-2 weeks
 
 **Implementation**:
+
 ```rust
 // Add to MotionDiv component
 #[prop(optional)]
@@ -195,6 +210,7 @@ if let Some(drag_config) = &drag {
 ```
 
 **Files to Modify**:
+
 - `crates/leptos-motion-dom/src/components.rs`
 - `crates/leptos-motion-gestures/src/lib.rs`
 
@@ -203,6 +219,7 @@ if let Some(drag_config) = &drag {
 **Timeline**: 2-3 weeks
 
 **Implementation**:
+
 ```rust
 // Add to MotionDiv component
 #[prop(optional)]
@@ -217,6 +234,7 @@ if layout.unwrap_or(false) {
 ```
 
 **Files to Modify**:
+
 - `crates/leptos-motion-dom/src/components.rs`
 - `crates/leptos-motion-layout/src/lib.rs`
 
@@ -225,6 +243,7 @@ if layout.unwrap_or(false) {
 **Timeline**: 1-2 weeks
 
 **Implementation**:
+
 ```rust
 // Add keyframe support
 #[prop(optional)]
@@ -242,6 +261,7 @@ if let Some(keyframes) = &keyframes {
 **Timeline**: 1 week
 
 **Implementation**:
+
 ```rust
 // Add stagger support
 #[prop(optional)]
@@ -260,6 +280,7 @@ if let Some(stagger_delay) = &stagger {
 **Timeline**: 1 week
 
 **Implementation**:
+
 ```rust
 // Add performance tracking
 use web_sys::Performance;
@@ -276,6 +297,7 @@ console::log_1(&format!("Animation took: {}ms", end_time - start_time).into());
 **Timeline**: 1 week
 
 **Implementation**:
+
 ```rust
 // Add cancellation support
 #[prop(optional)]
@@ -293,6 +315,7 @@ if let Some(cancel_callback) = &on_cancel {
 **Timeline**: 2 weeks
 
 **Implementation**:
+
 ```rust
 // Add queuing support
 #[prop(optional)]
@@ -312,12 +335,14 @@ if let Some(animation_queue) = &queue {
 **Timeline**: 1-2 weeks
 
 **Tasks**:
+
 - Document all MotionDiv props
 - Add usage examples
 - Create migration guide
 - Add troubleshooting section
 
 **Files to Create**:
+
 - `docs/API.md`
 - `docs/EXAMPLES.md`
 - `docs/MIGRATION.md`
@@ -328,6 +353,7 @@ if let Some(animation_queue) = &queue {
 **Timeline**: 2-3 weeks
 
 **Test Categories**:
+
 1. **Unit Tests**
    - Component prop validation
    - Animation logic testing
@@ -344,6 +370,7 @@ if let Some(animation_queue) = &queue {
    - Animation visual verification
 
 **Files to Create**:
+
 - `tests/unit/`
 - `tests/integration/`
 - `tests/e2e/`
@@ -353,12 +380,14 @@ if let Some(animation_queue) = &queue {
 **Timeline**: 1-2 weeks
 
 **Examples to Create**:
+
 - Basic animations
 - Complex animations
 - Performance demos
 - Error handling demos
 
 **Files to Create**:
+
 - `examples/basic-animations/`
 - `examples/complex-animations/`
 - `examples/performance-demo/`
@@ -371,6 +400,7 @@ if let Some(animation_queue) = &queue {
 **Timeline**: 1 week
 
 **Implementation**:
+
 ```rust
 // Add comprehensive error handling
 #[derive(Debug, Clone)]
@@ -393,6 +423,7 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 **Timeline**: 1 week
 
 **Tasks**:
+
 - Add compile-time validation
 - Improve type constraints
 - Add generic support where appropriate
@@ -402,6 +433,7 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 **Timeline**: 2-3 weeks
 
 **Tasks**:
+
 - Create Leptos integration examples
 - Add framework-specific optimizations
 - Document best practices
@@ -409,31 +441,37 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 ## Implementation Timeline
 
 ### Week 1-2: Critical Fix
+
 - [ ] Fix animation reactivity issue
 - [ ] Test and validate fix
 - [ ] Add debugging and monitoring
 
 ### Week 3-4: Core Features
+
 - [ ] Implement drag animations
 - [ ] Add layout animations (FLIP)
 - [ ] Implement keyframe animations
 
 ### Week 5-6: Advanced Features
+
 - [ ] Add stagger animations
 - [ ] Implement performance monitoring
 - [ ] Add animation cancellation
 
 ### Week 7-8: Documentation
+
 - [ ] Create comprehensive API docs
 - [ ] Add usage examples
 - [ ] Create migration guide
 
 ### Week 9-10: Testing & Validation
+
 - [ ] Expand test coverage
 - [ ] Performance optimization
 - [ ] Cross-browser testing
 
 ### Week 11-12: Production Readiness
+
 - [ ] Error handling improvements
 - [ ] Type safety enhancements
 - [ ] Final validation and release
@@ -441,32 +479,40 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 ## Risk Assessment
 
 ### High Risk
-- **Animation Reactivity Fix**: If the proposed solution doesn't work, may require significant architectural changes
+
+- **Animation Reactivity Fix**: If the proposed solution doesn't work, may
+  require significant architectural changes
 - **Performance**: Complex animations may cause performance issues
 
 ### Medium Risk
-- **Browser Compatibility**: Some animation features may not work across all browsers
+
+- **Browser Compatibility**: Some animation features may not work across all
+  browsers
 - **API Changes**: Adding new features may require breaking changes
 
 ### Low Risk
+
 - **Documentation**: Straightforward but time-consuming
 - **Testing**: Well-defined scope and requirements
 
 ## Success Metrics
 
 ### Technical Metrics
+
 - ✅ All animations work correctly
 - ✅ Performance benchmarks met
 - ✅ Test coverage > 90%
 - ✅ Zero critical bugs
 
 ### User Experience Metrics
+
 - ✅ Smooth animations
 - ✅ Intuitive API
 - ✅ Good documentation
 - ✅ Easy migration path
 
 ### Business Metrics
+
 - ✅ Library adoption
 - ✅ Community feedback
 - ✅ Production usage
@@ -475,11 +521,13 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 ## Dependencies
 
 ### External Dependencies
+
 - Leptos framework updates
 - Web standards evolution
 - Browser compatibility
 
 ### Internal Dependencies
+
 - Core animation system
 - Gesture detection system
 - Layout tracking system
@@ -487,25 +535,33 @@ pub fn MotionDiv(/* props */) -> Result<impl IntoView, AnimationError> {
 ## Rollback Plan
 
 ### If Critical Fix Fails
+
 1. Revert to previous working state
 2. Implement alternative approach
 3. Consider architectural redesign
 
 ### If Performance Issues
+
 1. Implement performance monitoring
 2. Add optimization options
 3. Provide fallback mechanisms
 
 ### If API Changes Required
+
 1. Maintain backward compatibility
 2. Provide migration tools
 3. Document breaking changes
 
 ## Conclusion
 
-This roadmap provides a structured approach to fixing the leptos-motion library and bringing it to production readiness. The critical fix for animation reactivity should be the immediate priority, followed by implementing core features and improving documentation.
+This roadmap provides a structured approach to fixing the leptos-motion library
+and bringing it to production readiness. The critical fix for animation
+reactivity should be the immediate priority, followed by implementing core
+features and improving documentation.
 
-The timeline is aggressive but achievable with focused effort. The key is to prioritize the critical fix first, then systematically work through the remaining phases.
+The timeline is aggressive but achievable with focused effort. The key is to
+prioritize the critical fix first, then systematically work through the
+remaining phases.
 
 ## Next Steps
 
@@ -514,4 +570,5 @@ The timeline is aggressive but achievable with focused effort. The key is to pri
 3. **Medium-term**: Implement core animation features
 4. **Long-term**: Complete documentation and testing
 
-This roadmap provides a clear path forward for making the leptos-motion library production-ready.
+This roadmap provides a clear path forward for making the leptos-motion library
+production-ready.

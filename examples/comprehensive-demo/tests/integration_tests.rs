@@ -1,5 +1,5 @@
 //! Integration tests for the comprehensive demo
-//! 
+//!
 //! These tests verify that all components work together correctly.
 
 use leptos::*;

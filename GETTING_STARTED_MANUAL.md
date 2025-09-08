@@ -68,7 +68,7 @@ use std::collections::HashMap;
 #[component]
 fn AnimatedBox() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(true);
-    
+
     // Define initial state (hidden)
     let initial = {
         let mut map = HashMap::new();
@@ -76,7 +76,7 @@ fn AnimatedBox() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(0.5));
         map
     };
-    
+
     // Define target state (visible)
     let animate = {
         let mut map = HashMap::new();
@@ -84,7 +84,7 @@ fn AnimatedBox() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     };
-    
+
     // Define transition
     let transition = Transition {
         duration: Some(0.5),
@@ -93,18 +93,18 @@ fn AnimatedBox() -> impl IntoView {
         repeat: RepeatConfig::Never,
         stagger: None,
     };
-    
+
     view! {
         <div style="padding: 2rem; text-align: center;">
             <h1>"My First Leptos Motion Animation"</h1>
-            
-            <button 
+
+            <button
                 on:click=move |_| set_is_visible.set(!is_visible.get())
                 style="padding: 1rem 2rem; margin: 1rem; font-size: 1.2rem;"
             >
                 {move || if is_visible.get() { "Hide" } else { "Show" }}
             </button>
-            
+
             <div style="margin-top: 2rem;">
                 <MotionDiv
                     class=Some("animated-box".to_string())
@@ -141,7 +141,7 @@ fn App() -> impl IntoView {
 pub fn main() {
     console_error_panic_hook::set_once();
     console_log::init().expect("Failed to initialize console log");
-    
+
     mount_to_body(|| view! { <App/> })
 }
 ```
@@ -153,30 +153,31 @@ Create `index.html`:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leptos Motion Demo</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .animated-box {
-            transition: all 0.3s ease;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .animated-box {
+        transition: all 0.3s ease;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <script type="module">
-        import init from './pkg/my_leptos_motion_app.js';
-        await init();
+      import init from './pkg/my_leptos_motion_app.js';
+      await init();
     </script>
-</body>
+  </body>
 </html>
 ```
 
@@ -220,7 +221,7 @@ fn HoverButton() -> impl IntoView {
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map
     };
-    
+
     // Hover state
     let hover = {
         let mut map = HashMap::new();
@@ -228,7 +229,7 @@ fn HoverButton() -> impl IntoView {
         map.insert("y".to_string(), AnimationValue::Pixels(-2.0));
         map
     };
-    
+
     view! {
         <MotionDiv
             _while_hover=Some(hover)
@@ -256,27 +257,27 @@ fn HoverButton() -> impl IntoView {
 #[component]
 fn SlideCard() -> impl IntoView {
     let (is_slided, set_is_slided) = signal(false);
-    
+
     let slide_in = {
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(-300.0));
         map.insert("opacity".to_string(), AnimationValue::Number(0.0));
         map
     };
-    
+
     let slide_out = {
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map
     };
-    
+
     view! {
         <div>
             <button on:click=move |_| set_is_slided.set(!is_slided.get())>
                 "Toggle Slide"
             </button>
-            
+
             <MotionDiv
                 initial=Some(slide_in)
                 animate=Some(slide_out)
@@ -308,21 +309,21 @@ fn SlideCard() -> impl IntoView {
 #[component]
 fn StaggeredList() -> impl IntoView {
     let items = vec!["Item 1", "Item 2", "Item 3", "Item 4"];
-    
+
     let initial = {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(20.0));
         map
     };
-    
+
     let animate = {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map
     };
-    
+
     let stagger_transition = Transition {
         duration: Some(0.3),
         ease: Easing::EaseOut,
@@ -333,7 +334,7 @@ fn StaggeredList() -> impl IntoView {
             from: StaggerFrom::First,
         }),
     };
-    
+
     view! {
         <div>
             <h3>"Staggered Animation"</h3>
@@ -369,7 +370,7 @@ fn StaggeredList() -> impl IntoView {
 #[component]
 fn ConditionalAnimation() -> impl IntoView {
     let (mode, set_mode) = signal(0);
-    
+
     let get_animation = move || {
         let mut map = HashMap::new();
         match mode.get() {
@@ -392,7 +393,7 @@ fn ConditionalAnimation() -> impl IntoView {
         }
         map
     };
-    
+
     let get_target = move || {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
@@ -401,7 +402,7 @@ fn ConditionalAnimation() -> impl IntoView {
         map.insert("rotate".to_string(), AnimationValue::Degrees(0.0));
         map
     };
-    
+
     view! {
         <div>
             <div style="margin-bottom: 1rem;">
@@ -409,7 +410,7 @@ fn ConditionalAnimation() -> impl IntoView {
                 <button on:click=move |_| set_mode.set(1)>"Slide"</button>
                 <button on:click=move |_| set_mode.set(2)>"Rotate"</button>
             </div>
-            
+
             <MotionDiv
                 initial=Some(get_animation())
                 animate=Some(get_target())
@@ -440,27 +441,27 @@ fn ConditionalAnimation() -> impl IntoView {
 #[component]
 fn ExitAnimation() -> impl IntoView {
     let (show, set_show) = signal(true);
-    
+
     let enter = {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     };
-    
+
     let exit = {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(0.0));
         map.insert("scale".to_string(), AnimationValue::Number(0.5));
         map
     };
-    
+
     view! {
         <div>
             <button on:click=move |_| set_show.set(!show.get())>
                 {move || if show.get() { "Hide" } else { "Show" }}
             </button>
-            
+
             <AnimatePresence mode=Some(PresenceMode::Sync)>
                 {move || show.get().then(|| view! {
                     <MotionDiv
@@ -577,21 +578,21 @@ use web_sys::console;
 #[component]
 fn DebugAnimation() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(true);
-    
+
     let animate = move || {
         let visible = is_visible.get();
         console::log_1(&format!("Animation state: {}", visible).into());
-        
+
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.0 }));
         map
     };
-    
+
     view! {
         <button on:click=move |_| set_is_visible.set(!is_visible.get())>
             "Toggle"
         </button>
-        
+
         <MotionDiv
             animate=Some(animate())
             _transition=Some(SMOOTH_TRANSITION)
@@ -607,9 +608,9 @@ fn DebugAnimation() -> impl IntoView {
 ```css
 /* Ensure your CSS supports the animations */
 .animated-element {
-    will-change: transform, opacity; /* Hint to browser for optimization */
-    backface-visibility: hidden; /* Prevent flickering */
-    transform-style: preserve-3d; /* Enable 3D transforms */
+  will-change: transform, opacity; /* Hint to browser for optimization */
+  backface-visibility: hidden; /* Prevent flickering */
+  transform-style: preserve-3d; /* Enable 3D transforms */
 }
 ```
 
@@ -631,15 +632,16 @@ fn DebugAnimation() -> impl IntoView {
 
 ### Common Issues and Solutions
 
-| Issue | Solution |
-|-------|----------|
-| Animations not working | Check prop types and `Some()` wrappers |
-| Choppy animations | Use hardware-accelerated properties |
-| Type errors | Import correct types from `leptos_motion_core` |
-| Performance issues | Optimize CSS and reduce simultaneous animations |
+| Issue                  | Solution                                        |
+| ---------------------- | ----------------------------------------------- |
+| Animations not working | Check prop types and `Some()` wrappers          |
+| Choppy animations      | Use hardware-accelerated properties             |
+| Type errors            | Import correct types from `leptos_motion_core`  |
+| Performance issues     | Optimize CSS and reduce simultaneous animations |
 
 ---
 
-**Congratulations! 🎉** You've built your first Leptos Motion animations. Keep experimenting and building amazing user experiences!
+**Congratulations! 🎉** You've built your first Leptos Motion animations. Keep
+experimenting and building amazing user experiences!
 
 **Happy Coding! 🚀**

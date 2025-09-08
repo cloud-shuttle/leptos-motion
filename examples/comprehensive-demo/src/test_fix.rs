@@ -1,8 +1,8 @@
 //! Test file to verify the animation reactivity fix
 
 use leptos::prelude::*;
+use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
 use leptos_motion_dom::MotionDiv;
-use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
 use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
@@ -16,12 +16,24 @@ pub fn TestFix() -> impl IntoView {
         let mut target = HashMap::new();
         if visible {
             target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-            target.insert("transform".to_string(), AnimationValue::String("scale(1)".to_string()));
-            target.insert("backgroundColor".to_string(), AnimationValue::String("red".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("scale(1)".to_string()),
+            );
+            target.insert(
+                "backgroundColor".to_string(),
+                AnimationValue::String("red".to_string()),
+            );
         } else {
             target.insert("opacity".to_string(), AnimationValue::Number(0.5));
-            target.insert("transform".to_string(), AnimationValue::String("scale(0.8)".to_string()));
-            target.insert("backgroundColor".to_string(), AnimationValue::String("blue".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("scale(0.8)".to_string()),
+            );
+            target.insert(
+                "backgroundColor".to_string(),
+                AnimationValue::String("blue".to_string()),
+            );
         }
         target
     };
@@ -56,7 +68,7 @@ pub fn TestFix() -> impl IntoView {
                     if visible { "Hide Animation" } else { "Show Animation" }
                 }}
             </button>
-            
+
             <MotionDiv
                 initial=create_animation_target(true)
                 animate=animate_animation()

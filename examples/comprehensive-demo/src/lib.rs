@@ -1,13 +1,13 @@
 //! Simple Demo - One Leptos Motion Capability
-//! 
+//!
 //! Demonstrating basic animation with MotionDiv
 
 use leptos::prelude::*;
+use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
 use leptos_motion_dom::MotionDiv;
-use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
-use wasm_bindgen::prelude::*;
 use std::collections::HashMap;
 use std::rc::Rc;
+use wasm_bindgen::prelude::*;
 use web_sys::console;
 
 mod test_fix;
@@ -19,55 +19,104 @@ pub fn DemoApp() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(true);
     let (animation_mode, set_animation_mode) = signal(0);
     let (hover_state, set_hover_state) = signal(false);
-    
+
     // Create animation targets for different modes
     let create_animation_target = |visible: bool, mode: i32| -> AnimationTarget {
         let mut target = HashMap::new();
-        
+
         match mode {
-            0 => { // Scale & Fade
-                target.insert("opacity".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.0 }));
-                target.insert("scale".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.3 }));
-                target.insert("background".to_string(), AnimationValue::Color(
-                    if visible { "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string() }
-                    else { "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string() }
-                ));
-            },
-            1 => { // Slide & Rotate
-                target.insert("opacity".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.8 }));
-                target.insert("x".to_string(), AnimationValue::Pixels(if visible { 0.0 } else { -200.0 }));
-                target.insert("rotate".to_string(), AnimationValue::Degrees(if visible { 0.0 } else { -180.0 }));
-                target.insert("background".to_string(), AnimationValue::Color(
-                    if visible { "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string() }
-                    else { "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)".to_string() }
-                ));
-            },
-            2 => { // Bounce & Color
-                target.insert("opacity".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.6 }));
-                target.insert("scale".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.8 }));
-                target.insert("y".to_string(), AnimationValue::Pixels(if visible { 0.0 } else { -50.0 }));
-                target.insert("background".to_string(), AnimationValue::Color(
-                    if visible { "linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string() }
-                    else { "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)".to_string() }
-                ));
-            },
+            0 => {
+                // Scale & Fade
+                target.insert(
+                    "opacity".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.0 }),
+                );
+                target.insert(
+                    "scale".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.3 }),
+                );
+                target.insert(
+                    "background".to_string(),
+                    AnimationValue::Color(if visible {
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string()
+                    } else {
+                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string()
+                    }),
+                );
+            }
+            1 => {
+                // Slide & Rotate
+                target.insert(
+                    "opacity".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.8 }),
+                );
+                target.insert(
+                    "x".to_string(),
+                    AnimationValue::Pixels(if visible { 0.0 } else { -200.0 }),
+                );
+                target.insert(
+                    "rotate".to_string(),
+                    AnimationValue::Degrees(if visible { 0.0 } else { -180.0 }),
+                );
+                target.insert(
+                    "background".to_string(),
+                    AnimationValue::Color(if visible {
+                        "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string()
+                    } else {
+                        "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)".to_string()
+                    }),
+                );
+            }
+            2 => {
+                // Bounce & Color
+                target.insert(
+                    "opacity".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.6 }),
+                );
+                target.insert(
+                    "scale".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.8 }),
+                );
+                target.insert(
+                    "y".to_string(),
+                    AnimationValue::Pixels(if visible { 0.0 } else { -50.0 }),
+                );
+                target.insert(
+                    "background".to_string(),
+                    AnimationValue::Color(if visible {
+                        "linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string()
+                    } else {
+                        "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)".to_string()
+                    }),
+                );
+            }
             _ => {
-                target.insert("opacity".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.3 }));
-                target.insert("scale".to_string(), AnimationValue::Number(if visible { 1.0 } else { 0.3 }));
-                target.insert("background".to_string(), AnimationValue::Color(
-                    if visible { "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string() }
-                    else { "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string() }
-                ));
+                target.insert(
+                    "opacity".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.3 }),
+                );
+                target.insert(
+                    "scale".to_string(),
+                    AnimationValue::Number(if visible { 1.0 } else { 0.3 }),
+                );
+                target.insert(
+                    "background".to_string(),
+                    AnimationValue::Color(if visible {
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string()
+                    } else {
+                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string()
+                    }),
+                );
             }
         }
-        
+
         target
     };
-    
+
     // Create reactive animation targets
     let initial_animation = move || create_animation_target(true, animation_mode.get());
     let animate_animation = move || create_animation_target(is_visible.get(), animation_mode.get());
-    
+
     // Create transition configuration
     let transition = Transition {
         duration: Some(0.6),
@@ -76,15 +125,18 @@ pub fn DemoApp() -> impl IntoView {
         repeat: RepeatConfig::Never,
         stagger: None,
     };
-    
+
     // Create hover animation for buttons
     let button_hover_animation = move || {
         let mut target = HashMap::new();
         target.insert("y".to_string(), AnimationValue::Pixels(-2.0));
-        target.insert("boxShadow".to_string(), AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string()));
+        target.insert(
+            "boxShadow".to_string(),
+            AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string()),
+        );
         target
     };
-    
+
     view! {
         <div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div style="max-width: 800px; margin: 0 auto; text-align: center;">
@@ -115,7 +167,7 @@ pub fn DemoApp() -> impl IntoView {
                                     >
                                         "Scale & Fade"
                                     </MotionDiv>
-                        <button 
+                        <button
                             class="mode-button"
                             on:click=move |_| set_animation_mode.set(1)
                             style=move || {
@@ -129,7 +181,7 @@ pub fn DemoApp() -> impl IntoView {
                         >
                             "Slide & Rotate"
                         </button>
-                        <button 
+                        <button
                             class="mode-button"
                             on:click=move |_| set_animation_mode.set(2)
                             style=move || {
@@ -147,7 +199,7 @@ pub fn DemoApp() -> impl IntoView {
                 </div>
 
                 <div style="margin-bottom: 2rem;">
-                    <button 
+                    <button
                         class="main-button"
                         on:click=move |_| {
                             let current = is_visible.get();
@@ -162,7 +214,7 @@ pub fn DemoApp() -> impl IntoView {
                         }}
                     </button>
                 </div>
-                
+
                 <div style="display: flex; justify-content: center; align-items: center; min-height: 200px;">
                                 <MotionDiv
                                     class="animated-box".to_string()
@@ -191,7 +243,7 @@ pub fn DemoApp() -> impl IntoView {
                             let mode = animation_mode.get();
                             match mode {
                                 0 => "🎨 Scale & Fade Animation",
-                                1 => "🌀 Slide & Rotate Animation", 
+                                1 => "🌀 Slide & Rotate Animation",
                                 2 => "🎪 Bounce & Color Animation",
                                 _ => "✨ Default Animation"
                             }
@@ -213,6 +265,6 @@ pub fn DemoApp() -> impl IntoView {
 pub fn main() {
     console_error_panic_hook::set_once();
     console_log::init().expect("Failed to initialize console log");
-    
+
     mount_to_body(|| view! { <TestFix/> })
 }

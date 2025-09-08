@@ -1,11 +1,11 @@
 //! Animation Reactivity Tests
-//! 
+//!
 //! These tests verify that MotionDiv components properly react to state changes
 //! and apply animations correctly.
 
 use leptos::prelude::*;
+use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
 use leptos_motion_dom::MotionDiv;
-use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
 use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen_test::*;
@@ -20,27 +20,42 @@ fn test_animation_reactivity() {
 
     let create_animation_target = |visible: bool, mode: i32| -> AnimationTarget {
         let mut target = HashMap::new();
-        
+
         if visible {
             target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-            target.insert("transform".to_string(), AnimationValue::String("scale(1)".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("scale(1)".to_string()),
+            );
         } else {
             target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-            target.insert("transform".to_string(), AnimationValue::String("scale(0.5)".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("scale(0.5)".to_string()),
+            );
         }
-        
+
         match mode {
             0 => {
-                target.insert("backgroundColor".to_string(), AnimationValue::String("red".to_string()));
+                target.insert(
+                    "backgroundColor".to_string(),
+                    AnimationValue::String("red".to_string()),
+                );
             }
             1 => {
-                target.insert("backgroundColor".to_string(), AnimationValue::String("blue".to_string()));
+                target.insert(
+                    "backgroundColor".to_string(),
+                    AnimationValue::String("blue".to_string()),
+                );
             }
             _ => {
-                target.insert("backgroundColor".to_string(), AnimationValue::String("green".to_string()));
+                target.insert(
+                    "backgroundColor".to_string(),
+                    AnimationValue::String("green".to_string()),
+                );
             }
         }
-        
+
         target
     };
 
@@ -56,26 +71,47 @@ fn test_animation_reactivity() {
 
     // Test initial state
     let initial_target = create_animation_target(true, 0);
-    assert_eq!(initial_target.get("opacity"), Some(&AnimationValue::Number(1.0)));
-    assert_eq!(initial_target.get("backgroundColor"), Some(&AnimationValue::String("red".to_string())));
+    assert_eq!(
+        initial_target.get("opacity"),
+        Some(&AnimationValue::Number(1.0))
+    );
+    assert_eq!(
+        initial_target.get("backgroundColor"),
+        Some(&AnimationValue::String("red".to_string()))
+    );
 
     // Test state change to invisible
     set_is_visible.set(false);
     let hidden_target = animate_animation();
-    assert_eq!(hidden_target.get("opacity"), Some(&AnimationValue::Number(0.0)));
-    assert_eq!(hidden_target.get("transform"), Some(&AnimationValue::String("scale(0.5)".to_string())));
+    assert_eq!(
+        hidden_target.get("opacity"),
+        Some(&AnimationValue::Number(0.0))
+    );
+    assert_eq!(
+        hidden_target.get("transform"),
+        Some(&AnimationValue::String("scale(0.5)".to_string()))
+    );
 
     // Test mode change
     set_animation_mode.set(1);
     let mode_changed_target = animate_animation();
-    assert_eq!(mode_changed_target.get("backgroundColor"), Some(&AnimationValue::String("blue".to_string())));
+    assert_eq!(
+        mode_changed_target.get("backgroundColor"),
+        Some(&AnimationValue::String("blue".to_string()))
+    );
 
     // Test both changes
     set_is_visible.set(true);
     set_animation_mode.set(2);
     let both_changed_target = animate_animation();
-    assert_eq!(both_changed_target.get("opacity"), Some(&AnimationValue::Number(1.0)));
-    assert_eq!(both_changed_target.get("backgroundColor"), Some(&AnimationValue::String("green".to_string())));
+    assert_eq!(
+        both_changed_target.get("opacity"),
+        Some(&AnimationValue::Number(1.0))
+    );
+    assert_eq!(
+        both_changed_target.get("backgroundColor"),
+        Some(&AnimationValue::String("green".to_string()))
+    );
 }
 
 /// Test that MotionDiv applies styles correctly
@@ -87,10 +123,16 @@ fn test_motion_div_style_application() {
         let mut target = HashMap::new();
         if is_visible.get() {
             target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-            target.insert("transform".to_string(), AnimationValue::String("translateX(0px)".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("translateX(0px)".to_string()),
+            );
         } else {
             target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-            target.insert("transform".to_string(), AnimationValue::String("translateX(-100px)".to_string()));
+            target.insert(
+                "transform".to_string(),
+                AnimationValue::String("translateX(-100px)".to_string()),
+            );
         }
         target
     };
@@ -105,13 +147,25 @@ fn test_motion_div_style_application() {
 
     // Test that the closure returns correct values
     let visible_target = animate_animation();
-    assert_eq!(visible_target.get("opacity"), Some(&AnimationValue::Number(1.0)));
-    assert_eq!(visible_target.get("transform"), Some(&AnimationValue::String("translateX(0px)".to_string())));
+    assert_eq!(
+        visible_target.get("opacity"),
+        Some(&AnimationValue::Number(1.0))
+    );
+    assert_eq!(
+        visible_target.get("transform"),
+        Some(&AnimationValue::String("translateX(0px)".to_string()))
+    );
 
     set_is_visible.set(false);
     let hidden_target = animate_animation();
-    assert_eq!(hidden_target.get("opacity"), Some(&AnimationValue::Number(0.0)));
-    assert_eq!(hidden_target.get("transform"), Some(&AnimationValue::String("translateX(-100px)".to_string())));
+    assert_eq!(
+        hidden_target.get("opacity"),
+        Some(&AnimationValue::Number(0.0))
+    );
+    assert_eq!(
+        hidden_target.get("transform"),
+        Some(&AnimationValue::String("translateX(-100px)".to_string()))
+    );
 }
 
 /// Test hover animations
@@ -119,14 +173,28 @@ fn test_motion_div_style_application() {
 fn test_hover_animations() {
     let hover_animation = {
         let mut target = HashMap::new();
-        target.insert("transform".to_string(), AnimationValue::String("translateY(-5px)".to_string()));
-        target.insert("boxShadow".to_string(), AnimationValue::String("0 10px 20px rgba(0,0,0,0.2)".to_string()));
+        target.insert(
+            "transform".to_string(),
+            AnimationValue::String("translateY(-5px)".to_string()),
+        );
+        target.insert(
+            "boxShadow".to_string(),
+            AnimationValue::String("0 10px 20px rgba(0,0,0,0.2)".to_string()),
+        );
         target
     };
 
     // Test hover animation target
-    assert_eq!(hover_animation.get("transform"), Some(&AnimationValue::String("translateY(-5px)".to_string())));
-    assert_eq!(hover_animation.get("boxShadow"), Some(&AnimationValue::String("0 10px 20px rgba(0,0,0,0.2)".to_string())));
+    assert_eq!(
+        hover_animation.get("transform"),
+        Some(&AnimationValue::String("translateY(-5px)".to_string()))
+    );
+    assert_eq!(
+        hover_animation.get("boxShadow"),
+        Some(&AnimationValue::String(
+            "0 10px 20px rgba(0,0,0,0.2)".to_string()
+        ))
+    );
 }
 
 /// Test tap animations
@@ -134,14 +202,26 @@ fn test_hover_animations() {
 fn test_tap_animations() {
     let tap_animation = {
         let mut target = HashMap::new();
-        target.insert("transform".to_string(), AnimationValue::String("scale(0.95)".to_string()));
-        target.insert("backgroundColor".to_string(), AnimationValue::String("rgba(0,0,0,0.1)".to_string()));
+        target.insert(
+            "transform".to_string(),
+            AnimationValue::String("scale(0.95)".to_string()),
+        );
+        target.insert(
+            "backgroundColor".to_string(),
+            AnimationValue::String("rgba(0,0,0,0.1)".to_string()),
+        );
         target
     };
 
     // Test tap animation target
-    assert_eq!(tap_animation.get("transform"), Some(&AnimationValue::String("scale(0.95)".to_string())));
-    assert_eq!(tap_animation.get("backgroundColor"), Some(&AnimationValue::String("rgba(0,0,0,0.1)".to_string())));
+    assert_eq!(
+        tap_animation.get("transform"),
+        Some(&AnimationValue::String("scale(0.95)".to_string()))
+    );
+    assert_eq!(
+        tap_animation.get("backgroundColor"),
+        Some(&AnimationValue::String("rgba(0,0,0,0.1)".to_string()))
+    );
 }
 
 /// Test AnimationValue to string conversion
@@ -178,19 +258,31 @@ fn test_complex_animation_sequences() {
         match step.get() {
             0 => {
                 target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-                target.insert("transform".to_string(), AnimationValue::String("translateY(-50px) scale(0.8)".to_string()));
+                target.insert(
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(-50px) scale(0.8)".to_string()),
+                );
             }
             1 => {
                 target.insert("opacity".to_string(), AnimationValue::Number(0.5));
-                target.insert("transform".to_string(), AnimationValue::String("translateY(-25px) scale(0.9)".to_string()));
+                target.insert(
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(-25px) scale(0.9)".to_string()),
+                );
             }
             2 => {
                 target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                target.insert("transform".to_string(), AnimationValue::String("translateY(0px) scale(1.0)".to_string()));
+                target.insert(
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(0px) scale(1.0)".to_string()),
+                );
             }
             _ => {
                 target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                target.insert("transform".to_string(), AnimationValue::String("translateY(0px) scale(1.0)".to_string()));
+                target.insert(
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(0px) scale(1.0)".to_string()),
+                );
             }
         }
         target
@@ -198,18 +290,42 @@ fn test_complex_animation_sequences() {
 
     // Test step 0
     let step0_target = complex_animation();
-    assert_eq!(step0_target.get("opacity"), Some(&AnimationValue::Number(0.0)));
-    assert_eq!(step0_target.get("transform"), Some(&AnimationValue::String("translateY(-50px) scale(0.8)".to_string())));
+    assert_eq!(
+        step0_target.get("opacity"),
+        Some(&AnimationValue::Number(0.0))
+    );
+    assert_eq!(
+        step0_target.get("transform"),
+        Some(&AnimationValue::String(
+            "translateY(-50px) scale(0.8)".to_string()
+        ))
+    );
 
     // Test step 1
     set_step.set(1);
     let step1_target = complex_animation();
-    assert_eq!(step1_target.get("opacity"), Some(&AnimationValue::Number(0.5)));
-    assert_eq!(step1_target.get("transform"), Some(&AnimationValue::String("translateY(-25px) scale(0.9)".to_string())));
+    assert_eq!(
+        step1_target.get("opacity"),
+        Some(&AnimationValue::Number(0.5))
+    );
+    assert_eq!(
+        step1_target.get("transform"),
+        Some(&AnimationValue::String(
+            "translateY(-25px) scale(0.9)".to_string()
+        ))
+    );
 
     // Test step 2
     set_step.set(2);
     let step2_target = complex_animation();
-    assert_eq!(step2_target.get("opacity"), Some(&AnimationValue::Number(1.0)));
-    assert_eq!(step2_target.get("transform"), Some(&AnimationValue::String("translateY(0px) scale(1.0)".to_string())));
+    assert_eq!(
+        step2_target.get("opacity"),
+        Some(&AnimationValue::Number(1.0))
+    );
+    assert_eq!(
+        step2_target.get("transform"),
+        Some(&AnimationValue::String(
+            "translateY(0px) scale(1.0)".to_string()
+        ))
+    );
 }

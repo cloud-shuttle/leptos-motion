@@ -39,7 +39,7 @@ use std::collections::HashMap;
 #[component]
 fn App() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(true);
-    
+
     // Create animation targets
     let initial = {
         let mut map = HashMap::new();
@@ -47,19 +47,19 @@ fn App() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(0.5));
         map
     };
-    
+
     let animate = {
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     };
-    
+
     view! {
         <button on:click=move |_| set_is_visible.set(!is_visible.get())>
             "Toggle Animation"
         </button>
-        
+
         <MotionDiv
             class=Some("animated-box".to_string())
             initial=Some(initial)
@@ -82,7 +82,8 @@ fn App() -> impl IntoView {
 
 ### 1. Animation Targets
 
-Animation targets are `HashMap<String, AnimationValue>` that define what properties to animate:
+Animation targets are `HashMap<String, AnimationValue>` that define what
+properties to animate:
 
 ```rust
 let mut target = HashMap::new();
@@ -125,6 +126,7 @@ The primary animation component for div elements:
 ```
 
 **Props:**
+
 - `class: Option<String>` - CSS class name
 - `initial: Option<AnimationTarget>` - Initial animation state
 - `animate: Option<AnimationTarget>` - Target animation state
@@ -376,6 +378,7 @@ let stagger_transition = Transition {
 **Problem**: Animations don't trigger or are not smooth.
 
 **Solutions**:
+
 - Ensure you're using `Some()` wrappers for optional props
 - Check that animation values are correct types
 - Verify transition configuration is valid
@@ -386,6 +389,7 @@ let stagger_transition = Transition {
 **Problem**: Compilation errors about type mismatches.
 
 **Solutions**:
+
 - Use correct `AnimationValue` variants
 - Ensure `HashMap<String, AnimationValue>` for animation targets
 - Use `Some()` for optional props
@@ -396,6 +400,7 @@ let stagger_transition = Transition {
 **Problem**: Animations are choppy or slow.
 
 **Solutions**:
+
 - Use `will-change` CSS property
 - Avoid animating too many properties simultaneously
 - Use hardware-accelerated properties (transform, opacity)

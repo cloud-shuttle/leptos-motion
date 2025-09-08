@@ -1,12 +1,12 @@
 //! Tests for basic animation capabilities
-//! 
+//!
 //! These tests define the expected behavior for basic animations like
 //! fade, scale, rotate, and translate.
 
+use crate::test_utils::*;
 use leptos::*;
 use leptos_motion_core::*;
 use leptos_motion_dom::*;
-use crate::test_utils::*;
 
 /// Test that fade animations work correctly
 #[test]
@@ -17,13 +17,13 @@ fn test_fade_animation() {
         easing: EasingFunction::EaseInOut,
         ..Default::default()
     };
-    
+
     // When: Animation is triggered
     let (opacity, set_opacity) = create_signal(0.0);
-    
+
     // Then: Opacity should animate from 0 to 1
     assert_eq!(opacity.get(), 0.0);
-    
+
     // Simulate animation progress
     set_opacity.set(1.0);
     assert_eq!(opacity.get(), 1.0);
@@ -38,13 +38,13 @@ fn test_scale_animation() {
         easing: EasingFunction::EaseOut,
         ..Default::default()
     };
-    
+
     // When: Animation is triggered
     let (scale, set_scale) = create_signal(0.0);
-    
+
     // Then: Scale should animate from 0 to 1
     assert_eq!(scale.get(), 0.0);
-    
+
     set_scale.set(1.0);
     assert_eq!(scale.get(), 1.0);
 }
@@ -58,13 +58,13 @@ fn test_rotate_animation() {
         easing: EasingFunction::Linear,
         ..Default::default()
     };
-    
+
     // When: Animation is triggered
     let (rotation, set_rotation) = create_signal(0.0);
-    
+
     // Then: Rotation should animate from 0 to 360 degrees
     assert_eq!(rotation.get(), 0.0);
-    
+
     set_rotation.set(360.0);
     assert_eq!(rotation.get(), 360.0);
 }
@@ -78,15 +78,15 @@ fn test_translate_animation() {
         easing: EasingFunction::EaseIn,
         ..Default::default()
     };
-    
+
     // When: Animation is triggered
     let (x, set_x) = create_signal(0.0);
     let (y, set_y) = create_signal(0.0);
-    
+
     // Then: Position should animate from (0,0) to (100,100)
     assert_eq!(x.get(), 0.0);
     assert_eq!(y.get(), 0.0);
-    
+
     set_x.set(100.0);
     set_y.set(100.0);
     assert_eq!(x.get(), 100.0);
@@ -100,12 +100,12 @@ fn test_simultaneous_animations() {
     let (opacity, set_opacity) = create_signal(0.0);
     let (scale, set_scale) = create_signal(0.0);
     let (rotation, set_rotation) = create_signal(0.0);
-    
+
     // When: All animations are triggered
     set_opacity.set(1.0);
     set_scale.set(1.0);
     set_rotation.set(180.0);
-    
+
     // Then: All properties should be updated
     assert_eq!(opacity.get(), 1.0);
     assert_eq!(scale.get(), 1.0);
@@ -125,7 +125,7 @@ fn test_easing_functions() {
         EasingFunction::EaseOutCubic,
         EasingFunction::EaseInOutCubic,
     ];
-    
+
     // When: Each easing function is applied
     for easing in easing_functions {
         let config = AnimationConfig {
@@ -133,7 +133,7 @@ fn test_easing_functions() {
             easing,
             ..Default::default()
         };
-        
+
         // Then: Configuration should be valid
         assert!(config.duration > 0.0);
     }
@@ -148,7 +148,7 @@ fn test_animation_delay() {
         delay: 200.0,
         ..Default::default()
     };
-    
+
     // When: Animation is configured
     // Then: Delay should be set correctly
     assert_eq!(config.delay, 200.0);
@@ -165,7 +165,7 @@ fn test_animation_repeat() {
         repeat_count: Some(3),
         ..Default::default()
     };
-    
+
     // When: Animation is configured
     // Then: Repeat settings should be correct
     assert!(config.repeat);

@@ -3,9 +3,9 @@
 //! These tests verify that the MotionDiv component properly supports reactive animations
 //! using Rc<dyn Fn() -> AnimationTarget> for the animate prop.
 
+use crate::{AnimationTargetOrReactive, ReactiveMotionDiv};
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
-use crate::{ReactiveMotionDiv, AnimationTargetOrReactive};
 use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen_test::*;

@@ -47,25 +47,25 @@
         <button class="test-button" onclick="testResponsiveness()">Test Responsiveness</button>
         <div id="test-results"></div>
     </div>
-    
+
     <script type="module">
         const statusEl = document.getElementById('status');
         const testResultsEl = document.getElementById('test-results');
-        
+
         try {
             statusEl.textContent = 'Importing minimal WASM module...';
             statusEl.className = 'status loading';
-            
+
             const init = await import('./pkg/v0_7_showcase.js');
-            
+
             statusEl.textContent = 'Initializing minimal WASM...';
             statusEl.className = 'status loading';
-            
+
             await init.default();
-            
+
             statusEl.textContent = 'Minimal WASM loaded successfully!';
             statusEl.className = 'status success';
-            
+
             // Test responsiveness
             window.testResponsiveness = function() {
                 try {
@@ -75,16 +75,16 @@
                     testResultsEl.innerHTML = `<p>❌ WASM function call failed: ${error.message}</p>`;
                 }
             };
-            
+
             // Set a flag to indicate WASM is loaded
             window.wasmLoaded = true;
-            
+
             // Wait a bit to see if the page becomes unresponsive
             setTimeout(() => {
                 statusEl.textContent = 'Minimal WASM loaded and page is responsive!';
                 statusEl.className = 'status success';
             }, 2000);
-            
+
         } catch (error) {
             statusEl.textContent = `Error: ${error.message}`;
             statusEl.className = 'status error';

@@ -34,20 +34,20 @@
 </head>
 <body>
     <h1>🔍 Leptos Motion v0.7.0 Showcase - DEBUG MODE</h1>
-    
+
     <div id="debug-log">
         <div class="debug-info">Starting debug session...</div>
     </div>
-    
+
     <div id="showcase-content" style="display: none;">
         <h2>Showcase Content</h2>
         <div id="app"></div>
     </div>
-    
+
     <script type="module">
         const debugLog = document.getElementById('debug-log');
         const showcaseContent = document.getElementById('showcase-content');
-        
+
         function log(message, type = 'info') {
             const div = document.createElement('div');
             div.className = `debug-info ${type}`;
@@ -55,7 +55,7 @@
             debugLog.appendChild(div);
             console.log(`[DEBUG] ${message}`);
         }
-        
+
         function logError(error) {
             const div = document.createElement('div');
             div.className = 'debug-info error';
@@ -63,46 +63,46 @@
             debugLog.appendChild(div);
             console.error('[DEBUG] ERROR:', error);
         }
-        
+
         async function initializeShowcase() {
             log('Starting WASM module initialization...');
-            
+
             try {
                 log('Importing WASM module...');
                 const { default: init, main } = await import('./pkg/v0_7_showcase.js');
                 log('WASM module imported successfully', 'success');
-                
+
                 log('Initializing WASM module...');
                 await init();
                 log('WASM module initialized successfully', 'success');
-                
+
                 log('Calling main function...');
                 main();
                 log('Main function called successfully', 'success');
-                
+
                 log('App mounting completed', 'success');
-                
+
                 // Show the showcase content
                 showcaseContent.style.display = 'block';
                 log('Showcase content displayed', 'success');
-                
+
             } catch (error) {
                 logError(error);
                 log('Failed to initialize showcase', 'error');
             }
         }
-        
+
         // Monitor for any additional errors
         window.addEventListener('error', (event) => {
             logError(event.error);
         });
-        
+
         window.addEventListener('unhandledrejection', (event) => {
             logError(event.reason);
         });
-        
+
         log('Debug session ready');
-        
+
         // Start initialization
         initializeShowcase();
     </script>

@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
 pub fn main() {
     console_error_panic_hook::set_once();
     console_log::init_with_level(log::Level::Debug).expect("error initializing log");
-    
+
     mount_to_body(|| {
         view! {
             <App />
@@ -31,13 +31,13 @@ fn App() -> impl IntoView {
 #[component]
 fn SpringPhysicsDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     view! {
         <div class="showcase-card">
             <div class="feature-badge">"🌊 Spring Physics"</div>
             <h3>"Spring Physics Engine"</h3>
             <p>"Natural, physics-based animations with configurable tension, friction, and mass parameters."</p>
-            
+
             <div class="demo-area">
                 <ReactiveMotionDiv
                     class="w-20 h-20 bg-green-500 rounded-full cursor-pointer".to_string()
@@ -66,7 +66,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                     "Click me!"
                 </ReactiveMotionDiv>
             </div>
-            
+
             <div class="controls">
                 <button
                     class="btn btn-primary"
@@ -82,13 +82,13 @@ fn SpringPhysicsDemo() -> impl IntoView {
 #[component]
 fn VariantsDemo() -> impl IntoView {
     let (current_variant, set_current_variant) = signal("idle".to_string());
-    
+
     view! {
         <div class="showcase-card">
             <div class="feature-badge">"🎭 Variants System"</div>
             <h3>"Named Animation States"</h3>
             <p>"Define reusable animation states with descriptive names for smooth transitions between different states."</p>
-            
+
             <div class="demo-area">
                 <ReactiveMotionDiv
                     class="w-24 h-24 rounded-lg cursor-pointer flex items-center justify-center text-white font-bold text-lg".to_string()
@@ -133,7 +133,7 @@ fn VariantsDemo() -> impl IntoView {
                     }}
                 </ReactiveMotionDiv>
             </div>
-            
+
             <div class="controls">
                 <button
                     class="btn btn-primary"
@@ -162,13 +162,13 @@ fn VariantsDemo() -> impl IntoView {
 fn TimelineDemo() -> impl IntoView {
     let (is_playing, set_is_playing) = signal(false);
     let (current_step, set_current_step) = signal(0);
-    
+
     view! {
         <div class="showcase-card">
             <div class="feature-badge">"⏰ Timeline Sequences"</div>
             <h3>"Advanced Orchestration"</h3>
             <p>"Create complex, multi-step animation sequences with precise timing and orchestration control."</p>
-            
+
             <div class="demo-area">
                 <ReactiveMotionDiv
                     class="w-20 h-20 bg-orange-500 rounded-lg".to_string()
@@ -210,7 +210,7 @@ fn TimelineDemo() -> impl IntoView {
                     {move || format!("Step {}", current_step.get())}
                 </ReactiveMotionDiv>
             </div>
-            
+
             <div class="controls">
                 <button
                     class="btn btn-primary"
@@ -249,13 +249,13 @@ fn TimelineDemo() -> impl IntoView {
 fn PerformanceDemo() -> impl IntoView {
     let (element_count, set_element_count) = signal(5);
     let (is_animating, set_is_animating) = signal(false);
-    
+
     view! {
         <div class="showcase-card">
             <div class="feature-badge">"⚡ Performance"</div>
             <h3>"Performance Optimizations"</h3>
             <p>"Memory pools, caching, and edge case handling for optimal performance in production applications."</p>
-            
+
             <div class="demo-area">
                 <div class="grid grid-cols-5 gap-2">
                     {move || (0..element_count.get()).map(|_i| {
@@ -287,7 +287,7 @@ fn PerformanceDemo() -> impl IntoView {
                     }).collect::<Vec<_>>()}
                 </div>
             </div>
-            
+
             <div class="controls">
                 <button
                     class="btn btn-primary"

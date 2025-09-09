@@ -10,17 +10,17 @@
         .hero-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
+
         .feature-card {
             transition: all 0.3s ease;
             border: 1px solid #e5e7eb;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
+
         .demo-container {
             min-height: 400px;
             background: #f8fafc;
@@ -28,7 +28,7 @@
             padding: 2rem;
             margin: 1rem 0;
         }
-        
+
         .animated-element {
             width: 80px;
             height: 80px;
@@ -43,14 +43,14 @@
             cursor: pointer;
             user-select: none;
         }
-        
+
         .spring-demo {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin: 2rem 0;
         }
-        
+
         .spring-item {
             background: white;
             border-radius: 8px;
@@ -58,7 +58,7 @@
             text-align: center;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
+
         .gesture-demo {
             display: flex;
             gap: 2rem;
@@ -67,7 +67,7 @@
             align-items: center;
             min-height: 300px;
         }
-        
+
         .gesture-item {
             width: 120px;
             height: 120px;
@@ -81,18 +81,18 @@
             cursor: grab;
             user-select: none;
         }
-        
+
         .gesture-item:active {
             cursor: grabbing;
         }
-        
+
         .layout-demo {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
             margin: 2rem 0;
         }
-        
+
         .layout-item {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             border-radius: 8px;
@@ -102,7 +102,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .timeline-demo {
             display: flex;
             gap: 1rem;
@@ -110,7 +110,7 @@
             justify-content: center;
             margin: 2rem 0;
         }
-        
+
         .timeline-item {
             width: 60px;
             height: 60px;
@@ -123,7 +123,7 @@
             font-weight: bold;
             cursor: pointer;
         }
-        
+
         .scroll-indicator {
             position: fixed;
             top: 0;
@@ -134,13 +134,13 @@
             transform-origin: left;
             z-index: 1000;
         }
-        
+
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s ease;
         }
-        
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
@@ -150,7 +150,7 @@
 <body class="bg-gray-50">
     <!-- Scroll Progress Indicator -->
     <div class="scroll-indicator" id="scrollProgress"></div>
-    
+
     <!-- Hero Section -->
     <section class="hero-gradient text-white py-20">
         <div class="container mx-auto px-6 text-center">
@@ -175,7 +175,7 @@
     <section class="py-20">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
+
                 <!-- Simple API -->
                 <div class="feature-card bg-white rounded-xl p-8 fade-in">
                     <div class="text-4xl mb-4">🎯</div>
@@ -365,7 +365,7 @@
             const element = document.getElementById('simpleApiDemo');
             element.style.transform = 'scale(1.2) rotate(360deg)';
             element.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-            
+
             setTimeout(() => {
                 element.style.transform = 'scale(1) rotate(0deg)';
                 element.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
@@ -377,7 +377,7 @@
             element.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
             element.style.transform = 'translateX(50px) translateY(-30px) rotateZ(180deg) scale(1.3)';
             element.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
-            
+
             setTimeout(() => {
                 element.style.transform = 'translateX(0) translateY(0) rotateZ(0deg) scale(1)';
                 element.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
@@ -392,7 +392,7 @@
                     item.style.transform = 'translateY(-20px) scale(1.1)';
                     item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
                     item.style.color = 'white';
-                    
+
                     setTimeout(() => {
                         item.style.transform = 'translateY(0) scale(1)';
                         item.style.background = 'white';
@@ -405,11 +405,11 @@
         function triggerExitAnimation() {
             const element = document.getElementById('exitAnimationDemo');
             const container = document.getElementById('exitAnimationContainer');
-            
+
             element.style.transition = 'all 0.5s ease-in-out';
             element.style.transform = 'scale(0) rotate(180deg)';
             element.style.opacity = '0';
-            
+
             setTimeout(() => {
                 element.style.transform = 'scale(1) rotate(0deg)';
                 element.style.opacity = '1';
@@ -419,38 +419,38 @@
 
         function setupGestures() {
             const gestureItems = document.querySelectorAll('#gesturesDemo .gesture-item');
-            
+
             gestureItems.forEach(item => {
                 const gesture = item.dataset.gesture;
-                
+
                 if (gesture === 'hover') {
                     item.addEventListener('mouseenter', () => {
                         item.style.transform = 'scale(1.2)';
                         item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
                     });
-                    
+
                     item.addEventListener('mouseleave', () => {
                         item.style.transform = 'scale(1)';
                         item.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
                     });
                 }
-                
+
                 if (gesture === 'press') {
                     item.addEventListener('mousedown', () => {
                         item.style.transform = 'scale(0.9)';
                         item.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
                     });
-                    
+
                     item.addEventListener('mouseup', () => {
                         item.style.transform = 'scale(1)';
                         item.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
                     });
                 }
-                
+
                 if (gesture === 'drag') {
                     let isDragging = false;
                     let startX, startY, initialX, initialY;
-                    
+
                     item.addEventListener('mousedown', (e) => {
                         isDragging = true;
                         startX = e.clientX;
@@ -460,7 +460,7 @@
                         item.style.cursor = 'grabbing';
                         item.style.background = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
                     });
-                    
+
                     document.addEventListener('mousemove', (e) => {
                         if (isDragging) {
                             const deltaX = e.clientX - startX;
@@ -468,7 +468,7 @@
                             item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
                         }
                     });
-                    
+
                     document.addEventListener('mouseup', () => {
                         if (isDragging) {
                             isDragging = false;
@@ -484,7 +484,7 @@
         function triggerLayoutAnimation() {
             const container = document.getElementById('layoutAnimationDemo');
             const items = container.querySelectorAll('.layout-item');
-            
+
             // Toggle between grid layouts
             if (container.style.gridTemplateColumns === 'repeat(2, 1fr)') {
                 container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
@@ -503,13 +503,13 @@
 
         function triggerTimelineSequences() {
             const items = document.querySelectorAll('#timelineSequencesDemo .timeline-item');
-            
+
             // Reset
             items.forEach(item => {
                 item.style.transform = 'scale(0) rotate(0deg)';
                 item.style.opacity = '0';
             });
-            
+
             // Animate in sequence
             items.forEach((item, index) => {
                 setTimeout(() => {
@@ -523,22 +523,22 @@
         function triggerPerformanceDemo() {
             const element = document.getElementById('performanceDemo');
             let startTime = performance.now();
-            
+
             function animate() {
                 const elapsed = performance.now() - startTime;
                 const progress = (elapsed % 2000) / 2000;
                 const rotation = progress * 360;
                 const scale = 1 + Math.sin(progress * Math.PI * 2) * 0.2;
-                
+
                 element.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-                
+
                 if (elapsed < 5000) {
                     requestAnimationFrame(animate);
                 } else {
                     element.style.transform = 'rotate(0deg) scale(1)';
                 }
             }
-            
+
             animate();
         }
 
@@ -596,7 +596,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             setupFadeInAnimations();
             setupScrollAnimations();
-            
+
             window.addEventListener('scroll', updateScrollProgress);
             updateScrollProgress();
         });

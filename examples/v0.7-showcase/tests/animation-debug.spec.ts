@@ -23,7 +23,7 @@ test.describe('Animation Debug', () => {
         backgroundColor: computed.backgroundColor,
         position: computed.position,
         left: computed.left,
-        top: computed.top
+        top: computed.top,
       };
     });
 
@@ -53,15 +53,16 @@ test.describe('Animation Debug', () => {
         backgroundColor: computed.backgroundColor,
         position: computed.position,
         left: computed.left,
-        top: computed.top
+        top: computed.top,
       };
     });
 
     console.log('Final styles:', finalStyles);
 
     // Check if styles changed
-    const stylesChanged = initialStyles.transform !== finalStyles.transform ||
-                         initialStyles.backgroundColor !== finalStyles.backgroundColor;
+    const stylesChanged =
+      initialStyles.transform !== finalStyles.transform ||
+      initialStyles.backgroundColor !== finalStyles.backgroundColor;
     console.log('Styles changed:', stylesChanged);
 
     // Get bounding box

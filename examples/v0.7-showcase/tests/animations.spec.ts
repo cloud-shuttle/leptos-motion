@@ -35,7 +35,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     // Check if the element moved (should have moved right)
     const finalBox = await animatedElement.boundingBox();
     expect(finalBox).not.toBeNull();
-    
+
     if (initialBox && finalBox) {
       // The element should have moved to the right (x position increased)
       expect(finalBox.x).toBeGreaterThan(initialBox.x);
@@ -52,8 +52,8 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     await expect(animatedElement).toBeVisible();
 
     // Get initial transform
-    const initialTransform = await animatedElement.evaluate(el => 
-      window.getComputedStyle(el).transform
+    const initialTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
     );
 
     // Hover over the element
@@ -63,8 +63,8 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     await page.waitForTimeout(500);
 
     // Check if transform changed (should have scale and rotation)
-    const hoverTransform = await animatedElement.evaluate(el => 
-      window.getComputedStyle(el).transform
+    const hoverTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
     );
 
     expect(hoverTransform).not.toBe(initialTransform);
@@ -94,7 +94,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     // Check if the element moved
     const finalBox = await animatedElement.boundingBox();
     expect(finalBox).not.toBeNull();
-    
+
     if (initialBox && finalBox) {
       // The element should have moved
       expect(finalBox.x).not.toBe(initialBox.x);
@@ -112,9 +112,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
 
     // Get initial positions
     const initialBoxes = await Promise.all(
-      Array.from({ length: 5 }, (_, i) => 
-        animatedElements.nth(i).boundingBox()
-      )
+      Array.from({ length: 5 }, (_, i) => animatedElements.nth(i).boundingBox())
     );
 
     // Click animate button
@@ -126,9 +124,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
 
     // Check if elements moved
     const finalBoxes = await Promise.all(
-      Array.from({ length: 5 }, (_, i) => 
-        animatedElements.nth(i).boundingBox()
-      )
+      Array.from({ length: 5 }, (_, i) => animatedElements.nth(i).boundingBox())
     );
 
     // At least some elements should have moved
@@ -192,7 +188,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     // Check if element moved
     const finalBox = await sharedElement.boundingBox();
     expect(finalBox).not.toBeNull();
-    
+
     if (initialBox && finalBox) {
       expect(finalBox.x).not.toBe(initialBox.x);
     }
@@ -221,7 +217,7 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
     // Check if element moved
     const finalBox = await animatedElement.boundingBox();
     expect(finalBox).not.toBeNull();
-    
+
     if (initialBox && finalBox) {
       expect(finalBox.x).not.toBe(initialBox.x);
     }
@@ -238,10 +234,8 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
 
     // Get initial opacity values
     const initialOpacities = await Promise.all(
-      Array.from({ length: 4 }, (_, i) => 
-        animatedElements.nth(i).evaluate(el => 
-          window.getComputedStyle(el).opacity
-        )
+      Array.from({ length: 4 }, (_, i) =>
+        animatedElements.nth(i).evaluate(el => window.getComputedStyle(el).opacity)
       )
     );
 
@@ -251,10 +245,8 @@ test.describe('Leptos Motion v0.8.0 Demo', () => {
 
     // Check if opacity changed (elements should fade in)
     const finalOpacities = await Promise.all(
-      Array.from({ length: 4 }, (_, i) => 
-        animatedElements.nth(i).evaluate(el => 
-          window.getComputedStyle(el).opacity
-        )
+      Array.from({ length: 4 }, (_, i) =>
+        animatedElements.nth(i).evaluate(el => window.getComputedStyle(el).opacity)
       )
     );
 

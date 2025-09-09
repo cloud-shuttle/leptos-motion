@@ -89,33 +89,33 @@
         <div id="status" class="status loading">Loading...</div>
         <div id="app"></div>
     </div>
-    
+
     <script type="module">
         const statusEl = document.getElementById('status');
-        
+
         try {
             statusEl.textContent = 'Importing WASM module...';
             statusEl.className = 'status loading';
-            
+
             const init = await import('./pkg/v0_7_showcase.js');
-            
+
             statusEl.textContent = 'Initializing WASM...';
             statusEl.className = 'status loading';
-            
+
             await init.default();
-            
+
             statusEl.textContent = 'WASM loaded successfully!';
             statusEl.className = 'status success';
-            
+
             // Set a flag to indicate WASM is loaded
             window.wasmLoaded = true;
-            
+
             // Wait a bit to see if the page becomes unresponsive
             setTimeout(() => {
                 statusEl.textContent = 'WASM loaded and page is responsive!';
                 statusEl.className = 'status success';
             }, 2000);
-            
+
         } catch (error) {
             statusEl.textContent = `Error: ${error.message}`;
             statusEl.className = 'status error';

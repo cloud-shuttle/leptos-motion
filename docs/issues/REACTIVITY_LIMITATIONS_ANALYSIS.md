@@ -13,12 +13,14 @@ The v0.7-showcase was experiencing multiple reactivity warnings and failed to di
 ### 1. Component API Mismatch
 
 **Expected API (from tests):**
+
 ```rust
 // From motion_div_integration_tests.rs
 animate=Rc::new(move || create_animation_target(is_visible.get(), animation_mode.get()))
 ```
 
 **Actual API (from components.rs):**
+
 ```rust
 // Current implementation
 animate: Option<AnimationTarget>,  // Static HashMap, not reactive
@@ -35,13 +37,15 @@ The issue stems from a fundamental mismatch between:
 ### 3. Evidence of the Problem
 
 #### Console Warnings
+
 ```
-At examples/v0.7-showcase/src/lib.rs:43:79, you access a reactive_graph::signal::read::ReadSignal<bool> 
-outside a reactive tracking context. This might mean your app is not responding to changes in signal values 
+At examples/v0.7-showcase/src/lib.rs:43:79, you access a reactive_graph::signal::read::ReadSignal<bool>
+outside a reactive tracking context. This might mean your app is not responding to changes in signal values
 in the way you expect.
 ```
 
 #### Compilation Errors
+
 ```
 error[E0308]: mismatched types
 expected `HashMap<String, AnimationValue>`, found `Rc<{closure}>`
@@ -50,11 +54,13 @@ expected `HashMap<String, AnimationValue>`, found `Rc<{closure}>`
 ## Impact Assessment
 
 ### 1. Functional Impact
+
 - **Static Animations Only**: Animations cannot respond to state changes
 - **No Interactive Demos**: Showcase components cannot demonstrate reactive behavior
 - **Limited API Usage**: Users cannot implement dynamic animations based on user input
 
 ### 2. Developer Experience Impact
+
 - **Confusing API**: Tests suggest reactive support that doesn't exist
 - **Inconsistent Documentation**: Component behavior doesn't match expected patterns
 - **Debugging Difficulty**: Reactivity warnings obscure the real issue
@@ -64,11 +70,13 @@ expected `HashMap<String, AnimationValue>`, found `Rc<{closure}>`
 **No, this is not a Leptos v0.8.8 limitation.** The issue is specific to the Leptos Motion library's component implementation:
 
 ### Evidence:
+
 1. **Leptos Reactivity Works**: The framework's signal system is functioning correctly
 2. **Component Implementation Issue**: The problem is in `leptos-motion-dom/src/components.rs`
 3. **Backup Implementation Exists**: A working reactive implementation exists in `components.rs.backup`
 
 ### Leptos v0.8.8 Capabilities:
+
 - ✅ Signal reactivity works correctly
 - ✅ `Effect::new()` and `create_effect()` are available
 - ✅ Reactive closures are supported
@@ -95,6 +103,7 @@ animate=HashMap::from([
 ## Recommended Solutions
 
 ### 1. Immediate Fix (Component Update)
+
 Update the `MotionDiv` component to support reactive animations:
 
 ```rust
@@ -111,6 +120,7 @@ Effect::new(move |_| {
 ```
 
 ### 2. Alternative Implementation
+
 Use the backup implementation that already supports reactivity:
 
 ```bash
@@ -118,7 +128,9 @@ cp crates/leptos-motion-dom/src/components.rs.backup crates/leptos-motion-dom/sr
 ```
 
 ### 3. API Consistency
+
 Ensure all components follow the same reactive pattern:
+
 - `initial`: `Option<AnimationTarget>` (static)
 - `animate`: `Option<Rc<dyn Fn() -> AnimationTarget>>` (reactive)
 - `while_hover`: `Option<AnimationTarget>` (static)
@@ -127,16 +139,19 @@ Ensure all components follow the same reactive pattern:
 ## Testing Strategy
 
 ### 1. Unit Tests
+
 - Test reactive animation prop changes
 - Verify signal tracking in animation closures
 - Test static vs reactive prop combinations
 
 ### 2. Integration Tests
+
 - Test full component lifecycle with reactive animations
 - Verify performance with frequent signal updates
 - Test edge cases (rapid signal changes, complex closures)
 
 ### 3. Browser Testing
+
 - Verify animations respond to user interactions
 - Test performance with multiple reactive components
 - Validate cross-browser compatibility
@@ -144,11 +159,13 @@ Ensure all components follow the same reactive pattern:
 ## Performance Considerations
 
 ### 1. Reactive Animation Overhead
+
 - Each signal change triggers animation recalculation
 - Consider debouncing for high-frequency updates
 - Implement efficient diffing for animation targets
 
 ### 2. Memory Management
+
 - `Rc<dyn Fn()>` closures need proper cleanup
 - Avoid memory leaks in long-running animations
 - Consider weak references for cleanup
@@ -158,12 +175,14 @@ Ensure all components follow the same reactive pattern:
 The reactivity limitations in Leptos Motion v0.7.0 are **not** due to Leptos v0.8.8 constraints but rather due to incomplete component implementation. The framework provides all necessary tools for reactive animations, but the MotionDiv component needs to be updated to properly utilize them.
 
 ### Key Takeaways:
+
 1. **Framework is Capable**: Leptos v0.8.8 fully supports reactive animations
 2. **Component Needs Update**: MotionDiv implementation is incomplete
 3. **Working Solution Exists**: Backup implementation shows the correct approach
 4. **Impact is Significant**: Current limitations severely restrict animation capabilities
 
 ### Next Steps:
+
 1. Update MotionDiv component to support reactive animations
 2. Align implementation with existing tests and documentation
 3. Ensure consistent API across all motion components

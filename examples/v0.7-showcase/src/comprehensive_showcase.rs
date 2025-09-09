@@ -1,15 +1,15 @@
 use leptos::prelude::*;
-use leptos_motion_dom::{ReactiveMotionDivFixed, signal_animate, AnimationValue};
+use leptos::web_sys;
+use leptos_motion_dom::{AnimationValue, ReactiveMotionDivFixed, signal_animate};
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
-use leptos::web_sys;
 
 #[wasm_bindgen(start)]
 pub fn main() {
     console_error_panic_hook::set_once();
-    
+
     web_sys::console::log_1(&"Comprehensive Showcase starting".into());
-    
+
     let _handle = mount_to_body(|| {
         web_sys::console::log_1(&"Comprehensive Showcase component rendering".into());
         view! {
@@ -18,14 +18,14 @@ pub fn main() {
             </div>
         }
     });
-    
+
     web_sys::console::log_1(&"Comprehensive Showcase mount completed".into());
 }
 
 #[component]
 fn ComprehensiveShowcase() -> impl IntoView {
     web_sys::console::log_1(&"ComprehensiveShowcase component starting to render".into());
-    
+
     let result = view! {
         <div class="showcase-container">
             <HeroSection />
@@ -33,7 +33,7 @@ fn ComprehensiveShowcase() -> impl IntoView {
             <CTASection />
         </div>
     };
-    
+
     web_sys::console::log_1(&"ComprehensiveShowcase component finished rendering".into());
     result
 }
@@ -86,28 +86,46 @@ fn FeaturesGrid() -> impl IntoView {
 #[component]
 fn SimpleAPIDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     let toggle = move |_| {
         set_is_active.update(|active| *active = !*active);
-        web_sys::console::log_1(&format!("Simple API triggered, is_active: {}", is_active.get()).into());
+        web_sys::console::log_1(
+            &format!("Simple API triggered, is_active: {}", is_active.get()).into(),
+        );
     };
-    
+
     let animation_target = signal_animate(move || {
         let is_active_val = is_active.get();
-        
+
         if is_active_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1.2) rotate(360deg)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1.2) rotate(360deg)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1) rotate(0deg)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1) rotate(0deg)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"🎯"</div>
@@ -133,28 +151,54 @@ fn SimpleAPIDemo() -> impl IntoView {
 #[component]
 fn IndependentTransformsDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     let toggle = move |_| {
         set_is_active.update(|active| *active = !*active);
-        web_sys::console::log_1(&format!("Independent transforms triggered, is_active: {}", is_active.get()).into());
+        web_sys::console::log_1(
+            &format!(
+                "Independent transforms triggered, is_active: {}",
+                is_active.get()
+            )
+            .into(),
+        );
     };
-    
+
     let animation_target = signal_animate(move || {
         let is_active_val = is_active.get();
-        
+
         if is_active_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("translateX(50px) translateY(-30px) rotateZ(180deg) scale(1.3)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String(
+                        "translateX(50px) translateY(-30px) rotateZ(180deg) scale(1.3)".to_string(),
+                    ),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("translateX(0px) translateY(0px) rotateZ(0deg) scale(1)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String(
+                        "translateX(0px) translateY(0px) rotateZ(0deg) scale(1)".to_string(),
+                    ),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"🔄"</div>
@@ -180,31 +224,59 @@ fn IndependentTransformsDemo() -> impl IntoView {
 #[component]
 fn ScrollAnimationDemo() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(false);
-    
+
     // This would be connected to an intersection observer in a real implementation
     let toggle = move |_| {
         set_is_visible.update(|visible| *visible = !*visible);
-        web_sys::console::log_1(&format!("Scroll animation triggered, is_visible: {}", is_visible.get()).into());
+        web_sys::console::log_1(
+            &format!(
+                "Scroll animation triggered, is_visible: {}",
+                is_visible.get()
+            )
+            .into(),
+        );
     };
-    
+
     let animation_target = signal_animate(move || {
         let is_visible_val = is_visible.get();
-        
+
         if is_visible_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("translateY(0px) scale(1)".to_string())),
-                ("opacity".to_string(), AnimationValue::String("1".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(0px) scale(1)".to_string()),
+                ),
+                (
+                    "opacity".to_string(),
+                    AnimationValue::String("1".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("translateY(50px) scale(0.8)".to_string())),
-                ("opacity".to_string(), AnimationValue::String("0.5".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("translateY(50px) scale(0.8)".to_string()),
+                ),
+                (
+                    "opacity".to_string(),
+                    AnimationValue::String("0.5".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"📜"</div>
@@ -230,14 +302,16 @@ fn ScrollAnimationDemo() -> impl IntoView {
 #[component]
 fn SpringPhysicsDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     let toggle = move |_| {
         set_is_active.update(|active| *active = !*active);
-        web_sys::console::log_1(&format!("Spring physics triggered, is_active: {}", is_active.get()).into());
+        web_sys::console::log_1(
+            &format!("Spring physics triggered, is_active: {}", is_active.get()).into(),
+        );
     };
-    
+
     let spring_items = vec!["Spring 1", "Spring 2", "Spring 3", "Spring 4"];
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"🌊"</div>
@@ -250,10 +324,10 @@ fn SpringPhysicsDemo() -> impl IntoView {
                         let spring_toggle = move |_| {
                             set_spring_active.update(|active| *active = !*active);
                         };
-                        
+
                         let spring_animation = signal_animate(move || {
                             let is_spring_active_val = is_spring_active.get();
-                            
+
                             if is_spring_active_val {
                                 HashMap::from([
                                     ("transform".to_string(), AnimationValue::String("translateY(-20px) scale(1.1)".to_string())),
@@ -268,7 +342,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                                 ])
                             }
                         });
-                        
+
                         view! {
                             <ReactiveMotionDivFixed
                                 animate=spring_animation
@@ -291,11 +365,13 @@ fn SpringPhysicsDemo() -> impl IntoView {
 #[component]
 fn ExitAnimationDemo() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(true);
-    
+
     let toggle = move |_| {
         set_is_visible.update(|visible| *visible = !*visible);
-        web_sys::console::log_1(&format!("Exit animation triggered, is_visible: {}", is_visible.get()).into());
-        
+        web_sys::console::log_1(
+            &format!("Exit animation triggered, is_visible: {}", is_visible.get()).into(),
+        );
+
         // Auto-restore after animation
         if !is_visible.get() {
             let set_visible = set_is_visible.clone();
@@ -304,30 +380,54 @@ fn ExitAnimationDemo() -> impl IntoView {
                 .set_timeout_with_callback_and_timeout_and_arguments_0(
                     &Closure::wrap(Box::new(move || {
                         set_visible.set(true);
-                    }) as Box<dyn Fn()>).as_ref().unchecked_ref(),
-                    1000
+                    }) as Box<dyn Fn()>)
+                    .as_ref()
+                    .unchecked_ref(),
+                    1000,
                 );
         }
     };
-    
+
     let animation_target = signal_animate(move || {
         let is_visible_val = is_visible.get();
-        
+
         if is_visible_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1) rotate(0deg)".to_string())),
-                ("opacity".to_string(), AnimationValue::String("1".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1) rotate(0deg)".to_string()),
+                ),
+                (
+                    "opacity".to_string(),
+                    AnimationValue::String("1".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(0) rotate(180deg)".to_string())),
-                ("opacity".to_string(), AnimationValue::String("0".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(0) rotate(180deg)".to_string()),
+                ),
+                (
+                    "opacity".to_string(),
+                    AnimationValue::String("0".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"👋"</div>
@@ -355,47 +455,79 @@ fn ExitAnimationDemo() -> impl IntoView {
 fn GesturesDemo() -> impl IntoView {
     let (hover_active, set_hover_active) = signal(false);
     let (press_active, set_press_active) = signal(false);
-    
+
     let hover_toggle = move |_| {
         set_hover_active.update(|active| *active = !*active);
     };
-    
+
     let press_toggle = move |_| {
         set_press_active.update(|active| *active = !*active);
     };
-    
+
     let hover_animation = signal_animate(move || {
         let hover_active_val = hover_active.get();
-        
+
         if hover_active_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1.2)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1.2)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     let press_animation = signal_animate(move || {
         let press_active_val = press_active.get();
-        
+
         if press_active_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(0.9)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(0.9)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("scale(1)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("scale(1)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"✋"</div>
@@ -432,14 +564,20 @@ fn GesturesDemo() -> impl IntoView {
 #[component]
 fn LayoutAnimationDemo() -> impl IntoView {
     let (layout_mode, set_layout_mode) = signal(false);
-    
+
     let toggle = move |_| {
         set_layout_mode.update(|mode| *mode = !*mode);
-        web_sys::console::log_1(&format!("Layout animation triggered, layout_mode: {}", layout_mode.get()).into());
+        web_sys::console::log_1(
+            &format!(
+                "Layout animation triggered, layout_mode: {}",
+                layout_mode.get()
+            )
+            .into(),
+        );
     };
-    
+
     let layout_items = vec!["Item 1", "Item 2", "Item 3", "Item 4"];
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"📐"</div>
@@ -452,10 +590,10 @@ fn LayoutAnimationDemo() -> impl IntoView {
                         let layout_toggle = move |_| {
                             set_layout_active.update(|active| *active = !*active);
                         };
-                        
+
                         let layout_animation = signal_animate(move || {
                             let is_layout_active_val = is_layout_active.get();
-                            
+
                             if is_layout_active_val {
                                 HashMap::from([
                                     ("transform".to_string(), AnimationValue::String("scale(1.1)".to_string())),
@@ -468,7 +606,7 @@ fn LayoutAnimationDemo() -> impl IntoView {
                                 ])
                             }
                         });
-                        
+
                         view! {
                             <ReactiveMotionDivFixed
                                 animate=layout_animation
@@ -491,14 +629,20 @@ fn LayoutAnimationDemo() -> impl IntoView {
 #[component]
 fn TimelineSequencesDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     let toggle = move |_| {
         set_is_active.update(|active| *active = !*active);
-        web_sys::console::log_1(&format!("Timeline sequences triggered, is_active: {}", is_active.get()).into());
+        web_sys::console::log_1(
+            &format!(
+                "Timeline sequences triggered, is_active: {}",
+                is_active.get()
+            )
+            .into(),
+        );
     };
-    
+
     let timeline_items = vec!["1", "2", "3", "4", "5"];
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"⏱️"</div>
@@ -511,10 +655,10 @@ fn TimelineSequencesDemo() -> impl IntoView {
                         let timeline_toggle = move |_| {
                             set_timeline_active.update(|active| *active = !*active);
                         };
-                        
+
                         let timeline_animation = signal_animate(move || {
                             let is_timeline_active_val = is_timeline_active.get();
-                            
+
                             if is_timeline_active_val {
                                 HashMap::from([
                                     ("transform".to_string(), AnimationValue::String("scale(1) rotate(360deg)".to_string())),
@@ -529,7 +673,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
                                 ])
                             }
                         });
-                        
+
                         view! {
                             <ReactiveMotionDivFixed
                                 animate=timeline_animation
@@ -552,28 +696,46 @@ fn TimelineSequencesDemo() -> impl IntoView {
 #[component]
 fn PerformanceDemo() -> impl IntoView {
     let (is_active, set_is_active) = signal(false);
-    
+
     let toggle = move |_| {
         set_is_active.update(|active| *active = !*active);
-        web_sys::console::log_1(&format!("Performance demo triggered, is_active: {}", is_active.get()).into());
+        web_sys::console::log_1(
+            &format!("Performance demo triggered, is_active: {}", is_active.get()).into(),
+        );
     };
-    
+
     let animation_target = signal_animate(move || {
         let is_active_val = is_active.get();
-        
+
         if is_active_val {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("rotate(360deg) scale(1.3)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("rotate(360deg) scale(1.3)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #fa709a 0%, #fee140 100%)".to_string(),
+                    ),
+                ),
             ])
         } else {
             HashMap::from([
-                ("transform".to_string(), AnimationValue::String("rotate(0deg) scale(1)".to_string())),
-                ("background".to_string(), AnimationValue::String("linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string())),
+                (
+                    "transform".to_string(),
+                    AnimationValue::String("rotate(0deg) scale(1)".to_string()),
+                ),
+                (
+                    "background".to_string(),
+                    AnimationValue::String(
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)".to_string(),
+                    ),
+                ),
             ])
         }
     });
-    
+
     view! {
         <div class="feature-card bg-white rounded-xl p-8">
             <div class="text-4xl mb-4">"⚡"</div>

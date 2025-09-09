@@ -13,7 +13,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        
+
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
@@ -22,59 +22,59 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         .header h1 {
             margin: 0;
             font-size: 2.5rem;
             font-weight: 300;
         }
-        
+
         .header p {
             margin: 10px 0 0 0;
             opacity: 0.9;
             font-size: 1.1rem;
         }
-        
+
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             padding: 30px;
         }
-        
+
         .metric-card {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
             border-left: 4px solid #667eea;
         }
-        
+
         .metric-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: #333;
             margin-bottom: 10px;
         }
-        
+
         .metric-value {
             font-size: 2rem;
             font-weight: 700;
             color: #667eea;
             margin-bottom: 5px;
         }
-        
+
         .metric-unit {
             font-size: 0.9rem;
             color: #666;
         }
-        
+
         .chart-container {
             background: white;
             border-radius: 8px;
@@ -82,7 +82,7 @@
             margin: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+
         .chart-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -90,7 +90,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .status-indicator {
             display: inline-block;
             width: 12px;
@@ -98,41 +98,41 @@
             border-radius: 50%;
             margin-right: 8px;
         }
-        
+
         .status-good { background: #28a745; }
         .status-warning { background: #ffc107; }
         .status-error { background: #dc3545; }
-        
+
         .test-results {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
             margin: 20px;
         }
-        
+
         .test-result {
             display: flex;
             align-items: center;
             padding: 10px 0;
             border-bottom: 1px solid #e9ecef;
         }
-        
+
         .test-result:last-child {
             border-bottom: none;
         }
-        
+
         .test-name {
             flex: 1;
             font-weight: 500;
         }
-        
+
         .test-status {
             font-weight: 600;
         }
-        
+
         .test-passed { color: #28a745; }
         .test-failed { color: #dc3545; }
-        
+
         .refresh-btn {
             background: #667eea;
             color: white;
@@ -144,11 +144,11 @@
             margin: 20px;
             transition: background 0.3s;
         }
-        
+
         .refresh-btn:hover {
             background: #5a6fd8;
         }
-        
+
         .last-updated {
             text-align: center;
             color: #666;
@@ -163,38 +163,38 @@
             <h1>📊 Performance Monitoring Dashboard</h1>
             <p>Real-time monitoring of Leptos Motion demo performance</p>
         </div>
-        
+
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-title">Page Load Time</div>
                 <div class="metric-value" id="loadTime">--</div>
                 <div class="metric-unit">milliseconds</div>
             </div>
-            
+
             <div class="metric-card">
                 <div class="metric-title">Memory Usage</div>
                 <div class="metric-value" id="memoryUsage">--</div>
                 <div class="metric-unit">MB</div>
             </div>
-            
+
             <div class="metric-card">
                 <div class="metric-title">Response Time</div>
                 <div class="metric-value" id="responseTime">--</div>
                 <div class="metric-unit">milliseconds</div>
             </div>
-            
+
             <div class="metric-card">
                 <div class="metric-title">Animation FPS</div>
                 <div class="metric-value" id="animationFPS">--</div>
                 <div class="metric-unit">frames per second</div>
             </div>
         </div>
-        
+
         <div class="chart-container">
             <div class="chart-title">Performance Trends Over Time</div>
             <canvas id="performanceChart" width="400" height="200"></canvas>
         </div>
-        
+
         <div class="test-results">
             <h3>Latest Test Results</h3>
             <div id="testResults">
@@ -216,9 +216,9 @@
                 </div>
             </div>
         </div>
-        
+
         <button class="refresh-btn" onclick="refreshMetrics()">🔄 Refresh Metrics</button>
-        
+
         <div class="last-updated" id="lastUpdated">
             Last updated: Never
         </div>
@@ -270,7 +270,7 @@
         function getPerformanceMetrics() {
             const navigation = performance.getEntriesByType('navigation')[0];
             const memory = performance.memory;
-            
+
             return {
                 loadTime: navigation ? Math.round(navigation.loadEventEnd - navigation.fetchStart) : 0,
                 memoryUsage: memory ? Math.round(memory.usedJSHeapSize / 1024 / 1024) : 0,
@@ -281,28 +281,28 @@
 
         function updateMetrics() {
             const metrics = getPerformanceMetrics();
-            
+
             document.getElementById('loadTime').textContent = metrics.loadTime;
             document.getElementById('memoryUsage').textContent = metrics.memoryUsage;
             document.getElementById('responseTime').textContent = metrics.responseTime;
             document.getElementById('animationFPS').textContent = metrics.animationFPS;
-            
+
             // Update chart
             const now = new Date().toLocaleTimeString();
             performanceChart.data.labels.push(now);
             performanceChart.data.datasets[0].data.push(metrics.loadTime);
             performanceChart.data.datasets[1].data.push(metrics.memoryUsage);
             performanceChart.data.datasets[2].data.push(metrics.responseTime);
-            
+
             // Keep only last 20 data points
             if (performanceChart.data.labels.length > 20) {
                 performanceChart.data.labels.shift();
                 performanceChart.data.datasets.forEach(dataset => dataset.data.shift());
             }
-            
+
             performanceChart.update();
-            
-            document.getElementById('lastUpdated').textContent = 
+
+            document.getElementById('lastUpdated').textContent =
                 `Last updated: ${new Date().toLocaleString()}`;
         }
 
@@ -312,10 +312,10 @@
 
         // Initialize dashboard
         updateMetrics();
-        
+
         // Auto-refresh every 30 seconds
         setInterval(updateMetrics, 30000);
-        
+
         // Simulate some test results (in a real implementation, this would come from CI/CD)
         function simulateTestResults() {
             const testResults = document.getElementById('testResults');
@@ -325,7 +325,7 @@
                 { name: 'Performance Monitoring', status: 'passed' },
                 { name: 'Component Coverage', status: 'passed' }
             ];
-            
+
             testResults.innerHTML = tests.map(test => `
                 <div class="test-result">
                     <span class="test-name">${test.name}</span>
@@ -335,7 +335,7 @@
                 </div>
             `).join('');
         }
-        
+
         simulateTestResults();
     </script>
 </body>

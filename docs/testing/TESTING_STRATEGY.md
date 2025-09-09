@@ -19,6 +19,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 **Purpose**: Detect when pages become unresponsive due to motion components
 
 **What it tests**:
+
 - Page response time (should be < 500ms)
 - Button click functionality
 - DOM element access
@@ -26,11 +27,13 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 - Motion component presence detection
 
 **Key Metrics**:
+
 - Response time: < 500ms average
 - Max response time: < 1000ms
 - Page responsiveness: No timeouts
 
 **Example Results**:
+
 ```
 ✅ Working Version: 101ms response time, all tests pass
 ❌ Broken Version: Timeout errors, all tests fail
@@ -41,6 +44,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 **Purpose**: Detect visual changes in animations, layouts, and styling
 
 **What it tests**:
+
 - Screenshot comparisons
 - Layout changes at different viewport sizes
 - CSS styling consistency
@@ -49,6 +53,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 - Responsive design behavior
 
 **Key Metrics**:
+
 - Screenshot similarity: > 95%
 - Layout consistency across viewports
 - Animation completion time: < 3 seconds
@@ -59,6 +64,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 **Purpose**: Track performance metrics over time and detect regressions
 
 **What it tests**:
+
 - Page load performance
 - Memory usage and leaks
 - Animation performance (FPS)
@@ -67,6 +73,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 - Network performance
 
 **Key Metrics**:
+
 - Page load time: < 5 seconds
 - Memory growth: < 50% increase
 - Animation FPS: > 30 FPS
@@ -78,6 +85,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 **Purpose**: Test all component combinations and edge cases
 
 **What it tests**:
+
 - All button interactions
 - Component state changes
 - Motion component variations
@@ -89,6 +97,7 @@ This document outlines our comprehensive testing strategy for Leptos Motion, inc
 - Network conditions
 
 **Key Metrics**:
+
 - Button interaction success: 100%
 - Component state consistency
 - Error rate: < 5%
@@ -136,11 +145,13 @@ export default defineConfig({
 ### GitHub Actions Workflow (`.github/workflows/comprehensive-testing.yml`)
 
 **Triggers**:
+
 - Push to main/develop branches
 - Pull requests
 - Daily at 2 AM UTC (performance monitoring)
 
 **Jobs**:
+
 1. **Responsiveness Tests**: Detect unresponsiveness issues
 2. **Visual Regression Tests**: Catch visual changes
 3. **Performance Monitoring**: Track performance metrics
@@ -149,6 +160,7 @@ export default defineConfig({
 6. **Test Summary**: Generate comprehensive reports
 
 **Artifacts**:
+
 - Test results (HTML, JSON, JUnit)
 - Screenshots and videos
 - Performance metrics
@@ -159,12 +171,14 @@ export default defineConfig({
 ### Dashboard Features (`performance-dashboard.html`)
 
 **Real-time Metrics**:
+
 - Page load time
 - Memory usage
 - Response time
 - Animation FPS
 
 **Visualizations**:
+
 - Performance trends over time
 - Test result status
 - Historical data
@@ -224,6 +238,7 @@ npx playwright test --project=webkit
 **❌ FAILED**: Page becomes unresponsive, timeouts occur
 
 **Common Issues**:
+
 - Motion components causing infinite loops
 - Memory leaks
 - Blocking JavaScript execution
@@ -234,6 +249,7 @@ npx playwright test --project=webkit
 **❌ FAILED**: Screenshots differ, visual changes detected
 
 **Common Issues**:
+
 - Animation timing changes
 - Layout shifts
 - Color/styling changes
@@ -244,6 +260,7 @@ npx playwright test --project=webkit
 **❌ FAILED**: Performance regressions detected
 
 **Common Issues**:
+
 - Increased load times
 - Memory leaks
 - Reduced FPS
@@ -255,6 +272,7 @@ npx playwright test --project=webkit
 **❌ FAILED**: Component issues detected
 
 **Common Issues**:
+
 - Button interactions failing
 - State management problems
 - Accessibility issues
@@ -330,21 +348,25 @@ npx playwright test tests/performance-monitoring.spec.ts --headed --debug
 ## 🎯 Success Metrics
 
 ### Responsiveness
+
 - **Target**: 100% of tests pass
 - **Threshold**: < 500ms average response time
 - **Monitoring**: Continuous
 
 ### Visual Consistency
+
 - **Target**: 95%+ screenshot similarity
 - **Threshold**: No unintended visual changes
 - **Monitoring**: On every PR
 
 ### Performance
+
 - **Target**: All metrics within thresholds
 - **Threshold**: < 5s load time, > 30 FPS, < 50% memory growth
 - **Monitoring**: Daily
 
 ### Coverage
+
 - **Target**: 100% component coverage
 - **Threshold**: All interactions tested
 - **Monitoring**: On every PR
@@ -352,25 +374,29 @@ npx playwright test tests/performance-monitoring.spec.ts --headed --debug
 ## 🚀 Future Enhancements
 
 ### 1. Advanced Monitoring
+
 - Real-time performance alerts
 - Historical trend analysis
 - Automated performance regression detection
 
 ### 2. Enhanced Visual Testing
+
 - 3D visual regression testing
 - Animation sequence validation
 - Accessibility visual testing
 
 ### 3. Load Testing
+
 - Stress testing with multiple users
 - Memory pressure testing
 - Long-running stability tests
 
 ### 4. Integration Testing
+
 - End-to-end user journey testing
 - API integration testing
 - Database performance testing
 
 ---
 
-*This testing strategy ensures that Leptos Motion maintains high quality, performance, and reliability across all supported platforms and use cases.*
+_This testing strategy ensures that Leptos Motion maintains high quality, performance, and reliability across all supported platforms and use cases._

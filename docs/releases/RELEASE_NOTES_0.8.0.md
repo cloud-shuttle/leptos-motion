@@ -7,18 +7,21 @@ We're excited to announce **Leptos Motion v0.8.0**, a major release that achieve
 ## 🎯 What's New
 
 ### 🔄 SVG Path Morphing Animations
+
 - **Complete path morphing system** with smooth interpolation between SVG paths
 - **PathMorphManager** for advanced path animation control
 - **PathMotionDiv component** for seamless integration
 - **Comprehensive test suite** covering all morphing scenarios
 
 ### 🔗 Shared Element Transitions
+
 - **Full shared element system** for smooth layout transitions
 - **SharedElementManager** with bounds tracking and state management
 - **SharedElementMotionDiv component** for visual continuity
 - **Complete test coverage** for shared element workflows
 
 ### 🎼 Animation Orchestration & Sequencing
+
 - **Robust orchestration system** with step sequencing and looping
 - **OrchestrationManager** for complex animation chains
 - **OrchestratedMotionDiv component** for precise timing control
@@ -36,6 +39,7 @@ This release represents a **complete TDD implementation** of advanced features:
 ## 📚 Enhanced Documentation & Examples
 
 ### Updated v0.7-showcase Demo
+
 - **SVG Path Morphing Demo** showcasing path interpolation
 - **Shared Element Demo** demonstrating layout transitions
 - **Orchestration Demo** showing complex animation sequences
@@ -91,7 +95,7 @@ use leptos_motion_dom::{SharedElementMotionDiv, SharedElementConfig};
 #[component]
 fn MySharedElement() -> impl IntoView {
     let (is_shared, set_is_shared) = signal(false);
-    
+
     view! {
         <SharedElementMotionDiv
             is_shared=is_shared
@@ -118,7 +122,7 @@ fn MyOrchestration() -> impl IntoView {
         easing: Easing::EaseOut,
         delay: 0.0,
     });
-    
+
     let config = OrchestrationConfig {
         sequence,
         loop_sequence: true,

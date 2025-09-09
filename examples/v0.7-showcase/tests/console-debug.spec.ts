@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Console Debug', () => {
   test('capture console logs during animation', async ({ page }) => {
     const logs: string[] = [];
-    
+
     // Capture all console messages
     page.on('console', msg => {
       const message = `[${msg.type()}] ${msg.text()}`;
@@ -41,10 +41,11 @@ test.describe('Console Debug', () => {
     logs.forEach(log => console.log(log));
 
     // Check if animation logs appeared
-    const animationLogs = logs.filter(log => 
-      log.includes('Animation triggered') || 
-      log.includes('Returning active animation') || 
-      log.includes('Returning idle animation')
+    const animationLogs = logs.filter(
+      log =>
+        log.includes('Animation triggered') ||
+        log.includes('Returning active animation') ||
+        log.includes('Returning idle animation')
     );
 
     console.log('\n=== Animation Logs ===');

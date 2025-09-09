@@ -8,16 +8,24 @@ test.describe('Performance Monitoring Tests', () => {
 
   test('should monitor page load performance', async ({ page }) => {
     // Measure page load metrics with timeout
-    const performanceMetrics = await page.evaluate(() => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      return {
-        domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
-        loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
-        totalLoadTime: navigation.loadEventEnd - navigation.fetchStart,
-        firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
-        largestContentfulPaint: performance.getEntriesByName('largest-contentful-paint')[0]?.startTime || 0
-      };
-    }, { timeout: 10000 });
+    const performanceMetrics = await page.evaluate(
+      () => {
+        const navigation = performance.getEntriesByType(
+          'navigation'
+        )[0] as PerformanceNavigationTiming;
+        return {
+          domContentLoaded:
+            navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+          loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
+          totalLoadTime: navigation.loadEventEnd - navigation.fetchStart,
+          firstContentfulPaint:
+            performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
+          largestContentfulPaint:
+            performance.getEntriesByName('largest-contentful-paint')[0]?.startTime || 0,
+        };
+      },
+      { timeout: 10000 }
+    );
 
     // Log metrics for monitoring
     console.log('Performance Metrics:', performanceMetrics);
@@ -31,16 +39,18 @@ test.describe('Performance Monitoring Tests', () => {
   test('should monitor memory usage', async ({ page }) => {
     // Measure initial memory usage
     const initialMemory = await page.evaluate(() => {
-      return (performance as any).memory ? {
-        usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-        totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-        jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit
-      } : null;
+      return (performance as any).memory
+        ? {
+            usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+            totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+            jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
+          }
+        : null;
     });
 
     if (initialMemory) {
       console.log('Initial Memory Usage:', initialMemory);
-      
+
       // Perform some interactions to test memory growth
       const toggleButton = page.locator('.showcase-card:has([data-motion]) button').first();
       if (await toggleButton.isVisible()) {
@@ -52,22 +62,24 @@ test.describe('Performance Monitoring Tests', () => {
 
       // Measure memory after interactions
       const finalMemory = await page.evaluate(() => {
-        return (performance as any).memory ? {
-          usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-          totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit
-        } : null;
+        return (performance as any).memory
+          ? {
+              usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+              totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+              jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
+            }
+          : null;
       });
 
       if (finalMemory) {
         console.log('Final Memory Usage:', finalMemory);
-        
+
         // Check for memory leaks (memory shouldn't grow excessively)
         const memoryGrowth = finalMemory.usedJSHeapSize - initialMemory.usedJSHeapSize;
         const memoryGrowthPercent = (memoryGrowth / initialMemory.usedJSHeapSize) * 100;
-        
+
         console.log(`Memory Growth: ${memoryGrowth} bytes (${memoryGrowthPercent.toFixed(2)}%)`);
-        
+
         // Memory growth should be reasonable (less than 50% increase)
         expect(memoryGrowthPercent).toBeLessThan(50);
       }
@@ -78,7 +90,7 @@ test.describe('Performance Monitoring Tests', () => {
     const motionDiv = page.locator('[data-motion]').first();
     if (await motionDiv.isVisible()) {
       const toggleButton = page.locator('.showcase-card:has([data-motion]) button').first();
-      
+
       // Measure animation performance
       const animationMetrics = await page.evaluate(() => {
         const startTime = performance.now();
@@ -88,18 +100,18 @@ test.describe('Performance Monitoring Tests', () => {
       await toggleButton.click();
       await page.waitForTimeout(2000); // Wait for animation
 
-      const animationPerformance = await page.evaluate((startTime) => {
+      const animationPerformance = await page.evaluate(startTime => {
         const endTime = performance.now();
         const animationDuration = endTime - startTime;
-        
+
         // Get frame rate information
         const frameCount = performance.getEntriesByType('measure').length;
-        
+
         return {
           animationDuration,
           frameCount,
           averageFrameTime: animationDuration / frameCount,
-          fps: frameCount / (animationDuration / 1000)
+          fps: frameCount / (animationDuration / 1000),
         };
       }, animationMetrics.startTime);
 
@@ -118,16 +130,18 @@ test.describe('Performance Monitoring Tests', () => {
     // Test multiple interactions
     for (let i = 0; i < 5; i++) {
       const startTime = Date.now();
-      
+
       // Test button click response
-      const incrementButton = page.locator('.showcase-card:has-text("Simple Test") button:has-text("Increment Counter")');
+      const incrementButton = page.locator(
+        '.showcase-card:has-text("Simple Test") button:has-text("Increment Counter")'
+      );
       if (await incrementButton.isVisible()) {
         await incrementButton.click();
         await page.waitForTimeout(100);
-        
+
         const responseTime = Date.now() - startTime;
         responseTimes.push(responseTime);
-        
+
         console.log(`Interaction ${i + 1} response time: ${responseTime}ms`);
       }
     }
@@ -137,7 +151,9 @@ test.describe('Performance Monitoring Tests', () => {
     const maxResponseTime = Math.max(...responseTimes);
     const minResponseTime = Math.min(...responseTimes);
 
-    console.log(`Response Time Stats: Avg: ${avgResponseTime.toFixed(2)}ms, Max: ${maxResponseTime}ms, Min: ${minResponseTime}ms`);
+    console.log(
+      `Response Time Stats: Avg: ${avgResponseTime.toFixed(2)}ms, Max: ${maxResponseTime}ms, Min: ${minResponseTime}ms`
+    );
 
     // Performance thresholds
     expect(avgResponseTime).toBeLessThan(500); // Average response time under 500ms
@@ -149,7 +165,7 @@ test.describe('Performance Monitoring Tests', () => {
     const cpuMetrics = await page.evaluate(() => {
       const startTime = performance.now();
       const startMemory = (performance as any).memory?.usedJSHeapSize || 0;
-      
+
       return { startTime, startMemory };
     });
 
@@ -162,14 +178,14 @@ test.describe('Performance Monitoring Tests', () => {
       }
     }
 
-    const finalMetrics = await page.evaluate((startData) => {
+    const finalMetrics = await page.evaluate(startData => {
       const endTime = performance.now();
       const endMemory = (performance as any).memory?.usedJSHeapSize || 0;
-      
+
       return {
         totalTime: endTime - startData.startTime,
         memoryDelta: endMemory - startData.startMemory,
-        operationsPerSecond: 20 / ((endTime - startData.startTime) / 1000)
+        operationsPerSecond: 20 / ((endTime - startData.startTime) / 1000),
       };
     }, cpuMetrics);
 
@@ -186,14 +202,14 @@ test.describe('Performance Monitoring Tests', () => {
       const resources = performance.getEntriesByType('resource');
       const wasmResources = resources.filter(r => r.name.includes('.wasm'));
       const jsResources = resources.filter(r => r.name.includes('.js'));
-      
+
       return {
         totalResources: resources.length,
         wasmResources: wasmResources.length,
         jsResources: jsResources.length,
         totalTransferSize: resources.reduce((sum, r) => sum + (r as any).transferSize, 0),
         wasmSize: wasmResources.reduce((sum, r) => sum + (r as any).transferSize, 0),
-        jsSize: jsResources.reduce((sum, r) => sum + (r as any).transferSize, 0)
+        jsSize: jsResources.reduce((sum, r) => sum + (r as any).transferSize, 0),
       };
     });
 
@@ -207,27 +223,32 @@ test.describe('Performance Monitoring Tests', () => {
   test('should generate performance report', async ({ page }) => {
     // Collect all performance metrics
     const performanceReport = await page.evaluate(() => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const navigation = performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming;
       const memory = (performance as any).memory;
       const resources = performance.getEntriesByType('resource');
-      
+
       return {
         timestamp: new Date().toISOString(),
         pageLoad: {
-          domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+          domContentLoaded:
+            navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
           loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
-          totalLoadTime: navigation.loadEventEnd - navigation.fetchStart
+          totalLoadTime: navigation.loadEventEnd - navigation.fetchStart,
         },
-        memory: memory ? {
-          usedJSHeapSize: memory.usedJSHeapSize,
-          totalJSHeapSize: memory.totalJSHeapSize,
-          jsHeapSizeLimit: memory.jsHeapSizeLimit
-        } : null,
+        memory: memory
+          ? {
+              usedJSHeapSize: memory.usedJSHeapSize,
+              totalJSHeapSize: memory.totalJSHeapSize,
+              jsHeapSizeLimit: memory.jsHeapSizeLimit,
+            }
+          : null,
         network: {
           totalResources: resources.length,
-          totalSize: resources.reduce((sum, r) => sum + (r as any).transferSize, 0)
+          totalSize: resources.reduce((sum, r) => sum + (r as any).transferSize, 0),
         },
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
       };
     });
 

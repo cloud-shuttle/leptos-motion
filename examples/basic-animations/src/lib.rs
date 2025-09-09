@@ -50,12 +50,12 @@ pub fn App() -> impl IntoView {
 #[component]
 pub fn SimpleAnimation() -> impl IntoView {
     let (is_visible, set_is_visible) = signal(false);
-    
+
     view! {
         <div>
             <h2>"Leptos Motion Core Engine Demo"</h2>
             <p>"Animation engine initialized successfully!"</p>
-            
+
             <MotionDiv
                 class="w-20 h-20 bg-blue-500 rounded-lg cursor-pointer".to_string()
                 animate=HashMap::from([

@@ -29,7 +29,7 @@ test.describe('Component Debug', () => {
     // Check if it's a ReactiveMotionDiv by looking for specific attributes
     const hasDataMotion = attributes['data-motion'] !== undefined;
     const hasStyle = attributes['style'] !== undefined;
-    
+
     console.log('Has data-motion:', hasDataMotion);
     console.log('Has style attribute:', hasStyle);
 

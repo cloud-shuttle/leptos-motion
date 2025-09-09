@@ -294,16 +294,16 @@
                 grid-template-columns: 1fr;
                 gap: 24px;
             }
-            
+
             .feature-card {
                 padding: 24px;
             }
-            
+
             .hero-cta {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 300px;
@@ -515,21 +515,21 @@
             frameCount++;
             const currentTime = performance.now();
             const deltaTime = currentTime - lastTime;
-            
+
             if (deltaTime >= 1000) {
                 fps = Math.round((frameCount * 1000) / deltaTime);
                 frameTime = (deltaTime / frameCount).toFixed(2);
                 frameCount = 0;
                 lastTime = currentTime;
-                
+
                 // Simulate memory usage
                 memory = Math.floor(Math.random() * 3) + 4;
-                
+
                 document.getElementById('fps').textContent = fps;
                 document.getElementById('frameTime').textContent = frameTime + 'ms';
                 document.getElementById('memory').textContent = memory + 'MB';
             }
-            
+
             requestAnimationFrame(updatePerformance);
         }
 
@@ -558,7 +558,7 @@
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-8px) scale(1.02)';
             });
-            
+
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
             });

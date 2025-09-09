@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Debug Demo Issues', () => {
   test('check for JavaScript errors and WASM loading', async ({ page }) => {
     const errors: string[] = [];
-    
+
     // Listen for console errors
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -31,8 +31,7 @@ test.describe('Debug Demo Issues', () => {
 
     // Check if WASM loaded
     const wasmLoaded = await page.evaluate(() => {
-      return typeof window !== 'undefined' && 
-             typeof (window as any).wasm !== 'undefined';
+      return typeof window !== 'undefined' && typeof (window as any).wasm !== 'undefined';
     });
     console.log('WASM loaded:', wasmLoaded);
 
@@ -55,8 +54,10 @@ test.describe('Debug Demo Issues', () => {
       const divs = document.querySelectorAll('div');
       let count = 0;
       divs.forEach(div => {
-        if (div.getAttribute('class')?.includes('w-20') || 
-            div.getAttribute('class')?.includes('w-24')) {
+        if (
+          div.getAttribute('class')?.includes('w-20') ||
+          div.getAttribute('class')?.includes('w-24')
+        ) {
           count++;
         }
       });

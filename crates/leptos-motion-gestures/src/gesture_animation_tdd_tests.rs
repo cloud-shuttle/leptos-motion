@@ -1,5 +1,5 @@
 //! TDD Tests for Gesture-Animation Integration
-//! 
+//!
 //! This module contains comprehensive tests for connecting gesture recognition
 //! to animation system for smooth, responsive user interactions.
 
@@ -7,8 +7,8 @@ use leptos::prelude::*;
 use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, MouseEvent, TouchEvent, PointerEvent};
 use wasm_bindgen_test::{console_error, console_log};
+use web_sys::{Element, MouseEvent, PointerEvent, TouchEvent};
 
 /// Gesture animation configuration
 #[derive(Clone, Debug)]
@@ -40,11 +40,11 @@ impl Default for GestureAnimationConfig {
         let mut hover_props = HashMap::new();
         hover_props.insert("scale".to_string(), AnimationValue::Number(1.05));
         hover_props.insert("opacity".to_string(), AnimationValue::Number(0.9));
-        
+
         let mut tap_props = HashMap::new();
         tap_props.insert("scale".to_string(), AnimationValue::Number(0.95));
         tap_props.insert("opacity".to_string(), AnimationValue::Number(0.8));
-        
+
         Self {
             drag_enabled: true,
             hover_enabled: true,
@@ -162,200 +162,217 @@ impl GestureAnimationManager {
             animation_id: None,
         }
     }
-    
+
     /// Set the target element for gestures
     pub fn set_element(&mut self, element: &Element) {
         self.element = Some(element.clone());
     }
-    
+
     /// Handle mouse enter event (hover start)
     pub fn handle_mouse_enter(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if !self.config.hover_enabled {
             return Ok(());
         }
-        
+
         self.gesture_data.state = GestureState::Hovering;
         self.gesture_data.start_time = js_sys::Date::now();
-        
+
         // Apply hover animation
         self.apply_hover_animation()?;
-        
+
         Ok(())
     }
-    
+
     /// Handle mouse leave event (hover end)
     pub fn handle_mouse_leave(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if !self.config.hover_enabled {
             return Ok(());
         }
-        
+
         self.gesture_data.state = GestureState::Returning;
-        
+
         // Return to idle state
         self.return_to_idle()?;
-        
+
         Ok(())
     }
-    
+
     /// Handle mouse down event (drag start)
     pub fn handle_mouse_down(&mut self, event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if !self.config.drag_enabled {
             return Ok(());
         }
-        
+
         self.gesture_data.state = GestureState::Dragging;
         self.gesture_data.start_time = js_sys::Date::now();
         self.gesture_data.position = (event.client_x() as f64, event.client_y() as f64);
         self.gesture_data.previous_position = self.gesture_data.position;
-        
+
         // Start drag animation
         self.start_drag_animation()?;
-        
+
         Ok(())
     }
-    
+
     /// Handle mouse move event (drag update)
     pub fn handle_mouse_move(&mut self, event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.gesture_data.state != GestureState::Dragging {
             return Ok(());
         }
-        
+
         let new_position = (event.client_x() as f64, event.client_y() as f64);
         let delta_x = new_position.0 - self.gesture_data.position.0;
         let delta_y = new_position.1 - self.gesture_data.position.1;
-        
+
         // Update velocity
         let current_time = js_sys::Date::now();
         let time_delta = current_time - self.gesture_data.start_time;
         if time_delta > 0.0 {
             self.gesture_data.velocity = (delta_x / time_delta, delta_y / time_delta);
         }
-        
+
         self.gesture_data.previous_position = self.gesture_data.position;
         self.gesture_data.position = new_position;
-        
+
         // Update drag animation
         self.update_drag_animation(delta_x, delta_y)?;
-        
+
         Ok(())
     }
-    
+
     /// Handle mouse up event (drag end)
     pub fn handle_mouse_up(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.gesture_data.state != GestureState::Dragging {
             return Ok(());
         }
-        
+
         self.gesture_data.state = GestureState::Returning;
-        
+
         // Apply spring animation based on velocity
         self.apply_spring_animation()?;
-        
+
         Ok(())
     }
-    
+
     /// Handle click event (tap)
     pub fn handle_click(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if !self.config.tap_enabled {
             return Ok(());
         }
-        
+
         self.gesture_data.state = GestureState::Tapping;
         self.gesture_data.start_time = js_sys::Date::now();
-        
+
         // Apply tap animation
         self.apply_tap_animation()?;
-        
+
         Ok(())
     }
-    
+
     /// Apply hover animation
     fn apply_hover_animation(&mut self) -> std::result::Result<(), JsValue> {
         self.animation_target = self.config.hover_properties.clone();
         self.is_animating = true;
-        
+
         // Start CSS transition
         self.start_css_transition()?;
-        
+
         Ok(())
     }
-    
+
     /// Apply tap animation
     fn apply_tap_animation(&mut self) -> std::result::Result<(), JsValue> {
         self.animation_target = self.config.tap_properties.clone();
         self.is_animating = true;
-        
+
         // Start CSS transition
         self.start_css_transition()?;
-        
+
         // Schedule return to idle after tap duration
-        let element = self.element.as_ref().ok_or_else(|| JsValue::from_str("No element set"))?;
+        let element = self
+            .element
+            .as_ref()
+            .ok_or_else(|| JsValue::from_str("No element set"))?;
         let callback = Closure::wrap(Box::new(move || {
             console_log!("Tap animation completed");
         }) as Box<dyn FnMut()>);
-        
-        element.add_event_listener_with_callback("transitionend", callback.as_ref().unchecked_ref())?;
+
+        element
+            .add_event_listener_with_callback("transitionend", callback.as_ref().unchecked_ref())?;
         callback.forget();
-        
+
         Ok(())
     }
-    
+
     /// Start drag animation
     fn start_drag_animation(&mut self) -> std::result::Result<(), JsValue> {
         self.animation_target = HashMap::new();
         self.is_animating = true;
-        
+
         // Disable CSS transitions during drag
         self.disable_css_transitions()?;
-        
+
         Ok(())
     }
-    
+
     /// Update drag animation
-    fn update_drag_animation(&mut self, delta_x: f64, delta_y: f64) -> std::result::Result<(), JsValue> {
-        let element = self.element.as_ref().ok_or_else(|| JsValue::from_str("No element set"))?;
+    fn update_drag_animation(
+        &mut self,
+        delta_x: f64,
+        delta_y: f64,
+    ) -> std::result::Result<(), JsValue> {
+        let element = self
+            .element
+            .as_ref()
+            .ok_or_else(|| JsValue::from_str("No element set"))?;
         let style = element.style("");
-        
+
         // Apply drag constraints
         let (constrained_x, constrained_y) = self.apply_drag_constraints(delta_x, delta_y);
-        
+
         // Update element position
-        style.set_property("transform", &format!("translate({}px, {}px)", constrained_x, constrained_y))?;
-        
+        style.set_property(
+            "transform",
+            &format!("translate({}px, {}px)", constrained_x, constrained_y),
+        )?;
+
         Ok(())
     }
-    
+
     /// Apply spring animation
     fn apply_spring_animation(&mut self) -> std::result::Result<(), JsValue> {
-        let element = self.element.as_ref().ok_or_else(|| JsValue::from_str("No element set"))?;
+        let element = self
+            .element
+            .as_ref()
+            .ok_or_else(|| JsValue::from_str("No element set"))?;
         let style = element.style("");
-        
+
         // Re-enable CSS transitions
         self.enable_css_transitions()?;
-        
+
         // Apply spring physics to return to original position
         let spring_target = self.calculate_spring_target();
         style.set_property("transform", &spring_target)?;
-        
+
         Ok(())
     }
-    
+
     /// Return to idle state
     fn return_to_idle(&mut self) -> std::result::Result<(), JsValue> {
         self.animation_target = HashMap::new();
         self.is_animating = true;
-        
+
         // Start CSS transition to return to original state
         self.start_css_transition()?;
-        
+
         Ok(())
     }
-    
+
     /// Apply drag constraints
     pub fn apply_drag_constraints(&self, delta_x: f64, delta_y: f64) -> (f64, f64) {
         let mut constrained_x = delta_x;
         let mut constrained_y = delta_y;
-        
+
         if let Some(min_x) = self.config.drag_constraints.min_x {
             constrained_x = constrained_x.max(min_x);
         }
@@ -368,65 +385,74 @@ impl GestureAnimationManager {
         if let Some(max_y) = self.config.drag_constraints.max_y {
             constrained_y = constrained_y.min(max_y);
         }
-        
+
         (constrained_x, constrained_y)
     }
-    
+
     /// Calculate spring target position
     pub fn calculate_spring_target(&self) -> String {
         // Simple spring calculation - in real implementation, use proper spring physics
         let velocity_factor = 0.1;
         let spring_x = self.gesture_data.velocity.0 * velocity_factor;
         let spring_y = self.gesture_data.velocity.1 * velocity_factor;
-        
+
         format!("translate({}px, {}px)", spring_x, spring_y)
     }
-    
+
     /// Start CSS transition
     fn start_css_transition(&mut self) -> std::result::Result<(), JsValue> {
-        let element = self.element.as_ref().ok_or_else(|| JsValue::from_str("No element set"))?;
+        let element = self
+            .element
+            .as_ref()
+            .ok_or_else(|| JsValue::from_str("No element set"))?;
         let style = element.style("");
-        
-        style.set_property("transition", &format!(
-            "transform {}s ease-out, opacity {}s ease-out, scale {}s ease-out",
-            self.config.transition_duration,
-            self.config.transition_duration,
-            self.config.transition_duration
-        ))?;
-        
+
+        style.set_property(
+            "transition",
+            &format!(
+                "transform {}s ease-out, opacity {}s ease-out, scale {}s ease-out",
+                self.config.transition_duration,
+                self.config.transition_duration,
+                self.config.transition_duration
+            ),
+        )?;
+
         Ok(())
     }
-    
+
     /// Disable CSS transitions
     fn disable_css_transitions(&mut self) -> std::result::Result<(), JsValue> {
-        let element = self.element.as_ref().ok_or_else(|| JsValue::from_str("No element set"))?;
+        let element = self
+            .element
+            .as_ref()
+            .ok_or_else(|| JsValue::from_str("No element set"))?;
         let style = element.style("");
-        
+
         style.set_property("transition", "none")?;
-        
+
         Ok(())
     }
-    
+
     /// Enable CSS transitions
     fn enable_css_transitions(&mut self) -> std::result::Result<(), JsValue> {
         self.start_css_transition()
     }
-    
+
     /// Get current gesture state
     pub fn get_gesture_state(&self) -> &GestureState {
         &self.gesture_data.state
     }
-    
+
     /// Get current animation target
     pub fn get_animation_target(&self) -> &HashMap<String, AnimationValue> {
         &self.animation_target
     }
-    
+
     /// Check if currently animating
     pub fn is_animating(&self) -> bool {
         self.is_animating
     }
-    
+
     /// Reset gesture manager
     pub fn reset(&mut self) {
         self.gesture_data = GestureData::default();
@@ -448,7 +474,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_gesture_animation_config_default() {
         let config = GestureAnimationConfig::default();
-        
+
         assert!(config.drag_enabled);
         assert!(config.hover_enabled);
         assert!(config.tap_enabled);
@@ -461,7 +487,7 @@ mod tests {
     fn test_gesture_animation_config_custom() {
         let mut hover_props = HashMap::new();
         hover_props.insert("scale".to_string(), AnimationValue::Number(1.1));
-        
+
         let config = GestureAnimationConfig {
             drag_enabled: false,
             hover_enabled: true,
@@ -474,7 +500,7 @@ mod tests {
             hover_properties: hover_props,
             tap_properties: HashMap::new(),
         };
-        
+
         assert!(!config.drag_enabled);
         assert!(config.hover_enabled);
         assert!(!config.tap_enabled);
@@ -486,7 +512,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_drag_constraints_default() {
         let constraints = DragConstraints::default();
-        
+
         assert_eq!(constraints.min_x, None);
         assert_eq!(constraints.max_x, None);
         assert_eq!(constraints.min_y, None);
@@ -503,7 +529,7 @@ mod tests {
             max_y: Some(50.0),
             constrain_to_parent: true,
         };
-        
+
         assert_eq!(constraints.min_x, Some(-100.0));
         assert_eq!(constraints.max_x, Some(100.0));
         assert_eq!(constraints.min_y, Some(-50.0));
@@ -514,7 +540,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_gesture_data_default() {
         let data = GestureData::default();
-        
+
         assert_eq!(data.state, GestureState::Idle);
         assert_eq!(data.position, (0.0, 0.0));
         assert_eq!(data.previous_position, (0.0, 0.0));
@@ -529,7 +555,7 @@ mod tests {
     fn test_gesture_animation_manager_creation() {
         let config = GestureAnimationConfig::default();
         let manager = GestureAnimationManager::new(config);
-        
+
         assert_eq!(manager.get_gesture_state(), &GestureState::Idle);
         assert!(!manager.is_animating());
         assert!(manager.get_animation_target().is_empty());
@@ -539,9 +565,9 @@ mod tests {
     fn test_gesture_animation_manager_reset() {
         let config = GestureAnimationConfig::default();
         let mut manager = GestureAnimationManager::new(config);
-        
+
         manager.reset();
-        
+
         assert_eq!(manager.get_gesture_state(), &GestureState::Idle);
         assert!(!manager.is_animating());
         assert!(manager.get_animation_target().is_empty());
@@ -569,14 +595,14 @@ mod tests {
             },
             ..Default::default()
         };
-        
+
         let manager = GestureAnimationManager::new(config);
-        
+
         // Test constraint application
         let (constrained_x, constrained_y) = manager.apply_drag_constraints(100.0, 100.0);
         assert_eq!(constrained_x, 50.0); // Clamped to max_x
         assert_eq!(constrained_y, 25.0); // Clamped to max_y
-        
+
         let (constrained_x, constrained_y) = manager.apply_drag_constraints(-100.0, -100.0);
         assert_eq!(constrained_x, -50.0); // Clamped to min_x
         assert_eq!(constrained_y, -25.0); // Clamped to min_y
@@ -586,10 +612,10 @@ mod tests {
     fn test_spring_target_calculation() {
         let config = GestureAnimationConfig::default();
         let mut manager = GestureAnimationManager::new(config);
-        
+
         // Set some velocity
         manager.gesture_data.velocity = (10.0, 20.0);
-        
+
         let spring_target = manager.calculate_spring_target();
         assert!(spring_target.contains("translate"));
         assert!(spring_target.contains("1px")); // 10.0 * 0.1

@@ -1,5 +1,5 @@
 //! TDD Tests for DOM Integration
-//! 
+//!
 //! This module contains comprehensive tests for integrating TDD implementations
 //! (Scroll, FLIP, Gesture) into the DOM crate with proper component wrappers.
 
@@ -9,8 +9,8 @@ use leptos_motion_core::*;
 // In a real implementation, these would be imported from their respective crates
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, MouseEvent, IntersectionObserver};
 use wasm_bindgen_test::{console_error, console_log};
+use web_sys::{Element, IntersectionObserver, MouseEvent};
 
 // Mock implementations to avoid circular dependencies
 // In a real implementation, these would be imported from their respective crates
@@ -41,7 +41,10 @@ impl Default for ScrollAnimationConfig {
 #[derive(Clone)]
 pub struct ScrollAnimationManager {
     config: ScrollAnimationConfig,
-    state: (ReadSignal<ScrollAnimationState>, WriteSignal<ScrollAnimationState>),
+    state: (
+        ReadSignal<ScrollAnimationState>,
+        WriteSignal<ScrollAnimationState>,
+    ),
     progress: (ReadSignal<f64>, WriteSignal<f64>),
 }
 
@@ -57,37 +60,36 @@ impl ScrollAnimationManager {
     pub fn new(config: ScrollAnimationConfig) -> Self {
         let state = signal(ScrollAnimationState::Waiting);
         let progress = signal(0.0);
-        
+
         Self {
             config,
             state,
             progress,
         }
     }
-    
+
     pub fn observe_element(&mut self, _element: &Element) -> std::result::Result<(), JsValue> {
         // Mock implementation
         Ok(())
     }
-    
+
     pub fn create_animation_target(&self) -> HashMap<String, AnimationValue> {
         let state = self.state.0.get();
         let progress = self.progress.0.get();
-        
+
         match state {
             ScrollAnimationState::Waiting => HashMap::new(),
-            ScrollAnimationState::Animating => {
-                HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(progress)),
-                    ("scale".to_string(), AnimationValue::Number(0.8 + (progress * 0.2))),
-                ])
-            }
-            ScrollAnimationState::Completed => {
-                HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(1.0)),
-                    ("scale".to_string(), AnimationValue::Number(1.0)),
-                ])
-            }
+            ScrollAnimationState::Animating => HashMap::from([
+                ("opacity".to_string(), AnimationValue::Number(progress)),
+                (
+                    "scale".to_string(),
+                    AnimationValue::Number(0.8 + (progress * 0.2)),
+                ),
+            ]),
+            ScrollAnimationState::Completed => HashMap::from([
+                ("opacity".to_string(), AnimationValue::Number(1.0)),
+                ("scale".to_string(), AnimationValue::Number(1.0)),
+            ]),
             ScrollAnimationState::Reversed => HashMap::new(),
         }
     }
@@ -141,12 +143,12 @@ impl FLIPManager {
             state: FLIPState::First,
         }
     }
-    
+
     pub fn record_first(&mut self, _element: &Element) -> std::result::Result<(), JsValue> {
         self.state = FLIPState::First;
         Ok(())
     }
-    
+
     pub fn get_state(&self) -> &FLIPState {
         &self.state
     }
@@ -193,11 +195,11 @@ impl Default for GestureAnimationConfig {
         let mut hover_props = HashMap::new();
         hover_props.insert("scale".to_string(), AnimationValue::Number(1.05));
         hover_props.insert("opacity".to_string(), AnimationValue::Number(0.9));
-        
+
         let mut tap_props = HashMap::new();
         tap_props.insert("scale".to_string(), AnimationValue::Number(0.95));
         tap_props.insert("opacity".to_string(), AnimationValue::Number(0.8));
-        
+
         Self {
             drag_enabled: true,
             hover_enabled: true,
@@ -240,11 +242,11 @@ impl GestureAnimationManager {
             animation_target: HashMap::new(),
         }
     }
-    
+
     pub fn set_element(&mut self, _element: &Element) {
         // Mock implementation
     }
-    
+
     pub fn handle_mouse_enter(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.config.hover_enabled {
             self.state = GestureState::Hovering;
@@ -252,7 +254,7 @@ impl GestureAnimationManager {
         }
         Ok(())
     }
-    
+
     pub fn handle_mouse_leave(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.config.hover_enabled {
             self.state = GestureState::Returning;
@@ -260,26 +262,26 @@ impl GestureAnimationManager {
         }
         Ok(())
     }
-    
+
     pub fn handle_mouse_down(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.config.drag_enabled {
             self.state = GestureState::Dragging;
         }
         Ok(())
     }
-    
+
     pub fn handle_mouse_move(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         // Mock implementation
         Ok(())
     }
-    
+
     pub fn handle_mouse_up(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.config.drag_enabled {
             self.state = GestureState::Returning;
         }
         Ok(())
     }
-    
+
     pub fn handle_click(&mut self, _event: &MouseEvent) -> std::result::Result<(), JsValue> {
         if self.config.tap_enabled {
             self.state = GestureState::Tapping;
@@ -287,7 +289,7 @@ impl GestureAnimationManager {
         }
         Ok(())
     }
-    
+
     pub fn get_animation_target(&self) -> &HashMap<String, AnimationValue> {
         &self.animation_target
     }
@@ -336,20 +338,20 @@ pub fn IntegratedMotionDiv(
     let scroll_enabled = scroll_enabled.unwrap_or(false);
     let flip_enabled = flip_enabled.unwrap_or(false);
     let gesture_enabled = gesture_enabled.unwrap_or(false);
-    
+
     // Create signals for different animation systems
     let (scroll_manager, set_scroll_manager) = signal(None::<ScrollAnimationManager>);
     let (flip_manager, set_flip_manager) = signal(None::<FLIPManager>);
     let (gesture_manager, set_gesture_manager) = signal(None::<GestureAnimationManager>);
-    
+
     // Combined animation target
     let (combined_animation_target, set_combined_animation_target) = signal(HashMap::new());
-    
+
     // Initialize managers when node ref is available
     Effect::new(move |_| {
         if let Some(element) = node_ref.get() {
             let mut managers_initialized = false;
-            
+
             // Initialize scroll manager
             if scroll_enabled {
                 if let Some(config) = scroll_config.clone() {
@@ -362,7 +364,7 @@ pub fn IntegratedMotionDiv(
                     }
                 }
             }
-            
+
             // Initialize FLIP manager
             if flip_enabled {
                 if let Some(config) = flip_config.clone() {
@@ -375,7 +377,7 @@ pub fn IntegratedMotionDiv(
                     }
                 }
             }
-            
+
             // Initialize gesture manager
             if gesture_enabled {
                 if let Some(config) = gesture_config.clone() {
@@ -385,28 +387,28 @@ pub fn IntegratedMotionDiv(
                     managers_initialized = true;
                 }
             }
-            
+
             if managers_initialized {
                 console_log!("All animation managers initialized successfully");
             }
         }
     });
-    
+
     // Combine animation targets from all systems
     Effect::new(move |_| {
         let mut combined = HashMap::new();
-        
+
         // Add base animation properties
         if let Some(base_animate) = animate.clone() {
             combined.extend(base_animate);
         }
-        
+
         // Add scroll animation properties
         if let Some(scroll_mgr) = scroll_manager.get() {
             let scroll_target = scroll_mgr.create_animation_target();
             combined.extend(scroll_target);
         }
-        
+
         // Add FLIP animation properties
         if let Some(flip_mgr) = flip_manager.get() {
             match flip_mgr.get_state() {
@@ -425,15 +427,15 @@ pub fn IntegratedMotionDiv(
                 _ => {}
             }
         }
-        
+
         // Add gesture animation properties
         if let Some(gesture_mgr) = gesture_manager.get() {
             combined.extend(gesture_mgr.get_animation_target().clone());
         }
-        
+
         set_combined_animation_target.set(combined);
     });
-    
+
     // Event handlers for gesture integration
     let on_mouse_enter = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
@@ -444,7 +446,7 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     let on_mouse_leave = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
             if let Err(e) = manager.handle_mouse_leave(&event) {
@@ -454,7 +456,7 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     let on_mouse_down = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
             if let Err(e) = manager.handle_mouse_down(&event) {
@@ -464,7 +466,7 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     let on_mouse_move = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
             if let Err(e) = manager.handle_mouse_move(&event) {
@@ -474,7 +476,7 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     let on_mouse_up = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
             if let Err(e) = manager.handle_mouse_up(&event) {
@@ -484,7 +486,7 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     let on_click = move |event: MouseEvent| {
         if let Some(mut manager) = gesture_manager.get() {
             if let Err(e) = manager.handle_click(&event) {
@@ -494,10 +496,10 @@ pub fn IntegratedMotionDiv(
             }
         }
     };
-    
+
     // Create reactive animation target
     let animation_target = move || combined_animation_target.get();
-    
+
     view! {
         <ReactiveMotionDiv
             class=class.unwrap_or_default()
@@ -586,7 +588,7 @@ pub fn FLIPMotionDiv(
     children: Children,
 ) -> impl IntoView {
     let moved = moved.unwrap_or(false);
-    
+
     // Handle FLIP state changes
     Effect::new(move |_| {
         if moved {
@@ -594,7 +596,7 @@ pub fn FLIPMotionDiv(
             console_log!("FLIP animation triggered - element moved");
         }
     });
-    
+
     view! {
         <IntegratedMotionDiv
             class=class
@@ -712,7 +714,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_integrated_motion_div_creation() {
         let config = ScrollAnimationConfig::default();
-        
+
         mount_to_body(move || {
             view! {
                 <IntegratedMotionDiv
@@ -890,7 +892,7 @@ mod tests {
                     >
                         "Scroll only"
                     </IntegratedMotionDiv>
-                    
+
                     <IntegratedMotionDiv
                         class="flip-only".to_string()
                         scroll_enabled=false
@@ -899,7 +901,7 @@ mod tests {
                     >
                         "FLIP only"
                     </IntegratedMotionDiv>
-                    
+
                     <IntegratedMotionDiv
                         class="gesture-only".to_string()
                         scroll_enabled=false

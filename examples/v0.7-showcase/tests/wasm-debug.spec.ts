@@ -4,13 +4,13 @@ test.describe('WASM Debug', () => {
   test('debug WASM loading issues', async ({ page }) => {
     const logs: string[] = [];
     const errors: string[] = [];
-    
+
     // Capture all console messages
     page.on('console', msg => {
       const message = `[${msg.type()}] ${msg.text()}`;
       logs.push(message);
       console.log(message);
-      
+
       if (msg.type() === 'error') {
         errors.push(msg.text());
       }
@@ -33,10 +33,10 @@ test.describe('WASM Debug', () => {
     });
 
     await page.goto('/');
-    
+
     // Wait for network to be idle
     await page.waitForLoadState('networkidle');
-    
+
     // Wait longer for WASM to potentially load
     await page.waitForTimeout(5000);
 
@@ -60,7 +60,7 @@ test.describe('WASM Debug', () => {
       return {
         exists: !!app,
         hasChildren: app ? app.children.length > 0 : false,
-        innerHTML: app ? app.innerHTML.substring(0, 200) : 'No app div'
+        innerHTML: app ? app.innerHTML.substring(0, 200) : 'No app div',
       };
     });
 

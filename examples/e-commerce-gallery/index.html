@@ -11,20 +11,20 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
         }
-        
+
         .ecommerce-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
-        
+
         .ecommerce-header {
             display: flex;
             justify-content: space-between;
@@ -36,13 +36,13 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .ecommerce-header h1 {
             color: white;
             font-size: 2.5rem;
             font-weight: 700;
         }
-        
+
         .cart-icon {
             display: flex;
             align-items: center;
@@ -54,7 +54,7 @@
             font-size: 1.2rem;
             font-weight: 600;
         }
-        
+
         .cart-count {
             background: #ff6b6b;
             color: white;
@@ -64,14 +64,14 @@
             min-width: 1.5rem;
             text-align: center;
         }
-        
+
         .ecommerce-main {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
             align-items: start;
         }
-        
+
         .product-gallery {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -79,12 +79,12 @@
             padding: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .main-image-container {
             position: relative;
             margin-bottom: 2rem;
         }
-        
+
         .main-image {
             width: 100%;
             height: 400px;
@@ -93,7 +93,7 @@
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        
+
         .image-controls {
             position: absolute;
             top: 50%;
@@ -103,7 +103,7 @@
             justify-content: space-between;
             padding: 0 1rem;
         }
-        
+
         .nav-btn {
             background: rgba(255, 255, 255, 0.9);
             border: none;
@@ -117,18 +117,18 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
+
         .nav-btn:hover {
             background: white;
             transform: scale(1.1);
         }
-        
+
         .thumbnail-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
         }
-        
+
         .thumbnail {
             width: 100%;
             height: 80px;
@@ -138,16 +138,16 @@
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-        
+
         .thumbnail:hover {
             transform: scale(1.05);
         }
-        
+
         .thumbnail.active {
             border-color: #667eea;
             transform: scale(1.05);
         }
-        
+
         .product-details {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -156,36 +156,36 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
         }
-        
+
         .product-details h2 {
             font-size: 2rem;
             margin-bottom: 1rem;
         }
-        
+
         .description {
             opacity: 0.9;
             line-height: 1.6;
             margin-bottom: 2rem;
         }
-        
+
         .price-section {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .price {
             font-size: 2rem;
             font-weight: 700;
             color: #4ecdc4;
         }
-        
+
         .original-price {
             text-decoration: line-through;
             opacity: 0.7;
         }
-        
+
         .discount {
             background: #ff6b6b;
             color: white;
@@ -194,23 +194,23 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
-        
+
         .quantity-selector {
             margin-bottom: 2rem;
         }
-        
+
         .quantity-selector label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
-        
+
         .quantity-controls {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .quantity-controls button {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -222,19 +222,19 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .quantity-controls button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
-        
+
         .quantity {
             font-size: 1.2rem;
             font-weight: 600;
             min-width: 2rem;
             text-align: center;
         }
-        
+
         .add-to-cart-btn {
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
@@ -248,51 +248,51 @@
             width: 100%;
             margin-bottom: 2rem;
         }
-        
+
         .add-to-cart-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
-        
+
         .add-to-cart-btn:active {
             transform: translateY(0);
         }
-        
+
         .add-to-cart-btn.added {
             background: linear-gradient(45deg, #4CAF50, #45a049);
         }
-        
+
         .features h3 {
             margin-bottom: 1rem;
             font-size: 1.3rem;
         }
-        
+
         .features ul {
             list-style: none;
         }
-        
+
         .features li {
             padding: 0.5rem 0;
             opacity: 0.9;
         }
-        
+
         .features li::before {
             content: "✓";
             color: #4ecdc4;
             font-weight: bold;
             margin-right: 0.5rem;
         }
-        
+
         @media (max-width: 768px) {
             .ecommerce-main {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
+
             .ecommerce-header h1 {
                 font-size: 1.8rem;
             }
-            
+
             .thumbnail-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -362,14 +362,14 @@
             </div>
         </div>
     </div>
-    
+
     <script type="module">
         import init from './pkg/e_commerce_gallery.js';
-        
+
         async function run() {
             await init();
         }
-        
+
         run().catch(console.error);
     </script>
 </body>

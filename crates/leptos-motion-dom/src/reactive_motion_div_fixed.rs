@@ -5,8 +5,8 @@
 
 use crate::{DragConfig, DragConstraints};
 use leptos::prelude::{
-    Children, ClassAttribute, ElementChild, Get, GetUntracked, NodeRef, NodeRefAttribute, Set,
-    StyleAttribute, signal, Effect, Memo,
+    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, Memo, NodeRef,
+    NodeRefAttribute, Set, StyleAttribute, signal,
 };
 use leptos::*;
 use leptos_motion_core::*;
@@ -111,7 +111,7 @@ pub fn ReactiveMotionDivFixed(
     // Create a reactive style signal that properly tracks changes
     let reactive_style = move || {
         let styles = current_styles.get(); // Track the styles signal
-        
+
         // Add CSS transitions first to ensure they're not overridden
         let mut style_parts = vec!["transition: all 0.5s ease-in-out".to_string()];
 
@@ -119,7 +119,7 @@ pub fn ReactiveMotionDivFixed(
         style_parts.extend(
             styles
                 .iter()
-                .map(|(key, value)| format!("{}: {}", key, value))
+                .map(|(key, value)| format!("{}: {}", key, value)),
         );
 
         // Add the style prop if provided

@@ -1,5 +1,5 @@
 //! TDD Tests for Scroll Integration
-//! 
+//!
 //! This module contains comprehensive tests for scroll-triggered animations
 //! using intersection observers and scroll progress tracking.
 
@@ -8,8 +8,8 @@ use leptos_motion_core::*;
 use leptos_motion_dom::{ReactiveMotionDiv, reactive_animate};
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, IntersectionObserver, IntersectionObserverInit};
 use wasm_bindgen_test::console_error;
+use web_sys::{Element, IntersectionObserver, IntersectionObserverInit};
 
 /// Test configuration for scroll animations
 #[derive(Clone, Debug)]
@@ -99,10 +99,8 @@ impl ScrollAnimationManager {
         init.set_threshold(&threshold_js);
         init.set_root_margin(&self.config.root_margin);
 
-        let observer = IntersectionObserver::new_with_options(
-            callback.as_ref().unchecked_ref(),
-            &init,
-        )?;
+        let observer =
+            IntersectionObserver::new_with_options(callback.as_ref().unchecked_ref(), &init)?;
 
         observer.observe(element);
 
@@ -147,9 +145,18 @@ impl ScrollAnimationManager {
                 // Animate based on progress
                 let eased_progress = self.config.easing.evaluate(self.progress);
                 HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(eased_progress)),
-                    ("scale".to_string(), AnimationValue::Number(0.5 + (eased_progress * 0.5))),
-                    ("y".to_string(), AnimationValue::Pixels(50.0 - (eased_progress * 50.0))),
+                    (
+                        "opacity".to_string(),
+                        AnimationValue::Number(eased_progress),
+                    ),
+                    (
+                        "scale".to_string(),
+                        AnimationValue::Number(0.5 + (eased_progress * 0.5)),
+                    ),
+                    (
+                        "y".to_string(),
+                        AnimationValue::Pixels(50.0 - (eased_progress * 50.0)),
+                    ),
                 ])
             }
             ScrollAnimationState::Completed => {
@@ -192,15 +199,15 @@ pub fn ScrollMotionDiv(
 ) -> impl IntoView {
     let config = scroll_config.unwrap_or_default();
     let node_ref = node_ref.unwrap_or_else(|| NodeRef::new());
-    
+
     // Create signals for animation state
     let (animation_state, _set_animation_state) = signal(ScrollAnimationState::Waiting);
     let (animation_progress, _set_animation_progress) = signal(0.0);
-    
+
     // Clone config for use in closures
     let config_clone = config.clone();
     let config_transition = config.clone();
-    
+
     // Initialize scroll manager when node ref is available
     Effect::new(move |_| {
         if let Some(element) = node_ref.get() {
@@ -210,45 +217,48 @@ pub fn ScrollMotionDiv(
             }
         }
     });
-    
+
     // Create animation target based on scroll state
     let animation_target = move || {
         let state = animation_state.get();
         let progress = animation_progress.get();
-        
+
         match state {
-            ScrollAnimationState::Waiting => {
-                HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(0.0)),
-                    ("scale".to_string(), AnimationValue::Number(0.5)),
-                    ("y".to_string(), AnimationValue::Pixels(50.0)),
-                ])
-            }
+            ScrollAnimationState::Waiting => HashMap::from([
+                ("opacity".to_string(), AnimationValue::Number(0.0)),
+                ("scale".to_string(), AnimationValue::Number(0.5)),
+                ("y".to_string(), AnimationValue::Pixels(50.0)),
+            ]),
             ScrollAnimationState::Animating => {
                 let eased_progress = config.easing.evaluate(progress);
                 HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(eased_progress)),
-                    ("scale".to_string(), AnimationValue::Number(0.5 + (eased_progress * 0.5))),
-                    ("y".to_string(), AnimationValue::Pixels(50.0 - (eased_progress * 50.0))),
+                    (
+                        "opacity".to_string(),
+                        AnimationValue::Number(eased_progress),
+                    ),
+                    (
+                        "scale".to_string(),
+                        AnimationValue::Number(0.5 + (eased_progress * 0.5)),
+                    ),
+                    (
+                        "y".to_string(),
+                        AnimationValue::Pixels(50.0 - (eased_progress * 50.0)),
+                    ),
                 ])
             }
-            ScrollAnimationState::Completed => {
-                HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(1.0)),
-                    ("scale".to_string(), AnimationValue::Number(1.0)),
-                    ("y".to_string(), AnimationValue::Pixels(0.0)),
-                ])
-            }
-            ScrollAnimationState::Reversed => {
-                HashMap::from([
-                    ("opacity".to_string(), AnimationValue::Number(0.0)),
-                    ("scale".to_string(), AnimationValue::Number(0.5)),
-                    ("y".to_string(), AnimationValue::Pixels(50.0)),
-                ])
-            }
+            ScrollAnimationState::Completed => HashMap::from([
+                ("opacity".to_string(), AnimationValue::Number(1.0)),
+                ("scale".to_string(), AnimationValue::Number(1.0)),
+                ("y".to_string(), AnimationValue::Pixels(0.0)),
+            ]),
+            ScrollAnimationState::Reversed => HashMap::from([
+                ("opacity".to_string(), AnimationValue::Number(0.0)),
+                ("scale".to_string(), AnimationValue::Number(0.5)),
+                ("y".to_string(), AnimationValue::Pixels(50.0)),
+            ]),
         }
     };
-    
+
     view! {
         <ReactiveMotionDiv
             class=class.unwrap_or_default()
@@ -277,7 +287,7 @@ mod tests {
     fn test_scroll_animation_manager_creation() {
         let config = ScrollAnimationConfig::default();
         let manager = ScrollAnimationManager::new(config);
-        
+
         assert_eq!(manager.get_state(), &ScrollAnimationState::Waiting);
         assert_eq!(manager.get_progress(), 0.0);
     }
@@ -286,9 +296,9 @@ mod tests {
     fn test_scroll_animation_target_waiting_state() {
         let config = ScrollAnimationConfig::default();
         let manager = ScrollAnimationManager::new(config);
-        
+
         let target = manager.create_animation_target();
-        
+
         assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(0.0)));
         assert_eq!(target.get("scale"), Some(&AnimationValue::Number(0.5)));
         assert_eq!(target.get("y"), Some(&AnimationValue::Pixels(50.0)));
@@ -298,12 +308,12 @@ mod tests {
     fn test_scroll_animation_target_completed_state() {
         let config = ScrollAnimationConfig::default();
         let mut manager = ScrollAnimationManager::new(config);
-        
+
         // Simulate completed state
         manager.set_state(ScrollAnimationState::Completed);
-        
+
         let target = manager.create_animation_target();
-        
+
         assert_eq!(target.get("opacity"), Some(&AnimationValue::Number(1.0)));
         assert_eq!(target.get("scale"), Some(&AnimationValue::Number(1.0)));
         assert_eq!(target.get("y"), Some(&AnimationValue::Pixels(0.0)));
@@ -313,13 +323,13 @@ mod tests {
     fn test_scroll_animation_target_animating_state() {
         let config = ScrollAnimationConfig::default();
         let mut manager = ScrollAnimationManager::new(config);
-        
+
         // Simulate animating state with 50% progress
         manager.set_state(ScrollAnimationState::Animating);
         manager.set_progress(0.5);
-        
+
         let target = manager.create_animation_target();
-        
+
         // With 50% progress and ease-out, we should have intermediate values
         let opacity = target.get("opacity").unwrap();
         if let AnimationValue::Number(opacity_val) = opacity {
@@ -332,7 +342,7 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_scroll_animation_config_default() {
         let config = ScrollAnimationConfig::default();
-        
+
         assert_eq!(config.threshold, 0.1);
         assert_eq!(config.root_margin, "0px");
         assert_eq!(config.trigger_point, 0.5);
@@ -349,7 +359,7 @@ mod tests {
             duration: 1.0,
             easing: Easing::EaseInOut,
         };
-        
+
         assert_eq!(config.threshold, 0.5);
         assert_eq!(config.root_margin, "100px");
         assert_eq!(config.trigger_point, 0.8);

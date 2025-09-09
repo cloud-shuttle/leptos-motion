@@ -12,7 +12,7 @@ test.describe('Simple Test', () => {
       return {
         exists: !!app,
         hasChildren: app ? app.children.length > 0 : false,
-        innerHTML: app ? app.innerHTML.substring(0, 500) : 'No app div'
+        innerHTML: app ? app.innerHTML.substring(0, 500) : 'No app div',
       };
     });
 

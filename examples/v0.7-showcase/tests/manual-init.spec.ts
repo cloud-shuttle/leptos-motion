@@ -10,7 +10,7 @@ test.describe('Manual WASM Initialization', () => {
       try {
         // Import the WASM module
         const wasmModule = await import('./pkg/v0_7_showcase.js');
-        
+
         // Check if main function exists
         if (typeof wasmModule.main === 'function') {
           console.log('Calling main function manually');
@@ -38,7 +38,7 @@ test.describe('Manual WASM Initialization', () => {
       return {
         exists: !!app,
         hasChildren: app ? app.children.length > 0 : false,
-        innerHTML: app ? app.innerHTML.substring(0, 500) : 'No app div'
+        innerHTML: app ? app.innerHTML.substring(0, 500) : 'No app div',
       };
     });
 

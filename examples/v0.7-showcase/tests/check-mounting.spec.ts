@@ -19,20 +19,20 @@ test.describe('Check App Mounting', () => {
     const mountingInfo = await page.evaluate(() => {
       const app = document.getElementById('app');
       const body = document.body;
-      
+
       return {
         appDiv: {
           exists: !!app,
           hasChildren: app ? app.children.length > 0 : false,
-          innerHTML: app ? app.innerHTML.substring(0, 200) : 'No app div'
+          innerHTML: app ? app.innerHTML.substring(0, 200) : 'No app div',
         },
         body: {
           hasChildren: body.children.length,
-          innerHTML: body.innerHTML.substring(0, 500)
+          innerHTML: body.innerHTML.substring(0, 500),
         },
         showcaseGrids: document.querySelectorAll('.showcase-grid').length,
         showcaseCards: document.querySelectorAll('.showcase-card').length,
-        allDivs: document.querySelectorAll('div').length
+        allDivs: document.querySelectorAll('div').length,
       };
     });
 
@@ -42,19 +42,23 @@ test.describe('Check App Mounting', () => {
     const motionElements = await page.evaluate(() => {
       const elements = document.querySelectorAll('*');
       const motionElements = [];
-      
+
       for (const el of elements) {
         const classes = el.getAttribute('class') || '';
-        if (classes.includes('w-20') || classes.includes('w-24') || 
-            classes.includes('bg-green-500') || classes.includes('bg-purple-500')) {
+        if (
+          classes.includes('w-20') ||
+          classes.includes('w-24') ||
+          classes.includes('bg-green-500') ||
+          classes.includes('bg-purple-500')
+        ) {
           motionElements.push({
             tagName: el.tagName,
             classes: classes,
-            innerHTML: el.innerHTML.substring(0, 100)
+            innerHTML: el.innerHTML.substring(0, 100),
           });
         }
       }
-      
+
       return motionElements;
     });
 

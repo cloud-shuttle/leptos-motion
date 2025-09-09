@@ -7,6 +7,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 ## ✨ New Features
 
 ### 🎨 FLIP Layout Animations (First, Last, Invert, Play)
+
 - **Complete FLIP Animation System**: Implemented full FLIP technique for smooth layout transitions
 - **Element Position Tracking**: Automatic detection and recording of element positions
 - **Layout Transition Detection**: Smart detection of layout changes (position, size, rotation)
@@ -16,6 +17,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **State Management**: Comprehensive animation state tracking and lifecycle management
 
 ### 🎬 Keyframe Animations
+
 - **Multi-Step Animations**: Complex animations with precise control over intermediate states
 - **Flexible Keyframe System**: Support for position, scale, rotation, and opacity keyframes
 - **Easing Types**: Linear, ease-in, ease-out, ease-in-out, cubic, and spring easing
@@ -25,6 +27,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **Performance Monitoring**: Built-in performance metrics and optimization
 
 ### ⚡ Stagger Animations
+
 - **Sequential Timing**: Configurable delays between multiple element animations
 - **Direction Control**: Forward, reverse, and center-out stagger patterns
 - **Element Types**: Support for different element types with appropriate delays
@@ -33,6 +36,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **Edge Case Handling**: Robust handling of empty groups, zero delays, and single elements
 
 ### 🚀 Advanced Performance Benchmarking
+
 - **Animation Loop Efficiency**: 60fps animation loop performance validation
 - **Concurrent Animations**: Multiple simultaneous animation performance testing
 - **Memory Allocation Patterns**: Memory usage optimization and leak detection
@@ -44,6 +48,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **Event Handling Performance**: Mouse and touch event processing benchmarks
 
 ### 🌐 Cross-Browser Compatibility Testing
+
 - **Browser Drag Compatibility**: Validated drag operations across different browsers
 - **Event Handling Consistency**: Consistent event handling across browser environments
 - **Momentum Calculation Validation**: Cross-browser momentum animation compatibility
@@ -56,6 +61,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 ## 🔧 Technical Improvements
 
 ### Enhanced Testing Infrastructure
+
 - **Comprehensive Test Coverage**: 500+ tests covering all major functionality
 - **TDD Implementation**: All new features implemented using Test-Driven Development
 - **Performance Benchmarks**: Automated performance regression testing
@@ -63,6 +69,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **Integration Tests**: End-to-end testing of complex animation scenarios
 
 ### Performance Optimizations
+
 - **Memory Management**: Improved memory allocation patterns and leak prevention
 - **Animation Loop Optimization**: 60fps animation loops with minimal CPU usage
 - **Constraint Calculation**: Optimized drag constraint calculations
@@ -70,6 +77,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 - **DOM Manipulation**: Reduced DOM thrashing and improved rendering performance
 
 ### Code Quality Improvements
+
 - **Type Safety**: Enhanced type safety with comprehensive error handling
 - **Documentation**: Complete API documentation with examples
 - **Error Handling**: Robust error handling and graceful degradation
@@ -78,15 +86,17 @@ This is a major release introducing comprehensive Phase 2 features including **F
 ## 📊 Test Results
 
 ### Test Coverage
+
 - **Total Tests**: 500+ tests across all crates
 - **FLIP Animation Tests**: 10 comprehensive tests
-- **Keyframe Animation Tests**: 10 comprehensive tests  
+- **Keyframe Animation Tests**: 10 comprehensive tests
 - **Stagger Animation Tests**: 10 comprehensive tests
 - **Performance Benchmark Tests**: 18 advanced performance tests
 - **Cross-Browser Tests**: 8 compatibility tests
 - **Integration Tests**: 50+ end-to-end tests
 
 ### Performance Benchmarks
+
 - **Animation Target Creation**: 200,000+ targets per second
 - **Animation Loop Efficiency**: 60fps with <16ms frame time
 - **Memory Allocation**: Optimized patterns with leak detection
@@ -98,6 +108,7 @@ This is a major release introducing comprehensive Phase 2 features including **F
 ### From v0.5.0 to v0.6.0
 
 #### New Features Available
+
 ```rust
 // FLIP Layout Animations
 use leptos_motion::*;
@@ -117,6 +128,7 @@ let stagger_config = StaggerConfig {
 ```
 
 #### Performance Improvements
+
 - All existing animations will automatically benefit from performance optimizations
 - No breaking changes to existing APIs
 - Enhanced error handling and debugging capabilities

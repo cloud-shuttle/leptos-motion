@@ -16,11 +16,11 @@ test.describe('Demo Inspection', () => {
       const card = showcaseCards[i];
       const title = await card.locator('h3').textContent();
       console.log(`Card ${i}: ${title}`);
-      
+
       // Check what elements are inside each card
       const elements = await card.locator('*').all();
       console.log(`  - Contains ${elements.length} elements`);
-      
+
       // Look for any divs with classes
       const divs = await card.locator('div').all();
       for (const div of divs) {

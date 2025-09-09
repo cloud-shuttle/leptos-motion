@@ -5,8 +5,8 @@
 
 use crate::{DragAxis, DragConfig, DragConstraints};
 use leptos::prelude::{
-    Children, ClassAttribute, ElementChild, Get, GetUntracked, NodeRef, NodeRefAttribute, OnAttribute, Set,
-    StyleAttribute, signal, Effect, Memo,
+    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, Memo, NodeRef,
+    NodeRefAttribute, OnAttribute, Set, StyleAttribute, signal,
 };
 use leptos::*;
 use leptos_motion_core::*;
@@ -57,8 +57,8 @@ impl From<Memo<AnimationTarget>> for AnimationTargetOrReactive {
 }
 
 /// Convenience function to create a reactive animation target
-pub fn reactive_animate<F>(closure: F) -> AnimationTargetOrReactive 
-where 
+pub fn reactive_animate<F>(closure: F) -> AnimationTargetOrReactive
+where
     F: Fn() -> AnimationTarget + 'static,
 {
     AnimationTargetOrReactive::Reactive(Rc::new(closure))
@@ -71,8 +71,8 @@ pub fn static_animate(target: AnimationTarget) -> AnimationTargetOrReactive {
 
 /// Convenience function to create a signal-based animation target
 /// This is the recommended approach for reactive animations as it properly tracks dependencies
-pub fn signal_animate<F>(closure: F) -> AnimationTargetOrReactive 
-where 
+pub fn signal_animate<F>(closure: F) -> AnimationTargetOrReactive
+where
     F: Fn() -> AnimationTarget + 'static + Send + Sync,
 {
     let memo = Memo::new(move |_| closure());
@@ -198,7 +198,7 @@ pub fn ReactiveMotionDiv(
         style_parts.extend(
             styles
                 .iter()
-                .map(|(key, value)| format!("{}: {}", key, value))
+                .map(|(key, value)| format!("{}: {}", key, value)),
         );
 
         // Add the style prop if provided

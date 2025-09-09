@@ -24,12 +24,14 @@ This document provides a comprehensive analysis of the critical issues encounter
 **Problem**: Leptos v0.8.8 introduced breaking changes that cause complete application unresponsiveness.
 
 **Symptoms**:
+
 - Pages become completely unresponsive (cannot right-click, interact with elements)
 - JavaScript execution appears to hang
 - No error messages in console
 - Application appears to "freeze" immediately upon mounting
 
 **Evidence**:
+
 ```bash
 # Terminal logs show successful mounting but immediate unresponsiveness
 Leptos comprehensive showcase starting
@@ -37,12 +39,14 @@ Leptos comprehensive showcase mounted
 # Page becomes unresponsive immediately after this point
 ```
 
-**Impact**: 
+**Impact**:
+
 - **Critical**: Complete application failure
 - **Scope**: Affects all Leptos applications using v0.8.8
 - **Workaround**: Downgrade to Leptos v0.8.6
 
 **Technical Details**:
+
 - Issue appears to be in the reactive system or DOM manipulation layer
 - Affects both simple counter components and complex motion components
 - No clear error messages or stack traces
@@ -57,11 +61,13 @@ Leptos comprehensive showcase mounted
 **Problem**: The `ReactiveMotionDiv` component causes immediate page unresponsiveness.
 
 **Symptoms**:
+
 - Page becomes unresponsive when `ReactiveMotionDiv` is included
 - Even simple motion components cause complete application freeze
 - Issue persists across different animation configurations
 
 **Root Cause Analysis**:
+
 ```rust
 // Problematic pattern in ReactiveMotionDiv
 fn style_string() -> String {
@@ -72,11 +78,13 @@ fn style_string() -> String {
 ```
 
 **Impact**:
+
 - **Critical**: Core motion component is unusable
 - **Scope**: Affects all motion-based applications
 - **Workaround**: Created `ReactiveMotionDivFixed` component
 
 **Technical Details**:
+
 - Issue appears to be in reactive tracking system
 - `get()` vs `get_untracked()` usage causes problems
 - Complex animation state management creates circular dependencies
@@ -90,22 +98,26 @@ fn style_string() -> String {
 **Problem**: Leptos reactive system has limitations with complex animation state.
 
 **Symptoms**:
+
 - Reactive tracking warnings in console
 - Animations not updating when signals change
 - Circular dependency issues with animation state
 
 **Evidence**:
+
 ```rust
 // Warning: current_styles.get() called outside reactive context
 // This prevents animations from updating reactively
 ```
 
 **Technical Details**:
+
 - `get()` vs `get_untracked()` usage patterns
 - Memo creation and dependency tracking
 - Effect lifecycle management
 
 **Impact**:
+
 - **High**: Animations don't work as expected
 - **Scope**: Affects all reactive animations
 - **Workaround**: Manual reactive style management
@@ -119,11 +131,13 @@ fn style_string() -> String {
 **Problem**: Multiple HTTP servers fail to serve HTML files properly.
 
 **Symptoms**:
+
 - 404 errors for files that exist and are readable
 - Both Python SimpleHTTPServer and Node.js http-server affected
 - Files are accessible via `file://` protocol but not via HTTP
 
 **Evidence**:
+
 ```bash
 # Files exist and are readable
 .rw-r--r--@ 9.2k peterhanssens  9 Sep 20:41 -N index.html
@@ -135,11 +149,13 @@ Server: SimpleHTTP/0.6 Python/3.13.7
 ```
 
 **Technical Details**:
+
 - Files have extended attributes (indicated by `@` symbol)
 - Permission issues with HTTP servers
 - Possible file system or server configuration problems
 
 **Impact**:
+
 - **Critical**: Cannot serve WASM applications
 - **Scope**: Affects all web deployment
 - **Workaround**: Use `file://` protocol (limited by CORS)
@@ -153,11 +169,13 @@ Server: SimpleHTTP/0.6 Python/3.13.7
 **Problem**: Animations are not visually appearing despite reactive system working.
 
 **Symptoms**:
+
 - Console logs show animations are triggered
 - Reactive system reports successful updates
 - No visual changes on screen
 
 **Evidence**:
+
 ```javascript
 // Console shows animations working
 Animation triggered, is_active: true
@@ -166,6 +184,7 @@ Returning active animation
 ```
 
 **Root Cause**:
+
 ```rust
 // Problem in style_string function
 fn style_string() -> String {
@@ -175,6 +194,7 @@ fn style_string() -> String {
 ```
 
 **Impact**:
+
 - **High**: Animations don't work visually
 - **Scope**: Affects all motion components
 - **Workaround**: Use reactive style memos
@@ -188,11 +208,13 @@ fn style_string() -> String {
 **Problem**: Existing tests don't catch critical responsiveness issues.
 
 **Symptoms**:
+
 - Tests pass but applications are unresponsive
 - No detection of page freezing
 - Limited coverage of motion component behavior
 
 **Evidence**:
+
 ```typescript
 // Tests focus on DOM structure but not responsiveness
 await expect(page.locator('#app')).toBeVisible();
@@ -200,6 +222,7 @@ await expect(page.locator('#app')).toBeVisible();
 ```
 
 **Impact**:
+
 - **Medium**: Issues go undetected in CI/CD
 - **Scope**: Affects development workflow
 - **Solution**: Enhanced testing suite created
@@ -276,21 +299,25 @@ While workarounds exist for most issues, the fundamental problems require framew
 ## Appendix: Technical Details
 
 ### File System Issues
+
 - Extended attributes on macOS files
 - HTTP server compatibility problems
 - CORS restrictions with local files
 
 ### Reactive System Patterns
+
 - Signal tracking best practices
 - Memo usage patterns
 - Effect lifecycle management
 
 ### Testing Strategies
+
 - Responsiveness testing
 - Visual regression testing
 - Performance monitoring
 
 ### Deployment Considerations
+
 - WASM serving requirements
 - CORS configuration
 - Browser compatibility

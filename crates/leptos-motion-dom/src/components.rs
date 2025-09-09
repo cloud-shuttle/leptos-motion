@@ -15,6 +15,25 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use web_sys;
 
+/// Animation target that can be either static or reactive
+#[derive(Clone)]
+pub enum AnimationTargetOrReactive {
+    /// Static animation target
+    Static(AnimationTarget),
+    /// Reactive animation target (function that returns AnimationTarget)
+    Reactive(Rc<dyn Fn() -> AnimationTarget>),
+}
+
+impl AnimationTargetOrReactive {
+    /// Get the current animation target
+    pub fn get_target(&self) -> AnimationTarget {
+        match self {
+            AnimationTargetOrReactive::Static(target) => target.clone(),
+            AnimationTargetOrReactive::Reactive(closure) => closure(),
+        }
+    }
+}
+
 /// Simple MotionDiv component for animated div elements
 #[component]
 pub fn MotionDiv(

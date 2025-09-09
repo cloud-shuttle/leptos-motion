@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion - Comprehensive Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the showcase */
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .demo-container {
+            min-height: 400px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .animated-element {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .spring-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .spring-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gesture-demo {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+        
+        .gesture-item {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+        }
+        
+        .gesture-item:active {
+            cursor: grabbing;
+        }
+        
+        .layout-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .layout-item {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 8px;
+            padding: 1rem;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-demo {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform-origin: left;
+            z-index: 1000;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-indicator" id="scrollProgress"></div>
+    
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-6xl font-bold mb-6 fade-in">
+                Animations that move
+            </h1>
+            <p class="text-xl mb-8 max-w-3xl mx-auto fade-in">
+                Create high-performance web animations with Leptos Motion's easy-to-use API — from simple transforms to advanced interactive gestures.
+            </p>
+            <div class="flex justify-center gap-4 fade-in">
+                <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Get Started
+                </button>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                    View Examples
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Simple API -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-2xl font-bold mb-4">Simple API</h3>
+                    <p class="text-gray-600 mb-6">Motion's pick-up-and-play API is easy to start and fun to master.</p>
+                    <div class="demo-container">
+                        <div class="flex justify-center items-center h-full">
+                            <div class="animated-element" id="simpleApiDemo">
+                                🎯
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerSimpleAPI()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Independent Transforms -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">🔄</div>
+                    <h3 class="text-2xl font-bold mb-4">Independent transforms</h3>
+                    <p class="text-gray-600 mb-6">Animate x, y, rotateZ etc independently, without wrapper elements.</p>
+                    <div class="demo-container">
+                        <div class="flex justify-center items-center h-full">
+                            <div class="animated-element" id="independentTransformsDemo">
+                                🔄
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerIndependentTransforms()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Scroll Animation -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">📜</div>
+                    <h3 class="text-2xl font-bold mb-4">Scroll animation</h3>
+                    <p class="text-gray-600 mb-6">Smooth, hardware-accelerated scroll animations.</p>
+                    <div class="demo-container">
+                        <div class="flex justify-center items-center h-full">
+                            <div class="animated-element scroll-trigger" id="scrollAnimationDemo">
+                                📜
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="scrollToDemo()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Spring Physics -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">🌊</div>
+                    <h3 class="text-2xl font-bold mb-4">Spring physics</h3>
+                    <p class="text-gray-600 mb-6">Real spring physics for great-feeling animations.</p>
+                    <div class="demo-container">
+                        <div class="spring-demo" id="springPhysicsDemo">
+                            <div class="spring-item">Spring 1</div>
+                            <div class="spring-item">Spring 2</div>
+                            <div class="spring-item">Spring 3</div>
+                            <div class="spring-item">Spring 4</div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerSpringPhysics()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Exit Animation -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">👋</div>
+                    <h3 class="text-2xl font-bold mb-4">Exit animation</h3>
+                    <p class="text-gray-600 mb-6">AnimatePresence makes it easy to animate elements as they exit.</p>
+                    <div class="demo-container">
+                        <div class="flex justify-center items-center h-full">
+                            <div id="exitAnimationContainer">
+                                <div class="animated-element" id="exitAnimationDemo">
+                                    👋
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerExitAnimation()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Gestures -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">✋</div>
+                    <h3 class="text-2xl font-bold mb-4">Gestures</h3>
+                    <p class="text-gray-600 mb-6">Hover, press and drag gestures that feel native, not "webby".</p>
+                    <div class="demo-container">
+                        <div class="gesture-demo" id="gesturesDemo">
+                            <div class="gesture-item" data-gesture="hover">Hover</div>
+                            <div class="gesture-item" data-gesture="press">Press</div>
+                            <div class="gesture-item" data-gesture="drag">Drag</div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="setupGestures()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Layout Animation -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">📐</div>
+                    <h3 class="text-2xl font-bold mb-4">Layout animation</h3>
+                    <p class="text-gray-600 mb-6">Animate between different layouts with Motion's industry-leading layout animation engine.</p>
+                    <div class="demo-container">
+                        <div class="layout-demo" id="layoutAnimationDemo">
+                            <div class="layout-item">Item 1</div>
+                            <div class="layout-item">Item 2</div>
+                            <div class="layout-item">Item 3</div>
+                            <div class="layout-item">Item 4</div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerLayoutAnimation()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Timeline Sequences -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">⏱️</div>
+                    <h3 class="text-2xl font-bold mb-4">Timeline sequences</h3>
+                    <p class="text-gray-600 mb-6">Variants, stagger and timelines make it easy to precisely orchestrate animations.</p>
+                    <div class="demo-container">
+                        <div class="timeline-demo" id="timelineSequencesDemo">
+                            <div class="timeline-item">1</div>
+                            <div class="timeline-item">2</div>
+                            <div class="timeline-item">3</div>
+                            <div class="timeline-item">4</div>
+                            <div class="timeline-item">5</div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerTimelineSequences()">
+                        Try it →
+                    </button>
+                </div>
+
+                <!-- Performance -->
+                <div class="feature-card bg-white rounded-xl p-8 fade-in">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Performance</h3>
+                    <p class="text-gray-600 mb-6">Hardware-accelerated animations with 60fps performance.</p>
+                    <div class="demo-container">
+                        <div class="flex justify-center items-center h-full">
+                            <div class="animated-element" id="performanceDemo">
+                                ⚡
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-purple-600 font-semibold hover:underline" onclick="triggerPerformanceDemo()">
+                        Try it →
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="hero-gradient text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-6 fade-in">
+                Ready to build amazing animations?
+            </h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto fade-in">
+                Join thousands of developers using Leptos Motion to create beautiful, performant web animations.
+            </p>
+            <div class="flex justify-center gap-4 fade-in">
+                <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Get Started Now
+                </button>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                    View Documentation
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animation functions
+        function triggerSimpleAPI() {
+            const element = document.getElementById('simpleApiDemo');
+            element.style.transform = 'scale(1.2) rotate(360deg)';
+            element.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+            
+            setTimeout(() => {
+                element.style.transform = 'scale(1) rotate(0deg)';
+                element.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 1000);
+        }
+
+        function triggerIndependentTransforms() {
+            const element = document.getElementById('independentTransformsDemo');
+            element.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            element.style.transform = 'translateX(50px) translateY(-30px) rotateZ(180deg) scale(1.3)';
+            element.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            
+            setTimeout(() => {
+                element.style.transform = 'translateX(0) translateY(0) rotateZ(0deg) scale(1)';
+                element.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 1500);
+        }
+
+        function triggerSpringPhysics() {
+            const items = document.querySelectorAll('#springPhysicsDemo .spring-item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                    item.style.transform = 'translateY(-20px) scale(1.1)';
+                    item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    item.style.color = 'white';
+                    
+                    setTimeout(() => {
+                        item.style.transform = 'translateY(0) scale(1)';
+                        item.style.background = 'white';
+                        item.style.color = 'black';
+                    }, 800);
+                }, index * 100);
+            });
+        }
+
+        function triggerExitAnimation() {
+            const element = document.getElementById('exitAnimationDemo');
+            const container = document.getElementById('exitAnimationContainer');
+            
+            element.style.transition = 'all 0.5s ease-in-out';
+            element.style.transform = 'scale(0) rotate(180deg)';
+            element.style.opacity = '0';
+            
+            setTimeout(() => {
+                element.style.transform = 'scale(1) rotate(0deg)';
+                element.style.opacity = '1';
+                element.style.background = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
+            }, 600);
+        }
+
+        function setupGestures() {
+            const gestureItems = document.querySelectorAll('#gesturesDemo .gesture-item');
+            
+            gestureItems.forEach(item => {
+                const gesture = item.dataset.gesture;
+                
+                if (gesture === 'hover') {
+                    item.addEventListener('mouseenter', () => {
+                        item.style.transform = 'scale(1.2)';
+                        item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    });
+                    
+                    item.addEventListener('mouseleave', () => {
+                        item.style.transform = 'scale(1)';
+                        item.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+                    });
+                }
+                
+                if (gesture === 'press') {
+                    item.addEventListener('mousedown', () => {
+                        item.style.transform = 'scale(0.9)';
+                        item.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+                    });
+                    
+                    item.addEventListener('mouseup', () => {
+                        item.style.transform = 'scale(1)';
+                        item.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+                    });
+                }
+                
+                if (gesture === 'drag') {
+                    let isDragging = false;
+                    let startX, startY, initialX, initialY;
+                    
+                    item.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        initialX = item.offsetLeft;
+                        initialY = item.offsetTop;
+                        item.style.cursor = 'grabbing';
+                        item.style.background = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
+                    });
+                    
+                    document.addEventListener('mousemove', (e) => {
+                        if (isDragging) {
+                            const deltaX = e.clientX - startX;
+                            const deltaY = e.clientY - startY;
+                            item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                        }
+                    });
+                    
+                    document.addEventListener('mouseup', () => {
+                        if (isDragging) {
+                            isDragging = false;
+                            item.style.cursor = 'grab';
+                            item.style.transform = 'translate(0, 0)';
+                            item.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+                        }
+                    });
+                }
+            });
+        }
+
+        function triggerLayoutAnimation() {
+            const container = document.getElementById('layoutAnimationDemo');
+            const items = container.querySelectorAll('.layout-item');
+            
+            // Toggle between grid layouts
+            if (container.style.gridTemplateColumns === 'repeat(2, 1fr)') {
+                container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
+                items.forEach((item, index) => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.transform = 'scale(1)';
+                });
+            } else {
+                container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                items.forEach((item, index) => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.transform = 'scale(1.1)';
+                });
+            }
+        }
+
+        function triggerTimelineSequences() {
+            const items = document.querySelectorAll('#timelineSequencesDemo .timeline-item');
+            
+            // Reset
+            items.forEach(item => {
+                item.style.transform = 'scale(0) rotate(0deg)';
+                item.style.opacity = '0';
+            });
+            
+            // Animate in sequence
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                    item.style.transform = 'scale(1) rotate(360deg)';
+                    item.style.opacity = '1';
+                }, index * 150);
+            });
+        }
+
+        function triggerPerformanceDemo() {
+            const element = document.getElementById('performanceDemo');
+            let startTime = performance.now();
+            
+            function animate() {
+                const elapsed = performance.now() - startTime;
+                const progress = (elapsed % 2000) / 2000;
+                const rotation = progress * 360;
+                const scale = 1 + Math.sin(progress * Math.PI * 2) * 0.2;
+                
+                element.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                
+                if (elapsed < 5000) {
+                    requestAnimationFrame(animate);
+                } else {
+                    element.style.transform = 'rotate(0deg) scale(1)';
+                }
+            }
+            
+            animate();
+        }
+
+        function scrollToDemo() {
+            document.getElementById('scrollAnimationDemo').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        // Scroll progress indicator
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.transform = `scaleX(${scrollPercent / 100})`;
+        }
+
+        // Intersection Observer for fade-in animations
+        function setupFadeInAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Scroll-triggered animations
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        element.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                        element.style.transform = 'translateY(0) scale(1)';
+                        element.style.opacity = '1';
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            document.querySelectorAll('.scroll-trigger').forEach(el => {
+                el.style.transform = 'translateY(50px) scale(0.8)';
+                el.style.opacity = '0.5';
+                observer.observe(el);
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFadeInAnimations();
+            setupScrollAnimations();
+            
+            window.addEventListener('scroll', updateScrollProgress);
+            updateScrollProgress();
+        });
+    </script>
+</body>
+</html>

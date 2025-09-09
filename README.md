@@ -9,14 +9,14 @@
 
 Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance.
 
-> **🚀 Latest Release!** Version 0.6.0 with Phase 2 features is now available.
+> **🚀 Latest Release!** Version 0.7.0 with advanced animation features is now available.
 
 ## 🎉 Latest Release Status
 
-**Version 0.6.0** is now available with comprehensive Phase 2 features!
+**Version 0.7.0** is now available with advanced animation features and performance optimizations!
 
 - ✅ **Solid Foundation**: Core animation engine, gestures, layout animations
-- ✅ **Comprehensive Testing**: 500+ tests passing with full coverage
+- ✅ **Comprehensive Testing**: 235+ tests passing with full coverage
 - ✅ **Type Safety**: Full Rust compile-time guarantees
 - ✅ **Simplified APIs**: Clean, user-friendly interfaces
 - ✅ **All Examples Working**: Advanced features, mobile app, dashboard, e-commerce
@@ -27,8 +27,13 @@ Leptos Motion brings smooth, performant animations to your Leptos applications w
 - ✅ **⚡ Stagger Animations**: Sequential animations with configurable delays
 - ✅ **🚀 Performance Benchmarking**: Advanced performance testing and optimization
 - ✅ **🌐 Cross-Browser Testing**: Comprehensive compatibility validation
+- ✅ **🌊 Spring Physics Engine**: Natural motion with configurable tension, friction, and mass
+- ✅ **👻 AnimatePresence**: Enter/exit animations with multiple presence modes
+- ✅ **🎭 Variants System**: Named animation states with smooth transitions
+- ✅ **⏰ Timeline Sequences**: Advanced orchestration for complex animation sequences
+- ✅ **⚡ Performance Optimizations**: Memory pools, caching, and edge case handling
 
-> **Note**: This is a stable release ready for production use.
+> **Note**: This is a stable release ready for production use with advanced animation capabilities.
 
 ## ✨ Features
 
@@ -38,6 +43,11 @@ Leptos Motion brings smooth, performant animations to your Leptos applications w
 - 🖱️ **Gesture Support**: Multi-touch, drag, hover, tap, and scroll animations
 - 📱 **Layout Animations**: FLIP-based smooth transitions when elements change position
 - 🎭 **Presence Animations**: Enter/exit animations with automatic cleanup
+- 🌊 **Spring Physics**: Natural motion with configurable tension, friction, and mass
+- 👻 **AnimatePresence**: Advanced enter/exit animations with multiple presence modes
+- 🎭 **Variants System**: Named animation states with smooth transitions
+- ⏰ **Timeline Sequences**: Advanced orchestration for complex animation sequences
+- ⚡ **Performance Optimizations**: Memory pools, caching, and edge case handling
 - 🔧 **Type Safe**: Full Rust type safety and compile-time guarantees
 - 🌐 **Cross Platform**: Works in browsers and server-side rendering
 
@@ -47,7 +57,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-leptos-motion = "0.6.0"
+leptos-motion = "0.7.0"
 ```
 
 ## 🚀 Quick Start
@@ -222,6 +232,160 @@ pub fn AnimatedList() -> impl IntoView {
                     }
                 />
             </ul>
+        </div>
+    }
+}
+```
+
+## 🌟 New in v0.7.0
+
+### Spring Physics Engine
+
+Create natural, physics-based animations with configurable spring parameters:
+
+```rust
+use leptos::*;
+use leptos_motion::*;
+
+#[component]
+pub fn SpringPhysicsDemo() -> impl IntoView {
+    let (is_active, set_is_active) = signal(false);
+    
+    view! {
+        <div class="space-y-4">
+            <MotionDiv
+                class="w-20 h-20 bg-green-500 rounded-full".to_string()
+                animate=motion_target!(
+                    "x" => AnimationValue::Pixels(if is_active.get() { 200.0 } else { 0.0 })
+                )
+                transition=Transition {
+                    duration: Some(1.0),
+                    ease: Easing::Spring(SpringConfig::default()
+                        .tension(300.0)
+                        .friction(30.0)
+                        .mass(1.0)
+                    ),
+                    ..Default::default()
+                }
+            />
+            <button
+                on:click=move |_| set_is_active.update(|x| *x = !*x)
+                class="px-4 py-2 bg-green-600 text-white rounded-lg"
+            >
+                "Spring Animation"
+            </button>
+        </div>
+    }
+}
+```
+
+### AnimatePresence Component
+
+Handle enter and exit animations for conditionally rendered elements:
+
+```rust
+use leptos::*;
+use leptos_motion::*;
+
+#[component]
+pub fn PresenceDemo() -> impl IntoView {
+    let (show, set_show) = signal(false);
+    
+    view! {
+        <div class="space-y-4">
+            <AnimatePresence>
+                {move || if show.get() {
+                    view! {
+                        <MotionDiv
+                            class="w-32 h-32 bg-blue-500 rounded-lg".to_string()
+                            initial=motion_target!(
+                                "opacity" => AnimationValue::Number(0.0),
+                                "scale" => AnimationValue::Number(0.8)
+                            )
+                            animate=motion_target!(
+                                "opacity" => AnimationValue::Number(1.0),
+                                "scale" => AnimationValue::Number(1.0)
+                            )
+                            exit=motion_target!(
+                                "opacity" => AnimationValue::Number(0.0),
+                                "scale" => AnimationValue::Number(0.8)
+                            )
+                        />
+                    }.into_any()
+                } else {
+                    view! {}.into_any()
+                }}
+            </AnimatePresence>
+            <button
+                on:click=move |_| set_show.update(|x| *x = !*x)
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+                "Toggle Presence"
+            </button>
+        </div>
+    }
+}
+```
+
+### Variants System
+
+Define named animation states for smooth transitions:
+
+```rust
+use leptos::*;
+use leptos_motion::*;
+
+#[component]
+pub fn VariantsDemo() -> impl IntoView {
+    let (current_variant, set_current_variant) = signal("idle".to_string());
+    
+    let variants = {
+        let mut v = HashMap::new();
+        v.insert("idle".to_string(), motion_target!(
+            "scale" => AnimationValue::Number(1.0),
+            "rotate" => AnimationValue::Number(0.0)
+        ));
+        v.insert("hover".to_string(), motion_target!(
+            "scale" => AnimationValue::Number(1.1),
+            "rotate" => AnimationValue::Number(5.0)
+        ));
+        v.insert("tap".to_string(), motion_target!(
+            "scale" => AnimationValue::Number(0.95),
+            "rotate" => AnimationValue::Number(-5.0)
+        ));
+        v
+    };
+    
+    view! {
+        <div class="space-y-4">
+            <MotionDiv
+                class="w-24 h-24 bg-purple-500 rounded-lg cursor-pointer".to_string()
+                variants=variants
+                animate=current_variant
+                on:mouseenter=move |_| set_current_variant.set("hover".to_string())
+                on:mouseleave=move |_| set_current_variant.set("idle".to_string())
+                on:click=move |_| set_current_variant.set("tap".to_string())
+            />
+            <div class="flex gap-2">
+                <button
+                    on:click=move |_| set_current_variant.set("idle".to_string())
+                    class="px-3 py-1 bg-gray-600 text-white rounded text-sm"
+                >
+                    "Idle"
+                </button>
+                <button
+                    on:click=move |_| set_current_variant.set("hover".to_string())
+                    class="px-3 py-1 bg-gray-600 text-white rounded text-sm"
+                >
+                    "Hover"
+                </button>
+                <button
+                    on:click=move |_| set_current_variant.set("tap".to_string())
+                    class="px-3 py-1 bg-gray-600 text-white rounded text-sm"
+                >
+                    "Tap"
+                </button>
+            </div>
         </div>
     }
 }

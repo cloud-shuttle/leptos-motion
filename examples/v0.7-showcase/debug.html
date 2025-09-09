@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion v0.7.0 Showcase - DEBUG</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+        }
+        .debug-info {
+            background: #2a2a2a;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #00ff00;
+        }
+        .error {
+            color: #ff0000;
+            border-left-color: #ff0000;
+        }
+        .success {
+            color: #00ff00;
+            border-left-color: #00ff00;
+        }
+        .warning {
+            color: #ffff00;
+            border-left-color: #ffff00;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Leptos Motion v0.7.0 Showcase - DEBUG MODE</h1>
+    
+    <div id="debug-log">
+        <div class="debug-info">Starting debug session...</div>
+    </div>
+    
+    <div id="showcase-content" style="display: none;">
+        <h2>Showcase Content</h2>
+        <div id="app"></div>
+    </div>
+    
+    <script type="module">
+        const debugLog = document.getElementById('debug-log');
+        const showcaseContent = document.getElementById('showcase-content');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `debug-info ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            debugLog.appendChild(div);
+            console.log(`[DEBUG] ${message}`);
+        }
+        
+        function logError(error) {
+            const div = document.createElement('div');
+            div.className = 'debug-info error';
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ERROR: ${error.message}<br>Stack: ${error.stack}`;
+            debugLog.appendChild(div);
+            console.error('[DEBUG] ERROR:', error);
+        }
+        
+        async function initializeShowcase() {
+            log('Starting WASM module initialization...');
+            
+            try {
+                log('Importing WASM module...');
+                const { default: init, main } = await import('./pkg/v0_7_showcase.js');
+                log('WASM module imported successfully', 'success');
+                
+                log('Initializing WASM module...');
+                await init();
+                log('WASM module initialized successfully', 'success');
+                
+                log('Calling main function...');
+                main();
+                log('Main function called successfully', 'success');
+                
+                log('App mounting completed', 'success');
+                
+                // Show the showcase content
+                showcaseContent.style.display = 'block';
+                log('Showcase content displayed', 'success');
+                
+            } catch (error) {
+                logError(error);
+                log('Failed to initialize showcase', 'error');
+            }
+        }
+        
+        // Monitor for any additional errors
+        window.addEventListener('error', (event) => {
+            logError(event.error);
+        });
+        
+        window.addEventListener('unhandledrejection', (event) => {
+            logError(event.reason);
+        });
+        
+        log('Debug session ready');
+        
+        // Start initialization
+        initializeShowcase();
+    </script>
+</body>
+</html>

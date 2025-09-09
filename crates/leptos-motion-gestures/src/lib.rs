@@ -258,3 +258,7 @@ mod simplified_gesture_tests {
 mod gesture_system_tdd_tests;
 #[cfg(test)]
 mod gesture_tests;
+
+// Include the gesture animation TDD tests
+#[cfg(test)]
+mod gesture_animation_tdd_tests;

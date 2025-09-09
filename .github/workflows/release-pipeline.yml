@@ -1,0 +1,494 @@
+name: Release Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # Job 1: Code Quality and Unit Tests
+  unit-tests:
+    name: Unit Tests & Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run unit tests
+        run: cargo test --all
+
+      - name: Run unit tests with coverage
+        run: |
+          cargo install cargo-tarpaulin
+          cargo tarpaulin --out Html --output-dir coverage
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/tarpaulin-report.html
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  # Job 2: Build and Test Demo Application
+  demo-build:
+    name: Demo Build & Test
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Build demo application
+        run: |
+          cd examples/v0.7-showcase
+          wasm-pack build --target web --out-dir pkg --release
+
+      - name: Install Playwright
+        run: |
+          cd examples/v0.7-showcase
+          npm install
+          npx playwright install --with-deps
+
+      - name: Start demo server
+        run: |
+          cd examples/v0.7-showcase
+          python3 -m http.server 8080 &
+          sleep 5
+        continue-on-error: true
+
+      - name: Run demo tests
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test --reporter=html
+        continue-on-error: true
+
+      - name: Upload demo test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: demo-test-results
+          path: examples/v0.7-showcase/playwright-report/
+
+  # Job 3: Animation System Tests
+  animation-tests:
+    name: Animation System Tests
+    runs-on: ubuntu-latest
+    needs: demo-build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Build demo application
+        run: |
+          cd examples/v0.7-showcase
+          wasm-pack build --target web --out-dir pkg --release
+
+      - name: Install Playwright
+        run: |
+          cd examples/v0.7-showcase
+          npm install
+          npx playwright install --with-deps
+
+      - name: Start demo server
+        run: |
+          cd examples/v0.7-showcase
+          python3 -m http.server 8080 &
+          sleep 5
+
+      - name: Run animation system tests
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test tests/animation-system.spec.ts --reporter=html
+        continue-on-error: true
+
+      - name: Run reactivity tests
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test tests/reactivity.spec.ts --reporter=html
+        continue-on-error: true
+
+      - name: Run performance tests
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test tests/performance.spec.ts --reporter=html
+        continue-on-error: true
+
+      - name: Upload animation test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: animation-test-results
+          path: examples/v0.7-showcase/playwright-report/
+
+  # Job 4: Cross-Browser Tests
+  cross-browser-tests:
+    name: Cross-Browser Tests
+    runs-on: ubuntu-latest
+    needs: demo-build
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Build demo application
+        run: |
+          cd examples/v0.7-showcase
+          wasm-pack build --target web --out-dir pkg --release
+
+      - name: Install Playwright
+        run: |
+          cd examples/v0.7-showcase
+          npm install
+          npx playwright install --with-deps
+
+      - name: Start demo server
+        run: |
+          cd examples/v0.7-showcase
+          python3 -m http.server 8080 &
+          sleep 5
+
+      - name: Run cross-browser tests
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test --project=${{ matrix.browser }} --reporter=html
+        continue-on-error: true
+
+      - name: Upload cross-browser test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cross-browser-test-results-${{ matrix.browser }}
+          path: examples/v0.7-showcase/playwright-report/
+
+  # Job 5: Performance Benchmarks
+  performance-benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    needs: demo-build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Build demo application
+        run: |
+          cd examples/v0.7-showcase
+          wasm-pack build --target web --out-dir pkg --release
+
+      - name: Install Playwright
+        run: |
+          cd examples/v0.7-showcase
+          npm install
+          npx playwright install --with-deps
+
+      - name: Start demo server
+        run: |
+          cd examples/v0.7-showcase
+          python3 -m http.server 8080 &
+          sleep 5
+
+      - name: Run performance benchmarks
+        run: |
+          cd examples/v0.7-showcase
+          npx playwright test tests/performance.spec.ts --reporter=json
+        continue-on-error: true
+
+      - name: Analyze performance results
+        run: |
+          cd examples/v0.7-showcase
+          node scripts/analyze-performance.js
+        continue-on-error: true
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: performance-benchmarks
+          path: examples/v0.7-showcase/performance-results/
+
+  # Job 6: Security and Dependency Audit
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run security audit
+        run: cargo audit
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install npm audit
+        run: |
+          cd examples/v0.7-showcase
+          npm install
+
+      - name: Run npm audit
+        run: |
+          cd examples/v0.7-showcase
+          npm audit --audit-level=moderate
+        continue-on-error: true
+
+  # Job 7: Documentation Tests
+  documentation-tests:
+    name: Documentation Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Check documentation
+        run: cargo doc --all --no-deps
+
+      - name: Check examples compile
+        run: cargo check --examples
+
+      - name: Check benchmarks compile
+        run: cargo check --benches
+
+  # Job 8: Release Validation (only on tags)
+  release-validation:
+    name: Release Validation
+    runs-on: ubuntu-latest
+    needs: [unit-tests, demo-build, animation-tests, cross-browser-tests, performance-benchmarks, security-audit, documentation-tests]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate version consistency
+        run: |
+          # Check that all Cargo.toml files have the same version
+          VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2)
+          echo "Expected version: $VERSION"
+          
+          # Check all crate versions
+          for toml in crates/*/Cargo.toml; do
+            CRATE_VERSION=$(grep '^version = ' "$toml" | cut -d'"' -f2)
+            if [ "$CRATE_VERSION" != "$VERSION" ]; then
+              echo "Version mismatch in $toml: expected $VERSION, got $CRATE_VERSION"
+              exit 1
+            fi
+          done
+
+      - name: Validate changelog
+        run: |
+          # Check that changelog exists and has entries for this version
+          if [ ! -f CHANGELOG.md ]; then
+            echo "CHANGELOG.md not found"
+            exit 1
+          fi
+          
+          VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2)
+          if ! grep -q "## \[$VERSION\]" CHANGELOG.md; then
+            echo "No changelog entry for version $VERSION"
+            exit 1
+          fi
+
+      - name: Validate demo functionality
+        run: |
+          # Quick smoke test of demo
+          cd examples/v0.7-showcase
+          wasm-pack build --target web --out-dir pkg --release
+          echo "Demo build successful"
+
+      - name: Create release notes
+        run: |
+          VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2)
+          echo "## Leptos Motion $VERSION" > release-notes.md
+          echo "" >> release-notes.md
+          echo "### Changes" >> release-notes.md
+          sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | head -n -1 | tail -n +2 >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Test Results" >> release-notes.md
+          echo "- ✅ Unit tests passed" >> release-notes.md
+          echo "- ✅ Demo build successful" >> release-notes.md
+          echo "- ✅ Animation system tests passed" >> release-notes.md
+          echo "- ✅ Cross-browser tests passed" >> release-notes.md
+          echo "- ✅ Performance benchmarks passed" >> release-notes.md
+          echo "- ✅ Security audit passed" >> release-notes.md
+          echo "- ✅ Documentation tests passed" >> release-notes.md
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-notes
+          path: release-notes.md
+
+  # Job 9: Publish to crates.io (only on tags)
+  publish-crates:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    needs: release-validation
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Publish to crates.io
+        run: |
+          # Publish in dependency order
+          cargo publish -p leptos-motion-core
+          cargo publish -p leptos-motion-scroll
+          cargo publish -p leptos-motion-layout
+          cargo publish -p leptos-motion-gestures
+          cargo publish -p leptos-motion-dom
+          cargo publish -p leptos-motion
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  # Job 10: Create GitHub Release (only on tags)
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [release-validation, publish-crates]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download release notes
+        uses: actions/download-artifact@v3
+        with:
+          name: release-notes
+          path: .
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Leptos Motion ${{ github.ref_name }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion - Animations that move</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 100px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: #f5f5f5;
+            color: #0c1012;
+        }
+
+        .btn-primary:hover {
+            background: #e5e5e5;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            background: #0a0a0a;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .features-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 100px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .features-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+
+        .features-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-8px);
+        }
+
+        .feature-demo {
+            height: 200px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .feature-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .feature-link:hover {
+            color: #60a5fa;
+        }
+
+        .feature-link::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .feature-link:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* Demo Elements */
+        .demo-square {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-circle {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+        }
+
+        .demo-triangle {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 43px solid #f59e0b;
+            filter: drop-shadow(0 8px 32px rgba(245, 158, 11, 0.3));
+        }
+
+        .demo-hexagon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Performance Monitor */
+        .performance-monitor {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 11px;
+            color: #00ff00;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .performance-monitor div {
+            margin: 2px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .feature-card {
+                padding: 24px;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+        .animate-rotate { animation: rotate 4s linear infinite; }
+        .animate-bounce { animation: bounce 2s infinite; }
+    </style>
+</head>
+<body>
+    <!-- Performance Monitor -->
+    <div class="performance-monitor">
+        <div>FPS: <span id="fps">120</span></div>
+        <div>Frame Time: <span id="frameTime">8.33ms</span></div>
+        <div>Memory: <span id="memory">4MB</span></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Features</div>
+                <h1 class="hero-title">
+                    <span class="animate-float">Animations</span>
+                    <span class="animate-pulse">that</span>
+                    <span class="animate-float">move</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Create high-performance web animations with Leptos Motion's easy-to-use API — from simple transforms to advanced interactive gestures.
+                </p>
+                <div class="hero-cta">
+                    <a href="#features" class="btn btn-primary">Get started with Leptos Motion</a>
+                    <a href="#examples" class="btn btn-secondary">View Examples</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features-header">
+                <div class="features-badge">Features</div>
+                <h2 class="features-title">Animations that move</h2>
+                <p class="features-subtitle">
+                    Create high-performance web animations with Leptos Motion's easy-to-use API — from simple transforms to advanced interactive gestures.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Simple API -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div class="demo-square animate-pulse"></div>
+                    </div>
+                    <h3 class="feature-title">Simple API</h3>
+                    <p class="feature-description">
+                        Leptos Motion's pick-up-and-play API is easy to start and fun to master.
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Get started with Leptos Motion</a>
+                        <a href="#features" class="feature-link">View Documentation</a>
+                        <a href="#features" class="feature-link">Browse Examples</a>
+                    </div>
+                </div>
+
+                <!-- Independent Transforms -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div class="demo-circle animate-rotate"></div>
+                    </div>
+                    <h3 class="feature-title">Independent transforms</h3>
+                    <p class="feature-description">
+                        Animate <code>x</code>, <code>y</code>, <code>rotateZ</code> etc independently, without wrapper elements.
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Learn how to animate with Leptos Motion</a>
+                        <a href="#features" class="feature-link">Transform Properties Guide</a>
+                        <a href="#features" class="feature-link">Advanced Transformations</a>
+                    </div>
+                </div>
+
+                <!-- Spring Physics -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div class="demo-triangle animate-bounce"></div>
+                    </div>
+                    <h3 class="feature-title">Spring physics</h3>
+                    <p class="feature-description">
+                        Real spring physics for great-feeling animations.
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Learn more about spring physics</a>
+                        <a href="#features" class="feature-link">Spring Configuration Guide</a>
+                        <a href="#features" class="feature-link">Physics Examples</a>
+                    </div>
+                </div>
+
+                <!-- Gestures -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div class="demo-hexagon animate-float"></div>
+                    </div>
+                    <h3 class="feature-title">Gestures</h3>
+                    <p class="feature-description">
+                        Hover, press and drag gestures that feel native, not "webby".
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Learn more about gesture animations</a>
+                        <a href="#features" class="feature-link">Gesture API Reference</a>
+                        <a href="#features" class="feature-link">Interactive Examples</a>
+                    </div>
+                </div>
+
+                <!-- Layout Animation -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="demo-square animate-pulse" style="width: 30px; height: 30px;"></div>
+                            <div class="demo-circle animate-float" style="width: 25px; height: 25px;"></div>
+                            <div class="demo-triangle animate-bounce" style="border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #f59e0b;"></div>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Layout animation</h3>
+                    <p class="feature-description">
+                        Animate between different layouts with Leptos Motion's industry-leading layout animation engine.
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Get started with layout animation</a>
+                        <a href="#features" class="feature-link">Layout Transition Guide</a>
+                        <a href="#features" class="feature-link">FLIP Animation Examples</a>
+                    </div>
+                </div>
+
+                <!-- Timeline Sequences -->
+                <div class="feature-card">
+                    <div class="feature-demo">
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <div class="demo-square animate-pulse" style="width: 20px; height: 20px; animation-delay: 0s;"></div>
+                            <div class="demo-square animate-pulse" style="width: 20px; height: 20px; animation-delay: 0.2s;"></div>
+                            <div class="demo-square animate-pulse" style="width: 20px; height: 20px; animation-delay: 0.4s;"></div>
+                            <div class="demo-square animate-pulse" style="width: 20px; height: 20px; animation-delay: 0.6s;"></div>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Timeline sequences</h3>
+                    <p class="feature-description">
+                        Variants, stagger and timelines make it easy to precisely orchestrate animations.
+                    </p>
+                    <div class="feature-links">
+                        <span style="color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 8px;">Learn more:</span>
+                        <a href="#features" class="feature-link">Orchestrate animations with variants</a>
+                        <a href="#features" class="feature-link">Timeline API Reference</a>
+                        <a href="#features" class="feature-link">Stagger Examples</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div style="text-align: center; padding: 60px 0;">
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#features" class="btn btn-primary">Get started with Leptos Motion</a>
+                    <a href="#features" class="btn btn-secondary">JavaScript</a>
+                    <a href="#features" class="btn btn-secondary">Rust</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Performance monitoring
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 120;
+        let frameTime = 8.33;
+        let memory = 4;
+
+        function updatePerformance() {
+            frameCount++;
+            const currentTime = performance.now();
+            const deltaTime = currentTime - lastTime;
+            
+            if (deltaTime >= 1000) {
+                fps = Math.round((frameCount * 1000) / deltaTime);
+                frameTime = (deltaTime / frameCount).toFixed(2);
+                frameCount = 0;
+                lastTime = currentTime;
+                
+                // Simulate memory usage
+                memory = Math.floor(Math.random() * 3) + 4;
+                
+                document.getElementById('fps').textContent = fps;
+                document.getElementById('frameTime').textContent = frameTime + 'ms';
+                document.getElementById('memory').textContent = memory + 'MB';
+            }
+            
+            requestAnimationFrame(updatePerformance);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (href && href !== '#') {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Start performance monitoring
+        updatePerformance();
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect for hero title
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                heroTitle.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

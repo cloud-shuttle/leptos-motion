@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Gallery - Leptos Motion v0.7.0</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .ecommerce-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .ecommerce-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .ecommerce-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .cart-count {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+        
+        .ecommerce-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        
+        .product-gallery {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-image-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        .thumbnail {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+        
+        .thumbnail.active {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .product-details {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .product-details h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .description {
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .price-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ecdc4;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .discount {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .quantity-selector {
+            margin-bottom: 2rem;
+        }
+        
+        .quantity-selector label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .quantity-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quantity-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .quantity {
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-width: 2rem;
+            text-align: center;
+        }
+        
+        .add-to-cart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+        
+        .add-to-cart-btn.added {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+        
+        .features h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            padding: 0.5rem 0;
+            opacity: 0.9;
+        }
+        
+        .features li::before {
+            content: "✓";
+            color: #4ecdc4;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .ecommerce-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .ecommerce-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .thumbnail-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ecommerce-container">
+        <div class="ecommerce-header">
+            <h1>🛒 E-commerce Gallery</h1>
+            <div class="cart-icon">
+                <span class="cart-count">0</span>
+                🛒
+            </div>
+        </div>
+
+        <div class="ecommerce-main">
+            <div class="product-gallery">
+                <div class="main-image-container">
+                    <img class="main-image" src="https://via.placeholder.com/400x400/667eea/ffffff?text=Product+1" alt="Product image">
+                    <div class="image-controls">
+                        <button class="nav-btn prev">‹</button>
+                        <button class="nav-btn next">›</button>
+                    </div>
+                </div>
+
+                <div class="thumbnail-grid">
+                    <img class="thumbnail active" src="https://via.placeholder.com/400x400/667eea/ffffff?text=Product+1" alt="Thumbnail 1">
+                    <img class="thumbnail" src="https://via.placeholder.com/400x400/764ba2/ffffff?text=Product+2" alt="Thumbnail 2">
+                    <img class="thumbnail" src="https://via.placeholder.com/400x400/f093fb/ffffff?text=Product+3" alt="Thumbnail 3">
+                    <img class="thumbnail" src="https://via.placeholder.com/400x400/f5576c/ffffff?text=Product+4" alt="Thumbnail 4">
+                </div>
+            </div>
+
+            <div class="product-details">
+                <h2>Premium Product</h2>
+                <p class="description">
+                    This is a high-quality product with amazing features. Perfect for everyday use and designed with user experience in mind.
+                </p>
+
+                <div class="price-section">
+                    <span class="price">$99.99</span>
+                    <span class="original-price">$129.99</span>
+                    <span class="discount">-23%</span>
+                </div>
+
+                <div class="quantity-selector">
+                    <label>Quantity:</label>
+                    <div class="quantity-controls">
+                        <button>-</button>
+                        <span class="quantity">1</span>
+                        <button>+</button>
+                    </div>
+                </div>
+
+                <button class="add-to-cart-btn">Add to Cart</button>
+
+                <div class="features">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>High-quality materials</li>
+                        <li>Durable construction</li>
+                        <li>Easy to use</li>
+                        <li>30-day warranty</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import init from './pkg/e_commerce_gallery.js';
+        
+        async function run() {
+            await init();
+        }
+        
+        run().catch(console.error);
+    </script>
+</body>
+</html>

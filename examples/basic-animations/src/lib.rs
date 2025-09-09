@@ -3,11 +3,9 @@
 //! This example demonstrates how to create smooth animations without
 //! requiring the MotionDiv component
 
-use leptos::prelude::{
-    ClassAttribute, ElementChild, Get, OnAttribute, StyleAttribute, Update, signal,
-};
-use leptos::*;
-use leptos_motion_core::*;
+use leptos::prelude::*;
+use leptos_motion::*;
+use std::collections::HashMap;
 
 /// Simple working animation example
 #[component]
@@ -51,11 +49,28 @@ pub fn App() -> impl IntoView {
 
 #[component]
 pub fn SimpleAnimation() -> impl IntoView {
-    let _engine = MinimalEngine::new();
+    let (is_visible, set_is_visible) = signal(false);
+    
     view! {
         <div>
             <h2>"Leptos Motion Core Engine Demo"</h2>
             <p>"Animation engine initialized successfully!"</p>
+            
+            <MotionDiv
+                class="w-20 h-20 bg-blue-500 rounded-lg cursor-pointer".to_string()
+                animate=HashMap::from([
+                    ("opacity".to_string(), AnimationValue::Number(if is_visible.get() { 1.0 } else { 0.5 })),
+                    ("scale".to_string(), AnimationValue::Number(if is_visible.get() { 1.2 } else { 1.0 }))
+                ])
+                transition=Transition {
+                    duration: Some(0.5),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+                on:click=move |_| set_is_visible.update(|x| *x = !*x)
+            >
+                "Click me!"
+            </MotionDiv>
         </div>
     }
 }

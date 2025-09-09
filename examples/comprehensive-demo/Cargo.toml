@@ -12,13 +12,13 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 leptos = { version = "0.8.8", features = ["csr"] }
-leptos-motion = { path = "../../crates/leptos-motion", features = ["default"] }
-leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["default"] }
-leptos-motion-gestures = { path = "../../crates/leptos-motion-gestures", features = ["default"] }
-leptos-motion-layout = { path = "../../crates/leptos-motion-layout", features = ["default"] }
-leptos-motion-scroll = { path = "../../crates/leptos-motion-scroll" }
-leptos-motion-macros = { path = "../../crates/leptos-motion-macros" }
-leptos-motion-core = { path = "../../crates/leptos-motion-core", features = ["default"] }
+leptos-motion = { version = "0.7.0", path = "../../crates/leptos-motion", features = ["default"] }
+leptos-motion-dom = { version = "0.7.0", path = "../../crates/leptos-motion-dom", features = ["default"] }
+leptos-motion-gestures = { version = "0.7.0", path = "../../crates/leptos-motion-gestures", features = ["default"] }
+leptos-motion-layout = { version = "0.7.0", path = "../../crates/leptos-motion-layout", features = ["default"] }
+leptos-motion-scroll = { version = "0.7.0", path = "../../crates/leptos-motion-scroll" }
+leptos-motion-macros = { version = "0.7.0", path = "../../crates/leptos-motion-macros" }
+leptos-motion-core = { version = "0.7.0", path = "../../crates/leptos-motion-core", features = ["default"] }
 
 # Web dependencies
 wasm-bindgen = "0.2"

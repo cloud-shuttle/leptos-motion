@@ -93,7 +93,7 @@ fn ProductGallery() -> impl IntoView {
                             class="thumbnail".to_string()
                             class:active=is_active
                             on:click=move |_| set_current_image.set(i)
-                            while_hover={
+                            _while_hover={
                                 let mut target = HashMap::new();
                                 target.insert("scale".to_string(), AnimationValue::Number(1.1));
                                 target
@@ -167,13 +167,13 @@ fn ProductDetails() -> impl IntoView {
                 class="add-to-cart-btn".to_string()
                 class:added=is_added_to_cart
                 on:click=add_to_cart
-                while_hover={
+                _while_hover={
                     let mut target = HashMap::new();
                     target.insert("scale".to_string(), AnimationValue::Number(1.05));
                     target.insert("boxShadow".to_string(), AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string()));
                     target
                 }
-                while_tap={
+                _while_tap={
                     let mut target = HashMap::new();
                     target.insert("scale".to_string(), AnimationValue::Number(0.95));
                     target

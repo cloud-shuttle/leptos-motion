@@ -7,24 +7,13 @@ members = [
     "crates/leptos-motion-scroll",
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
-    "examples/basic-animations",
-    "examples/showcase",
-    "examples/minimal-showcase",
-    "examples/ultra-minimal",
-    "examples/advanced-gestures",
-    "examples/css-class-showcase",
-    "examples/mobile-app",
-    "examples/dashboard-app",
-    "examples/e-commerce-gallery",
-    "examples/advanced-features",
-    "examples/comprehensive-demo",
-    "examples/capability-showcase",
+    "examples/v0.7-showcase",
     "benches",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.6.0"
+version = "0.8.0"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2024"  # Latest edition as of September 2025
@@ -38,18 +27,18 @@ description = "A comprehensive animation library for Leptos with Motion-inspired
 
 [workspace.dependencies]
 # Core Leptos dependencies (Latest stable versions as of September 2025)
-leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
+leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
 leptos_meta = "0.8.5"
 leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
 leptos-motion = { path = "crates/leptos-motion" }
-leptos-motion-core = { version = "0.6.0", path = "crates/leptos-motion-core" }
-leptos-motion-dom = { version = "0.6.0", path = "crates/leptos-motion-dom" }
-leptos-motion-gestures = { version = "0.6.0", path = "crates/leptos-motion-gestures" }
-leptos-motion-layout = { version = "0.6.0", path = "crates/leptos-motion-layout" }
-leptos-motion-scroll = { version = "0.6.0", path = "crates/leptos-motion-scroll" }
-leptos-motion-macros = { version = "0.6.0", path = "crates/leptos-motion-macros" }
+leptos-motion-core = { version = "0.8.0", path = "crates/leptos-motion-core" }
+leptos-motion-dom = { version = "0.8.0", path = "crates/leptos-motion-dom" }
+leptos-motion-gestures = { version = "0.8.0", path = "crates/leptos-motion-gestures" }
+leptos-motion-layout = { version = "0.8.0", path = "crates/leptos-motion-layout" }
+leptos-motion-scroll = { version = "0.8.0", path = "crates/leptos-motion-scroll" }
+leptos-motion-macros = { version = "0.8.0", path = "crates/leptos-motion-macros" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }

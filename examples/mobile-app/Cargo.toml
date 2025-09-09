@@ -5,7 +5,8 @@ edition.workspace = true
 description = "Mobile-style app with page transitions and gestures"
 
 [dependencies]
-leptos-motion = { path = "../../crates/leptos-motion", features = ["csr"] }
+leptos-motion = { version = "0.8.0", path = "../../crates/leptos-motion", features = ["csr"] }
+leptos-motion-dom = { version = "0.8.0", path = "../../crates/leptos-motion-dom" }
 leptos.workspace = true
 leptos_meta.workspace = true
 leptos_router.workspace = true

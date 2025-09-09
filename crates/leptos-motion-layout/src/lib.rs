@@ -254,3 +254,7 @@ mod simplified_layout_tests {
 
 #[cfg(test)]
 mod flip_tests;
+
+// Include the FLIP TDD tests
+#[cfg(test)]
+mod flip_tdd_tests;

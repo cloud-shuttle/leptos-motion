@@ -125,8 +125,12 @@
 // Re-export core functionality
 pub use leptos_motion_core::{
     AnimationConfig, AnimationEngine, AnimationHandle, AnimationValue, Easing, RepeatConfig,
-    Result, SpringConfig, Transition, animation, easing, performance, spring,
+    Result, SpringConfig, Transition, animation, easing, spring,
 };
+
+// Re-export performance module if available
+#[cfg(feature = "performance-metrics")]
+pub use leptos_motion_core::performance;
 
 // Re-export DOM functionality
 pub use leptos_motion_dom::{

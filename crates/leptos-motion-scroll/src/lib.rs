@@ -4,6 +4,10 @@
 
 use std::collections::HashMap;
 
+// Include the scroll integration tests
+#[cfg(test)]
+mod scroll_integration_tests;
+
 /// Scroll direction
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ScrollDirection {

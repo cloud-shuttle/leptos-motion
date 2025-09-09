@@ -1,0 +1,324 @@
+name: Comprehensive Testing Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC for performance monitoring
+    - cron: '0 2 * * *'
+
+jobs:
+  responsiveness-tests:
+    name: Responsiveness Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Build WASM
+      run: |
+        cd examples/v0.7-showcase
+        wasm-pack build --target web --out-dir pkg --dev
+    
+    - name: Start HTTP Server
+      run: |
+        cd examples/v0.7-showcase
+        python3 -m http.server 8080 &
+        sleep 5
+    
+    - name: Run Responsiveness Tests
+      run: |
+        cd examples/v0.7-showcase
+        npx playwright test tests/simple-responsiveness-test.spec.ts --reporter=line
+    
+    - name: Upload Responsiveness Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: responsiveness-test-results
+        path: examples/v0.7-showcase/test-results/
+
+  visual-regression-tests:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Build WASM
+      run: |
+        cd examples/v0.7-showcase
+        wasm-pack build --target web --out-dir pkg --dev
+    
+    - name: Start HTTP Server
+      run: |
+        cd examples/v0.7-showcase
+        python3 -m http.server 8080 &
+        sleep 5
+    
+    - name: Run Visual Regression Tests
+      run: |
+        cd examples/v0.7-showcase
+        npx playwright test tests/visual-regression.spec.ts --reporter=line
+    
+    - name: Upload Visual Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: visual-regression-results
+        path: examples/v0.7-showcase/test-results/
+
+  performance-monitoring:
+    name: Performance Monitoring
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Build WASM
+      run: |
+        cd examples/v0.7-showcase
+        wasm-pack build --target web --out-dir pkg --dev
+    
+    - name: Start HTTP Server
+      run: |
+        cd examples/v0.7-showcase
+        python3 -m http.server 8080 &
+        sleep 5
+    
+    - name: Run Performance Monitoring Tests
+      run: |
+        cd examples/v0.7-showcase
+        npx playwright test tests/performance-monitoring.spec.ts --reporter=line
+    
+    - name: Upload Performance Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: performance-monitoring-results
+        path: examples/v0.7-showcase/test-results/
+    
+    - name: Comment Performance Results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Read performance results and create comment
+          const resultsPath = 'examples/v0.7-showcase/test-results/';
+          if (fs.existsSync(resultsPath)) {
+            const files = fs.readdirSync(resultsPath);
+            const performanceFiles = files.filter(f => f.includes('performance'));
+            
+            if (performanceFiles.length > 0) {
+              const comment = `## 📊 Performance Monitoring Results
+              
+              Performance tests completed. Check the artifacts for detailed results.
+              
+              **Files generated:**
+              ${performanceFiles.map(f => `- ${f}`).join('\n')}
+              
+              **Next steps:**
+              - Review performance metrics
+              - Check for regressions
+              - Monitor memory usage trends`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          }
+
+  component-coverage:
+    name: Component Coverage Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Build WASM
+      run: |
+        cd examples/v0.7-showcase
+        wasm-pack build --target web --out-dir pkg --dev
+    
+    - name: Start HTTP Server
+      run: |
+        cd examples/v0.7-showcase
+        python3 -m http.server 8080 &
+        sleep 5
+    
+    - name: Run Component Coverage Tests
+      run: |
+        cd examples/v0.7-showcase
+        npx playwright test tests/component-coverage.spec.ts --reporter=line
+    
+    - name: Upload Component Coverage Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: component-coverage-results
+        path: examples/v0.7-showcase/test-results/
+
+  cross-browser-testing:
+    name: Cross-Browser Testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Build WASM
+      run: |
+        cd examples/v0.7-showcase
+        wasm-pack build --target web --out-dir pkg --dev
+    
+    - name: Start HTTP Server
+      run: |
+        cd examples/v0.7-showcase
+        python3 -m http.server 8080 &
+        sleep 5
+    
+    - name: Run Cross-Browser Tests
+      run: |
+        cd examples/v0.7-showcase
+        npx playwright test tests/simple-responsiveness-test.spec.ts --project=${{ matrix.browser }} --reporter=line
+    
+    - name: Upload Cross-Browser Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: cross-browser-results-${{ matrix.browser }}
+        path: examples/v0.7-showcase/test-results/
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [responsiveness-tests, visual-regression-tests, performance-monitoring, component-coverage, cross-browser-testing]
+    if: always()
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download All Test Results
+      uses: actions/download-artifact@v4
+      with:
+        path: test-results/
+    
+    - name: Generate Test Summary
+      run: |
+        echo "# 🧪 Test Summary Report" > test-summary.md
+        echo "" >> test-summary.md
+        echo "**Date:** $(date)" >> test-summary.md
+        echo "**Commit:** ${{ github.sha }}" >> test-summary.md
+        echo "**Branch:** ${{ github.ref_name }}" >> test-summary.md
+        echo "" >> test-summary.md
+        
+        echo "## Test Results" >> test-summary.md
+        echo "" >> test-summary.md
+        
+        # Check each test job
+        if [ "${{ needs.responsiveness-tests.result }}" == "success" ]; then
+          echo "✅ **Responsiveness Tests:** PASSED" >> test-summary.md
+        else
+          echo "❌ **Responsiveness Tests:** FAILED" >> test-summary.md
+        fi
+        
+        if [ "${{ needs.visual-regression-tests.result }}" == "success" ]; then
+          echo "✅ **Visual Regression Tests:** PASSED" >> test-summary.md
+        else
+          echo "❌ **Visual Regression Tests:** FAILED" >> test-summary.md
+        fi
+        
+        if [ "${{ needs.performance-monitoring.result }}" == "success" ]; then
+          echo "✅ **Performance Monitoring:** PASSED" >> test-summary.md
+        else
+          echo "❌ **Performance Monitoring:** FAILED" >> test-summary.md
+        fi
+        
+        if [ "${{ needs.component-coverage.result }}" == "success" ]; then
+          echo "✅ **Component Coverage:** PASSED" >> test-summary.md
+        else
+          echo "❌ **Component Coverage:** FAILED" >> test-summary.md
+        fi
+        
+        if [ "${{ needs.cross-browser-testing.result }}" == "success" ]; then
+          echo "✅ **Cross-Browser Testing:** PASSED" >> test-summary.md
+        else
+          echo "❌ **Cross-Browser Testing:** FAILED" >> test-summary.md
+        fi
+        
+        echo "" >> test-summary.md
+        echo "## Next Steps" >> test-summary.md
+        echo "" >> test-summary.md
+        echo "- Review failed tests" >> test-summary.md
+        echo "- Check performance metrics" >> test-summary.md
+        echo "- Monitor for regressions" >> test-summary.md
+    
+    - name: Upload Test Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-summary-report
+        path: test-summary.md
+    
+    - name: Comment Test Summary
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync('test-summary.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });

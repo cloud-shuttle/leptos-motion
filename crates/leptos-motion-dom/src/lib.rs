@@ -6,6 +6,8 @@
 #![forbid(unsafe_code)]
 
 pub mod components;
+pub mod reactive_motion_div;
+pub mod reactive_motion_div_fixed;
 pub mod elements;
 pub mod hooks;
 pub mod improved_motion_div;
@@ -13,6 +15,13 @@ pub mod performance;
 pub mod presence;
 pub mod simplified_event_handling;
 pub mod utils;
+
+// New v0.7 features
+pub mod spring_physics;
+pub mod animate_presence;
+pub mod variants;
+pub mod timeline;
+pub mod performance_optimizations;
 
 #[cfg(feature = "css-animations")]
 pub mod css_animations;
@@ -24,6 +33,17 @@ mod accessibility_tests;
 mod components_tests;
 #[cfg(test)]
 mod motion_div_tdd_tests;
+
+// Include the DOM integration TDD tests
+#[cfg(test)]
+mod dom_integration_tdd_tests;
+
+// Include the advanced features TDD tests
+#[cfg(test)]
+mod advanced_features_tdd_tests;
+
+#[cfg(test)]
+mod reactive_animation_tests;
 
 #[cfg(test)]
 mod drag_animation_tests {
@@ -85,6 +105,31 @@ mod cross_browser_tests {
     include!("cross_browser_tests.rs");
 }
 
+#[cfg(test)]
+mod spring_physics_tests {
+    include!("spring_physics_tests.rs");
+}
+
+#[cfg(test)]
+mod animate_presence_tests {
+    include!("animate_presence_tests.rs");
+}
+
+#[cfg(test)]
+mod variants_system_tests {
+    include!("variants_system_tests.rs");
+}
+
+#[cfg(test)]
+mod timeline_sequences_tests {
+    include!("timeline_sequences_tests.rs");
+}
+
+#[cfg(test)]
+mod polish_optimize_tests {
+    include!("polish_optimize_tests.rs");
+}
+
 // #[cfg(test)]
 // mod phase1_engine_integration_tests;
 
@@ -101,14 +146,23 @@ mod cross_browser_tests {
 // pub use components::*; // Temporarily disabled due to unused imports
 pub use elements::*;
 pub use hooks::*;
-pub use presence::*;
+// pub use presence::*; // Disabled due to conflict with animate_presence
 pub use utils::*;
+
+// Re-export new v0.7 features
+pub use spring_physics::*;
+pub use animate_presence::*;
+pub use variants::*;
+pub use timeline::*;
+pub use performance_optimizations::*;
 
 #[cfg(feature = "css-animations")]
 pub use css_animations::*;
 
 // Re-export components
 pub use components::{MotionDiv, MotionSpan};
+pub use reactive_motion_div::{ReactiveMotionDiv, AnimationTargetOrReactive, reactive_animate, static_animate, signal_animate};
+pub use reactive_motion_div_fixed::{ReactiveMotionDivFixed};
 // Improved motion div module is not yet implemented
 // pub use improved_motion_div::{
 //     ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,

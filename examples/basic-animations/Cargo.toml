@@ -6,8 +6,8 @@ description = "Basic animations example for Leptos Motion"
 license = "MIT"
 
 [dependencies]
-leptos-motion = { path = "../../crates/leptos-motion", features = ["csr"] }
-leptos-motion-core = { path = "../../crates/leptos-motion-core" }
+leptos-motion = { version = "0.8.0", path = "../../crates/leptos-motion", features = ["csr"] }
+leptos-motion-dom = { version = "0.8.0", path = "../../crates/leptos-motion-dom" }
 leptos.workspace = true
 leptos_meta.workspace = true
 leptos_router.workspace = true

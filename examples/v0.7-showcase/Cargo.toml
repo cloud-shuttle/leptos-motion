@@ -7,7 +7,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
+leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
+leptos_macro = "0.8.8"  # Published version
+reactive_graph = "0.2.6"  # Published version
 leptos-motion = { version = "0.8.0", path = "../../crates/leptos-motion" }
 leptos-motion-dom = { version = "0.8.0", path = "../../crates/leptos-motion-dom" }
 log = "0.4"
@@ -20,4 +22,6 @@ console_log = "1.0"
 crate-type = ["cdylib", "rlib"]
 
 [build-dependencies]
-leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
+leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
+leptos_macro = "0.8.8"  # Published version
+reactive_graph = "0.2.6"  # Published version

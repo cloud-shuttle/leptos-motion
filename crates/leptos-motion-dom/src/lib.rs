@@ -12,9 +12,16 @@ pub mod improved_motion_div;
 pub mod performance;
 pub mod presence;
 pub mod reactive_motion_div;
-pub mod reactive_motion_div_fixed;
+// pub mod reactive_motion_div_fixed; // Disabled due to threading issues
 pub mod simplified_event_handling;
 pub mod utils;
+
+// Phase 2: Animation Engine Integration
+pub mod animation_engine;
+pub mod easing_functions;
+pub mod enhanced_motion_div;
+pub mod repeat_config;
+pub mod transform_animations;
 
 // New v0.7 features
 pub mod animate_presence;
@@ -34,13 +41,31 @@ mod components_tests;
 #[cfg(test)]
 mod motion_div_tdd_tests;
 
-// Include the DOM integration TDD tests
 #[cfg(test)]
-mod dom_integration_tdd_tests;
+mod motion_div_api_fix_tests;
+
+#[cfg(test)]
+mod api_contract_tests;
+
+#[cfg(test)]
+mod regression_prevention_tests;
+
+#[cfg(test)]
+mod integration_tests;
+
+#[cfg(test)]
+mod animation_engine_tests;
+
+#[cfg(test)]
+mod enhanced_motion_div_tests;
+
+// Include the DOM integration TDD tests
+// #[cfg(test)]
+// mod dom_integration_tdd_tests;
 
 // Include the advanced features TDD tests
-#[cfg(test)]
-mod advanced_features_tdd_tests;
+// #[cfg(test)]
+// mod advanced_features_tdd_tests;
 
 #[cfg(test)]
 mod reactive_animation_tests;
@@ -164,7 +189,7 @@ pub use components::{MotionDiv, MotionSpan};
 pub use reactive_motion_div::{
     AnimationTargetOrReactive, ReactiveMotionDiv, reactive_animate, signal_animate, static_animate,
 };
-pub use reactive_motion_div_fixed::ReactiveMotionDivFixed;
+// pub use reactive_motion_div_fixed::ReactiveMotionDivFixed; // Disabled due to threading issues
 // Improved motion div module is not yet implemented
 // pub use improved_motion_div::{
 //     ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,

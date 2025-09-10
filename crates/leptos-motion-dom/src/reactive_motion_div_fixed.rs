@@ -5,16 +5,17 @@
 
 use crate::{DragConfig, DragConstraints};
 use leptos::prelude::{
-    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, Memo, NodeRef,
-    NodeRefAttribute, Set, StyleAttribute, signal,
+    Children, ClassAttribute, Effect, ElementChild, Get, Memo, NodeRef, NodeRefAttribute, Set,
+    StyleAttribute,
 };
+use leptos::reactive::signal::signal;
 use leptos::*;
 use leptos_motion_core::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 // Import the types from the original module to avoid duplication
-use super::reactive_motion_div::{AnimationTargetOrReactive, signal_animate};
+use super::reactive_motion_div::AnimationTargetOrReactive;
 
 /// Fixed ReactiveMotionDiv component for animated div elements
 /// This version removes complex momentum animations and focuses on basic functionality
@@ -71,56 +72,49 @@ pub fn ReactiveMotionDivFixed(
         set_styles.set(styles);
     }
 
-    // Handle animate prop with reactive support - SIMPLIFIED VERSION
-    if let Some(animate_target) = animate {
-        match animate_target {
-            AnimationTargetOrReactive::Static(target) => {
-                // Static animation - apply once
-                let mut styles = current_styles.get();
-                for (key, value) in target {
-                    styles.insert(key, value.to_string_value());
-                }
-                set_styles.set(styles);
-            }
-            AnimationTargetOrReactive::Reactive(closure) => {
-                // Reactive animation - create effect to watch for changes
-                // SIMPLIFIED: Use get_untracked to avoid dependency tracking issues
-                Effect::new(move |_| {
-                    let target = closure();
-                    let mut styles = current_styles.get_untracked();
-                    for (key, value) in target {
-                        styles.insert(key, value.to_string_value());
-                    }
-                    set_styles.set(styles);
-                });
-            }
-            AnimationTargetOrReactive::Signal(animate_memo) => {
-                // Signal-based animation - use untracked to avoid circular dependencies
-                Effect::new(move |_| {
-                    let target = animate_memo.get(); // This properly tracks the memo
-                    let mut styles = current_styles.get_untracked(); // Use get_untracked to avoid circular dependencies
-                    for (key, value) in target {
-                        styles.insert(key, value.to_string_value());
-                    }
-                    set_styles.set(styles);
-                });
-            }
-        }
-    }
-
     // Create a reactive style signal that properly tracks changes
     let reactive_style = move || {
-        let styles = current_styles.get(); // Track the styles signal
-
         // Add CSS transitions first to ensure they're not overridden
-        let mut style_parts = vec!["transition: all 0.5s ease-in-out".to_string()];
+        let mut style_parts = vec!["transition: all 0.6s ease-in-out".to_string()];
 
-        // Add animation styles
-        style_parts.extend(
-            styles
-                .iter()
-                .map(|(key, value)| format!("{}: {}", key, value)),
-        );
+        // Handle animate prop with reactive support - COMPUTE INSIDE THE REACTIVE FUNCTION
+        if let Some(animate_target) = &animate {
+            let animation_styles = match animate_target {
+                AnimationTargetOrReactive::Static(target) => {
+                    // Static animation - convert to styles immediately
+                    let mut styles = HashMap::new();
+                    for (key, value) in target {
+                        styles.insert(key.clone(), value.to_string_value());
+                    }
+                    styles
+                }
+                AnimationTargetOrReactive::Reactive(closure) => {
+                    // Reactive animation - call the closure to get current styles
+                    let target = closure(); // This will track any signals used in the closure
+                    let mut styles = HashMap::new();
+                    for (key, value) in target {
+                        styles.insert(key.clone(), value.to_string_value());
+                    }
+                    styles
+                }
+                AnimationTargetOrReactive::Signal(animate_memo) => {
+                    // Signal-based animation - get the current value
+                    let target = animate_memo.get();
+                    let mut styles = HashMap::new();
+                    for (key, value) in target {
+                        styles.insert(key.clone(), value.to_string_value());
+                    }
+                    styles
+                }
+            };
+
+            // Add animation styles
+            style_parts.extend(
+                animation_styles
+                    .iter()
+                    .map(|(key, value)| format!("{}: {}", key, value)),
+            );
+        }
 
         // Add the style prop if provided
         if let Some(style_prop) = &style {

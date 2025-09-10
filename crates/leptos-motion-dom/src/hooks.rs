@@ -1,6 +1,7 @@
 //! Animation hooks for Leptos components
 
 use leptos::prelude::*;
+use leptos::reactive::signal::signal;
 
 // Include modern TDD tests
 #[cfg(test)]

@@ -3,6 +3,7 @@
 //! A component for handling enter and exit animations of conditionally rendered elements
 
 use leptos::prelude::*;
+use leptos::reactive::signal::signal;
 use leptos_motion_core::{AnimationTarget, Transition};
 use std::collections::HashMap;
 

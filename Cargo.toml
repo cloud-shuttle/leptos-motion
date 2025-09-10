@@ -8,6 +8,7 @@ members = [
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
     "examples/v0.7-showcase",
+    "examples/comprehensive-demo",
     "benches",
 ]
 resolver = "2"
@@ -26,8 +27,10 @@ categories = ["gui", "wasm", "web-programming"]
 description = "A comprehensive animation library for Leptos with Motion-inspired API"
 
 [workspace.dependencies]
-# Core Leptos dependencies (Latest stable versions as of September 2025)
-leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
+# Core Leptos dependencies (Testing with published leptos to verify fixes)
+leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
+leptos_macro = "0.8.8"  # Published version
+reactive_graph = "0.2.6"  # Published version
 leptos_meta = "0.8.5"
 leptos_router = "0.8.6"
 

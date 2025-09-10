@@ -6,8 +6,9 @@
 use crate::{DragAxis, DragConfig, DragConstraints};
 use leptos::prelude::{
     Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, Memo, NodeRef,
-    NodeRefAttribute, OnAttribute, Set, StyleAttribute, signal,
+    NodeRefAttribute, OnAttribute, Set, StyleAttribute,
 };
+use leptos::reactive::signal::signal;
 use leptos::*;
 use leptos_motion_core::*;
 use std::cell::RefCell;

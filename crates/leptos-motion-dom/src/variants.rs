@@ -3,6 +3,7 @@
 //! A system for defining and managing named animation states
 
 use leptos::prelude::*;
+use leptos::reactive::signal::signal;
 use leptos_motion_core::{AnimationTarget, Transition};
 use std::collections::HashMap;
 

@@ -12,12 +12,11 @@ test.describe('Comprehensive Demo Tests', () => {
   test('should load the demo page', async ({ page }) => {
     // Check that the main content is visible
     await expect(page.locator('h1')).toHaveCount(2);
-    await expect(page.locator('h1').first()).toContainText('🚀 Leptos Motion');
+    await expect(page.locator('h1').last()).toContainText('Animation Reactivity Test');
 
     // Check that the main demo elements are present
-    await expect(page.locator('.animated-box')).toBeVisible();
-    await expect(page.locator('.mode-button')).toHaveCount(3);
-    await expect(page.locator('.main-button')).toBeVisible();
+    await expect(page.locator('button')).toBeVisible();
+    await expect(page.locator('div[style*="padding: 2rem"]')).toBeVisible();
   });
 
   test('should display interactive elements', async ({ page }) => {
@@ -31,8 +30,8 @@ test.describe('Comprehensive Demo Tests', () => {
   });
 
   test('should handle hover effects', async ({ page }) => {
-    // Find a hoverable element (mode button)
-    const hoverElement = page.locator('.mode-button').first();
+    // Find a hoverable element (button)
+    const hoverElement = page.locator('button').first();
 
     // Get initial transform
     const initialTransform = await hoverElement.evaluate(
@@ -66,6 +65,102 @@ test.describe('Comprehensive Demo Tests', () => {
     await expect(clickElement).toBeVisible();
   });
 
+  test('should test animation functionality with visual verification', async ({ page }) => {
+    // Find the animation button
+    const animationButton = page.locator('button').first();
+
+    // Find the animated element - look for the test animation box text
+    const animatedElement = page.locator('div:has-text("Test Animation Box")').last();
+
+    // Get initial state
+    const initialOpacity = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).opacity
+    );
+    const initialBackgroundColor = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).backgroundColor
+    );
+    const initialTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
+    );
+
+    console.log('Initial state:', { initialOpacity, initialBackgroundColor, initialTransform });
+
+    // Click the button to trigger animation
+    await animationButton.click();
+
+    // Wait for animation to start and complete
+    await page.waitForTimeout(100);
+
+    // Check that the animation is in progress or completed
+    const midAnimationOpacity = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).opacity
+    );
+    const midAnimationBackgroundColor = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).backgroundColor
+    );
+    const midAnimationTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
+    );
+
+    console.log('Mid animation state:', {
+      midAnimationOpacity,
+      midAnimationBackgroundColor,
+      midAnimationTransform,
+    });
+
+    // Wait for animation to complete
+    await page.waitForTimeout(1000);
+
+    // Get final state
+    const finalOpacity = await animatedElement.evaluate(el => window.getComputedStyle(el).opacity);
+    const finalBackgroundColor = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).backgroundColor
+    );
+    const finalTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
+    );
+
+    console.log('Final state:', { finalOpacity, finalBackgroundColor, finalTransform });
+
+    // Verify that the animation actually changed the visual properties
+    // The animation should change opacity from 1.0 to 0.5
+    expect(finalOpacity).not.toBe(initialOpacity);
+
+    // The animation should change the transform (scale)
+    expect(finalTransform).not.toBe(initialTransform);
+
+    // The animation should change the background color
+    expect(finalBackgroundColor).not.toBe(initialBackgroundColor);
+
+    // Click again to toggle back
+    await animationButton.click();
+
+    // Wait for animation to complete
+    await page.waitForTimeout(1000);
+
+    // Get the state after toggling back
+    const backToInitialOpacity = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).opacity
+    );
+    const backToInitialBackgroundColor = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).backgroundColor
+    );
+    const backToInitialTransform = await animatedElement.evaluate(
+      el => window.getComputedStyle(el).transform
+    );
+
+    console.log('Back to initial state:', {
+      backToInitialOpacity,
+      backToInitialBackgroundColor,
+      backToInitialTransform,
+    });
+
+    // Verify that it animated back to the initial state
+    expect(backToInitialOpacity).toBe(initialOpacity);
+    expect(backToInitialTransform).toBe(initialTransform);
+    expect(backToInitialBackgroundColor).toBe(initialBackgroundColor);
+  });
+
   test('should load WASM module without errors', async ({ page }) => {
     // Check for console errors
     const errors: string[] = [];
@@ -90,8 +185,8 @@ test.describe('Comprehensive Demo Tests', () => {
   test('should have proper HTML structure', async ({ page }) => {
     // Check that the main structure is present
     await expect(page.locator('body')).toBeVisible();
-    await expect(page.locator('h1')).toHaveCount(2); // Main title
-    await expect(page.locator('.animated-box')).toBeVisible();
-    await expect(page.locator('.mode-button')).toHaveCount(3);
+    await expect(page.locator('h1')).toHaveCount(2); // Static title + Leptos title
+    await expect(page.locator('button')).toBeVisible();
+    await expect(page.locator('div[style*="padding: 2rem"]')).toBeVisible();
   });
 });

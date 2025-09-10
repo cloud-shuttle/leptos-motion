@@ -10,8 +10,16 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use web_sys::console;
 
+mod comprehensive_motion_demo;
+mod reactive_style_test;
+mod simple_animation_test;
 mod test_fix;
+mod working_motion_demo;
+use comprehensive_motion_demo::ComprehensiveMotionDemo;
+use reactive_style_test::ReactiveStyleTest;
+use simple_animation_test::SimpleAnimationTest;
 use test_fix::TestFix;
+use working_motion_demo::WorkingMotionDemo;
 
 /// Main demo app component
 #[component]
@@ -155,7 +163,7 @@ pub fn DemoApp() -> impl IntoView {
                                     <MotionDiv
                                         class="mode-button".to_string()
                                         on:click=move |_| set_animation_mode.set(0)
-                                        _while_hover=button_hover_animation()
+                                        while_hover=button_hover_animation()
                         style=(move || {
                             let active = animation_mode.get() == 0;
                             if active {
@@ -266,5 +274,5 @@ pub fn main() {
     console_error_panic_hook::set_once();
     console_log::init().expect("Failed to initialize console log");
 
-    mount_to_body(|| view! { <TestFix/> })
+    mount_to_body(|| view! { <WorkingMotionDemo/> })
 }

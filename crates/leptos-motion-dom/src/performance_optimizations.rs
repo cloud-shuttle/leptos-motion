@@ -3,6 +3,7 @@
 //! Advanced performance optimization systems for memory management and edge case handling
 
 use leptos::prelude::*;
+use leptos::reactive::signal::signal;
 use leptos_motion_core::AnimationValue;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};

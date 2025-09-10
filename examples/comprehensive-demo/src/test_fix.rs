@@ -2,7 +2,7 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
-use leptos_motion_dom::MotionDiv;
+use leptos_motion_dom::{AnimationTargetOrReactive, MotionDiv};
 use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
@@ -38,6 +38,7 @@ pub fn TestFix() -> impl IntoView {
         target
     };
 
+    // Create a memo that will react to signal changes
     let animate_animation = move || {
         let target = create_animation_target(is_visible.get());
         console::log_1(&format!("Animation target: {:?}", target).into());
@@ -69,27 +70,35 @@ pub fn TestFix() -> impl IntoView {
                 }}
             </button>
 
-            <MotionDiv
-                initial=create_animation_target(true)
-                animate=animate_animation()
-                transition=transition
-                style="
-                    padding: 2rem;
-                    margin: 2rem auto;
-                    border-radius: 10px;
-                    color: white;
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    text-align: center;
-                    min-width: 200px;
-                    min-height: 100px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                ".to_string()
+            <div
+                style=move || {
+                    let animate_target = animate_animation();
+                    let mut style_parts = vec![
+                        "padding: 2rem".to_string(),
+                        "margin: 2rem auto".to_string(),
+                        "border-radius: 10px".to_string(),
+                        "color: white".to_string(),
+                        "font-size: 1.5rem".to_string(),
+                        "font-weight: bold".to_string(),
+                        "text-align: center".to_string(),
+                        "min-width: 200px".to_string(),
+                        "min-height: 100px".to_string(),
+                        "display: flex".to_string(),
+                        "align-items: center".to_string(),
+                        "justify-content: center".to_string(),
+                        "transition: all 0.6s ease-in-out".to_string(),
+                    ];
+
+                    // Add animation styles
+                    for (key, value) in animate_target {
+                        style_parts.push(format!("{}: {}", key, value.to_string_value()));
+                    }
+
+                    style_parts.join("; ")
+                }
             >
                 "Test Animation Box"
-            </MotionDiv>
+            </div>
         </div>
     }
 }

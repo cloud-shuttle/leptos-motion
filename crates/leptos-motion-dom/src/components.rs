@@ -2,11 +2,18 @@
 //!
 //! This module provides motion components that integrate with Leptos
 
-use crate::{DragAxis, DragConfig, DragConstraints};
-use leptos::prelude::{
-    Children, ClassAttribute, ElementChild, Get, NodeRef, NodeRefAttribute, OnAttribute, Set,
-    StyleAttribute, signal,
+use crate::{
+    DragAxis, DragConfig, DragConstraints,
+    animation_engine::{AnimationEngine, AnimationEngineBuilder},
+    easing_functions::*,
+    repeat_config::{AnimationCycleManager, RepeatState},
+    transform_animations::{TransformAnimationBuilder, TransformAnimationManager},
 };
+use leptos::prelude::{
+    Children, ClassAttribute, Effect, ElementChild, Get, NodeRef, NodeRefAttribute, OnAttribute,
+    Set, StyleAttribute,
+};
+use leptos::reactive::signal::signal;
 use leptos::*;
 use leptos_motion_core::*;
 use std::cell::RefCell;
@@ -57,13 +64,13 @@ pub fn MotionDiv(
     transition: Option<Transition>,
     /// Hover animation state
     #[prop(optional)]
-    _while_hover: Option<AnimationTarget>,
+    while_hover: Option<AnimationTarget>,
     /// Tap animation state
     #[prop(optional)]
-    _while_tap: Option<AnimationTarget>,
+    while_tap: Option<AnimationTarget>,
     /// Layout animation enabled
     #[prop(optional)]
-    _layout: Option<bool>,
+    layout: Option<bool>,
     /// Drag configuration
     #[prop(optional)]
     drag: Option<DragConfig>,
@@ -96,15 +103,44 @@ pub fn MotionDiv(
         set_styles.set(styles);
     }
 
-    // Handle animate prop with animation engine integration
+    // Handle animate prop with reactive animation
     if let Some(animate_target) = animate {
-        // TODO: Integrate with animation engine instead of direct style manipulation
-        // For now, we'll do direct style manipulation to make tests pass
-        let mut styles = current_styles.get();
-        for (key, value) in animate_target {
-            styles.insert(key, value.to_string_value());
-        }
-        set_styles.set(styles);
+        // Create a reactive effect that updates styles when animate_target changes
+        Effect::new(move |_| {
+            let mut styles = current_styles.get();
+            for (key, value) in animate_target.iter() {
+                styles.insert(key.clone(), value.to_string_value());
+            }
+            set_styles.set(styles);
+        });
+    }
+
+    // Handle while_hover prop with reactive animation
+    if let Some(hover_target) = while_hover {
+        let hover_target_clone = hover_target.clone();
+        Effect::new(move |_| {
+            if _is_hovered.get() {
+                let mut styles = current_styles.get();
+                for (key, value) in hover_target_clone.iter() {
+                    styles.insert(key.clone(), value.to_string_value());
+                }
+                set_styles.set(styles);
+            }
+        });
+    }
+
+    // Handle while_tap prop with reactive animation
+    if let Some(tap_target) = while_tap {
+        let tap_target_clone = tap_target.clone();
+        Effect::new(move |_| {
+            if _is_tapped.get() {
+                let mut styles = current_styles.get();
+                for (key, value) in tap_target_clone.iter() {
+                    styles.insert(key.clone(), value.to_string_value());
+                }
+                set_styles.set(styles);
+            }
+        });
     }
 
     // Convert styles to CSS string
@@ -302,6 +338,26 @@ pub fn MotionDiv(
                         start_momentum();
                     }
                 }
+            }
+            on:mouseenter=move |_event| {
+                _set_hovered.set(true);
+            }
+            on:mouseleave=move |_event| {
+                _set_hovered.set(false);
+            }
+            on:click=move |_event| {
+                _set_tapped.set(true);
+                // Reset tap state after a short delay
+                let set_tapped_clone = _set_tapped.clone();
+                let _ = web_sys::window()
+                    .unwrap()
+                    .set_timeout_with_callback_and_timeout_and_arguments_0(
+                        &Closure::wrap(Box::new(move || {
+                            set_tapped_clone.set(false);
+                        }) as Box<dyn FnMut()>).as_ref().unchecked_ref(),
+                        150 // 150ms tap duration
+                    )
+                    .unwrap();
             }
         >
             {children()}

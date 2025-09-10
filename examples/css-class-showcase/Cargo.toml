@@ -16,6 +16,8 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 leptos = { version = "0.8.8", features = ["csr"] }
+leptos_macro = "0.8.8"  # Published version
+reactive_graph = "0.2.6"  # Published version
 leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["css-animations"] }
 console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"

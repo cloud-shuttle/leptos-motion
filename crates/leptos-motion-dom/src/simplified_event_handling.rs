@@ -17,7 +17,7 @@ pub enum DragAxis {
 }
 
 /// Drag constraints for limiting drag movement
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct DragConstraints {
     /// Left boundary
     pub left: Option<f64>,
@@ -27,6 +27,17 @@ pub struct DragConstraints {
     pub top: Option<f64>,
     /// Bottom boundary
     pub bottom: Option<f64>,
+}
+
+impl Default for DragConstraints {
+    fn default() -> Self {
+        Self {
+            left: None,
+            right: None,
+            top: None,
+            bottom: None,
+        }
+    }
 }
 
 /// Drag configuration

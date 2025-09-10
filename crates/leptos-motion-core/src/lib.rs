@@ -47,7 +47,19 @@ pub mod minimal_serialization;
 pub mod spring;
 
 #[cfg(test)]
+mod fuzz_tests_1;
+#[cfg(test)]
+mod fuzz_tests_2;
+#[cfg(test)]
+mod fuzz_tests_3;
+#[cfg(test)]
+mod fuzz_tests_4;
+#[cfg(test)]
 mod memory_optimization_tests;
+#[cfg(test)]
+mod performance_stress_tests;
+#[cfg(test)]
+mod property_based_tests;
 
 #[cfg(test)]
 mod basic_functionality_tests;

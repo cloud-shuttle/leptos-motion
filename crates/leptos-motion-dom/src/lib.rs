@@ -43,6 +43,10 @@ pub mod css_animations;
 
 #[cfg(test)]
 mod accessibility_tests;
+#[cfg(test)]
+mod fuzz_tests;
+#[cfg(test)]
+mod visual_regression_tests;
 
 #[cfg(test)]
 mod components_tests;

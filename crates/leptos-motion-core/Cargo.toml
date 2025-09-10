@@ -111,6 +111,11 @@ log.workspace = true
 [dev-dependencies]
 wasm-bindgen-test.workspace = true
 pretty_assertions.workspace = true
+proptest.workspace = true
+arbitrary.workspace = true
+quickcheck.workspace = true
+test-case.workspace = true
+rstest.workspace = true
 
 # Benchmarks will be added later
 

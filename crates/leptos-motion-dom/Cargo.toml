@@ -76,6 +76,12 @@ log = "0.4"
 
 [dev-dependencies]
 wasm-bindgen-test.workspace = true
+proptest.workspace = true
+arbitrary.workspace = true
+quickcheck.workspace = true
+test-case.workspace = true
+rstest.workspace = true
+pretty_assertions.workspace = true
 
 [lib]
 crate-type = ["cdylib", "rlib"]

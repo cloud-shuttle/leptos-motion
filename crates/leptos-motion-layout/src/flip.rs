@@ -303,7 +303,8 @@ impl FLIPAnimator {
                 .dyn_ref::<web_sys::HtmlElement>()
                 .unwrap()
                 .style()
-                .set_property("transform", &transform).is_ok()
+                .set_property("transform", &transform)
+                .is_ok()
             {
                 // Transform applied successfully
             }

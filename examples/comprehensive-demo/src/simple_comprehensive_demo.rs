@@ -30,7 +30,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Basic animations with proper signal tracking and WASM memory management"
                     </p>
-                    
+
                     <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
                         <button
                             style="
@@ -71,7 +71,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Counter functionality and show/hide animations"
                     </p>
-                    
+
                     <div class="button-group" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
                         <button
                             class="counter-button"
@@ -129,7 +129,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Layout transitions and responsive design"
                     </p>
-                    
+
                     <div style="margin-bottom: 2rem;">
                         <button
                             class="layout-toggle"
@@ -179,7 +179,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Interactive gesture handling and touch support"
                     </p>
-                    
+
                     <div class="gesture-box" style="
                         width: 200px;
                         height: 200px;
@@ -204,7 +204,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Touch and gesture recognition for mobile devices"
                     </p>
-                    
+
                     <div style="
                         width: 100%;
                         height: 150px;
@@ -227,7 +227,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Hardware acceleration and optimized rendering"
                     </p>
-                    
+
                     <div class="animated-box" style="
                         width: 100px;
                         height: 100px;
@@ -254,7 +254,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "Responsive design and CSS animations"
                     </p>
-                    
+
                     <div style="
                         display: flex;
                         flex-direction: row;
@@ -278,7 +278,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 2rem;">
                         "State management during layout changes"
                     </p>
-                    
+
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <button
                             on:click=move |_| set_counter.update(|c| *c += 1)
@@ -295,7 +295,7 @@ pub fn SimpleComprehensiveDemo() -> impl IntoView {
                         >
                             {move || format!("Count: {}", counter.get())}
                         </button>
-                        
+
                         <button
                             on:click=move |_| set_is_grid_layout.set(!is_grid_layout.get())
                             style="

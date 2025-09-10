@@ -10,13 +10,13 @@ use std::collections::HashMap;
 #[component]
 pub fn FixedDemo() -> impl IntoView {
     web_sys::console::log_1(&"🎯 FixedDemo: Component created".into());
-    
+
     // ✅ Create reactive signals for animation
     let (x_pos, set_x_pos) = signal(0.0);
     let (y_pos, set_y_pos) = signal(0.0);
     let (rotation, set_rotation) = signal(0.0);
     let (is_animated, set_animated) = signal(false);
-    
+
     // ✅ Create reactive animation target using signals
     let (animate_target, set_animate_target) = signal({
         let mut target = HashMap::new();
@@ -26,17 +26,23 @@ pub fn FixedDemo() -> impl IntoView {
         target.insert("opacity".to_string(), AnimationValue::Number(0.5));
         target
     });
-    
+
     // ✅ Update animation target when signals change
     Effect::new(move |_| {
         let mut target = HashMap::new();
         target.insert("x".to_string(), AnimationValue::Pixels(x_pos.get()));
         target.insert("y".to_string(), AnimationValue::Pixels(y_pos.get()));
-        target.insert("rotateZ".to_string(), AnimationValue::Degrees(rotation.get()));
-        target.insert("opacity".to_string(), AnimationValue::Number(if is_animated.get() { 1.0 } else { 0.5 }));
+        target.insert(
+            "rotateZ".to_string(),
+            AnimationValue::Degrees(rotation.get()),
+        );
+        target.insert(
+            "opacity".to_string(),
+            AnimationValue::Number(if is_animated.get() { 1.0 } else { 0.5 }),
+        );
         set_animate_target.set(target);
     });
-    
+
     // ✅ Create initial animation target
     let initial_target = {
         let mut target = HashMap::new();
@@ -46,7 +52,7 @@ pub fn FixedDemo() -> impl IntoView {
         target.insert("opacity".to_string(), AnimationValue::Number(0.5));
         target
     };
-    
+
     // ✅ Animation controls
     let animate = move |_| {
         set_x_pos.set(100.0);
@@ -54,14 +60,14 @@ pub fn FixedDemo() -> impl IntoView {
         set_rotation.set(45.0);
         set_animated.set(true);
     };
-    
+
     let reset = move |_| {
         set_x_pos.set(0.0);
         set_y_pos.set(0.0);
         set_rotation.set(0.0);
         set_animated.set(false);
     };
-    
+
     view! {
         <div style="padding: 2rem; max-width: 800px; margin: 0 auto; font-family: system-ui, sans-serif;">
             <header style="text-align: center; margin-bottom: 2rem;">
@@ -76,7 +82,7 @@ pub fn FixedDemo() -> impl IntoView {
             <main>
                 <section style="margin-bottom: 3rem; padding: 2rem; border: 1px solid #ddd; border-radius: 8px;">
                     <h2 style="margin-bottom: 1rem; color: #333;">"Fixed MotionDiv Test"</h2>
-                    
+
                     <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
                         <button
                             on:click=animate
@@ -91,7 +97,7 @@ pub fn FixedDemo() -> impl IntoView {
                             "Reset"
                         </button>
                     </div>
-                    
+
                     <div style="display: flex; justify-content: center; align-items: center; min-height: 200px; position: relative;">
                         <FixedMotionDiv
                             initial=initial_target.clone()
@@ -101,7 +107,7 @@ pub fn FixedDemo() -> impl IntoView {
                             "Fixed"
                         </FixedMotionDiv>
                     </div>
-                    
+
                     <div style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
                         <p>"Current values:"</p>
                         <p>{move || format!("x: {:.1}px", x_pos.get())}</p>
@@ -110,13 +116,13 @@ pub fn FixedDemo() -> impl IntoView {
                         <p>{move || format!("animated: {}", is_animated.get())}</p>
                     </div>
                 </section>
-                
+
                 <section style="margin-bottom: 3rem; padding: 2rem; border: 1px solid #ddd; border-radius: 8px;">
                     <h2 style="margin-bottom: 1rem; color: #333;">"Signal Tracking Test"</h2>
                     <p style="color: #666; margin-bottom: 1rem;">
                         "This tests if signals are properly tracked and DOM updates work without hanging."
                     </p>
-                    
+
                     <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                         <button
                             on:click=move |_| set_x_pos.set(x_pos.get() + 10.0)
@@ -137,7 +143,7 @@ pub fn FixedDemo() -> impl IntoView {
                             "Rotate +15°"
                         </button>
                     </div>
-                    
+
                     <div style="display: flex; justify-content: center; align-items: center; min-height: 150px; position: relative;">
                         <FixedMotionDiv
                             initial=initial_target.clone()

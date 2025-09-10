@@ -7,8 +7,8 @@
 
 pub mod components;
 pub mod elements;
-pub mod hooks;
 pub mod fixed_motion_div;
+pub mod hooks;
 /// Improved motion div implementation with enhanced features
 pub mod improved_motion_div;
 pub mod performance;
@@ -28,8 +28,8 @@ pub mod transform_animations;
 // Signal-based animation controller with proven patterns
 // pub mod signal_based_controller; // Temporarily disabled due to compilation errors
 // pub mod signal_based_motion_div; // Temporarily disabled due to compilation errors
-pub mod simple_signal_based_motion_div;
 pub mod signal_based_animation_controller;
+pub mod simple_signal_based_motion_div;
 
 // New v0.7 features
 pub mod animate_presence;

@@ -276,7 +276,7 @@ pub fn ScrollMotionDiv(
     //         {children()}
     //     </ReactiveMotionDiv>
     // }
-    
+
     // For now, return a simple div to avoid circular dependency
     view! {
         <div class=class.unwrap_or_default() style=style.unwrap_or_default()>

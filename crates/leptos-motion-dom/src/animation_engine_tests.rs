@@ -467,7 +467,7 @@ fn test_transform_animation_builder() {
 
     // Test that animations were set up (check that animations exist)
     assert!(manager.has_active_animations());
-    
+
     // The property values should be at their initial values (0.0) since animations haven't been updated
     assert_eq!(manager.get_property_value("translateX"), 0.0);
     assert_eq!(manager.get_property_value("translateY"), 0.0);

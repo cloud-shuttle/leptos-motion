@@ -8,7 +8,7 @@ use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::{console_error, console_log};
-use web_sys::{Element, MouseEvent, PointerEvent, TouchEvent, CssStyleDeclaration};
+use web_sys::{CssStyleDeclaration, Element, MouseEvent, PointerEvent, TouchEvent};
 
 /// Gesture animation configuration
 #[derive(Clone, Debug)]

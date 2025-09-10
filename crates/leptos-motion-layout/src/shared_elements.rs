@@ -35,23 +35,23 @@ impl Default for SharedElementConfig {
 #[derive(Debug, Clone)]
 pub enum ZIndexStrategy {
     /// Use fixed z-index values
-    Fixed { 
+    Fixed {
         /// Base z-index value
-        base: i32, 
+        base: i32,
         /// Increment per layer
-        increment: i32 
+        increment: i32,
     },
     /// Use dynamic z-index based on element depth
-    Dynamic { 
+    Dynamic {
         /// Base z-index value
-        base: i32, 
+        base: i32,
         /// Maximum z-index value
-        max: i32 
+        max: i32,
     },
     /// Use CSS custom properties for z-index
-    CustomProperty { 
+    CustomProperty {
         /// CSS custom property name
-        property: String 
+        property: String,
     },
     /// Elevate element during transition
     Elevate,

@@ -276,7 +276,6 @@ impl Default for AnimationBuilder {
     }
 }
 
-
 impl Default for Variants {
     fn default() -> Self {
         Self::new()

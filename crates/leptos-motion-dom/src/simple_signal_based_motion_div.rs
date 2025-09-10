@@ -1,5 +1,5 @@
 //! Simple Signal-Based MotionDiv Component
-//! 
+//!
 //! This component implements the proven patterns from the user's guide for
 //! proper signal tracking, WASM memory management, and effect dependencies.
 //! Simplified version without complex WASM bindings.
@@ -23,11 +23,11 @@ pub fn SimpleSignalBasedMotionDiv(
     children: Children,
 ) -> impl IntoView {
     let node_ref = NodeRef::<leptos::html::Div>::new();
-    
+
     // ✅ CRITICAL: Effect that properly tracks animate function changes
     Effect::new(move |_| {
-        let animate_values = animate();  // Call the animate function
-        
+        let animate_values = animate(); // Call the animate function
+
         if let Some(div) = node_ref.get() {
             // Apply animation to DOM element
             for (property, value) in animate_values {
@@ -35,8 +35,11 @@ pub fn SimpleSignalBasedMotionDiv(
                 if let Err(e) = div
                     .unchecked_ref::<web_sys::HtmlElement>()
                     .style()
-                    .set_property(&property, &css_value) {
-                    web_sys::console::error_1(&format!("Failed to set CSS property {}: {:?}", property, e).into());
+                    .set_property(&property, &css_value)
+                {
+                    web_sys::console::error_1(
+                        &format!("Failed to set CSS property {}: {:?}", property, e).into(),
+                    );
                 }
             }
         }
@@ -94,13 +97,13 @@ pub fn ReactiveSimpleMotionDiv(
     children: Children,
 ) -> impl IntoView {
     let node_ref = NodeRef::<leptos::html::Div>::new();
-    
+
     // ✅ CRITICAL: Effect with explicit dependencies
     Effect::new(move |_| {
         // This effect will re-run when ANY of these signals change:
-        let animate_values = animate.get();  // Dependency 1
-        let visible = is_visible.get();  // Dependency 2
-        
+        let animate_values = animate.get(); // Dependency 1
+        let visible = is_visible.get(); // Dependency 2
+
         if visible {
             if let Some(div) = node_ref.get() {
                 // Apply animation to DOM element
@@ -109,8 +112,11 @@ pub fn ReactiveSimpleMotionDiv(
                     if let Err(e) = div
                         .unchecked_ref::<web_sys::HtmlElement>()
                         .style()
-                        .set_property(&property, &css_value) {
-                        web_sys::console::error_1(&format!("Failed to set CSS property {}: {:?}", property, e).into());
+                        .set_property(&property, &css_value)
+                    {
+                        web_sys::console::error_1(
+                            &format!("Failed to set CSS property {}: {:?}", property, e).into(),
+                        );
                     }
                 }
             }

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use leptos_motion_dom::signal_based_animation_controller::*;
 use leptos_motion_core::types::AnimationValue;
+use leptos_motion_dom::signal_based_animation_controller::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -11,7 +11,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
     let (layout_mode, set_layout_mode) = signal("grid".to_string());
     let (scroll_progress, set_scroll_progress) = signal(0.0);
     let (gesture_state, set_gesture_state) = signal("idle".to_string());
-    
+
     // ✅ Create animation controllers for different features
     let independent_transform_controller = Rc::new(SignalBasedAnimationController::new({
         let mut map = HashMap::new();
@@ -21,7 +21,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     }));
-    
+
     let spring_controller = Rc::new(SignalBasedAnimationController::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
@@ -29,7 +29,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     }));
-    
+
     let scroll_controller = Rc::new(SignalBasedAnimationController::new({
         let mut map = HashMap::new();
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
@@ -37,7 +37,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
     }));
-    
+
     let gesture_controller = Rc::new(SignalBasedAnimationController::new({
         let mut map = HashMap::new();
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
@@ -46,7 +46,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map
     }));
-    
+
     let layout_controller = Rc::new(SignalBasedAnimationController::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
@@ -59,31 +59,35 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
     let move_right = move |_| {
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("independent-transform-box")) {
+            .and_then(|d| d.get_element_by_id("independent-transform-box"))
+        {
             element.set_attribute("style", "width: 80px; height: 80px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateX(100px) translateY(0px) rotateZ(0deg) scale(1); transition: transform 0.3s ease;").unwrap();
         }
     };
-    
+
     let move_down = move |_| {
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("independent-transform-box")) {
+            .and_then(|d| d.get_element_by_id("independent-transform-box"))
+        {
             element.set_attribute("style", "width: 80px; height: 80px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateX(0px) translateY(50px) rotateZ(0deg) scale(1); transition: transform 0.3s ease;").unwrap();
         }
     };
-    
+
     let rotate = move |_| {
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("independent-transform-box")) {
+            .and_then(|d| d.get_element_by_id("independent-transform-box"))
+        {
             element.set_attribute("style", "width: 80px; height: 80px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateX(0px) translateY(0px) rotateZ(180deg) scale(1); transition: transform 0.3s ease;").unwrap();
         }
     };
-    
+
     let scale_up = move |_| {
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("independent-transform-box")) {
+            .and_then(|d| d.get_element_by_id("independent-transform-box"))
+        {
             element.set_attribute("style", "width: 80px; height: 80px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateX(0px) translateY(0px) rotateZ(0deg) scale(1.5); transition: transform 0.3s ease;").unwrap();
         }
     };
@@ -92,10 +96,11 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
     let spring_bounce = move |_| {
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("spring-ball")) {
+            .and_then(|d| d.get_element_by_id("spring-ball"))
+        {
             // Reset to initial state first
             element.set_attribute("style", "width: 100px; height: 100px; background: linear-gradient(45deg, #ff9ff3, #54a0ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateY(0px) scale(1); transition: transform 0.1s ease;").unwrap();
-            
+
             // Then immediately bounce up with spring physics
             element.set_attribute("style", "width: 100px; height: 100px; background: linear-gradient(45deg, #ff9ff3, #54a0ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateY(-50px) scale(1.2); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);").unwrap();
         }
@@ -106,43 +111,51 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
         set_gesture_state.set("hover".to_string());
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("gesture-card")) {
+            .and_then(|d| d.get_element_by_id("gesture-card"))
+        {
             element.set_attribute("style", "width: 150px; height: 150px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; cursor: pointer; user-select: none; transform: scale(1.1) rotateZ(5deg); transition: transform 0.2s ease;").unwrap();
         }
     };
-    
+
     let handle_hover_end = move |_| {
         set_gesture_state.set("idle".to_string());
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("gesture-card")) {
+            .and_then(|d| d.get_element_by_id("gesture-card"))
+        {
             element.set_attribute("style", "width: 150px; height: 150px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; cursor: pointer; user-select: none; transform: scale(1) rotateZ(0deg); transition: transform 0.2s ease;").unwrap();
         }
     };
-    
+
     let handle_press = move |_| {
         set_gesture_state.set("pressed".to_string());
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("gesture-card")) {
+            .and_then(|d| d.get_element_by_id("gesture-card"))
+        {
             element.set_attribute("style", "width: 150px; height: 150px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; cursor: pointer; user-select: none; transform: scale(0.95) rotateZ(5deg); transition: transform 0.1s ease;").unwrap();
         }
     };
-    
+
     let handle_press_end = move |_| {
         set_gesture_state.set("hover".to_string());
         if let Some(element) = web_sys::window()
             .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("gesture-card")) {
+            .and_then(|d| d.get_element_by_id("gesture-card"))
+        {
             element.set_attribute("style", "width: 150px; height: 150px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; cursor: pointer; user-select: none; transform: scale(1.1) rotateZ(5deg); transition: transform 0.2s ease;").unwrap();
         }
     };
 
     // ✅ Layout Animation
     let toggle_layout = move |_| {
-        let new_mode = if layout_mode.get() == "grid" { "list".to_string() } else { "grid".to_string() };
+        let new_mode = if layout_mode.get() == "grid" {
+            "list".to_string()
+        } else {
+            "grid".to_string()
+        };
         set_layout_mode.set(new_mode.clone());
-        
+
         // Animate layout transition
         let mut target = HashMap::new();
         if new_mode == "list" {
@@ -198,7 +211,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                             </div>
                         </div>
                         <div style="display: flex; justify-content: center; align-items: center; height: 300px; background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 16px;">
-                            <div 
+                            <div
                                 style="width: 80px; height: 80px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateX(0px) translateY(0px) rotateZ(0deg) scale(1); transition: transform 0.3s ease;"
                                 id="independent-transform-box"
                             >
@@ -223,7 +236,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                             </button>
                         </div>
                         <div style="display: flex; justify-content: center; align-items: center; height: 300px; background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 16px;">
-                            <div 
+                            <div
                                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff9ff3, #54a0ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: translateY(0px) scale(1); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);"
                                 id="spring-ball"
                             >
@@ -253,7 +266,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                             </p>
                         </div>
                         <div style="display: flex; justify-content: center; align-items: center; height: 300px; background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 16px;">
-                            <div 
+                            <div
                                 style="width: 150px; height: 150px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; cursor: pointer; user-select: none; transform: scale(1) rotateZ(0deg); transition: transform 0.2s ease;"
                                 id="gesture-card"
                                 on:mouseenter=handle_hover
@@ -281,7 +294,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                                 {move || if layout_mode.get() == "grid" { "Switch to List" } else { "Switch to Grid" }}
                             </button>
                         </div>
-                        <div 
+                        <div
                             style=move || {
                                 if layout_mode.get() == "grid" {
                                     "display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; padding: 2rem; background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 16px;"
@@ -292,7 +305,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                         >
                             {move || (0..8).map(|i| {
                                 view! {
-                                    <div 
+                                    <div
                                         style="padding: 2rem; background: linear-gradient(45deg, #96ceb4, #feca57); border-radius: 12px; color: white; font-weight: 600; text-align: center; font-size: 1.1rem;"
                                     >
                                         {format!("Item {}", i + 1)}
@@ -316,7 +329,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                             {move || if show_exit_demo.get() { "Hide Element" } else { "Show Element" }}
                         </button>
                         <div style="display: flex; justify-content: center; align-items: center; min-height: 200px;">
-                            <div 
+                            <div
                                 style=move || {
                                     if show_exit_demo.get() {
                                         "width: 200px; height: 200px; background: linear-gradient(45deg, #ff9ff3, #54a0ff); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.5rem; box-shadow: 0 12px 24px rgba(0,0,0,0.2);"
@@ -343,7 +356,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                         <div style="height: 400px; overflow-y: auto; background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 16px; padding: 2rem;">
                             {move || (0..20).map(|i| {
                                 view! {
-                                    <div 
+                                    <div
                                         style="height: 100px; background: linear-gradient(45deg, #96ceb4, #feca57); border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem;"
                                     >
                                         {format!("Scroll Item {}", i + 1)}
@@ -366,7 +379,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                             {move || (0..6).map(|i| {
                                 view! {
-                                    <div 
+                                    <div
                                         style="width: 80px; height: 80px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: scale(1); transition: transform 0.3s ease;"
                                         id=format!("timeline-item-{}", i)
                                     >
@@ -376,7 +389,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                             }).collect_view()}
                         </div>
                         <div style="text-align: center; margin-top: 2rem;">
-                            <button 
+                            <button
                                 on:click=move |_| {
                                     // Reset all items to initial state first
                                     for i in 0..6 {
@@ -387,7 +400,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                                             element.set_attribute("style", "width: 80px; height: 80px; background: linear-gradient(45deg, #5f27cd, #00d2d3); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; transform: scale(1); transition: transform 0.1s ease;").unwrap();
                                         }
                                     }
-                                    
+
                                     // Then animate with stagger effect using CSS transition delays
                                     for i in 0..6 {
                                         let element_id = format!("timeline-item-{}", i);

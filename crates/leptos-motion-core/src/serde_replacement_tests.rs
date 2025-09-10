@@ -173,7 +173,7 @@ fn test_easing_types_after_serde_replacement() {
 
     // Verify all variants exist and can be matched
     match linear {
-        Easing::Linear => { /* Test passes */ },
+        Easing::Linear => { /* Test passes */ }
         _ => panic!("Expected Linear easing"),
     }
 
@@ -211,7 +211,7 @@ fn test_repeat_config_after_serde_replacement() {
 
     // Verify all variants exist and can be matched
     match never {
-        RepeatConfig::Never => { /* Test passes */ },
+        RepeatConfig::Never => { /* Test passes */ }
         _ => panic!("Expected Never repeat"),
     }
 
@@ -221,12 +221,12 @@ fn test_repeat_config_after_serde_replacement() {
     }
 
     match infinite {
-        RepeatConfig::Infinite => { /* Test passes */ },
+        RepeatConfig::Infinite => { /* Test passes */ }
         _ => panic!("Expected Infinite repeat"),
     }
 
     match infinite_reverse {
-        RepeatConfig::InfiniteReverse => { /* Test passes */ },
+        RepeatConfig::InfiniteReverse => { /* Test passes */ }
         _ => panic!("Expected InfiniteReverse repeat"),
     }
 }
@@ -282,17 +282,17 @@ fn test_stagger_config_after_serde_replacement() {
     let from_index = StaggerFrom::Index(5);
 
     match from_first {
-        StaggerFrom::First => { /* Test passes */ },
+        StaggerFrom::First => { /* Test passes */ }
         _ => panic!("Expected First stagger from"),
     }
 
     match from_last {
-        StaggerFrom::Last => { /* Test passes */ },
+        StaggerFrom::Last => { /* Test passes */ }
         _ => panic!("Expected Last stagger from"),
     }
 
     match from_center {
-        StaggerFrom::Center => { /* Test passes */ },
+        StaggerFrom::Center => { /* Test passes */ }
         _ => panic!("Expected Center stagger from"),
     }
 

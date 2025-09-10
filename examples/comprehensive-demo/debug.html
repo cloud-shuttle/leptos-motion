@@ -40,22 +40,22 @@
 </head>
 <body>
     <h1>🔍 Leptos Motion Debug Panel</h1>
-    
+
     <div class="debug-panel">
         <h2>WASM Loading Status</h2>
         <div id="wasm-status">Loading...</div>
     </div>
-    
+
     <div class="debug-panel">
         <h2>Console Logs</h2>
         <div id="console-logs" class="log"></div>
     </div>
-    
+
     <div class="debug-panel">
         <h2>Error Logs</h2>
         <div id="error-logs" class="log"></div>
     </div>
-    
+
     <div class="debug-panel">
         <h2>Page Content</h2>
         <div id="page-content"></div>
@@ -66,61 +66,61 @@
         const originalLog = console.log;
         const originalError = console.error;
         const originalWarn = console.warn;
-        
+
         const consoleLogs = document.getElementById('console-logs');
         const errorLogs = document.getElementById('error-logs');
-        
+
         function addLog(type, message) {
             const timestamp = new Date().toLocaleTimeString();
             const logEntry = `[${timestamp}] ${type}: ${message}\n`;
-            
+
             if (type === 'ERROR') {
                 errorLogs.textContent += logEntry;
             } else {
                 consoleLogs.textContent += logEntry;
             }
         }
-        
+
         console.log = function(...args) {
             originalLog.apply(console, args);
             addLog('LOG', args.join(' '));
         };
-        
+
         console.error = function(...args) {
             originalError.apply(console, args);
             addLog('ERROR', args.join(' '));
         };
-        
+
         console.warn = function(...args) {
             originalWarn.apply(console, args);
             addLog('WARN', args.join(' '));
         };
-        
+
         // Monitor WASM loading
         const wasmStatus = document.getElementById('wasm-status');
-        
+
         async function loadWasm() {
             try {
                 wasmStatus.innerHTML = '<span class="warning">Loading WASM...</span>';
                 console.log('Starting WASM import...');
-                
+
                 const init = await import('./pkg/comprehensive_demo.js');
                 console.log('WASM module imported successfully');
-                
+
                 wasmStatus.innerHTML = '<span class="success">WASM module imported</span>';
                 console.log('Initializing WASM...');
-                
+
                 await init.default();
                 console.log('WASM initialized successfully');
-                
+
                 wasmStatus.innerHTML = '<span class="success">✅ WASM loaded and initialized</span>';
-                
+
                 // Check if Leptos app mounted
                 setTimeout(() => {
-                    const leptosContent = document.querySelector('[data-leptos-hydrate]') || 
+                    const leptosContent = document.querySelector('[data-leptos-hydrate]') ||
                                         document.querySelector('.leptos-app') ||
                                         document.body.innerHTML.includes('FeatureShowcaseDemo');
-                    
+
                     if (leptosContent) {
                         console.log('✅ Leptos app appears to be mounted');
                         wasmStatus.innerHTML += '<br><span class="success">✅ Leptos app mounted</span>';
@@ -129,25 +129,25 @@
                         wasmStatus.innerHTML += '<br><span class="warning">⚠️ Leptos app not detected</span>';
                     }
                 }, 1000);
-                
+
             } catch (error) {
                 console.error('WASM loading failed:', error);
                 wasmStatus.innerHTML = `<span class="error">❌ WASM loading failed: ${error.message}</span>`;
             }
         }
-        
+
         // Monitor page content
         function updatePageContent() {
             const pageContent = document.getElementById('page-content');
             const bodyHTML = document.body.innerHTML;
-            
+
             // Check for key elements
             const hasHeading = bodyHTML.includes('🚀 Leptos Motion');
             const hasWasmScript = bodyHTML.includes('comprehensive_demo.js');
-            const hasLeptosContent = bodyHTML.includes('FeatureShowcaseDemo') || 
+            const hasLeptosContent = bodyHTML.includes('FeatureShowcaseDemo') ||
                                    bodyHTML.includes('Simple API') ||
                                    bodyHTML.includes('Independent Transforms');
-            
+
             pageContent.innerHTML = `
                 <div>Heading present: ${hasHeading ? '✅' : '❌'}</div>
                 <div>WASM script: ${hasWasmScript ? '✅' : '❌'}</div>
@@ -155,19 +155,19 @@
                 <div>Body length: ${bodyHTML.length} characters</div>
             `;
         }
-        
+
         // Start monitoring
         loadWasm();
         updatePageContent();
-        
+
         // Update content every second
         setInterval(updatePageContent, 1000);
-        
+
         // Global error handler
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
         });
-        
+
         window.addEventListener('unhandledrejection', (event) => {
             console.error('Unhandled promise rejection:', event.reason);
         });

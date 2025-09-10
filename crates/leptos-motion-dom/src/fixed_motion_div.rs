@@ -26,20 +26,20 @@ impl FixedAnimationController {
         let (target_values, set_target_values) = signal(initial_values);
         let (is_playing, set_is_playing) = signal(false);
         let (progress, set_progress) = signal(0.0);
-        
+
         // ✅ CRITICAL: Effect to handle animation updates with proper signal tracking
         Effect::new(move |_| {
             let _current = current_values.get();
             let target = target_values.get();
             let playing = is_playing.get();
-            
+
             if playing {
                 // Simple animation logic - just copy target to current for now
                 set_current_values.set(target.clone());
                 set_is_playing.set(false);
             }
         });
-        
+
         Self {
             current_values,
             target_values,
@@ -51,7 +51,7 @@ impl FixedAnimationController {
             _set_progress: set_progress,
         }
     }
-    
+
     pub fn animate_to(&self, target: HashMap<String, AnimationValue>) {
         // ✅ Update target values (triggers effect)
         self._set_target_values.set(target);
@@ -85,44 +85,44 @@ pub fn FixedMotionDiv(
 ) -> impl IntoView {
     // ✅ Create node reference if not provided
     let node_ref = node_ref.unwrap_or_else(|| NodeRef::new());
-    
+
     // ✅ Initialize animation controller with proper signal management
     let initial_values = initial.unwrap_or_default();
     let animation_controller = FixedAnimationController::new(initial_values);
-    
+
     // ✅ CRITICAL FIX: Use Effect::new for proper signal tracking
     if let Some(animate_signal) = animate {
         let controller_clone = animation_controller.clone();
         Effect::new(move |_| {
             // This effect will re-run when animate_signal changes
             let animate_values = animate_signal.get();
-            
+
             // Update animation controller
             controller_clone.animate_to(animate_values);
         });
     }
-    
+
     // ✅ FIXED: Use Effect::new for DOM updates (simplified approach)
     // The style_string closure below will handle the reactive updates
-    
+
     // ✅ Create style string from current values
     let style_string = move || {
         let current_values = animation_controller.current_values.get();
         let mut style_parts = Vec::new();
-        
+
         // Add current animation styles
         for (property, value) in current_values {
             style_parts.push(format!("{}: {}", property, value.to_string_value()));
         }
-        
+
         // Add any additional styles
         if let Some(additional_style) = &style {
             style_parts.push(additional_style.clone());
         }
-        
+
         style_parts.join("; ")
     };
-    
+
     view! {
         <div
             class=class.unwrap_or_default()

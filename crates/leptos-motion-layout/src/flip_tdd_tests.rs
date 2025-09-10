@@ -8,7 +8,7 @@ use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::{console_error, console_log};
-use web_sys::{DomRect, Element, CssStyleDeclaration};
+use web_sys::{CssStyleDeclaration, DomRect, Element};
 
 /// FLIP animation configuration
 #[derive(Clone, Debug)]
@@ -221,7 +221,10 @@ impl FLIPManager {
     }
 
     /// Record the last (final) layout and start animation
-    pub fn record_last_and_play(&mut self, element: &WebElement) -> std::result::Result<(), JsValue> {
+    pub fn record_last_and_play(
+        &mut self,
+        element: &WebElement,
+    ) -> std::result::Result<(), JsValue> {
         self.last_layout = Some(LayoutInfo::from_element(element)?);
         self.state = FLIPState::Last;
 

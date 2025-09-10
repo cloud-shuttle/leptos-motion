@@ -342,7 +342,8 @@ impl SimplifiedLayoutManager {
             easing: self.convert_easing(self.config.easing),
         };
 
-        let _ = self.internal_shared_manager
+        let _ = self
+            .internal_shared_manager
             .start_transition("shared-transition");
 
         // Update animation status for both elements

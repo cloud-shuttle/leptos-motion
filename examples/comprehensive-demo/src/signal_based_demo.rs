@@ -11,7 +11,7 @@ use std::collections::HashMap;
 #[component]
 pub fn SignalBasedDemo() -> impl IntoView {
     web_sys::console::log_1(&"🎯 SignalBasedDemo: Component created".into());
-    
+
     // ✅ Create reactive signals for animation state
     let (is_animated, set_animated) = signal(false);
     let (x_pos, set_x_pos) = signal(0.0);
@@ -19,14 +19,17 @@ pub fn SignalBasedDemo() -> impl IntoView {
     let (rotation, set_rotation) = signal(0.0);
     let (scale, set_scale) = signal(1.0);
     let (opacity, set_opacity) = signal(1.0);
-    
+
     // ✅ Create reactive animation target using signals
     let animate_target = move || {
         let mut target = HashMap::new();
         if is_animated.get() {
             target.insert("x".to_string(), AnimationValue::Pixels(x_pos.get()));
             target.insert("y".to_string(), AnimationValue::Pixels(y_pos.get()));
-            target.insert("rotateZ".to_string(), AnimationValue::Degrees(rotation.get()));
+            target.insert(
+                "rotateZ".to_string(),
+                AnimationValue::Degrees(rotation.get()),
+            );
             target.insert("scale".to_string(), AnimationValue::Number(scale.get()));
             target.insert("opacity".to_string(), AnimationValue::Number(opacity.get()));
         } else {
@@ -38,7 +41,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
         }
         target
     };
-    
+
     // ✅ Create transition signal
     let transition_signal = signal(Transition {
         duration: Some(0.5),
@@ -47,19 +50,19 @@ pub fn SignalBasedDemo() -> impl IntoView {
         repeat: RepeatConfig::Never,
         stagger: None,
     });
-    
+
     // ✅ Create visibility signal
     let (is_visible, set_is_visible) = signal(true);
-    
+
     // ✅ Create animate signal that properly tracks changes
     let (animate_signal, set_animate_signal) = signal(animate_target());
-    
+
     // ✅ Effect to update animate signal when dependencies change
     Effect::new(move |_| {
         let new_target = animate_target();
         set_animate_signal.set(new_target);
     });
-    
+
     // ✅ Button handlers that update signals
     let handle_animate = move |_| {
         web_sys::console::log_1(&"🎬 SignalBasedDemo: Starting animation".into());
@@ -70,7 +73,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
         set_scale.set(1.5);
         set_opacity.set(0.7);
     };
-    
+
     let handle_reset = move |_| {
         web_sys::console::log_1(&"🔄 SignalBasedDemo: Resetting animation".into());
         set_animated.set(false);
@@ -80,7 +83,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
         set_scale.set(1.0);
         set_opacity.set(1.0);
     };
-    
+
     let handle_toggle_visibility = move |_| {
         set_is_visible.update(|visible| *visible = !*visible);
     };
@@ -89,7 +92,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
         <div style="padding: 20px; font-family: Arial, sans-serif;">
             <h1>"🎯 Signal-Based Motion Demo"</h1>
             <p>"This demo uses the proven signal-based patterns from the user's guide."</p>
-            
+
             <div style="margin: 20px 0;">
                 <button
                     on:click=handle_animate
@@ -110,7 +113,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
                     "Toggle Visibility"
                 </button>
             </div>
-            
+
             <div style="margin: 20px 0;">
                 <h3>"Animation State:"</h3>
                 <p>{move || format!("Animated: {}", is_animated.get())}</p>
@@ -121,7 +124,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
                 <p>{move || format!("Opacity: {:.1}", opacity.get())}</p>
                 <p>{move || format!("Visible: {}", is_visible.get())}</p>
             </div>
-            
+
             <div style="margin: 20px 0; border: 2px solid #007bff; padding: 20px; border-radius: 8px;">
                 <h3>"Animated Element:"</h3>
                 <SimpleSignalBasedMotionDiv
@@ -152,7 +155,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
                     </div>
                 </SimpleSignalBasedMotionDiv>
             </div>
-            
+
             <div style="margin: 20px 0; border: 2px solid #28a745; padding: 20px; border-radius: 8px;">
                 <h3>"Reactive Element:"</h3>
                 <ReactiveSimpleMotionDiv
@@ -175,7 +178,7 @@ pub fn SignalBasedDemo() -> impl IntoView {
                     </div>
                 </ReactiveSimpleMotionDiv>
             </div>
-            
+
             <div style="margin: 20px 0; border: 2px solid #ffc107; padding: 20px; border-radius: 8px;">
                 <h3>"Simple Element:"</h3>
                 <SimpleSignalBasedMotionDiv

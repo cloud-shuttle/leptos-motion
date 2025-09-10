@@ -4,9 +4,9 @@
 //! It provides proper signal tracking, WASM memory management, and effect dependencies.
 
 use leptos::prelude::*;
-use std::collections::HashMap;
 use leptos_motion_core::types::AnimationValue;
 use leptos_motion_core::types::Transition;
+use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
 /// Animation state managed by signals
@@ -140,7 +140,7 @@ pub fn ProperSignalTrackingMotionDiv(
 
     // ✅ CRITICAL: Use Effect::new with proper signal tracking
     Effect::new(move |_| {
-        let animate_values = animate.get();  // This properly tracks the signal!
+        let animate_values = animate.get(); // This properly tracks the signal!
 
         if let Some(div) = node_ref.get() {
             // Apply animation to DOM element

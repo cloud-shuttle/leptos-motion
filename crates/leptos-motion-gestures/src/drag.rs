@@ -133,7 +133,9 @@ impl GestureHandler for DragGesture {
                 }
             }
             GestureEvent::TouchMove { touches } => {
-                if self.active && let Some(touch) = touches.first() {
+                if self.active
+                    && let Some(touch) = touches.first()
+                {
                     self.current_position = Some((touch.x, touch.y));
                     self.last_update = Some(Instant::now());
 

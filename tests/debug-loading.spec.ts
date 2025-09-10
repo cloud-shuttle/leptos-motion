@@ -20,19 +20,19 @@ test('Debug demo loading', async ({ page }) => {
   });
 
   await page.goto('/');
-  
+
   // Wait a bit for everything to load
   await page.waitForTimeout(5000);
-  
+
   // Log what we found
   console.log('Console messages:', consoleMessages);
   console.log('Network requests:', requests);
   console.log('Page errors:', errors);
-  
+
   // Check if the page has any content
   const bodyText = await page.textContent('body');
   console.log('Body text:', bodyText?.substring(0, 200));
-  
+
   // Check if there's an h1 element
   const h1 = await page.$('h1');
   console.log('H1 element exists:', !!h1);

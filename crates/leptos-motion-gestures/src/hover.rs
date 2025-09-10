@@ -148,7 +148,8 @@ impl GestureHandler for HoverGesture {
 
                             // Trigger leave callback
                             if let Some(ref callback) = self.on_leave
-                                && let Some(current_pos) = self.current_position {
+                                && let Some(current_pos) = self.current_position
+                            {
                                 callback(current_pos);
                             }
                         }
@@ -163,7 +164,8 @@ impl GestureHandler for HoverGesture {
 
                     // Trigger leave callback
                     if let Some(ref callback) = self.on_leave
-                        && let Some(current_pos) = self.current_position {
+                        && let Some(current_pos) = self.current_position
+                    {
                         callback(current_pos);
                     }
                 }

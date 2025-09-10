@@ -5,9 +5,9 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
 
+mod minimal_comprehensive_demo;
 mod motion_showcase_demo;
 mod signal_based_comprehensive_demo;
-mod minimal_comprehensive_demo;
 // mod simple_comprehensive_demo; // Commented out
 // mod simplified_comprehensive_demo; // Commented out
 // mod feature_showcase_demo;
@@ -30,7 +30,6 @@ use motion_showcase_demo::MotionShowcaseDemo;
 // use simple_working_demo::SimpleWorkingDemo;
 // use signal_based_demo::SignalBasedDemo;
 
-
 /// Main function to run the demo
 #[wasm_bindgen(start)]
 pub fn main() {
@@ -38,7 +37,7 @@ pub fn main() {
     console_log::init().expect("Failed to initialize console log");
 
     web_sys::console::log_1(&"🚀 Leptos Motion: Starting main function".into());
-    
+
     // Add error handling for the mount
     match std::panic::catch_unwind(|| {
         web_sys::console::log_1(&"📦 Leptos Motion: About to mount MotionShowcaseDemo".into());
@@ -46,13 +45,19 @@ pub fn main() {
             web_sys::console::log_1(&"🎨 Leptos Motion: Creating MotionShowcaseDemo view".into());
             view! { <MotionShowcaseDemo/> }
         });
-        web_sys::console::log_1(&"✅ Leptos Motion: MotionShowcaseDemo mounted successfully".into());
+        web_sys::console::log_1(
+            &"✅ Leptos Motion: MotionShowcaseDemo mounted successfully".into(),
+        );
     }) {
         Ok(_) => {
-            web_sys::console::log_1(&"✅ Leptos Motion: Main function completed successfully".into());
+            web_sys::console::log_1(
+                &"✅ Leptos Motion: Main function completed successfully".into(),
+            );
         }
         Err(e) => {
-            web_sys::console::error_1(&format!("❌ Leptos Motion: Main function panicked: {:?}", e).into());
+            web_sys::console::error_1(
+                &format!("❌ Leptos Motion: Main function panicked: {:?}", e).into(),
+            );
         }
     }
 }

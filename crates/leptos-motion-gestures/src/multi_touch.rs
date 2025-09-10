@@ -159,7 +159,8 @@ impl MultiTouchGestureDetector {
 
         // Calculate scale and rotation if we have previous state
         if let Some(prev_state) = &self.previous_state
-            && prev_state.touches.len() >= 2 {
+            && prev_state.touches.len() >= 2
+        {
             // Calculate scale change
             let scale_change = self.state.average_distance / prev_state.average_distance;
             self.state.scale = scale_change;
@@ -237,7 +238,8 @@ impl MultiTouchGestureDetector {
     /// Calculate the previous gesture angle
     fn calculate_previous_gesture_angle(&self) -> f64 {
         if let Some(prev_state) = &self.previous_state
-            && prev_state.touches.len() >= 2 {
+            && prev_state.touches.len() >= 2
+        {
             let touches: Vec<&TouchPoint> = prev_state.touches.values().collect();
             let (x1, y1) = (touches[0].x, touches[0].y);
             let (x2, y2) = (touches[1].x, touches[1].y);

@@ -73,7 +73,7 @@ fn SimpleApiDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Motion's pick-up-and-play API is easy to start and fun to master."
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
                 <button
                     style="padding: 1rem 2rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
@@ -147,7 +147,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Animate x, y, rotateZ etc independently, without wrapper elements."
             </p>
-            
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
                 <div style="text-align: center;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">"X Position"</label>
@@ -164,7 +164,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
                     />
                     <span style="font-size: 0.9rem; color: #666;">{move || format!("{:.0}px", x_pos.get())}</span>
                 </div>
-                
+
                 <div style="text-align: center;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">"Y Position"</label>
                     <input
@@ -180,7 +180,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
                     />
                     <span style="font-size: 0.9rem; color: #666;">{move || format!("{:.0}px", y_pos.get())}</span>
                 </div>
-                
+
                 <div style="text-align: center;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">"Rotation"</label>
                     <input
@@ -196,7 +196,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
                     />
                     <span style="font-size: 0.9rem; color: #666;">{move || format!("{:.0}°", rotation.get())}</span>
                 </div>
-                
+
                 <div style="text-align: center;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">"Scale"</label>
                     <input
@@ -263,7 +263,7 @@ fn ScrollAnimationDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Smooth, hardware-accelerated scroll animations."
             </p>
-            
+
             <div style="height: 400px; overflow-y: auto; background: white; border-radius: 8px; padding: 2rem;">
                 <div style="height: 800px; display: flex; flex-direction: column; gap: 2rem;">
                     {move || (0..10).map(|i| {
@@ -319,7 +319,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Real spring physics for great-feeling animations."
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
                 <button
                     style="padding: 1rem 2rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
@@ -406,7 +406,7 @@ fn ExitAnimationDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "AnimatePresence makes it easy to animate elements as they exit."
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
                 <button
                     style="padding: 1rem 2rem; background: linear-gradient(45deg, #4ecdc4, #44a08d); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
@@ -478,7 +478,7 @@ fn GesturesDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Hover, press and drag gestures that feel native, not 'webby'."
             </p>
-            
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
                 <div style="text-align: center;">
                     <h3 style="margin-bottom: 1rem; color: #333;">"Hover Gesture"</h3>
@@ -555,7 +555,7 @@ fn LayoutAnimationDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Animate between different layouts with Motion's industry-leading layout animation engine."
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
                 <button
                     style="padding: 1rem 2rem; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
@@ -615,7 +615,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
             <p style="text-align: center; margin-bottom: 2rem; color: #666; font-size: 1.1rem;">
                 "Variants, stagger and timelines make it easy to precisely orchestrate animations."
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
                 <button
                     style="padding: 1rem 2rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"

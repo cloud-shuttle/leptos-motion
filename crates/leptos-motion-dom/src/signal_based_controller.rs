@@ -1,14 +1,14 @@
 //! Signal-Based Animation Controller
-//! 
+//!
 //! This module implements the proven patterns from the user's guide for
 //! proper signal tracking, WASM memory management, and effect dependencies.
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
-use std::collections::HashMap;
-use wasm_bindgen::prelude::*;
-use std::result::Result as StdResult;
 use serde_wasm_bindgen;
+use std::collections::HashMap;
+use std::result::Result as StdResult;
+use wasm_bindgen::prelude::*;
 
 /// Animation state managed with signals for proper reactivity
 #[derive(Clone, PartialEq, Debug)]
@@ -51,7 +51,7 @@ impl SignalBasedAnimationController {
         let (target_values, set_target_values) = signal(initial_values.clone());
         let (is_playing, set_is_playing) = signal(false);
         let (progress, set_progress) = signal(0.0);
-        
+
         // Create combined animation state signal
         let (animation_state, set_animation_state) = signal(AnimationState {
             is_playing: false,
@@ -66,7 +66,7 @@ impl SignalBasedAnimationController {
             let target = target_values.get();
             let playing = is_playing.get();
             let prog = progress.get();
-            
+
             // Update combined state
             set_animation_state.set(AnimationState {
                 is_playing: playing,
@@ -146,7 +146,8 @@ impl WasmMotionController {
         let (read_signal, write_signal) = signal(initial_value);
         let signal_id = self.signals.len() as u32;
 
-        self.signals.insert(name.to_string(), (read_signal, write_signal));
+        self.signals
+            .insert(name.to_string(), (read_signal, write_signal));
 
         // ✅ Store cleanup function
         let cleanup = Box::new(move || {
@@ -170,7 +171,9 @@ impl WasmMotionController {
 
     #[wasm_bindgen]
     pub fn get_animation_value(&self, name: &str) -> Option<f32> {
-        self.signals.get(name).map(|(read_signal, _)| read_signal.get())
+        self.signals
+            .get(name)
+            .map(|(read_signal, _)| read_signal.get())
     }
 
     #[wasm_bindgen]
@@ -259,9 +262,9 @@ impl ProperEffectMotionDiv {
         // ✅ CRITICAL: Effect with explicit dependencies
         Effect::new(move |_| {
             // This effect will re-run when ANY of these signals change:
-            let _animate_values = animate.get();  // Dependency 1
-            let _transition_config = transition.get();  // Dependency 2
-            let _visible = is_visible.get();  // Dependency 3
+            let _animate_values = animate.get(); // Dependency 1
+            let _transition_config = transition.get(); // Dependency 2
+            let _visible = is_visible.get(); // Dependency 3
 
             set_effect_run_count.update(|count| *count += 1);
         });

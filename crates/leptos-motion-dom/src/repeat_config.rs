@@ -56,7 +56,9 @@ impl RepeatState {
         }
 
         // Check if we've reached the total count
-        if let Some(total) = self.total_count && self.current_count >= total {
+        if let Some(total) = self.total_count
+            && self.current_count >= total
+        {
             self.is_complete = true;
         }
     }
@@ -158,7 +160,7 @@ impl AnimationCycleManager {
 
             // Advance the repeat state first
             self.repeat_state.advance();
-            
+
             // Check if we should continue repeating
             if self.repeat_state.should_continue() {
                 CycleUpdate::CycleComplete

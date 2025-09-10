@@ -388,7 +388,8 @@ pub fn use_timeline() -> UseTimelineReturn {
     Effect::new(move |_| {
         if let Some(seq_id) = current_sequence.get() {
             if let Some(sequence) = sequences.get().get(&seq_id)
-                && let Some(step) = sequence.get_step_at(0) {
+                && let Some(step) = sequence.get_step_at(0)
+            {
                 set_current_target.set(Some(step.target.clone()));
             }
         } else {

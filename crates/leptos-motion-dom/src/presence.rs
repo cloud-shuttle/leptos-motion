@@ -6,7 +6,8 @@ use leptos::prelude::*;
 #[component]
 pub fn AnimatePresence(
     /// Presence mode controlling how exit animations are coordinated
-    #[prop(optional)] mode: Option<PresenceMode>,
+    #[prop(optional)]
+    mode: Option<PresenceMode>,
     /// Child components to manage presence for
     children: Children,
 ) -> impl IntoView {

@@ -3,7 +3,9 @@
 //! This module provides motion components that integrate with Leptos
 
 use crate::{
-    DragAxis, DragConfig, DragConstraints,
+    DragAxis,
+    DragConfig,
+    DragConstraints,
     // animation_engine::{AnimationEngine, AnimationEngineBuilder}, // Unused
     // easing_functions::*, // Unused
     // repeat_config::{AnimationCycleManager, RepeatState}, // Unused
@@ -13,8 +15,8 @@ use crate::{
 /// Type alias for momentum step callback
 type MomentumStepCallback = Rc<RefCell<Option<Box<dyn FnMut()>>>>;
 use leptos::prelude::{
-    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, NodeRef, NodeRefAttribute, OnAttribute,
-    Set, StyleAttribute,
+    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, NodeRef, NodeRefAttribute,
+    OnAttribute, Set, StyleAttribute,
 };
 use leptos::reactive::signal::signal;
 use leptos::*;
@@ -110,7 +112,7 @@ pub fn MotionDiv(
     if let Some(animate_target) = animate {
         // Convert static animate target to reactive signal
         let (animate_signal, set_animate_signal) = signal(animate_target.clone());
-        
+
         // Create a reactive effect that updates styles when animate signal changes
         Effect::new(move |_| {
             let animate_values = animate_signal.get();
@@ -129,7 +131,7 @@ pub fn MotionDiv(
             let is_hovered = _is_hovered.get();
             let hover_values = hover_signal.get();
             let mut styles = current_styles.get();
-            
+
             if is_hovered {
                 for (key, value) in hover_values.iter() {
                     styles.insert(key.clone(), value.to_string_value());
@@ -146,7 +148,7 @@ pub fn MotionDiv(
             let is_tapped = _is_tapped.get();
             let tap_values = tap_signal.get();
             let mut styles = current_styles.get();
-            
+
             if is_tapped {
                 for (key, value) in tap_values.iter() {
                     styles.insert(key.clone(), value.to_string_value());
@@ -192,7 +194,7 @@ pub fn MotionDiv(
     Effect::new(move |_| {
         // This effect runs when the component is created and tracks all signals
         // When the component is destroyed, this effect will be cleaned up automatically
-        
+
         // Track all animation-related signals to ensure proper reactivity
         let _ = current_styles.get();
         let _ = _is_hovered.get();
@@ -201,7 +203,7 @@ pub fn MotionDiv(
         let _ = drag_position.get();
         let _ = drag_velocity.get();
         let _ = is_animating_momentum.get();
-        
+
         // Return cleanup function (this will be called when the effect is destroyed)
         move || {
             // Cleanup any pending timeouts or animation frames

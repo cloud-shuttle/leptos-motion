@@ -223,13 +223,17 @@ impl GestureHandler for TapGesture {
                 }
             }
             GestureEvent::TouchMove { touches } => {
-                if self.active && let Some(touch) = touches.first() {
+                if self.active
+                    && let Some(touch) = touches.first()
+                {
                     // Update end position during move
                     self.end_position = Some((touch.x, touch.y));
                 }
             }
             GestureEvent::TouchEnd { touches } => {
-                if self.active && let Some(touch) = touches.first() {
+                if self.active
+                    && let Some(touch) = touches.first()
+                {
                     self.end_position = Some((touch.x, touch.y));
                     self.end_time = Some(Instant::now());
 

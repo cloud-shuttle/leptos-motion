@@ -68,7 +68,7 @@ impl AnimationBuilder {
 }
 
 /// Complete animation configuration
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct AnimationConfig {
     /// Initial animation state
     pub initial: AnimationTarget,
@@ -276,17 +276,6 @@ impl Default for AnimationBuilder {
     }
 }
 
-impl Default for AnimationConfig {
-    fn default() -> Self {
-        Self {
-            initial: HashMap::new(),
-            animate: HashMap::new(),
-            exit: HashMap::new(),
-            transition: Transition::default(),
-            variants: None,
-        }
-    }
-}
 
 impl Default for Variants {
     fn default() -> Self {

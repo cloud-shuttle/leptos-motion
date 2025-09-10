@@ -35,11 +35,24 @@ impl Default for SharedElementConfig {
 #[derive(Debug, Clone)]
 pub enum ZIndexStrategy {
     /// Use fixed z-index values
-    Fixed { base: i32, increment: i32 },
+    Fixed { 
+        /// Base z-index value
+        base: i32, 
+        /// Increment per layer
+        increment: i32 
+    },
     /// Use dynamic z-index based on element depth
-    Dynamic { base: i32, max: i32 },
+    Dynamic { 
+        /// Base z-index value
+        base: i32, 
+        /// Maximum z-index value
+        max: i32 
+    },
     /// Use CSS custom properties for z-index
-    CustomProperty { property: String },
+    CustomProperty { 
+        /// CSS custom property name
+        property: String 
+    },
     /// Elevate element during transition
     Elevate,
     /// Custom z-index value
@@ -83,6 +96,7 @@ pub struct SharedElementManager {
     /// Transition queue
     transition_queue: VecDeque<QueuedTransition>,
     /// Z-index strategy
+    #[allow(dead_code)]
     z_index_strategy: ZIndexStrategy,
     /// Performance tracking
     performance_metrics: SharedElementMetrics,

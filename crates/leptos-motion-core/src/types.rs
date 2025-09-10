@@ -244,7 +244,7 @@ pub struct Transition {
 }
 
 /// Easing function types
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub enum Easing {
     /// Linear interpolation
@@ -254,6 +254,7 @@ pub enum Easing {
     /// Ease out (slow end)
     EaseOut,
     /// Ease in and out (slow start and end)
+    #[default]
     EaseInOut,
     /// Circular easing in
     CircIn,
@@ -422,11 +423,6 @@ impl Default for SpringConfig {
     }
 }
 
-impl Default for Easing {
-    fn default() -> Self {
-        Easing::EaseInOut
-    }
-}
 
 // Utility implementations
 
@@ -496,8 +492,8 @@ impl Transform {
 
     /// Check if transform is identity (no changes)
     pub fn is_identity(&self) -> bool {
-        let zero_or_none = |v: Option<f64>| v.map_or(true, |v| v == 0.0);
-        let one_or_none = |v: Option<f64>| v.map_or(true, |v| v == 1.0);
+        let zero_or_none = |v: Option<f64>| v.is_none_or(|v| v == 0.0);
+        let one_or_none = |v: Option<f64>| v.is_none_or(|v| v == 1.0);
 
         zero_or_none(self.x)
             && zero_or_none(self.y)

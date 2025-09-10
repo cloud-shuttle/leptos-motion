@@ -3,11 +3,11 @@
 //! This module provides comprehensive easing functions for smooth animations.
 //! Includes standard easing curves, cubic bezier curves, and spring physics.
 
-use std::f64::consts::PI;
+// Global PI import removed - now imported in specific modules where needed
 
 /// Standard easing functions
 pub mod standard {
-    use super::*;
+    // use super::*; // Unused
 
     /// Linear easing (no easing)
     pub fn linear(t: f64) -> f64 {
@@ -93,7 +93,7 @@ pub mod standard {
 
 /// Sine-based easing functions
 pub mod sine {
-    use super::*;
+    use std::f64::consts::PI;
 
     /// Ease in sine
     pub fn ease_in_sine(t: f64) -> f64 {
@@ -113,7 +113,7 @@ pub mod sine {
 
 /// Exponential easing functions
 pub mod exponential {
-    use super::*;
+    // use super::*; // Unused
 
     /// Ease in exponential
     pub fn ease_in_expo(t: f64) -> f64 {
@@ -149,7 +149,7 @@ pub mod exponential {
 
 /// Circular easing functions
 pub mod circular {
-    use super::*;
+    // use super::*; // Unused
 
     /// Ease in circular
     pub fn ease_in_circ(t: f64) -> f64 {
@@ -173,7 +173,7 @@ pub mod circular {
 
 /// Back easing functions (overshoot)
 pub mod back {
-    use super::*;
+    // use super::*; // Unused
 
     const C1: f64 = 1.70158;
     const C2: f64 = C1 * 1.525;
@@ -201,7 +201,7 @@ pub mod back {
 
 /// Elastic easing functions (bounce-like)
 pub mod elastic {
-    use super::*;
+    use std::f64::consts::PI;
 
     const C4: f64 = (2.0 * PI) / 3.0;
     const C5: f64 = (2.0 * PI) / 4.5;
@@ -244,7 +244,7 @@ pub mod elastic {
 
 /// Bounce easing functions
 pub mod bounce {
-    use super::*;
+    // use super::*; // Unused
 
     const N1: f64 = 7.5625;
     const D1: f64 = 2.75;
@@ -279,8 +279,10 @@ pub mod bounce {
 
 /// Cubic Bezier curve implementation
 pub struct CubicBezier {
+    #[allow(dead_code)]
     x1: f64,
     y1: f64,
+    #[allow(dead_code)]
     x2: f64,
     y2: f64,
 }
@@ -329,7 +331,7 @@ impl CubicBezier {
 
 /// Predefined cubic bezier curves
 pub mod bezier {
-    use super::*;
+    use super::CubicBezier;
 
     /// Ease (0.25, 0.1, 0.25, 1.0)
     pub fn ease() -> CubicBezier {
@@ -359,7 +361,7 @@ pub mod bezier {
 
 /// Spring physics implementation
 pub mod spring {
-    use super::*;
+    // use super::*; // Unused
 
     /// Spring configuration
     #[derive(Debug, Clone)]
@@ -394,13 +396,18 @@ pub mod spring {
     /// Spring animation state
     #[derive(Debug, Clone)]
     pub struct SpringState {
+        /// Current position of the spring
         pub position: f64,
+        /// Current velocity of the spring
         pub velocity: f64,
+        /// Target position for the spring
         pub target: f64,
+        /// Whether the spring animation is complete
         pub is_complete: bool,
     }
 
     impl SpringState {
+        /// Create a new spring state with initial position and target
         pub fn new(initial: f64, target: f64) -> Self {
             Self {
                 position: initial,
@@ -434,7 +441,7 @@ pub mod spring {
 
     /// Predefined spring configurations
     pub mod presets {
-        use super::*;
+        use super::SpringConfig;
 
         /// Gentle spring
         pub fn gentle() -> SpringConfig {
@@ -500,6 +507,7 @@ pub mod spring {
 
 /// Easing function trait for extensibility
 pub trait EasingFunction {
+    /// Evaluate the easing function at time t (0.0 to 1.0), returning the eased value
     fn evaluate(&self, t: f64) -> f64;
 }
 

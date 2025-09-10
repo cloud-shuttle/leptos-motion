@@ -62,30 +62,45 @@ pub struct SimplifiedGestureResult {
 /// Simplified 2D vector
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SimplifiedVector2D {
+    /// X coordinate
     pub x: f64,
+    /// Y coordinate
     pub y: f64,
 }
 
 /// Simplified gesture bounds
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SimplifiedGestureBounds {
+    /// Minimum X boundary
     pub min_x: f64,
+    /// Maximum X boundary
     pub max_x: f64,
+    /// Minimum Y boundary
     pub min_y: f64,
+    /// Maximum Y boundary
     pub max_y: f64,
 }
 
 /// Simplified gesture data
 #[derive(Debug, Clone, PartialEq)]
 pub struct SimplifiedGestureData {
+    /// Type of gesture detected
     pub gesture_type: SimplifiedGestureType,
+    /// Number of touch points
     pub touch_count: usize,
+    /// Whether the gesture is currently active
     pub is_active: bool,
+    /// Center point of the gesture
     pub center: Option<SimplifiedVector2D>,
+    /// Bounds of the gesture area
     pub bounds: Option<SimplifiedGestureBounds>,
+    /// Distance measurement for gestures like pinch
     pub distance: Option<f64>,
+    /// Angle measurement for rotational gestures
     pub angle: Option<f64>,
+    /// Confidence level of gesture detection (0.0-1.0)
     pub confidence: f64,
+    /// Duration of the gesture in milliseconds
     pub duration: u64,
 }
 

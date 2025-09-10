@@ -5,10 +5,13 @@
 
 use crate::{
     DragConfig, DragConstraints,
-    animation_engine::{AnimationEngine, AnimationEngineBuilder},
-    easing_functions::*,
-    repeat_config::{AnimationCycleManager, RepeatState, StaggerConfig},
-    transform_animations::{TransformAnimationBuilder, TransformAnimationManager},
+    animation_engine::{AnimationEngine},
+    // easing_functions::*, // Unused
+    repeat_config::{StaggerConfig},
+    transform_animations::{TransformAnimationManager},
+    // animation_engine::{AnimationEngineBuilder}, // Unused
+    // repeat_config::{AnimationCycleManager, RepeatState}, // Unused
+    // transform_animations::{TransformAnimationBuilder}, // Unused
 };
 use leptos::prelude::*;
 use leptos_motion_core::*;
@@ -28,7 +31,7 @@ pub fn EnhancedMotionDiv(
     style: Option<String>,
     /// Node reference for animation engine integration
     #[prop(optional)]
-    node_ref: Option<NodeRef<leptos::html::Div>>,
+    _node_ref: Option<NodeRef<leptos::html::Div>>,
     /// Initial animation state
     #[prop(optional)]
     initial: Option<AnimationTarget>,
@@ -46,13 +49,13 @@ pub fn EnhancedMotionDiv(
     while_tap: Option<AnimationTarget>,
     /// Layout animation enabled
     #[prop(optional)]
-    layout: Option<bool>,
+    _layout: Option<bool>,
     /// Drag configuration
     #[prop(optional)]
     drag: Option<DragConfig>,
     /// Drag constraints
     #[prop(optional)]
-    drag_constraints: Option<DragConstraints>,
+    _drag_constraints: Option<DragConstraints>,
     /// Children elements
     children: Children,
 ) -> impl IntoView {
@@ -259,8 +262,11 @@ pub struct AnimationSequenceBuilder {
 /// Single animation step in a sequence
 #[derive(Debug, Clone)]
 pub struct AnimationStep {
+    /// The target values for this animation step
     pub target: AnimationTarget,
+    /// The transition configuration for this step
     pub transition: Transition,
+    /// Delay before this animation step begins (in seconds)
     pub delay: f64,
 }
 

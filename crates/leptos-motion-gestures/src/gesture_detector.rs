@@ -19,10 +19,13 @@ pub struct GestureDetector {
     /// Multi-touch gesture detector
     multi_touch: MultiTouchGestureDetector,
     /// Drag gesture detector
+    #[allow(dead_code)]
     drag: DragGesture,
     /// Hover gesture detector
+    #[allow(dead_code)]
     hover: HoverGesture,
     /// Tap gesture detector
+    #[allow(dead_code)]
     tap: TapGesture,
     /// Element this detector is attached to
     element: Option<Element>,
@@ -51,6 +54,7 @@ impl GestureDetector {
     }
 
     /// Create with default configuration
+    #[allow(clippy::should_implement_trait)]
     pub fn default() -> Self {
         Self::new(GestureConfig::default())
     }
@@ -95,12 +99,11 @@ impl GestureDetector {
         F: Fn(MultiTouchState) + Send + Sync + 'static,
     {
         let wrapped_callback = move |result: GestureResult| {
-            if let Some(data) = result.data {
-                if let Ok(multi_touch_state) =
+            if let Some(data) = result.data
+                && let Ok(multi_touch_state) =
                     serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
-                {
-                    callback(multi_touch_state);
-                }
+            {
+                callback(multi_touch_state);
             }
         };
 
@@ -114,16 +117,13 @@ impl GestureDetector {
         F: Fn(f64) + Send + Sync + 'static,
     {
         let wrapped_callback = move |result: GestureResult| {
-            if let Some(data) = result.data {
-                if let Ok(multi_touch_state) =
+            if let Some(data) = result.data
+                && let Ok(multi_touch_state) =
                     serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
-                {
-                    if multi_touch_state.gesture_type == MultiTouchGestureType::Pinch
-                        || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate
-                    {
-                        callback(multi_touch_state.scale);
-                    }
-                }
+                && (multi_touch_state.gesture_type == MultiTouchGestureType::Pinch
+                    || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate)
+            {
+                callback(multi_touch_state.scale);
             }
         };
 
@@ -137,16 +137,13 @@ impl GestureDetector {
         F: Fn(f64) + Send + Sync + 'static,
     {
         let wrapped_callback = move |result: GestureResult| {
-            if let Some(data) = result.data {
-                if let Ok(multi_touch_state) =
+            if let Some(data) = result.data
+                && let Ok(multi_touch_state) =
                     serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
-                {
-                    if multi_touch_state.gesture_type == MultiTouchGestureType::Rotation
-                        || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate
-                    {
-                        callback(multi_touch_state.rotation);
-                    }
-                }
+                && (multi_touch_state.gesture_type == MultiTouchGestureType::Rotation
+                    || multi_touch_state.gesture_type == MultiTouchGestureType::PinchAndRotate)
+            {
+                callback(multi_touch_state.rotation);
             }
         };
 
@@ -338,12 +335,11 @@ impl GestureDetector {
         let result = self.multi_touch.handle_gesture(event.clone());
 
         // Update current gesture state
-        if let Some(data) = &result.data {
-            if let Ok(multi_touch_state) =
+        if let Some(data) = &result.data
+            && let Ok(multi_touch_state) =
                 serde_json::from_value::<MultiTouchState>(serde_json::to_value(data).unwrap())
-            {
-                self.current_gesture = Some(multi_touch_state);
-            }
+        {
+            self.current_gesture = Some(multi_touch_state);
         }
 
         // Trigger callbacks based on gesture type

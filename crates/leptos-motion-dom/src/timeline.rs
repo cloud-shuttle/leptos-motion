@@ -7,6 +7,14 @@ use leptos::reactive::signal::signal;
 use leptos_motion_core::{AnimationTarget, Transition};
 use std::collections::HashMap;
 
+/// Type alias for timeline hook return type
+type UseTimelineReturn = (
+    ReadSignal<Option<String>>,
+    WriteSignal<Option<String>>,
+    ReadSignal<Option<AnimationTarget>>,
+    WriteSignal<HashMap<String, TimelineSequence>>,
+);
+
 /// Timeline sequence step
 #[derive(Debug, Clone, PartialEq)]
 pub struct TimelineStep {
@@ -371,23 +379,17 @@ impl Default for TimelineManager {
 }
 
 /// Hook for using timeline sequences in Leptos components
-pub fn use_timeline() -> (
-    ReadSignal<Option<String>>,
-    WriteSignal<Option<String>>,
-    ReadSignal<Option<AnimationTarget>>,
-    WriteSignal<HashMap<String, TimelineSequence>>,
-) {
+pub fn use_timeline() -> UseTimelineReturn {
     let (current_sequence, set_current_sequence) = signal(None::<String>);
     let (current_target, set_current_target) = signal(None::<AnimationTarget>);
     let (sequences, set_sequences) = signal(HashMap::<String, TimelineSequence>::new());
 
     // Update current target when sequence changes
-    create_effect(move |_| {
+    Effect::new(move |_| {
         if let Some(seq_id) = current_sequence.get() {
-            if let Some(sequence) = sequences.get().get(&seq_id) {
-                if let Some(step) = sequence.get_step_at(0) {
-                    set_current_target.set(Some(step.target.clone()));
-                }
+            if let Some(sequence) = sequences.get().get(&seq_id)
+                && let Some(step) = sequence.get_step_at(0) {
+                set_current_target.set(Some(step.target.clone()));
             }
         } else {
             set_current_target.set(None);

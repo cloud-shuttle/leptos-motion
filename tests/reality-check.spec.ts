@@ -4,13 +4,13 @@ test.describe('Leptos Motion - Reality Check', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for the app to load
-    await page.waitForSelector('h1:has-text("Leptos Motion - Advanced Features!")');
+    await page.waitForSelector('h1:has-text("🚀 Leptos Motion")');
   });
 
   test.describe('Basic Functionality', () => {
     test('should load the showcase page', async ({ page }) => {
       const title = await page.locator('h1').textContent();
-      expect(title).toContain('Leptos Motion - Advanced Features!');
+      expect(title).toContain('🚀 Leptos Motion');
     });
 
     test('should display all demo sections', async ({ page }) => {

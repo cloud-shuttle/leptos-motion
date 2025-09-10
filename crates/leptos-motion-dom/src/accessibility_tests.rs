@@ -4,7 +4,7 @@
 // for animation components and interactions.
 
 use crate::*;
-use std::collections::HashMap;
+// use std::collections::HashMap; // Unused import
 
 /// Test that motion components support ARIA attributes
 #[test]

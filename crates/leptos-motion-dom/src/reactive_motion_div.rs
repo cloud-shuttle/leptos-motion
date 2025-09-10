@@ -14,6 +14,9 @@ use leptos_motion_core::*;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
+
+/// Type alias for momentum step callback
+type MomentumStepCallback = Rc<RefCell<Option<Box<dyn FnMut()>>>>;
 use wasm_bindgen::prelude::*;
 use web_sys;
 
@@ -252,7 +255,7 @@ pub fn ReactiveMotionDiv(
                         // Start momentum animation with proper continuous loop using Rc<RefCell<>>
                         let start_momentum = move || {
                             // Create a momentum step function using Rc<RefCell<>> to avoid circular references
-                            let momentum_step: Rc<RefCell<Option<Box<dyn FnMut()>>>> = Rc::new(RefCell::new(None));
+                            let momentum_step: MomentumStepCallback = Rc::new(RefCell::new(None));
 
                             let momentum_step_ref = momentum_step.clone();
                             let set_drag_position_clone = set_drag_position.clone();

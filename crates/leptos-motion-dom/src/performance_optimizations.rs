@@ -26,7 +26,7 @@ impl AnimationTargetPool {
 
     /// Get a target from the pool or create a new one
     pub fn get_target(&mut self) -> HashMap<String, AnimationValue> {
-        self.pool.pop().unwrap_or_else(HashMap::new)
+        self.pool.pop().unwrap_or_default()
     }
 
     /// Return a target to the pool for reuse
@@ -62,6 +62,12 @@ pub struct PerformanceMonitor {
     max_frame_time: Duration,
     min_frame_time: Duration,
     total_time: Duration,
+}
+
+impl Default for PerformanceMonitor {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PerformanceMonitor {
@@ -146,11 +152,17 @@ impl PerformanceMonitor {
 /// Performance statistics
 #[derive(Debug, Clone)]
 pub struct PerformanceStats {
+    /// Total number of animation frames processed
     pub frame_count: u64,
+    /// Average time per frame
     pub average_frame_time: Duration,
+    /// Maximum frame processing time recorded
     pub max_frame_time: Duration,
+    /// Minimum frame processing time recorded
     pub min_frame_time: Duration,
+    /// Frames per second calculation
     pub fps: f64,
+    /// Total animation runtime
     pub total_time: Duration,
 }
 

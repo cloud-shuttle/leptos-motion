@@ -4,7 +4,7 @@
 // in practice.
 
 use crate::{DragAxis, DragConfig, DragConstraints};
-use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};
+use leptos_motion_core::{AnimationTarget, AnimationValue};
 use std::collections::HashMap;
 
 /// Helper function to create a test drag configuration

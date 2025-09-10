@@ -214,7 +214,7 @@ impl SimplifiedLayoutManager {
 
         self.tracked_elements
             .insert(element_id.to_string(), element.clone());
-        self.internal_tracker.track_element(element.clone());
+        let _ = self.internal_tracker.track_element(element.clone());
 
         Ok(())
     }
@@ -226,7 +226,7 @@ impl SimplifiedLayoutManager {
         }
 
         self.tracked_elements.remove(element_id);
-        self.internal_tracker.untrack_element(element_id);
+        let _ = self.internal_tracker.untrack_element(element_id);
         self.active_animations.remove(element_id);
 
         Ok(())
@@ -268,7 +268,7 @@ impl SimplifiedLayoutManager {
             hardware_accelerated: self.config.hardware_accelerated,
         };
 
-        self.internal_flip_animator.animate(
+        let _ = self.internal_flip_animator.animate(
             element_id.to_string(),
             element.clone(),
             from_rect,
@@ -313,8 +313,8 @@ impl SimplifiedLayoutManager {
         &mut self,
         from_element_id: &str,
         to_element_id: &str,
-        from_layout: &LayoutInfo,
-        to_layout: &LayoutInfo,
+        _from_layout: &LayoutInfo,
+        _to_layout: &LayoutInfo,
     ) -> Result<(), String> {
         if !self.config.enable_shared_elements {
             return Err("Shared element transitions are disabled".to_string());
@@ -331,18 +331,18 @@ impl SimplifiedLayoutManager {
             return Err(format!("Element '{}' is not being tracked", to_element_id));
         }
 
-        let from_element = self.tracked_elements.get(from_element_id).unwrap();
-        let to_element = self.tracked_elements.get(to_element_id).unwrap();
+        let _from_element = self.tracked_elements.get(from_element_id).unwrap();
+        let _to_element = self.tracked_elements.get(to_element_id).unwrap();
 
         // Create shared element transition using the correct API
-        let config = SharedElementConfig {
+        let _config = SharedElementConfig {
             maintain_aspect_ratio: true,
             hardware_accelerated: self.config.hardware_accelerated,
             duration: self.config.duration,
             easing: self.convert_easing(self.config.easing),
         };
 
-        self.internal_shared_manager
+        let _ = self.internal_shared_manager
             .start_transition("shared-transition");
 
         // Update animation status for both elements

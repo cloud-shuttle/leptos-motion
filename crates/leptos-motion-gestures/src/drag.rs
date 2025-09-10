@@ -133,15 +133,13 @@ impl GestureHandler for DragGesture {
                 }
             }
             GestureEvent::TouchMove { touches } => {
-                if self.active {
-                    if let Some(touch) = touches.first() {
-                        self.current_position = Some((touch.x, touch.y));
-                        self.last_update = Some(Instant::now());
+                if self.active && let Some(touch) = touches.first() {
+                    self.current_position = Some((touch.x, touch.y));
+                    self.last_update = Some(Instant::now());
 
-                        if self.exceeds_threshold() {
-                            self.update_direction();
-                            self.calculate_velocity();
-                        }
+                    if self.exceeds_threshold() {
+                        self.update_direction();
+                        self.calculate_velocity();
                     }
                 }
             }

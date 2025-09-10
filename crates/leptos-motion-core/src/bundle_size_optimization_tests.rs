@@ -182,11 +182,7 @@ impl BundleSizeAnalyzer {
                 .sum();
 
             // Ensure we don't have negative size
-            let potential_size_bytes = if total_savings > analysis.total_size_bytes {
-                0
-            } else {
-                analysis.total_size_bytes - total_savings
-            };
+            let potential_size_bytes = analysis.total_size_bytes.saturating_sub(total_savings);
 
             potential_size_bytes as f64 / 1024.0
         } else {

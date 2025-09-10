@@ -267,11 +267,11 @@ fn test_wasm_animation_timing() {
 
     // Test that progress is clamped to [0, 1]
     let negative_progress: f64 = (-0.5 - start_time) / duration;
-    let clamped_negative = negative_progress.max(0.0).min(1.0);
+    let clamped_negative = negative_progress.clamp(0.0, 1.0);
     assert_eq!(clamped_negative, 0.0);
 
     let overflow_progress: f64 = (2.0 - start_time) / duration;
-    let clamped_overflow = overflow_progress.max(0.0).min(1.0);
+    let clamped_overflow = overflow_progress.clamp(0.0, 1.0);
     assert_eq!(clamped_overflow, 1.0);
 }
 

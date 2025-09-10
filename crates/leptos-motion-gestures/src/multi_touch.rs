@@ -40,6 +40,7 @@ impl MultiTouchGestureDetector {
     }
 
     /// Create with default configuration
+    #[allow(clippy::should_implement_trait)]
     pub fn default() -> Self {
         Self::new(GestureConfig::default())
     }
@@ -157,19 +158,18 @@ impl MultiTouchGestureDetector {
         self.state.average_distance = total_distance / self.state.touches.len() as f64;
 
         // Calculate scale and rotation if we have previous state
-        if let Some(prev_state) = &self.previous_state {
-            if prev_state.touches.len() >= 2 {
-                // Calculate scale change
-                let scale_change = self.state.average_distance / prev_state.average_distance;
-                self.state.scale = scale_change;
+        if let Some(prev_state) = &self.previous_state
+            && prev_state.touches.len() >= 2 {
+            // Calculate scale change
+            let scale_change = self.state.average_distance / prev_state.average_distance;
+            self.state.scale = scale_change;
 
-                // Calculate rotation change
-                if self.state.touches.len() >= 2 {
-                    let current_angle = self.calculate_gesture_angle();
-                    let previous_angle = self.calculate_previous_gesture_angle();
-                    let rotation_change = current_angle - previous_angle;
-                    self.state.rotation = rotation_change;
-                }
+            // Calculate rotation change
+            if self.state.touches.len() >= 2 {
+                let current_angle = self.calculate_gesture_angle();
+                let previous_angle = self.calculate_previous_gesture_angle();
+                let rotation_change = current_angle - previous_angle;
+                self.state.rotation = rotation_change;
             }
         }
     }
@@ -236,13 +236,12 @@ impl MultiTouchGestureDetector {
 
     /// Calculate the previous gesture angle
     fn calculate_previous_gesture_angle(&self) -> f64 {
-        if let Some(prev_state) = &self.previous_state {
-            if prev_state.touches.len() >= 2 {
-                let touches: Vec<&TouchPoint> = prev_state.touches.values().collect();
-                let (x1, y1) = (touches[0].x, touches[0].y);
-                let (x2, y2) = (touches[1].x, touches[1].y);
-                return (y2 - y1).atan2(x2 - x1);
-            }
+        if let Some(prev_state) = &self.previous_state
+            && prev_state.touches.len() >= 2 {
+            let touches: Vec<&TouchPoint> = prev_state.touches.values().collect();
+            let (x1, y1) = (touches[0].x, touches[0].y);
+            let (x2, y2) = (touches[1].x, touches[1].y);
+            return (y2 - y1).atan2(x2 - x1);
         }
         0.0
     }

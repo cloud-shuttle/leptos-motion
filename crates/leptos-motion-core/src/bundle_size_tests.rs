@@ -44,7 +44,7 @@ fn test_minimal_engine_after_optimization() {
 
     let _engine = MinimalEngine::new();
     // Engine should be created successfully
-    assert!(true); // Basic creation test
+    // Test passes if we reach here // Basic creation test
 }
 
 /// Test that performance monitoring still works after optimization
@@ -61,7 +61,7 @@ fn test_performance_monitoring_after_optimization() {
 
     let monitor = PerformanceMonitor::new(budget);
     // Monitor should be created successfully
-    assert!(true); // Basic creation test
+    // Test passes if we reach here // Basic creation test
 }
 
 /// Test that animation values still work after serde replacement
@@ -102,7 +102,7 @@ fn test_animation_values_after_serde_replacement() {
 fn test_gesture_system_after_web_sys_optimization() {
     // This test will be implemented when we optimize web-sys dependencies
     // For now, just ensure the test structure is in place
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that layout animations still work after optimization
@@ -112,7 +112,7 @@ fn test_gesture_system_after_web_sys_optimization() {
 fn test_layout_animations_after_optimization() {
     // This test will be implemented when we optimize layout dependencies
     // For now, just ensure the test structure is in place
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test bundle size targets (conceptual - actual measurement will be done externally)
@@ -129,5 +129,5 @@ fn test_bundle_size_targets() {
 
     // This test passes if the functionality tests pass
     // Bundle size measurement will be done separately
-    assert!(true);
+    // Test passes if we reach here
 }

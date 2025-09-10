@@ -8,7 +8,7 @@ use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::{console_error, console_log};
-use web_sys::{Element, MouseEvent, PointerEvent, TouchEvent};
+use web_sys::{Element, MouseEvent, PointerEvent, TouchEvent, CssStyleDeclaration};
 
 /// Gesture animation configuration
 #[derive(Clone, Debug)]
@@ -325,7 +325,7 @@ impl GestureAnimationManager {
             .element
             .as_ref()
             .ok_or_else(|| JsValue::from_str("No element set"))?;
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         // Apply drag constraints
         let (constrained_x, constrained_y) = self.apply_drag_constraints(delta_x, delta_y);
@@ -345,7 +345,7 @@ impl GestureAnimationManager {
             .element
             .as_ref()
             .ok_or_else(|| JsValue::from_str("No element set"))?;
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         // Re-enable CSS transitions
         self.enable_css_transitions()?;
@@ -405,7 +405,7 @@ impl GestureAnimationManager {
             .element
             .as_ref()
             .ok_or_else(|| JsValue::from_str("No element set"))?;
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         style.set_property(
             "transition",
@@ -426,7 +426,7 @@ impl GestureAnimationManager {
             .element
             .as_ref()
             .ok_or_else(|| JsValue::from_str("No element set"))?;
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         style.set_property("transition", "none")?;
 

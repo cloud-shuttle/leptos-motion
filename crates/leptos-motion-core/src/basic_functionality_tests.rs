@@ -83,8 +83,8 @@ mod tests {
         // We can't test much more without WASM environment
     }
 
-    /// Test that we can create an optimized hybrid engine
-    /// Note: This test requires WASM environment, so it's commented out for standard tests
+    // /// Test that we can create an optimized hybrid engine
+    // /// Note: This test requires WASM environment, so it's commented out for standard tests
     // #[test]
     // fn test_optimized_hybrid_engine_creation() {
     //     let _engine = OptimizedHybridEngine::new();

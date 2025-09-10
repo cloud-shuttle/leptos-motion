@@ -56,10 +56,8 @@ impl RepeatState {
         }
 
         // Check if we've reached the total count
-        if let Some(total) = self.total_count {
-            if self.current_count >= total {
-                self.is_complete = true;
-            }
+        if let Some(total) = self.total_count && self.current_count >= total {
+            self.is_complete = true;
         }
     }
 
@@ -116,7 +114,7 @@ impl RepeatConfigBuilder {
             (None, true) => RepeatConfig::InfiniteReverse,
             (Some(0), _) => RepeatConfig::Never,
             (Some(count), false) => RepeatConfig::Count(count),
-            (Some(count), true) => {
+            (Some(_count), true) => {
                 // For count-based reverse, we'll use InfiniteReverse and track manually
                 RepeatConfig::InfiniteReverse
             }
@@ -158,9 +156,11 @@ impl AnimationCycleManager {
         if self.current_cycle_time >= self.base_duration {
             self.current_cycle_time = 0.0;
 
+            // Advance the repeat state first
+            self.repeat_state.advance();
+            
             // Check if we should continue repeating
             if self.repeat_state.should_continue() {
-                self.repeat_state.advance();
                 CycleUpdate::CycleComplete
             } else {
                 self.repeat_state.is_complete = true;

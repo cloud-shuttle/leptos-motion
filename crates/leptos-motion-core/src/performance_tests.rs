@@ -41,7 +41,7 @@ fn test_performance_monitoring_with_animations() {
     engine.end_performance_monitoring(0); // Simulate no animations
 
     // Verify the methods can be called without errors
-    assert!(true); // If we get here, the methods work
+    // Test passes if we reach this point
 }
 
 /// Test performance budget enforcement
@@ -59,7 +59,7 @@ fn test_performance_budget_enforcement() {
     engine.end_performance_monitoring(5); // Simulate 5 animations
 
     // Verify the methods can handle high workloads
-    assert!(true); // If we get here, the methods work
+    // Test passes if we reach this point
 }
 
 /// Test GPU layer management integration
@@ -75,7 +75,7 @@ fn test_gpu_layer_management_integration() {
     let optimized = engine.optimize_for_gpu(&element);
 
     // Verify the method can be called (return value may vary)
-    assert!(optimized == true || optimized == false);
+    // Test passes if we reach here - this is a tautology by design
 }
 
 /// Test animation pool integration
@@ -90,7 +90,7 @@ fn test_animation_pool_integration() {
     engine.end_performance_monitoring(0);
 
     // Verify the engine works with performance monitoring
-    assert!(true); // If we get here, the integration works
+    // Test passes if we reach this point
 }
 
 /// Test performance monitoring with real animation
@@ -104,7 +104,7 @@ fn test_performance_monitoring_with_real_animation() {
     engine.end_performance_monitoring(1);
 
     // Test that performance monitoring is integrated into the engine
-    assert!(true); // If we get here, the integration works
+    // Test passes if we reach this point
 }
 
 /// Test performance monitoring error handling
@@ -121,7 +121,7 @@ fn test_performance_monitoring_error_handling() {
     engine.end_performance_monitoring(1000); // Many animations
 
     // Verify the methods handle edge cases gracefully
-    assert!(true); // If we get here, the methods work
+    // Test passes if we reach this point
 }
 
 /// Test performance monitoring memory usage tracking
@@ -135,7 +135,7 @@ fn test_performance_monitoring_memory_tracking() {
     engine.end_performance_monitoring(1); // Simulate memory usage
 
     // Verify the methods can track memory usage
-    assert!(true); // If we get here, the methods work
+    // Test passes if we reach this point
 }
 
 /// Test performance monitoring with multiple engines
@@ -153,5 +153,5 @@ fn test_performance_monitoring_multiple_engines() {
     engine2.end_performance_monitoring(2);
 
     // Verify both engines work independently
-    assert!(true); // If we get here, both engines work
+    // Test passes if we reach this point
 }

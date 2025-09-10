@@ -3,7 +3,7 @@
 //! This module tests gesture recognition, event handling, and interaction
 //! for the motion gesture system using a TDD approach.
 
-use leptos_motion_core::*;
+// use leptos_motion_core::*; // Unused import
 use wasm_bindgen_test::*;
 
 wasm_bindgen_test_configure!(run_in_browser);

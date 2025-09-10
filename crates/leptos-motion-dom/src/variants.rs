@@ -7,6 +7,14 @@ use leptos::reactive::signal::signal;
 use leptos_motion_core::{AnimationTarget, Transition};
 use std::collections::HashMap;
 
+/// Type alias for variants hook return type
+type UseVariantsReturn = (
+    ReadSignal<Option<String>>,
+    WriteSignal<Option<String>>,
+    ReadSignal<Option<AnimationTarget>>,
+    WriteSignal<HashMap<String, AnimationTarget>>,
+);
+
 /// Variants manager for named animation states
 #[derive(Debug, Clone)]
 pub struct Variants {
@@ -185,18 +193,13 @@ impl Default for VariantsWithTransitions {
 }
 
 /// Hook for using variants in Leptos components
-pub fn use_variants() -> (
-    ReadSignal<Option<String>>,
-    WriteSignal<Option<String>>,
-    ReadSignal<Option<AnimationTarget>>,
-    WriteSignal<HashMap<String, AnimationTarget>>,
-) {
+pub fn use_variants() -> UseVariantsReturn {
     let (current_variant, set_current_variant) = signal(None::<String>);
     let (current_target, set_current_target) = signal(None::<AnimationTarget>);
     let (variants, set_variants) = signal(HashMap::<String, AnimationTarget>::new());
 
     // Update current target when variant changes
-    create_effect(move |_| {
+    Effect::new(move |_| {
         if let Some(variant) = current_variant.get() {
             if let Some(target) = variants.get().get(&variant) {
                 set_current_target.set(Some(target.clone()));

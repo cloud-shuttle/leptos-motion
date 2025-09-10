@@ -84,7 +84,7 @@ fn SimpleApiDemo() -> impl IntoView {
                 <MotionDiv
                     initial=create_simple_animation_target(false)
                     animate=create_simple_animation_target(is_animated.get())
-                    transition=Transition {
+                    _transition=Transition {
                         duration: Some(0.8),
                         ease: Easing::EaseInOut,
                         repeat: RepeatConfig::Never,
@@ -189,7 +189,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
                 <MotionDiv
                     initial=create_transform_animation_target(0.0, 0.0, 0.0, 1.0)
                     animate=create_transform_animation_target(x_pos.get(), y_pos.get(), rotation.get(), scale.get())
-                    transition=Transition {
+                    _transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,
                         repeat: RepeatConfig::Never,
@@ -251,7 +251,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                 <MotionDiv
                     initial=create_spring_animation_target(false)
                     animate=create_spring_animation_target(is_springing.get())
-                    transition=Transition {
+                    _transition=Transition {
                         duration: Some(1.2),
                         ease: Easing::Spring(SpringConfig {
                             stiffness: 100.0,
@@ -411,8 +411,8 @@ fn LayoutAnimationDemo() -> impl IntoView {
                 {move || (0..6).map(|i| {
                     view! {
                         <MotionDiv
-                            layout=true
-                            transition=Transition {
+                            _layout=true
+                            _transition=Transition {
                                 duration: Some(0.5),
                                 ease: Easing::EaseInOut,
                                 repeat: RepeatConfig::Never,
@@ -476,7 +476,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
                         <MotionDiv
                    initial=create_sequence_animation_target(false, i)
                    animate=create_sequence_animation_target(is_playing.get(), i)
-                   transition=Transition {
+                    _transition=Transition {
                        duration: Some(0.6),
                        ease: Easing::EaseOut,
                        repeat: RepeatConfig::Never,

@@ -3,7 +3,6 @@
 //! These tests ensure that error handling works correctly in production environments
 
 use crate::*;
-use std::collections::HashMap;
 
 // WASM-specific test configuration - conditional compilation
 #[cfg(feature = "web-sys")]

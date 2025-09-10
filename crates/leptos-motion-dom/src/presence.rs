@@ -5,7 +5,9 @@ use leptos::prelude::*;
 /// AnimatePresence component for coordinating exit animations
 #[component]
 pub fn AnimatePresence(
+    /// Presence mode controlling how exit animations are coordinated
     #[prop(optional)] mode: Option<PresenceMode>,
+    /// Child components to manage presence for
     children: Children,
 ) -> impl IntoView {
     let _mode = mode.unwrap_or(PresenceMode::Sync);

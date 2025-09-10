@@ -3,6 +3,9 @@
 use crate::{GestureEvent, GestureHandler, GestureResult};
 use std::time::{Duration, Instant};
 
+/// Type alias for hover callback functions
+type HoverCallback = Option<Box<dyn Fn((f64, f64)) + Send + Sync>>;
+
 /// Hover gesture handler
 pub struct HoverGesture {
     /// Whether hover is active
@@ -16,9 +19,9 @@ pub struct HoverGesture {
     /// Hover area bounds
     bounds: Option<((f64, f64), (f64, f64))>,
     /// Hover callbacks
-    on_enter: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
-    on_leave: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
-    on_move: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
+    on_enter: HoverCallback,
+    on_leave: HoverCallback,
+    on_move: HoverCallback,
 }
 
 impl HoverGesture {
@@ -144,10 +147,9 @@ impl GestureHandler for HoverGesture {
                             self.active = false;
 
                             // Trigger leave callback
-                            if let Some(ref callback) = self.on_leave {
-                                if let Some(current_pos) = self.current_position {
-                                    callback(current_pos);
-                                }
+                            if let Some(ref callback) = self.on_leave
+                                && let Some(current_pos) = self.current_position {
+                                callback(current_pos);
                             }
                         }
                         self.current_position = None;
@@ -160,10 +162,9 @@ impl GestureHandler for HoverGesture {
                     self.active = false;
 
                     // Trigger leave callback
-                    if let Some(ref callback) = self.on_leave {
-                        if let Some(current_pos) = self.current_position {
-                            callback(current_pos);
-                        }
+                    if let Some(ref callback) = self.on_leave
+                        && let Some(current_pos) = self.current_position {
+                        callback(current_pos);
                     }
                 }
                 self.current_position = None;

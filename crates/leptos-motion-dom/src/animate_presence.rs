@@ -7,6 +7,14 @@ use leptos::reactive::signal::signal;
 use leptos_motion_core::{AnimationTarget, Transition};
 use std::collections::HashMap;
 
+/// Type alias for animate presence hook return type
+type UseAnimatePresenceReturn = (
+    ReadSignal<bool>,
+    WriteSignal<bool>,
+    ReadSignal<Vec<String>>,
+    WriteSignal<Vec<String>>,
+);
+
 /// Mode for handling presence animations
 #[derive(Debug, Clone, PartialEq)]
 pub enum PresenceMode {
@@ -62,7 +70,7 @@ pub fn AnimatePresence(
     /// Children to animate
     children: Children,
 ) -> impl IntoView {
-    let config = AnimatePresenceConfig {
+    let _config = AnimatePresenceConfig {
         mode: mode.unwrap_or_default(),
         exit_transition,
         enter_transition,
@@ -76,12 +84,7 @@ pub fn AnimatePresence(
 }
 
 /// Hook for managing presence state
-pub fn use_animate_presence() -> (
-    ReadSignal<bool>,
-    WriteSignal<bool>,
-    ReadSignal<Vec<String>>,
-    WriteSignal<Vec<String>>,
-) {
+pub fn use_animate_presence() -> UseAnimatePresenceReturn {
     let (is_present, set_is_present) = signal(false);
     let (children, set_children) = signal(Vec::<String>::new());
 
@@ -96,6 +99,7 @@ pub fn use_exiting_children() -> (ReadSignal<Vec<String>>, WriteSignal<Vec<Strin
 /// Presence animation manager
 #[derive(Debug, Clone)]
 pub struct PresenceManager {
+    #[allow(dead_code)]
     config: AnimatePresenceConfig,
     children: Vec<String>,
     exiting_children: Vec<String>,

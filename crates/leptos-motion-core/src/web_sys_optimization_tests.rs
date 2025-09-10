@@ -32,7 +32,7 @@ fn test_core_dom_functionality_after_web_sys_optimization() {
     let _value = 42.0;
     let _transition = "test";
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that animation APIs still work after web-sys optimization
@@ -57,9 +57,9 @@ fn test_animation_apis_after_web_sys_optimization() {
     // Test basic types instead of WASM-specific DOM manipulation
     let _transition = "test";
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that performance APIs still work after web-sys optimization
@@ -88,7 +88,7 @@ fn test_console_apis_after_web_sys_optimization() {
     // Test that we can still use console for debugging
     console::log_1(&"Test message".into());
     // If we get here without panicking, console works
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that minimal web-sys features are sufficient for core functionality
@@ -113,22 +113,22 @@ fn test_minimal_web_sys_features_sufficient() {
 
     // Test core animation properties
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // style
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // style
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
 
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
     // Basic test passes
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that web-sys optimization doesn't break engine functionality
@@ -143,7 +143,7 @@ fn test_engine_functionality_after_web_sys_optimization() {
     let _minimal_engine = MinimalEngine::new();
 
     // If we get here without panicking, engines work
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test bundle size targets for web-sys optimization
@@ -157,5 +157,5 @@ fn test_web_sys_bundle_size_targets() {
     // Target: <400KB after web-sys optimization
     // Target: Only include essential web-sys features
 
-    assert!(true); // Placeholder for bundle size validation
+    // Test passes if we reach here // Placeholder for bundle size validation
 }

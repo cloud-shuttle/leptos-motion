@@ -72,7 +72,7 @@ fn test_performance_monitoring_after_wasm_optimization() {
     // Test performance monitor creation
     let _monitor = PerformanceMonitor::new(budget);
     // Monitor should be created successfully
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that animation values still work after WASM optimization
@@ -127,7 +127,7 @@ fn test_easing_functions_after_wasm_optimization() {
 
     // Verify all variants exist and can be matched
     match linear {
-        Easing::Linear => assert!(true),
+        Easing::Linear => { /* Test passes */ },
         _ => panic!("Expected Linear easing"),
     }
 
@@ -154,7 +154,7 @@ fn test_repeat_configurations_after_wasm_optimization() {
 
     // Verify all variants exist and can be matched
     match never {
-        RepeatConfig::Never => assert!(true),
+        RepeatConfig::Never => { /* Test passes */ },
         _ => panic!("Expected Never repeat"),
     }
 
@@ -164,12 +164,12 @@ fn test_repeat_configurations_after_wasm_optimization() {
     }
 
     match infinite {
-        RepeatConfig::Infinite => assert!(true),
+        RepeatConfig::Infinite => { /* Test passes */ },
         _ => panic!("Expected Infinite repeat"),
     }
 
     match infinite_reverse {
-        RepeatConfig::InfiniteReverse => assert!(true),
+        RepeatConfig::InfiniteReverse => { /* Test passes */ },
         _ => panic!("Expected InfiniteReverse repeat"),
     }
 }
@@ -196,17 +196,17 @@ fn test_stagger_configurations_after_wasm_optimization() {
     let from_index = StaggerFrom::Index(5);
 
     match from_first {
-        StaggerFrom::First => assert!(true),
+        StaggerFrom::First => { /* Test passes */ },
         _ => panic!("Expected First stagger from"),
     }
 
     match from_last {
-        StaggerFrom::Last => assert!(true),
+        StaggerFrom::Last => { /* Test passes */ },
         _ => panic!("Expected Last stagger from"),
     }
 
     match from_center {
-        StaggerFrom::Center => assert!(true),
+        StaggerFrom::Center => { /* Test passes */ },
         _ => panic!("Expected Center stagger from"),
     }
 
@@ -278,7 +278,7 @@ fn test_wasm_optimization_bundle_size_targets() {
 
     // Target: Additional 20-30% reduction from current 605KB
     // Expected: 400-500KB total bundle size
-    assert!(true);
+    // Test passes if we reach here
 }
 
 /// Test that memory optimization still works after WASM optimization
@@ -318,6 +318,6 @@ fn test_lazy_loading_after_wasm_optimization() {
     #[cfg(not(feature = "lazy-loading"))]
     {
         // When lazy loading is disabled, just verify the test passes
-        assert!(true);
+        // Test passes if we reach here
     }
 }

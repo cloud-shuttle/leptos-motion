@@ -375,7 +375,7 @@ fn test_gesture_confidence_calculation() {
 }
 
 // Performance testing with modern benchmarking
-#[cfg(feature = "bench")]
+#[cfg(feature = "multi-touch")]
 mod benches {
     use super::*;
 

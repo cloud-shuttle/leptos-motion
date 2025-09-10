@@ -812,6 +812,7 @@ impl RafAnimation {
 }
 
 /// Feature detection for animation capabilities
+#[derive(Default)]
 pub struct FeatureDetector {
     waapi_available: Option<bool>,
 }
@@ -819,9 +820,7 @@ pub struct FeatureDetector {
 impl FeatureDetector {
     /// Create a new feature detector
     pub fn new() -> Self {
-        Self {
-            waapi_available: None,
-        }
+        Self::default()
     }
 
     /// Check if WAAPI is supported

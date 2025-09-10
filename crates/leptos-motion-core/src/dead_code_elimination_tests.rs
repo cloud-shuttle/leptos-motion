@@ -194,7 +194,7 @@ mod tests {
     fn test_dead_code_modules_are_optional() {
         let analyzer = DeadCodeEliminationAnalyzer::new();
 
-        for (_, module) in &analyzer.dead_code_modules {
+        for module in analyzer.dead_code_modules.values() {
             assert!(
                 module.is_optional,
                 "Module {} should be marked as optional",

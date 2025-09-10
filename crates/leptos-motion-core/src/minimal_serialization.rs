@@ -135,7 +135,7 @@ impl MinimalJsonSerializer {
                 }
                 ',' => {
                     if !in_quotes && brace_count == 0 {
-                        result.push(Self::parse_kv(&current.trim())?);
+                        result.push(Self::parse_kv(current.trim())?);
                         current.clear();
                         continue;
                     }
@@ -146,7 +146,7 @@ impl MinimalJsonSerializer {
         }
 
         if !current.trim().is_empty() {
-            result.push(Self::parse_kv(&current.trim())?);
+            result.push(Self::parse_kv(current.trim())?);
         }
 
         Ok(result)

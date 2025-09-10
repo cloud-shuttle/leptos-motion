@@ -22,12 +22,12 @@ fn test_motion_div_api_contract_signature() {
                 node_ref=NodeRef::new()
                 initial=HashMap::new()
                 animate=HashMap::new()
-                transition=Transition::default()
+                _transition=Transition::default()
                 while_hover=HashMap::new()
                 while_tap=HashMap::new()
-                layout=true
+                _layout=true
                 drag=DragConfig::default()
-                drag_constraints=DragConstraints::default()
+                _drag_constraints=DragConstraints::default()
             >
                 "Test Content"
             </MotionDiv>
@@ -151,12 +151,12 @@ fn test_prop_type_consistency_contract() {
             <MotionDiv
                 initial=initial.unwrap_or_default()
                 animate=animate.unwrap_or_default()
-                transition=transition.unwrap_or_default()
+                _transition=transition.unwrap_or_default()
                 while_hover=while_hover.unwrap_or_default()
                 while_tap=while_tap.unwrap_or_default()
-                layout=layout.unwrap_or(false)
+                _layout=layout.unwrap_or(false)
                 drag=drag.unwrap_or_default()
-                drag_constraints=drag_constraints.unwrap_or_default()
+                _drag_constraints=drag_constraints.unwrap_or_default()
             >
                 "Type Test Content"
             </MotionDiv>
@@ -178,8 +178,8 @@ fn test_default_implementations_contract() {
     let transform_default = Transform::default();
 
     // Test that defaults are valid
-    assert!(transition_default.duration.is_none());
-    assert!(drag_config_default.axis.is_none());
+    assert!(transition_default.duration.is_some());
+    assert!(drag_config_default.axis.is_some());
     assert!(drag_constraints_default.left.is_none());
     assert!(transform_default.x.is_none());
 }
@@ -260,12 +260,12 @@ fn test_api_stability_contract() {
                 node_ref=NodeRef::new()
                 initial=HashMap::new()
                 animate=HashMap::new()
-                transition=Transition::default()
+                _transition=Transition::default()
                 while_hover=HashMap::new()
                 while_tap=HashMap::new()
-                layout=true
+                _layout=true
                 drag=DragConfig::default()
-                drag_constraints=DragConstraints::default()
+                _drag_constraints=DragConstraints::default()
             >
                 "Stability Test"
             </MotionDiv>

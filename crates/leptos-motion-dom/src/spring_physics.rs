@@ -51,6 +51,7 @@ impl SpringPhysics {
     }
 
     /// Create a spring physics engine with default config
+    #[allow(clippy::should_implement_trait)]
     pub fn default() -> Self {
         Self::new(SpringConfig::default())
     }

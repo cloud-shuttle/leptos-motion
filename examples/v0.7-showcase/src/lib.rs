@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos::web_sys;
-use leptos_motion_dom::{AnimationValue, ReactiveMotionDivFixed, signal_animate};
+use leptos_motion_dom::{AnimationValue, ReactiveMotionDiv, signal_animate};
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
@@ -133,13 +133,13 @@ fn SimpleAPIDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Motion's pick-up-and-play API is easy to start and fun to master."</p>
             <div class="demo-container">
                 <div class="flex justify-center items-center h-full">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=animation_target
                         class="w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl cursor-pointer".to_string()
                         on:click=toggle
                     >
                         <div>"🎯"</div>
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline" on:click=toggle>
@@ -207,13 +207,13 @@ fn IndependentTransformsDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Animate x, y, rotateZ etc independently, without wrapper elements."</p>
             <div class="demo-container">
                 <div class="flex justify-center items-center h-full">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=animation_target
                         class="w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl cursor-pointer".to_string()
                         on:click=toggle
                     >
                         <div>"🔄"</div>
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline" on:click=toggle>
@@ -285,13 +285,13 @@ fn ScrollAnimationDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Smooth, hardware-accelerated scroll animations."</p>
             <div class="demo-container">
                 <div class="flex justify-center items-center h-full">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=animation_target
                         class="w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl cursor-pointer".to_string()
                         on:click=toggle
                     >
                         <div>"📜"</div>
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline" on:click=toggle>
@@ -321,7 +321,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Real spring physics for great-feeling animations."</p>
             <div class="demo-container">
                 <div class="spring-demo">
-                    {spring_items.into_iter().enumerate().map(|(index, item)| {
+                    {spring_items.into_iter().enumerate().map(|(_index, item)| {
                         let (is_spring_active, set_spring_active) = signal(false);
                         let spring_toggle = move |_| {
                             set_spring_active.update(|active| *active = !*active);
@@ -346,13 +346,13 @@ fn SpringPhysicsDemo() -> impl IntoView {
                         });
 
                         view! {
-                            <ReactiveMotionDivFixed
+                            <ReactiveMotionDiv
                                 animate=spring_animation
                                 class="spring-item cursor-pointer".to_string()
                                 on:click=spring_toggle
                             >
                                 {item}
-                            </ReactiveMotionDivFixed>
+                            </ReactiveMotionDiv>
                         }
                     }).collect::<Vec<_>>()}
                 </div>
@@ -377,7 +377,7 @@ fn ExitAnimationDemo() -> impl IntoView {
         // Auto-restore after animation
         if !is_visible.get() {
             let set_visible = set_is_visible.clone();
-            let timeout = web_sys::window()
+            let _timeout = web_sys::window()
                 .unwrap()
                 .set_timeout_with_callback_and_timeout_and_arguments_0(
                     &Closure::wrap(Box::new(move || {
@@ -437,13 +437,13 @@ fn ExitAnimationDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"AnimatePresence makes it easy to animate elements as they exit."</p>
             <div class="demo-container">
                 <div class="flex justify-center items-center h-full">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=animation_target
                         class="w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl cursor-pointer".to_string()
                         on:click=toggle
                     >
                         <div>"👋"</div>
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline" on:click=toggle>
@@ -576,27 +576,27 @@ fn GesturesDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Hover, press and drag gestures that feel native, not \"webby\"."</p>
             <div class="demo-container">
                 <div class="gesture-demo">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=hover_animation
                         class="gesture-item".to_string()
                         on:click=hover_toggle
                     >
                         "Hover"
-                    </ReactiveMotionDivFixed>
-                    <ReactiveMotionDivFixed
+                    </ReactiveMotionDiv>
+                    <ReactiveMotionDiv
                         animate=press_animation
                         class="gesture-item".to_string()
                         on:click=press_toggle
                     >
                         "Press"
-                    </ReactiveMotionDivFixed>
-                    <ReactiveMotionDivFixed
+                    </ReactiveMotionDiv>
+                    <ReactiveMotionDiv
                         animate=drag_animation
                         class="gesture-item".to_string()
                         on:click=drag_toggle
                     >
                         "Drag"
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline">
@@ -653,13 +653,13 @@ fn LayoutAnimationDemo() -> impl IntoView {
                         });
 
                         view! {
-                            <ReactiveMotionDivFixed
+                            <ReactiveMotionDiv
                                 animate=layout_animation
                                 class="layout-item cursor-pointer".to_string()
                                 on:click=layout_toggle
                             >
                                 {item}
-                            </ReactiveMotionDivFixed>
+                            </ReactiveMotionDiv>
                         }
                     }).collect::<Vec<_>>()}
                 </div>
@@ -695,7 +695,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Variants, stagger and timelines make it easy to precisely orchestrate animations."</p>
             <div class="demo-container">
                 <div class="timeline-demo">
-                    {timeline_items.into_iter().enumerate().map(|(index, item)| {
+                    {timeline_items.into_iter().enumerate().map(|(_index, item)| {
                         let (is_timeline_active, set_timeline_active) = signal(false);
                         let timeline_toggle = move |_| {
                             set_timeline_active.update(|active| *active = !*active);
@@ -723,13 +723,13 @@ fn TimelineSequencesDemo() -> impl IntoView {
                         });
 
                         view! {
-                            <ReactiveMotionDivFixed
+                            <ReactiveMotionDiv
                                 animate=timeline_animation
                                 class="timeline-item cursor-pointer".to_string()
                                 on:click=timeline_toggle
                             >
                                 {item}
-                            </ReactiveMotionDivFixed>
+                            </ReactiveMotionDiv>
                         }
                     }).collect::<Vec<_>>()}
                 </div>
@@ -791,13 +791,13 @@ fn PerformanceDemo() -> impl IntoView {
             <p class="text-gray-600 mb-6">"Hardware-accelerated animations with 60fps performance."</p>
             <div class="demo-container">
                 <div class="flex justify-center items-center h-full">
-                    <ReactiveMotionDivFixed
+                    <ReactiveMotionDiv
                         animate=animation_target
                         class="w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl cursor-pointer".to_string()
                         on:click=toggle
                     >
                         <div>"⚡"</div>
-                    </ReactiveMotionDivFixed>
+                    </ReactiveMotionDiv>
                 </div>
             </div>
             <button class="text-purple-600 font-semibold hover:underline" on:click=toggle>

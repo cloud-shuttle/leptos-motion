@@ -12,7 +12,7 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
-use leptos_motion_dom::*;
+use leptos_motion_dom::simple_signal_based_motion_div::SimpleSignalBasedMotionDiv;
 use leptos_motion_gestures::*;
 use leptos_motion_layout::*;
 use leptos_motion_scroll::*;
@@ -89,16 +89,17 @@ fn SimpleApiDemo() -> impl IntoView {
                     {move || if is_animated.get() { "Reset" } else { "Animate" }}
                 </button>
 
-                <MotionDiv
+                <SimpleSignalBasedMotionDiv
                     initial=create_animation_target(false)
-                    animate=create_animation_target(is_animated.get())
-                    transition=Transition {
+                    animate=move || create_animation_target(is_animated.get())
+                    transition=move || Transition {
                         duration: Some(0.8),
                         ease: Easing::EaseInOut,
                         repeat: RepeatConfig::Never,
                         delay: Some(0.0),
                         stagger: None,
                     }
+                    is_visible=move || true
                     style="
                         width: 100px;
                         height: 100px;
@@ -113,7 +114,7 @@ fn SimpleApiDemo() -> impl IntoView {
                     ".to_string()
                 >
                     "Motion"
-                </MotionDiv>
+                </SimpleSignalBasedMotionDiv>
             </div>
         </section>
     }
@@ -194,9 +195,9 @@ fn IndependentTransformsDemo() -> impl IntoView {
             </div>
 
             <div style="position: relative; height: 300px; background: #f8f9fa; border-radius: 8px; overflow: hidden;">
-                <MotionDiv
+                <SimpleSignalBasedMotionDiv
                     initial=create_animation_target(false)
-                    animate={
+                    animate=move || {
                         let mut target = HashMap::new();
                         target.insert("x".to_string(), AnimationValue::Pixels(x_pos.get()));
                         target.insert("y".to_string(), AnimationValue::Pixels(y_pos.get()));
@@ -204,7 +205,7 @@ fn IndependentTransformsDemo() -> impl IntoView {
                         target.insert("scale".to_string(), AnimationValue::Number(scale.get()));
                         target
                     }
-                    transition=Transition {
+                    transition=move || Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,
                         repeat: RepeatConfig::Never,
@@ -226,9 +227,10 @@ fn IndependentTransformsDemo() -> impl IntoView {
                         font-weight: bold;
                         box-shadow: 0 4px 20px rgba(0,0,0,0.1);
                     ".to_string()
+                    is_visible=move || true
                 >
                     "Transform"
-                </MotionDiv>
+                </SimpleSignalBasedMotionDiv>
             </div>
         </section>
     }
@@ -266,7 +268,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                 <MotionDiv
                     initial=create_animation_target(false)
                     animate=create_spring_animation_target(is_springing.get())
-                    transition=Transition {
+                    _transition=Transition {
                         duration: Some(1.2),
                         ease: Easing::Spring(SpringConfig::default()),
                         repeat: RepeatConfig::Never,
@@ -419,8 +421,8 @@ fn LayoutAnimationDemo() -> impl IntoView {
                 {move || (0..6).map(|i| {
                     view! {
                         <MotionDiv
-                            layout=true
-                            transition=Transition {
+                            _layout=true
+                            _transition=Transition {
                                 duration: Some(0.5),
                                 ease: Easing::EaseInOut,
                                 repeat: RepeatConfig::Never,
@@ -484,7 +486,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
                         <MotionDiv
                             initial=create_animation_target(false)
                             animate=create_sequence_animation_target(is_playing.get(), i)
-                            transition=Transition {
+                            _transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseOut,
                                 repeat: RepeatConfig::Never,
@@ -576,7 +578,7 @@ fn ExitAnimationsDemo() -> impl IntoView {
                             <MotionDiv
                                 initial=create_animation_target(false)
                                 animate=create_animation_target(true)
-                                transition=Transition {
+                                _transition=Transition {
                                     duration: Some(0.3),
                                     ease: Easing::EaseInOut,
                                     repeat: RepeatConfig::Never,
@@ -658,7 +660,7 @@ fn create_tap_animation() -> AnimationTarget {
     target
 }
 
-fn create_sequence_animation_target(playing: bool, index: usize) -> AnimationTarget {
+fn create_sequence_animation_target(playing: bool, _index: usize) -> AnimationTarget {
     let mut target = HashMap::new();
     if playing {
         target.insert("y".to_string(), AnimationValue::Pixels(-30.0));

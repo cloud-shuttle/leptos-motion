@@ -4,7 +4,7 @@
 // DOM hooks using the latest Rust testing patterns.
 
 use super::*;
-use leptos::prelude::*;
+// use leptos::prelude::*; // Unused import
 
 // Modern fixture-based testing
 fn node_ref_fixture() -> NodeRef<leptos::html::Div> {
@@ -175,7 +175,7 @@ fn test_use_animation_hook_error_handling() {
 }
 
 // Performance testing with modern benchmarking
-#[cfg(feature = "bench")]
+#[cfg(feature = "performance-monitoring")]
 mod benches {
     use super::*;
 

@@ -32,6 +32,9 @@ minimal = ["raf", "waapi"]
 core-only = ["raf", "waapi"]
 basic-components = ["raf", "waapi", "dom"]
 
+# Performance features
+performance-metrics = ["leptos-motion-core/performance-metrics"]
+
 [dependencies]
 # All motion crates
 leptos-motion-core = "0.8.0"

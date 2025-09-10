@@ -45,7 +45,7 @@ pub fn TestFix() -> impl IntoView {
         target
     };
 
-    let transition = Transition {
+    let _transition = Transition {
         duration: Some(0.6),
         ease: Easing::EaseInOut,
         delay: None,

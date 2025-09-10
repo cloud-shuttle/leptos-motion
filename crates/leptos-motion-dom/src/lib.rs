@@ -8,6 +8,8 @@
 pub mod components;
 pub mod elements;
 pub mod hooks;
+pub mod fixed_motion_div;
+/// Improved motion div implementation with enhanced features
 pub mod improved_motion_div;
 pub mod performance;
 pub mod presence;
@@ -22,6 +24,12 @@ pub mod easing_functions;
 pub mod enhanced_motion_div;
 pub mod repeat_config;
 pub mod transform_animations;
+
+// Signal-based animation controller with proven patterns
+// pub mod signal_based_controller; // Temporarily disabled due to compilation errors
+// pub mod signal_based_motion_div; // Temporarily disabled due to compilation errors
+pub mod simple_signal_based_motion_div;
+pub mod signal_based_animation_controller;
 
 // New v0.7 features
 pub mod animate_presence;
@@ -69,6 +77,9 @@ mod enhanced_motion_div_tests;
 
 #[cfg(test)]
 mod reactive_animation_tests;
+
+#[cfg(test)]
+mod signal_based_controller_tests;
 
 #[cfg(test)]
 mod drag_animation_tests {

@@ -5,12 +5,16 @@ use crate::AnimationValue;
 use leptos::prelude::*;
 use std::collections::HashMap;
 
+/// Type alias for motion value subscribers
+#[cfg(feature = "leptos-integration")]
+type MotionValueSubscriber<T> = Box<dyn Fn(&T) + Send + Sync + 'static>;
+
 /// Reactive motion value that tracks animation state
 #[cfg(feature = "leptos-integration")]
 pub struct MotionValue<T: Clone + Send + Sync + 'static> {
     value: RwSignal<T>,
     velocity: RwSignal<f64>,
-    subscribers: std::sync::Mutex<Vec<Box<dyn Fn(&T) + Send + Sync + 'static>>>,
+    subscribers: std::sync::Mutex<Vec<MotionValueSubscriber<T>>>,
 }
 
 #[cfg(feature = "leptos-integration")]

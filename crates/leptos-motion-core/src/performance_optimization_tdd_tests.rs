@@ -4,9 +4,6 @@
 
 #[cfg(feature = "performance-metrics")]
 use crate::performance::{PerformanceBudget, PerformanceMonitor, PerformanceReport};
-use crate::*;
-use std::collections::HashMap;
-use std::time::{Duration, Instant};
 
 // WASM-specific test configuration - conditional compilation
 #[cfg(feature = "web-sys")]

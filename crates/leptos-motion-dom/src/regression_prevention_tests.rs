@@ -128,7 +128,7 @@ fn test_transition_functionality_regression() {
 
         view! {
             <MotionDiv
-                transition=transition
+                _transition=transition
             >
                 "Transition Test"
             </MotionDiv>
@@ -238,10 +238,10 @@ fn test_prop_combinations_regression() {
                 style="background: blue".to_string()
                 initial=initial
                 animate=animate
-                transition=transition
+                _transition=transition
                 while_hover=hover_target
                 while_tap=tap_target
-                layout=true
+                _layout=true
                 drag=drag_config
             >
                 "Complex Combination"
@@ -341,12 +341,12 @@ fn test_type_safety_regression() {
             <MotionDiv
                 initial=correct_initial.unwrap_or_default()
                 animate=correct_animate.unwrap_or_default()
-                transition=correct_transition.unwrap_or_default()
+                _transition=correct_transition.unwrap_or_default()
                 while_hover=correct_while_hover.unwrap_or_default()
                 while_tap=correct_while_tap.unwrap_or_default()
-                layout=correct_layout.unwrap_or(false)
+                _layout=correct_layout.unwrap_or(false)
                 drag=correct_drag.unwrap_or_default()
-                drag_constraints=correct_drag_constraints.unwrap_or_default()
+                _drag_constraints=correct_drag_constraints.unwrap_or_default()
             >
                 "Type Safety Test"
             </MotionDiv>

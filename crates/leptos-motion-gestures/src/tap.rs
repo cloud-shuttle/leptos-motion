@@ -3,6 +3,9 @@
 use crate::{GestureEvent, GestureHandler, GestureResult};
 use std::time::{Duration, Instant};
 
+/// Type alias for tap callback functions
+type TapCallback = Option<Box<dyn Fn((f64, f64)) + Send + Sync>>;
+
 /// Tap gesture handler
 pub struct TapGesture {
     /// Whether tap is active
@@ -26,9 +29,9 @@ pub struct TapGesture {
     /// Multi-tap timeout
     multi_tap_timeout: Duration,
     /// Tap callbacks
-    on_single_tap: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
-    on_double_tap: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
-    on_triple_tap: Option<Box<dyn Fn((f64, f64)) + Send + Sync>>,
+    on_single_tap: TapCallback,
+    on_double_tap: TapCallback,
+    on_triple_tap: TapCallback,
 }
 
 /// Tap type
@@ -220,24 +223,20 @@ impl GestureHandler for TapGesture {
                 }
             }
             GestureEvent::TouchMove { touches } => {
-                if self.active {
-                    if let Some(touch) = touches.first() {
-                        // Update end position during move
-                        self.end_position = Some((touch.x, touch.y));
-                    }
+                if self.active && let Some(touch) = touches.first() {
+                    // Update end position during move
+                    self.end_position = Some((touch.x, touch.y));
                 }
             }
             GestureEvent::TouchEnd { touches } => {
-                if self.active {
-                    if let Some(touch) = touches.first() {
-                        self.end_position = Some((touch.x, touch.y));
-                        self.end_time = Some(Instant::now());
+                if self.active && let Some(touch) = touches.first() {
+                    self.end_position = Some((touch.x, touch.y));
+                    self.end_time = Some(Instant::now());
 
-                        // Process the tap
-                        self.update_tap_count();
+                    // Process the tap
+                    self.update_tap_count();
 
-                        self.active = false;
-                    }
+                    self.active = false;
                 }
             }
             _ => {}

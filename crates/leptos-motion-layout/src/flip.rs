@@ -107,13 +107,14 @@ pub struct FLIPAnimation {
 }
 
 /// Easing function for FLIP animations
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub enum EasingFunction {
     /// Linear easing
     Linear,
     /// Ease-in
     EaseIn,
     /// Ease-out
+    #[default]
     EaseOut,
     /// Ease-in-out
     EaseInOut,
@@ -126,12 +127,6 @@ pub enum EasingFunction {
         /// Spring friction
         friction: f64,
     },
-}
-
-impl Default for EasingFunction {
-    fn default() -> Self {
-        EasingFunction::EaseOut
-    }
 }
 
 impl EasingFunction {
@@ -176,6 +171,7 @@ pub struct FLIPAnimator {
     /// Active FLIP animations
     active_animations: HashMap<String, FLIPAnimation>,
     /// Animation frame callback
+    #[allow(dead_code)]
     animation_frame: Option<i32>,
     /// Performance tracking
     performance_metrics: FLIPPerformanceMetrics,
@@ -302,12 +298,12 @@ impl FLIPAnimator {
                 current_x, current_y, current_scale_x, current_scale_y
             );
 
-            if let Ok(_) = animation
+            if animation
                 .element
                 .dyn_ref::<web_sys::HtmlElement>()
                 .unwrap()
                 .style()
-                .set_property("transform", &transform)
+                .set_property("transform", &transform).is_ok()
             {
                 // Transform applied successfully
             }
@@ -320,6 +316,7 @@ impl FLIPAnimator {
     }
 
     /// Apply transform to element based on progress
+    #[allow(dead_code)]
     fn apply_transform(&self, animation: &FLIPAnimation, progress: f64) {
         let inverted = &animation.state.inverted;
         let current_x = inverted.translate_x * (1.0 - progress);
@@ -332,7 +329,7 @@ impl FLIPAnimator {
             current_x, current_y, current_scale_x, current_scale_y
         );
 
-        if let Ok(style) = animation
+        if let Ok(_style) = animation
             .element
             .dyn_ref::<web_sys::HtmlElement>()
             .unwrap()
@@ -363,6 +360,7 @@ impl FLIPAnimator {
         self.active_animations.remove(id).is_some()
     }
 
+    #[allow(dead_code)]
     fn parse_easing_function(&self, easing: &str) -> Result<EasingFunction, String> {
         match easing {
             "linear" => Ok(EasingFunction::Linear),
@@ -402,6 +400,7 @@ impl FLIPAnimator {
         }
     }
 
+    #[allow(dead_code)]
     fn update_performance_metrics(&mut self, duration: f64) {
         let total = self.performance_metrics.total_animations as f64;
         let current_avg = self.performance_metrics.average_duration;

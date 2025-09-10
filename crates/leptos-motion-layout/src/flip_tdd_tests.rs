@@ -8,7 +8,7 @@ use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::{console_error, console_log};
-use web_sys::{DomRect, Element};
+use web_sys::{DomRect, Element, CssStyleDeclaration};
 
 /// FLIP animation configuration
 #[derive(Clone, Debug)]
@@ -72,7 +72,7 @@ pub struct LayoutInfo {
 
 impl LayoutInfo {
     /// Create new layout info from an element
-    pub fn from_element(element: &Element) -> std::result::Result<Self, JsValue> {
+    pub fn from_element(element: &WebElement) -> std::result::Result<Self, JsValue> {
         let rect = element.get_bounding_client_rect();
         let computed_style = web_sys::window()
             .unwrap()
@@ -213,7 +213,7 @@ impl FLIPManager {
     }
 
     /// Record the first (initial) layout
-    pub fn record_first(&mut self, element: &Element) -> std::result::Result<(), JsValue> {
+    pub fn record_first(&mut self, element: &WebElement) -> std::result::Result<(), JsValue> {
         self.first_layout = Some(LayoutInfo::from_element(element)?);
         self.current_element = Some(element.clone());
         self.state = FLIPState::First;
@@ -221,7 +221,7 @@ impl FLIPManager {
     }
 
     /// Record the last (final) layout and start animation
-    pub fn record_last_and_play(&mut self, element: &Element) -> std::result::Result<(), JsValue> {
+    pub fn record_last_and_play(&mut self, element: &WebElement) -> std::result::Result<(), JsValue> {
         self.last_layout = Some(LayoutInfo::from_element(element)?);
         self.state = FLIPState::Last;
 
@@ -270,7 +270,7 @@ impl FLIPManager {
         element: &Element,
         layout: &LayoutInfo,
     ) -> std::result::Result<(), JsValue> {
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         // Set position
         style.set_property("left", &format!("{}px", layout.rect.left()))?;
@@ -297,7 +297,7 @@ impl FLIPManager {
         first: &LayoutInfo,
         last: &LayoutInfo,
     ) -> std::result::Result<(), JsValue> {
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         // Calculate the inverse transform
         let delta_x = first.rect.left() - last.rect.left();
@@ -355,7 +355,7 @@ impl FLIPManager {
         element: &Element,
         target: &HashMap<String, AnimationValue>,
     ) -> std::result::Result<(), JsValue> {
-        let style = element.style("");
+        let style: CssStyleDeclaration = element.style();
 
         // Set up the transition
         style.set_property(

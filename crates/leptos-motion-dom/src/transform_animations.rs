@@ -279,7 +279,9 @@ pub struct TransformAnimationManager {
 struct PropertyAnimation {
     current: f64,
     target: f64,
+    #[allow(dead_code)]
     initial: f64,
+    #[allow(dead_code)]
     velocity: f64,
     is_complete: bool,
 }
@@ -302,7 +304,7 @@ impl TransformAnimationManager {
     }
 
     /// Animate a specific transform property
-    pub fn animate_property(&mut self, property: &str, target: f64, transition: &Transition) {
+    pub fn animate_property(&mut self, property: &str, target: f64, _transition: &Transition) {
         let current = self.get_property_value(property);
         let animation = PropertyAnimation {
             current,

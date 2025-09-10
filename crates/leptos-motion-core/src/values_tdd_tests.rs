@@ -295,8 +295,8 @@ mod tests {
     // Property-based testing for MotionValues
     #[test]
     fn test_motion_values_properties() {
-        let test_keys = vec!["opacity", "x", "y", "scale", "rotation"];
-        let test_values = vec![0.0, 0.5, 1.0, 100.0, 360.0];
+        let test_keys = ["opacity", "x", "y", "scale", "rotation"];
+        let test_values = [0.0, 0.5, 1.0, 100.0, 360.0];
 
         for (i, key) in test_keys.iter().enumerate() {
             if i < test_values.len() {
@@ -351,7 +351,6 @@ mod tests {
     }
 
     // Performance testing with modern benchmarking
-    #[cfg(feature = "bench")]
     mod benches {
         use super::*;
 

@@ -103,6 +103,7 @@ pub struct PerformanceMonitor {
     /// Memory usage tracking
     memory_usage: Vec<usize>,
     /// Performance observer
+    #[allow(dead_code)]
     performance_observer: Option<PerformanceObserver>,
     /// Last frame time
     pub last_frame_time: f64,
@@ -281,6 +282,7 @@ impl LayoutTracker {
     }
 
     /// Create a layout change record
+    #[allow(dead_code)]
     fn create_layout_change(
         &self,
         tracked_element: &TrackedElement,
@@ -306,6 +308,7 @@ impl LayoutTracker {
     }
 
     /// Determine the type of layout change
+    #[allow(dead_code)]
     fn determine_change_type(&self, old: &DomRect, new: &DomRect) -> LayoutChangeType {
         let position_changed =
             (old.left() - new.left()).abs() > 0.1 || (old.top() - new.top()).abs() > 0.1;
@@ -321,6 +324,7 @@ impl LayoutTracker {
     }
 
     /// Calculate performance impact of layout change
+    #[allow(dead_code)]
     fn calculate_performance_impact(&self, old: &DomRect, new: &DomRect) -> PerformanceImpact {
         let area_change = (new.width() * new.height() - old.width() * old.height()).abs();
         let position_change =

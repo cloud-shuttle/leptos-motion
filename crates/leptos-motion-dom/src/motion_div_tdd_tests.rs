@@ -2,7 +2,7 @@
 //!
 //! These tests drive the development of proper MotionDiv functionality
 
-use crate::{DragAxis, DragConfig, DragConstraints};
+use crate::{DragAxis, DragConfig};
 use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen_test::*;

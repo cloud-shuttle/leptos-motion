@@ -545,7 +545,7 @@ mod tests {
                 )
             })
             .collect();
-        assert!(conditional_comp_recs.len() >= 1);
+        assert!(!conditional_comp_recs.is_empty());
 
         // All recommendations should have positive savings
         for rec in &report.recommendations {

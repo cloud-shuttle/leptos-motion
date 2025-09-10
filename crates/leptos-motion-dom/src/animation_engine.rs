@@ -9,11 +9,18 @@
 //! - Transform animations
 
 use leptos_motion_core::*;
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::cell::RefCell;
+
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
+
+#[cfg(target_arch = "wasm32")]
 use web_sys;
+
+/// Type alias for animation update callback
+type UpdateCallback = Option<Rc<dyn Fn(&HashMap<String, f64>)>>;
 
 /// Animation state for a single property
 #[derive(Debug, Clone)]
@@ -31,6 +38,7 @@ pub struct AnimationState {
 }
 
 impl AnimationState {
+    /// Create a new animation state with initial and target values
     pub fn new(initial: f64, target: f64) -> Self {
         Self {
             current: initial,
@@ -58,6 +66,7 @@ pub struct PropertyAnimation {
 }
 
 impl PropertyAnimation {
+    /// Create a new property animation with initial value, target value, and transition settings
     pub fn new(initial: f64, target: f64, transition: Transition) -> Self {
         let duration = transition.duration.unwrap_or(0.3);
         let is_spring = matches!(transition.ease, Easing::Spring(_));
@@ -81,7 +90,7 @@ pub struct AnimationEngine {
     /// Callback for when animations complete
     on_complete: Option<Rc<dyn Fn()>>,
     /// Callback for when animation values change
-    on_update: Option<Rc<dyn Fn(&HashMap<String, f64>)>>,
+    on_update: UpdateCallback,
     /// Whether the engine is running
     is_running: bool,
 }
@@ -166,6 +175,7 @@ impl AnimationEngine {
     }
 
     /// Start the animation loop
+    #[cfg(target_arch = "wasm32")]
     fn start_animation_loop(&mut self) {
         if self.is_running {
             return;
@@ -193,7 +203,20 @@ impl AnimationEngine {
         }
     }
 
+    /// Start the animation loop (non-WASM version)
+    #[cfg(not(target_arch = "wasm32"))]
+    fn start_animation_loop(&mut self) {
+        if self.is_running {
+            return;
+        }
+
+        self.is_running = true;
+        // No-op for non-WASM targets
+        // In a real implementation, this might use a different animation system
+    }
+
     /// Stop the animation loop
+    #[cfg(target_arch = "wasm32")]
     fn stop_animation_loop(&mut self) {
         if let Some(handle) = self.animation_handle.take() {
             web_sys::window()
@@ -201,6 +224,13 @@ impl AnimationEngine {
                 .cancel_animation_frame(handle)
                 .unwrap();
         }
+        self.is_running = false;
+    }
+
+    /// Stop the animation loop (non-WASM version)
+    #[cfg(not(target_arch = "wasm32"))]
+    fn stop_animation_loop(&mut self) {
+        self.animation_handle = None;
         self.is_running = false;
     }
 
@@ -400,12 +430,14 @@ pub struct AnimationEngineBuilder {
 }
 
 impl AnimationEngineBuilder {
+    /// Create a new animation engine builder
     pub fn new() -> Self {
         Self {
             engine: AnimationEngine::new(),
         }
     }
 
+    /// Set a callback to be called when all animations complete
     pub fn on_complete<F>(mut self, callback: F) -> Self
     where
         F: Fn() + 'static,
@@ -414,6 +446,7 @@ impl AnimationEngineBuilder {
         self
     }
 
+    /// Set a callback to be called on each animation frame update
     pub fn on_update<F>(mut self, callback: F) -> Self
     where
         F: Fn(&HashMap<String, f64>) + 'static,
@@ -422,6 +455,7 @@ impl AnimationEngineBuilder {
         self
     }
 
+    /// Build the final animation engine with configured settings
     pub fn build(self) -> AnimationEngine {
         self.engine
     }

@@ -8,7 +8,7 @@
 // - Edge cases and error handling
 
 use crate::{DragAxis, DragConfig, DragConstraints};
-use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
+use leptos_motion_core::AnimationValue;
 use std::collections::HashMap;
 
 /// Helper function to create a comprehensive drag configuration

@@ -38,7 +38,7 @@ mod tests {
         let _loader = AnimationLazyLoader::new();
 
         // All should compile and work without optional features
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that web-sys features work when enabled
@@ -46,7 +46,7 @@ mod tests {
     fn test_web_sys_features() {
         // Test that web-sys features are properly configured
         // This test verifies that web-sys features work when enabled
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that leptos integration features work when enabled
@@ -99,7 +99,7 @@ mod tests {
     fn test_feature_flag_combinations() {
         // Test that we can build with different feature combinations
         // This test verifies that feature flag combinations work properly
-        assert!(true);
+        // Test passes if we reach here
 
         // Test that performance monitoring works regardless of features
         // Test basic types instead of WASM-specific performance monitoring
@@ -132,7 +132,7 @@ mod tests {
         let _repeat = RepeatConfig::Never;
 
         // All should work without pulling in unused code
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that feature flags properly control compilation
@@ -161,7 +161,7 @@ mod tests {
         let _loader = AnimationLazyLoader::new();
 
         // All core functionality should be available regardless of feature flags
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that feature flags properly control re-exports
@@ -190,7 +190,7 @@ mod tests {
         let _loader = AnimationLazyLoader::new();
 
         // All core functionality should be re-exported regardless of feature flags
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that feature flags properly control test compilation
@@ -219,7 +219,7 @@ mod tests {
         let _loader = AnimationLazyLoader::new();
 
         // All tests should work regardless of feature flags
-        assert!(true);
+        // Test passes if we reach here
     }
 
     /// Test that feature flags properly control documentation
@@ -248,6 +248,6 @@ mod tests {
         let _loader = AnimationLazyLoader::new();
 
         // All documented functionality should be available regardless of feature flags
-        assert!(true);
+        // Test passes if we reach here
     }
 }

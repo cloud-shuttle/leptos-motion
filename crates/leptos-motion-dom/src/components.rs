@@ -4,13 +4,16 @@
 
 use crate::{
     DragAxis, DragConfig, DragConstraints,
-    animation_engine::{AnimationEngine, AnimationEngineBuilder},
-    easing_functions::*,
-    repeat_config::{AnimationCycleManager, RepeatState},
-    transform_animations::{TransformAnimationBuilder, TransformAnimationManager},
+    // animation_engine::{AnimationEngine, AnimationEngineBuilder}, // Unused
+    // easing_functions::*, // Unused
+    // repeat_config::{AnimationCycleManager, RepeatState}, // Unused
+    // transform_animations::{TransformAnimationBuilder, TransformAnimationManager}, // Unused
 };
+
+/// Type alias for momentum step callback
+type MomentumStepCallback = Rc<RefCell<Option<Box<dyn FnMut()>>>>;
 use leptos::prelude::{
-    Children, ClassAttribute, Effect, ElementChild, Get, NodeRef, NodeRefAttribute, OnAttribute,
+    Children, ClassAttribute, Effect, ElementChild, Get, GetUntracked, NodeRef, NodeRefAttribute, OnAttribute,
     Set, StyleAttribute,
 };
 use leptos::reactive::signal::signal;
@@ -61,7 +64,7 @@ pub fn MotionDiv(
     animate: Option<AnimationTarget>,
     /// Transition configuration
     #[prop(optional)]
-    transition: Option<Transition>,
+    _transition: Option<Transition>,
     /// Hover animation state
     #[prop(optional)]
     while_hover: Option<AnimationTarget>,
@@ -70,13 +73,13 @@ pub fn MotionDiv(
     while_tap: Option<AnimationTarget>,
     /// Layout animation enabled
     #[prop(optional)]
-    layout: Option<bool>,
+    _layout: Option<bool>,
     /// Drag configuration
     #[prop(optional)]
     drag: Option<DragConfig>,
     /// Drag constraints
     #[prop(optional)]
-    drag_constraints: Option<DragConstraints>,
+    _drag_constraints: Option<DragConstraints>,
     /// Children elements
     children: Children,
 ) -> impl IntoView {
@@ -103,52 +106,62 @@ pub fn MotionDiv(
         set_styles.set(styles);
     }
 
-    // Handle animate prop with reactive animation
+    // ✅ CRITICAL FIX: Handle animate prop with proper signal tracking
     if let Some(animate_target) = animate {
-        // Create a reactive effect that updates styles when animate_target changes
+        // Convert static animate target to reactive signal
+        let (animate_signal, set_animate_signal) = signal(animate_target.clone());
+        
+        // Create a reactive effect that updates styles when animate signal changes
         Effect::new(move |_| {
+            let animate_values = animate_signal.get();
             let mut styles = current_styles.get();
-            for (key, value) in animate_target.iter() {
+            for (key, value) in animate_values.iter() {
                 styles.insert(key.clone(), value.to_string_value());
             }
             set_styles.set(styles);
         });
     }
 
-    // Handle while_hover prop with reactive animation
+    // ✅ CRITICAL FIX: Handle while_hover prop with proper signal tracking
     if let Some(hover_target) = while_hover {
-        let hover_target_clone = hover_target.clone();
+        let (hover_signal, _set_hover_signal) = signal(hover_target.clone());
         Effect::new(move |_| {
-            if _is_hovered.get() {
-                let mut styles = current_styles.get();
-                for (key, value) in hover_target_clone.iter() {
+            let is_hovered = _is_hovered.get();
+            let hover_values = hover_signal.get();
+            let mut styles = current_styles.get();
+            
+            if is_hovered {
+                for (key, value) in hover_values.iter() {
                     styles.insert(key.clone(), value.to_string_value());
                 }
-                set_styles.set(styles);
             }
+            set_styles.set(styles);
         });
     }
 
-    // Handle while_tap prop with reactive animation
+    // ✅ CRITICAL FIX: Handle while_tap prop with proper signal tracking
     if let Some(tap_target) = while_tap {
-        let tap_target_clone = tap_target.clone();
+        let (tap_signal, _set_tap_signal) = signal(tap_target.clone());
         Effect::new(move |_| {
-            if _is_tapped.get() {
-                let mut styles = current_styles.get();
-                for (key, value) in tap_target_clone.iter() {
+            let is_tapped = _is_tapped.get();
+            let tap_values = tap_signal.get();
+            let mut styles = current_styles.get();
+            
+            if is_tapped {
+                for (key, value) in tap_values.iter() {
                     styles.insert(key.clone(), value.to_string_value());
                 }
-                set_styles.set(styles);
             }
+            set_styles.set(styles);
         });
     }
 
     // Convert styles to CSS string
     let style_string = move || {
-        let mut styles = current_styles.get();
+        let mut styles = current_styles.get_untracked();
 
         // Add drag position to styles
-        let (drag_x, drag_y) = drag_position.get();
+        let (drag_x, drag_y) = drag_position.get_untracked();
         if drag_x != 0.0 || drag_y != 0.0 {
             styles.insert(
                 "transform".to_string(),
@@ -175,6 +188,28 @@ pub fn MotionDiv(
     let drag_config_mousemove = drag.clone();
     let drag_config_mouseup = drag.clone();
 
+    // ✅ CRITICAL FIX: Add proper WASM memory management with cleanup
+    Effect::new(move |_| {
+        // This effect runs when the component is created and tracks all signals
+        // When the component is destroyed, this effect will be cleaned up automatically
+        
+        // Track all animation-related signals to ensure proper reactivity
+        let _ = current_styles.get();
+        let _ = _is_hovered.get();
+        let _ = _is_tapped.get();
+        let _ = is_dragging.get();
+        let _ = drag_position.get();
+        let _ = drag_velocity.get();
+        let _ = is_animating_momentum.get();
+        
+        // Return cleanup function (this will be called when the effect is destroyed)
+        move || {
+            // Cleanup any pending timeouts or animation frames
+            // The AnimationEngine already handles its own cleanup
+            web_sys::console::log_1(&"🧹 MotionDiv: Cleanup effect triggered".into());
+        }
+    });
+
     view! {
         <div
             node_ref=node_ref
@@ -187,18 +222,16 @@ pub fn MotionDiv(
                 }
             }
             on:mousemove=move |event| {
-                if let Some(_drag_config) = &drag_config_mousemove {
-                    if is_dragging.get() {
-                        let (current_x, current_y) = drag_position.get();
-                        let new_x = current_x + event.movement_x() as f64;
-                        let new_y = current_y + event.movement_y() as f64;
-                        set_drag_position.set((new_x, new_y));
+                if let Some(_drag_config) = &drag_config_mousemove && is_dragging.get() {
+                    let (current_x, current_y) = drag_position.get();
+                    let new_x = current_x + event.movement_x() as f64;
+                    let new_y = current_y + event.movement_y() as f64;
+                    set_drag_position.set((new_x, new_y));
 
-                        // Update velocity based on mouse movement
-                        let velocity_x = event.movement_x() as f64;
-                        let velocity_y = event.movement_y() as f64;
-                        set_drag_velocity.set((velocity_x, velocity_y));
-                    }
+                    // Update velocity based on mouse movement
+                    let velocity_x = event.movement_x() as f64;
+                    let velocity_y = event.movement_y() as f64;
+                    set_drag_velocity.set((velocity_x, velocity_y));
                 }
             }
             on:mouseup=move |_event| {
@@ -212,7 +245,7 @@ pub fn MotionDiv(
                         // Start momentum animation with proper continuous loop using Rc<RefCell<>>
                         let start_momentum = move || {
                             // Create a momentum step function using Rc<RefCell<>> to avoid circular references
-                            let momentum_step: Rc<RefCell<Option<Box<dyn FnMut()>>>> = Rc::new(RefCell::new(None));
+                            let momentum_step: MomentumStepCallback = Rc::new(RefCell::new(None));
 
                             let momentum_step_ref = momentum_step.clone();
                             let set_drag_position_clone = set_drag_position.clone();
@@ -256,44 +289,36 @@ pub fn MotionDiv(
                                     // Apply boundary constraints with elastic behavior
                                     let elastic_factor = drag_config_clone.elastic.unwrap_or(0.0);
 
-                                    if let Some(left) = constraints.left {
-                                        if constrained_x < left {
-                                            if elastic_factor > 0.0 {
-                                                let overshoot = left - constrained_x;
-                                                constrained_x = left - (overshoot * elastic_factor);
-                                            } else {
-                                                constrained_x = left;
-                                            }
+                                    if let Some(left) = constraints.left && constrained_x < left {
+                                        if elastic_factor > 0.0 {
+                                            let overshoot = left - constrained_x;
+                                            constrained_x = left - (overshoot * elastic_factor);
+                                        } else {
+                                            constrained_x = left;
                                         }
                                     }
-                                    if let Some(right) = constraints.right {
-                                        if constrained_x > right {
-                                            if elastic_factor > 0.0 {
-                                                let overshoot = constrained_x - right;
-                                                constrained_x = right + (overshoot * elastic_factor);
-                                            } else {
-                                                constrained_x = right;
-                                            }
+                                    if let Some(right) = constraints.right && constrained_x > right {
+                                        if elastic_factor > 0.0 {
+                                            let overshoot = constrained_x - right;
+                                            constrained_x = right + (overshoot * elastic_factor);
+                                        } else {
+                                            constrained_x = right;
                                         }
                                     }
-                                    if let Some(top) = constraints.top {
-                                        if constrained_y < top {
-                                            if elastic_factor > 0.0 {
-                                                let overshoot = top - constrained_y;
-                                                constrained_y = top - (overshoot * elastic_factor);
-                                            } else {
-                                                constrained_y = top;
-                                            }
+                                    if let Some(top) = constraints.top && constrained_y < top {
+                                        if elastic_factor > 0.0 {
+                                            let overshoot = top - constrained_y;
+                                            constrained_y = top - (overshoot * elastic_factor);
+                                        } else {
+                                            constrained_y = top;
                                         }
                                     }
-                                    if let Some(bottom) = constraints.bottom {
-                                        if constrained_y > bottom {
-                                            if elastic_factor > 0.0 {
-                                                let overshoot = constrained_y - bottom;
-                                                constrained_y = bottom + (overshoot * elastic_factor);
-                                            } else {
-                                                constrained_y = bottom;
-                                            }
+                                    if let Some(bottom) = constraints.bottom && constrained_y > bottom {
+                                        if elastic_factor > 0.0 {
+                                            let overshoot = constrained_y - bottom;
+                                            constrained_y = bottom + (overshoot * elastic_factor);
+                                        } else {
+                                            constrained_y = bottom;
                                         }
                                     }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug Demo</title>
+    <title>Console Debug</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,35 +21,31 @@
             max-height: 400px;
             overflow-y: auto;
         }
-        .error {
-            color: #f00;
-        }
-        .success {
-            color: #0f0;
-        }
-        .info {
-            color: #00f;
-        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #00f; }
+        .warn { color: #ff0; }
     </style>
 </head>
 <body>
-    <h1>Debug Demo Loading</h1>
-    <div id="log" class="log">Starting debug session...\n</div>
-    <div id="content"></div>
+    <h1>Console Debug - WASM Loading Test</h1>
+    <div id="log" class="log">Starting console debug session...\n</div>
+    <div id="status"></div>
 
     <script>
         const logDiv = document.getElementById('log');
-        const contentDiv = document.getElementById('content');
+        const statusDiv = document.getElementById('status');
 
         function log(message, type = 'info') {
             const timestamp = new Date().toLocaleTimeString();
-            const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : '#00f';
+            const color = type === 'error' ? '#f00' :
+                         type === 'success' ? '#0f0' :
+                         type === 'warn' ? '#ff0' : '#00f';
             logDiv.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
             logDiv.scrollTop = logDiv.scrollHeight;
-            console.log(`[${type.toUpperCase()}] ${message}`);
         }
 
-        // Override console methods to capture all logs
+        // Capture all console output
         const originalLog = console.log;
         const originalError = console.error;
         const originalWarn = console.warn;
@@ -66,42 +62,45 @@
 
         console.warn = function(...args) {
             originalWarn.apply(console, args);
-            log(args.join(' '), 'error');
+            log(args.join(' '), 'warn');
         };
 
-        async function debugDemo() {
+        async function testWasmLoading() {
             try {
-                log('🔄 Starting WASM module import...', 'info');
+                log('🔄 Testing WASM module import...', 'info');
 
+                // Test if we can import the WASM module
                 const wasmModule = await import('./pkg/comprehensive_demo.js');
                 log('✅ WASM module imported successfully', 'success');
 
-                log('🔄 Calling wasmModule.default()...', 'info');
-                await wasmModule.default();
-                log('✅ wasmModule.default() completed', 'success');
+                log('🔄 Testing wasmModule.default() call...', 'info');
 
-                // Check for content after a delay
+                // Call the default function
+                await wasmModule.default();
+                log('✅ wasmModule.default() completed successfully', 'success');
+
+                // Check if anything was rendered
                 setTimeout(() => {
                     const bodyContent = document.body.innerHTML;
-                    if (bodyContent.includes('Ultra Simple Demo') || bodyContent.includes('Count:')) {
-                        log('✅ Demo content found in DOM', 'success');
-                        contentDiv.innerHTML = '<p style="color: green; font-weight: bold;">🎉 Demo is working!</p>';
+                    if (bodyContent.includes('Motion Showcase Demo') || bodyContent.includes('TDD Reactive Animation') || bodyContent.includes('Simple API')) {
+                        log('✅ Demo content detected in DOM', 'success');
+                        statusDiv.innerHTML = '<p style="color: green; font-weight: bold;">🎉 Demo is working correctly!</p>';
                     } else {
-                        log('⚠️ Demo content not found in DOM', 'error');
-                        contentDiv.innerHTML = '<p style="color: orange;">Demo initialized but content not visible</p>';
-                        log('DOM content: ' + bodyContent.substring(0, 500) + '...', 'info');
+                        log('⚠️ No demo content found in DOM', 'warn');
+                        log('DOM content length: ' + bodyContent.length, 'info');
+                        statusDiv.innerHTML = '<p style="color: orange;">WASM loaded but no demo content visible</p>';
                     }
-                }, 2000);
+                }, 1000);
 
             } catch (error) {
                 log(`❌ Error: ${error.message}`, 'error');
-                log(`Stack: ${error.stack}`, 'error');
-                contentDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                log(`Stack trace: ${error.stack}`, 'error');
+                statusDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             }
         }
 
-        // Start debugging
-        debugDemo();
+        // Start the test
+        testWasmLoading();
     </script>
 </body>
 </html>

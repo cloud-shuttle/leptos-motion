@@ -5,22 +5,28 @@
 use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
 
+mod advanced_3d_demo;
 mod animate_fn_test;
+mod animation_3d_demo;
 mod basic_test_demo;
 mod batched_updates_test;
 mod fixed_reactive_demo;
 mod memoization_test;
 mod minimal_comprehensive_demo;
+mod minimal_motion_test;
 mod minimal_test_demo;
 mod motion_showcase_demo;
 mod phase4a_demo;
 mod reactive_motion_div_test;
 mod signal_based_comprehensive_demo;
+mod simple_demo;
 mod simple_div_test;
 mod simple_phase4a_test;
 mod simple_working_demo;
+mod simplified_showcase;
 mod tdd_reactive_demo;
 mod transition_config_test;
+mod ultra_simple_demo;
 mod working_tdd_demo;
 // mod simple_comprehensive_demo; // Commented out
 // mod simplified_comprehensive_demo; // Commented out
@@ -33,20 +39,26 @@ mod working_tdd_demo;
 // mod fixed_demo;
 // mod simple_working_demo;
 // mod signal_based_demo;
+use advanced_3d_demo::Advanced3DDemo;
 use animate_fn_test::AnimateFnTest;
+use animation_3d_demo::Animation3DDemo;
 use basic_test_demo::BasicTestDemo;
 use batched_updates_test::BatchedUpdatesTest;
 use fixed_reactive_demo::FixedReactiveDemo;
 use memoization_test::MemoizationTest;
+use minimal_motion_test::MinimalMotionTest;
 use minimal_test_demo::MinimalTestDemo;
 use motion_showcase_demo::MotionShowcaseDemo;
 use phase4a_demo::Phase4aDemo;
 use reactive_motion_div_test::ReactiveMotionDivTest;
+use simple_demo::SimpleDemo;
 use simple_div_test::SimpleDivTest;
 use simple_phase4a_test::SimplePhase4aTest;
 use simple_working_demo::SimpleWorkingDemo;
+use simplified_showcase::SimplifiedShowcase;
 use tdd_reactive_demo::TddReactiveDemo;
 use transition_config_test::TransitionConfigTest;
+use ultra_simple_demo::UltraSimpleDemo;
 // use simple_working_demo::SimpleWorkingDemo;
 // use feature_showcase_demo::FeatureShowcaseDemo;
 // use reactive_style_test::ReactiveStyleTest;
@@ -70,7 +82,12 @@ pub fn main() {
         web_sys::console::log_1(&"📦 Leptos Motion: About to mount MotionShowcaseDemo".into());
         mount_to_body(|| {
             web_sys::console::log_1(&"🎨 Leptos Motion: Creating MotionShowcaseDemo view".into());
-            view! { <MotionShowcaseDemo/> }
+            web_sys::console::log_1(&"🎨 Leptos Motion: About to render MotionShowcaseDemo".into());
+            let demo = view! { <SimplifiedShowcase/> };
+            web_sys::console::log_1(
+                &"🎨 Leptos Motion: MotionShowcaseDemo created successfully".into(),
+            );
+            demo
         });
         web_sys::console::log_1(
             &"✅ Leptos Motion: MotionShowcaseDemo mounted successfully".into(),

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal WASM Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #d32f2f; }
+        .success { background: #e8f5e9; color: #388e3c; }
+    </style>
+</head>
+<body>
+    <h1>Minimal WASM Test</h1>
+    <div id="log"></div>
+
+    <script>
+        const log = document.getElementById('log');
+
+        function addLog(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(div);
+            console.log(message);
+        }
+
+        async function test() {
+            try {
+                addLog('Starting WASM test...', 'info');
+
+                const wasm = await import('./examples/comprehensive-demo/pkg/comprehensive_demo.js');
+                addLog('WASM module loaded!', 'success');
+
+                addLog('Calling wasm.default()...', 'info');
+                await wasm.default();
+                addLog('wasm.default() completed!', 'success');
+
+                addLog('Test completed successfully!', 'success');
+
+            } catch (error) {
+                addLog(`Error: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        test();
+    </script>
+</body>
+</html>

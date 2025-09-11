@@ -4,6 +4,10 @@ use leptos_motion_dom::signal_based_animation_controller::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+// Import the 3D animation demos
+use crate::advanced_3d_demo::Advanced3DDemo;
+use crate::animation_3d_demo::Animation3DDemo;
+
 #[component]
 pub fn MotionShowcaseDemo() -> impl IntoView {
     // ✅ Signal-based state management for all demo features
@@ -419,6 +423,32 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
                         </div>
                     </div>
                 </section>
+
+               // ✅ 3D Animation Section
+               <section class="feature-section" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 3rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                   <div style="text-align: center;">
+                       <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #333; font-weight: 700;">
+                           "3D Animation System"
+                       </h2>
+                       <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                           "Experience the power of 3D animations with hardware acceleration and perspective controls."
+                       </p>
+                       <Animation3DDemo/>
+                   </div>
+               </section>
+
+               // ✅ Advanced 3D Features Section
+               <section class="feature-section" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 3rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                   <div style="text-align: center;">
+                       <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #333; font-weight: 700;">
+                           "Advanced 3D Features"
+                       </h2>
+                       <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                           "Discover advanced 3D animations including morphing, particle systems, and complex transformations."
+                       </p>
+                       <Advanced3DDemo/>
+                   </div>
+               </section>
             </main>
 
             <footer style="text-align: center; margin-top: 4rem; padding: 2rem; color: white; opacity: 0.8;">

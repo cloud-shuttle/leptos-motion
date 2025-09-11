@@ -11,6 +11,7 @@ pub mod fixed_motion_div;
 pub mod hooks;
 /// Improved motion div implementation with enhanced features
 pub mod improved_motion_div;
+pub mod minimal_motion_div;
 pub mod performance;
 pub mod presence;
 pub mod reactive_motion_div;
@@ -185,6 +186,34 @@ mod polish_optimize_tests {
     include!("polish_optimize_tests.rs");
 }
 
+#[cfg(test)]
+mod animation_3d_tests;
+
+#[cfg(test)]
+mod performance_3d_tests;
+
+#[cfg(test)]
+mod api_documentation_3d_tests;
+
+#[cfg(test)]
+mod advanced_3d_features_tests;
+
+#[cfg(test)]
+mod reactive_motion_div_tests;
+
+#[cfg(test)]
+mod reactive_motion_div_unit_tests;
+
+#[cfg(test)]
+mod minimal_motion_div_tests;
+
+#[cfg(test)]
+mod tdd_performance_tests;
+
+pub mod minimal_motion_div_docs;
+
+pub mod animation_3d_implementation;
+
 // #[cfg(test)]
 // mod phase1_engine_integration_tests;
 
@@ -216,6 +245,7 @@ pub use css_animations::*;
 
 // Re-export components
 pub use components::{MotionDiv, MotionSpan};
+pub use minimal_motion_div::MinimalMotionDiv;
 pub use reactive_motion_div::{ReactiveMotionDiv, ReactiveMotionDiv as ReactiveMotionDivNew};
 // pub use reactive_motion_div_fixed::ReactiveMotionDivFixed; // Disabled due to threading issues
 // Improved motion div module is not yet implemented

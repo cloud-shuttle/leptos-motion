@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #e0e0e0;
+        }
+        .error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        .info {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Demo Loading Test</h1>
+    <div id="status" class="status">Loading...</div>
+    <div id="content"></div>
+
+    <script type="module">
+        const statusDiv = document.getElementById('status');
+        const contentDiv = document.getElementById('content');
+
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        async function testDemo() {
+            try {
+                updateStatus('🔄 Testing WASM module loading...', 'info');
+
+                // Test if we can load the WASM module
+                const wasmModule = await import('./examples/comprehensive-demo/pkg/comprehensive_demo.js');
+                updateStatus('✅ WASM module loaded successfully!', 'success');
+
+                updateStatus('🔄 Testing Leptos initialization...', 'info');
+
+                // Try to initialize the demo
+                await wasmModule.default();
+                updateStatus('✅ Leptos app initialized successfully!', 'success');
+
+                // Check if content was rendered
+                setTimeout(() => {
+                    const bodyContent = document.body.innerHTML;
+                    if (bodyContent.includes('Simple Leptos Motion Demo') || bodyContent.includes('Hello!')) {
+                        updateStatus('✅ Demo content rendered successfully!', 'success');
+                        contentDiv.innerHTML = '<p style="color: green; font-weight: bold;">🎉 Demo is working correctly!</p>';
+                    } else {
+                        updateStatus('⚠️ Demo initialized but content not visible', 'info');
+                        contentDiv.innerHTML = '<p style="color: orange;">Demo initialized but content may not be visible</p>';
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error testing demo:", error);
+                updateStatus(`❌ Error: ${error.message}`, 'error');
+                contentDiv.innerHTML = `<p style="color: red;">Error details: ${error.stack}</p>`;
+            }
+        }
+
+        testDemo();
+    </script>
+</body>
+</html>

@@ -15,7 +15,7 @@ leptos = { version = "0.8.8", features = ["csr"] }
 leptos_macro = "0.8.8"  # Published version
 reactive_graph = "0.2.6"  # Published version
 leptos-motion = { version = "0.8.1", features = ["default"] }
-leptos-motion-dom = { version = "0.8.1", features = ["default"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["default"] }
 leptos-motion-gestures = { version = "0.8.1", features = ["default"] }
 leptos-motion-layout = { version = "0.8.1", features = ["default"] }
 leptos-motion-scroll = "0.8.1"

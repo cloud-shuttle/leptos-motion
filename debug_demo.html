@@ -73,7 +73,7 @@
             try {
                 log('🔄 Starting WASM module import...', 'info');
 
-                const wasmModule = await import('./pkg/comprehensive_demo.js');
+                const wasmModule = await import('./examples/comprehensive-demo/pkg/comprehensive_demo.js');
                 log('✅ WASM module imported successfully', 'success');
 
                 log('🔄 Calling wasmModule.default()...', 'info');
@@ -83,7 +83,7 @@
                 // Check for content after a delay
                 setTimeout(() => {
                     const bodyContent = document.body.innerHTML;
-                    if (bodyContent.includes('Ultra Simple Demo') || bodyContent.includes('Count:')) {
+                    if (bodyContent.includes('Simple Demo Test') || bodyContent.includes('Hello!')) {
                         log('✅ Demo content found in DOM', 'success');
                         contentDiv.innerHTML = '<p style="color: green; font-weight: bold;">🎉 Demo is working!</p>';
                     } else {

@@ -67,13 +67,13 @@ pub fn main() {
 
     // Add error handling for the mount
     match std::panic::catch_unwind(|| {
-        web_sys::console::log_1(&"📦 Leptos Motion: About to mount BatchedUpdatesTest".into());
+        web_sys::console::log_1(&"📦 Leptos Motion: About to mount MotionShowcaseDemo".into());
         mount_to_body(|| {
-            web_sys::console::log_1(&"🎨 Leptos Motion: Creating BatchedUpdatesTest view".into());
-            view! { <BatchedUpdatesTest/> }
+            web_sys::console::log_1(&"🎨 Leptos Motion: Creating MotionShowcaseDemo view".into());
+            view! { <MotionShowcaseDemo/> }
         });
         web_sys::console::log_1(
-            &"✅ Leptos Motion: BatchedUpdatesTest mounted successfully".into(),
+            &"✅ Leptos Motion: MotionShowcaseDemo mounted successfully".into(),
         );
     }) {
         Ok(_) => {

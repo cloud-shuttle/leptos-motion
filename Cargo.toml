@@ -7,6 +7,7 @@ members = [
     "crates/leptos-motion-scroll",
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
+    "examples/comprehensive-demo",
     "benches",
 ]
 resolver = "2"

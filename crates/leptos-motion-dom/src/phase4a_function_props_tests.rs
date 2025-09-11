@@ -83,7 +83,7 @@ fn test_function_based_while_hover_prop() {
 
     let component = view! {
         <ReactiveMotionDiv
-            while_hover_fn=hover_function
+            _while_hover_fn=hover_function
         >
             "Function-based hover test"
         </ReactiveMotionDiv>
@@ -111,7 +111,7 @@ fn test_function_based_while_tap_prop() {
 
     let component = view! {
         <ReactiveMotionDiv
-            while_tap_fn=tap_function
+            _while_tap_fn=tap_function
         >
             "Function-based tap test"
         </ReactiveMotionDiv>
@@ -153,7 +153,7 @@ fn test_mixed_static_and_function_props() {
         <ReactiveMotionDiv
             initial=static_initial
             animate_fn=function_animate
-            while_hover_fn=function_hover
+            _while_hover_fn=function_hover
         >
             "Mixed static and function props"
         </ReactiveMotionDiv>

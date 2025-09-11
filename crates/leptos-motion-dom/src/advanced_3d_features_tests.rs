@@ -37,7 +37,7 @@ fn test_3d_morphing_animation_system() {
         .rotate_y(0.0)
         .rotate_z(0.0);
 
-    let sphere_shape = Transform3D::default()
+    let _sphere_shape = Transform3D::default()
         .scale_x(1.0)
         .scale_y(1.0)
         .scale_z(1.0)

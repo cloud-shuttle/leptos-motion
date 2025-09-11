@@ -303,8 +303,8 @@ fn benchmark_drag_event_processing() {
         let constrained_y = new_y.max(-50.0).min(50.0);
 
         // Calculate velocity
-        let velocity_x = delta_x;
-        let velocity_y = delta_y;
+        let _velocity_x = delta_x;
+        let _velocity_y = delta_y;
 
         // Verify processing
         assert!(constrained_x >= -100.0 && constrained_x <= 100.0);

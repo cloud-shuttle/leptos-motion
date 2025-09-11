@@ -1,0 +1,50 @@
+[package]
+name = "leptos-motion-webgl"
+version.workspace = true
+edition = "2021"
+description = "WebGL rendering engine for leptos-motion"
+license.workspace = true
+repository.workspace = true
+keywords = ["leptos", "webgl", "3d", "graphics", "animation"]
+categories = ["graphics", "web-programming"]
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+leptos-motion-core = { path = "../leptos-motion-core" }
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3", features = [
+    "WebGl2RenderingContext",
+    "WebGlProgram",
+    "WebGlShader",
+    "WebGlBuffer",
+    "WebGlVertexArrayObject",
+    "WebGlTexture",
+    "WebGlFramebuffer",
+    "WebGlRenderbuffer",
+    "WebGlUniformLocation",
+    "HtmlCanvasElement",
+    "HtmlImageElement",
+    "ImageData",
+    "HtmlVideoElement",
+    "CanvasRenderingContext2d",
+    "Window",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "Performance",
+    "console",
+] }
+js-sys = "0.3"
+gl_matrix = "0.0.2"
+bytemuck = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+leptos = { version = "0.8", features = ["csr", "hydrate"] }
+
+[features]
+default = []

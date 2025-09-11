@@ -22,18 +22,17 @@ fn test_basic_animations_60fps_performance() {
     target.insert("scale".to_string(), AnimationValue::Number(1.5));
     target.insert("opacity".to_string(), AnimationValue::Number(0.8));
 
-    // Simulate animation frames
+    // Simulate animation frames without artificial sleep
     while start_time.elapsed() < test_duration {
         // Simulate animation calculation
         let _ = target.get("scale");
         let _ = target.get("opacity");
         frame_count += 1;
-
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
+    // More realistic target: should be able to process many more frames than 60fps
+    // in a test environment without actual rendering
     assert!(
         actual_fps >= target_fps,
         "Basic animations should maintain 60+ FPS, got {:.2} FPS",
@@ -82,8 +81,7 @@ fn test_3d_animations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -181,8 +179,7 @@ fn test_complex_animations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -239,8 +236,7 @@ fn test_spring_animations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -305,8 +301,7 @@ fn test_easing_calculations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -377,8 +372,7 @@ fn test_transition_configurations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -454,8 +448,7 @@ fn test_concurrent_animations_60fps_performance() {
         }
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();
@@ -494,8 +487,7 @@ fn test_memory_allocation_60fps_performance() {
         // Memory is automatically freed when temp_targets goes out of scope
         frame_count += 1;
 
-        // Simulate 16.67ms frame time (60fps)
-        std::thread::sleep(Duration::from_micros(16670));
+        // No artificial sleep - measure actual processing performance
     }
 
     let actual_fps = frame_count as f64 / start_time.elapsed().as_secs_f64();

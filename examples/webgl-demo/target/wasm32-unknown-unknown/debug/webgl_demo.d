@@ -1,0 +1,1 @@
+/Users/peterhanssens/consulting/Leptos/leptos-motion/examples/webgl-demo/target/wasm32-unknown-unknown/debug/webgl_demo.wasm: /Users/peterhanssens/consulting/Leptos/leptos-motion/examples/webgl-demo/src/lib.rs /Users/peterhanssens/consulting/Leptos/leptos-motion/examples/webgl-demo/src/simple_demo.rs

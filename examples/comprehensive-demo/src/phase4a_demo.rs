@@ -172,7 +172,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Hover Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for hover state animation"</p>
                     <ReactiveMotionDiv
-                        while_hover_fn=hover_animation
+                        _while_hover_fn=hover_animation
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Hover"
@@ -184,7 +184,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Tap Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for tap state animation"</p>
                     <ReactiveMotionDiv
-                        while_tap_fn=tap_animation
+                        _while_tap_fn=tap_animation
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Tap"
@@ -198,7 +198,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         initial=create_animation_target("opacity", 0.3)
                         animate_fn=function_target_clone
-                        while_hover_fn=hover_animation_clone
+                        _while_hover_fn=hover_animation_clone
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Mixed"

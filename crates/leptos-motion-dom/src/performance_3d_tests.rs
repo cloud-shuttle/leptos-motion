@@ -187,7 +187,7 @@ fn test_3d_matrix_performance() {
     let result = matrix_animation();
     let expected_cos = 9.99_f64.cos();
     let expected_sin = 9.99_f64.sin();
-    let expected_matrix = format!(
+    let _expected_matrix = format!(
         "matrix3d({},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{})",
         expected_cos,
         -expected_sin,

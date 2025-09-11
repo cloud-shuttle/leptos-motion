@@ -3,7 +3,7 @@
 //! A minimal test to see if animate_fn works
 
 use leptos::prelude::*;
-use leptos_motion_core::{AnimationTarget, AnimationValue};
+use leptos_motion_core::AnimationValue;
 use leptos_motion_dom::ReactiveMotionDiv;
 use std::collections::HashMap;
 

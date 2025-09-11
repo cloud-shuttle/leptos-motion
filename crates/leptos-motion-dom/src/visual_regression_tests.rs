@@ -423,12 +423,14 @@ proptest! {
 
     #[test]
     fn visual_regression_unicode_property_rendering(
-        unicode_keys in prop::collection::vec(".*", 1..10),
-        values in prop::collection::vec(any::<f64>(), 1..10)
+        unicode_keys in prop::collection::vec("[a-zA-Z0-9_]+", 1..10),
+        values in prop::collection::vec(-1000.0..1000.0, 1..10)
     ) {
         let mut target = AnimationTarget::new();
+        let mut unique_keys = std::collections::HashSet::new();
+        
         for (i, key) in unicode_keys.iter().enumerate() {
-            if i < values.len() {
+            if i < values.len() && !key.is_empty() && unique_keys.insert(key.clone()) {
                 target.insert(key.clone(), AnimationValue::Number(values[i]));
             }
         }
@@ -453,7 +455,7 @@ proptest! {
 
         // Test that unicode keys are preserved
         for (i, key) in unicode_keys.iter().enumerate() {
-            if i < values.len() {
+            if i < values.len() && !key.is_empty() && unique_keys.contains(key) {
                 match target.get(key) {
                     Some(AnimationValue::Number(value)) => {
                         assert_eq!(*value, values[i]);

@@ -3,7 +3,7 @@
 //! TDD for Phase 4B: Add TransitionConfig for timing controls
 
 use leptos::prelude::*;
-use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, Transition};
+use leptos_motion_core::{AnimationValue, Easing, Transition};
 use leptos_motion_dom::ReactiveMotionDiv;
 use std::collections::HashMap;
 

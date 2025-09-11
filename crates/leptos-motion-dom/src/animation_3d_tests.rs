@@ -36,7 +36,7 @@ fn test_3d_transform_properties() {
     animate.insert("scaleY".to_string(), AnimationValue::Number(2.0));
     animate.insert("scaleZ".to_string(), AnimationValue::Number(0.5));
 
-    let transition = Transition {
+    let _transition = Transition {
         duration: Some(1.0),
         delay: Some(0.0),
         ease: Easing::EaseInOut,
@@ -178,7 +178,7 @@ fn test_3d_component_integration() {
     animate.insert("rotateY".to_string(), AnimationValue::Number(90.0));
     animate.insert("translateZ".to_string(), AnimationValue::Number(100.0));
 
-    let transition = Transition {
+    let _transition = Transition {
         duration: Some(1.0),
         delay: Some(0.0),
         ease: Easing::EaseInOut,
@@ -194,8 +194,8 @@ fn test_3d_component_integration() {
     assert!(has_3d_properties, "3D properties should be present");
 
     // Test transition configuration
-    assert_eq!(transition.duration, Some(1.0));
-    assert_eq!(transition.ease, Easing::EaseInOut);
+    assert_eq!(_transition.duration, Some(1.0));
+    assert_eq!(_transition.ease, Easing::EaseInOut);
 }
 
 /// Test 3D animation with signal-based reactivity

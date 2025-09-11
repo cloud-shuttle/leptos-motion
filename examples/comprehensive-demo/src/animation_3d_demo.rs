@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use leptos_motion_core::{AnimationValue, StaggerConfig, StaggerFrom};
-use leptos_motion_dom::{Easing, ReactiveMotionDiv, RepeatConfig, Transition};
+use leptos_motion_core::AnimationValue;
+use leptos_motion_dom::ReactiveMotionDiv;
 use std::collections::HashMap;
 
 /// 3D Animation Demo Component

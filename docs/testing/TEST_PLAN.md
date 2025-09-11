@@ -717,7 +717,7 @@ cargo test -- --nocapture
 
 ```bash
 # Install Playwright
-npm install @playwright/test
+pnpm install @playwright/test
 npx playwright install
 
 # Run all integration tests

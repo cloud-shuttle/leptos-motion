@@ -2,9 +2,9 @@
 
 use crate::error::{Result, WebGLError};
 use crate::lighting::{DirectionalLight, PointLight, SpotLight};
-use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlTexture, WebGlRenderbuffer};
 use gl_matrix::mat4;
 use std::collections::HashMap;
+use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlRenderbuffer, WebGlTexture};
 
 /// Shadow map resolution
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -97,7 +97,7 @@ impl DirectionalShadowMap {
     /// Create a new directional shadow map
     pub fn new(context: &WebGl2RenderingContext, config: ShadowMapConfig) -> Result<Self> {
         let resolution = config.resolution.get_size();
-        
+
         // Create shadow map texture
         let shadow_map = context
             .create_texture()
@@ -139,9 +139,9 @@ impl DirectionalShadowMap {
         );
 
         // Create framebuffer
-        let framebuffer = context
-            .create_framebuffer()
-            .ok_or_else(|| WebGLError::framebuffer_error("Failed to create shadow map framebuffer"))?;
+        let framebuffer = context.create_framebuffer().ok_or_else(|| {
+            WebGLError::framebuffer_error("Failed to create shadow map framebuffer")
+        })?;
 
         context.bind_framebuffer(WebGl2RenderingContext::FRAMEBUFFER, Some(&framebuffer));
         context.framebuffer_texture_2d(
@@ -155,7 +155,9 @@ impl DirectionalShadowMap {
         // Check framebuffer status
         let status = context.check_framebuffer_status(WebGl2RenderingContext::FRAMEBUFFER);
         if status != WebGl2RenderingContext::FRAMEBUFFER_COMPLETE {
-            return Err(WebGLError::framebuffer_error("Shadow map framebuffer is not complete"));
+            return Err(WebGLError::framebuffer_error(
+                "Shadow map framebuffer is not complete",
+            ));
         }
 
         // Unbind
@@ -215,7 +217,11 @@ impl DirectionalShadowMap {
         );
 
         // Calculate view-projection matrix
-        mat4::multiply(&mut self.view_projection_matrix, &self.projection_matrix, &self.view_matrix);
+        mat4::multiply(
+            &mut self.view_projection_matrix,
+            &self.projection_matrix,
+            &self.view_matrix,
+        );
     }
 
     /// Calculate orthographic size for the shadow map
@@ -271,11 +277,11 @@ impl PointShadowMap {
     /// Create a new point shadow map
     pub fn new(context: &WebGl2RenderingContext, config: ShadowMapConfig) -> Result<Self> {
         let resolution = config.resolution.get_size();
-        
+
         // Create shadow map cubemap texture
-        let shadow_map = context
-            .create_texture()
-            .ok_or_else(|| WebGLError::texture_error("Failed to create point shadow map texture"))?;
+        let shadow_map = context.create_texture().ok_or_else(|| {
+            WebGLError::texture_error("Failed to create point shadow map texture")
+        })?;
 
         context.bind_texture(WebGl2RenderingContext::TEXTURE_CUBE_MAP, Some(&shadow_map));
 
@@ -322,9 +328,9 @@ impl PointShadowMap {
         );
 
         // Create framebuffer
-        let framebuffer = context
-            .create_framebuffer()
-            .ok_or_else(|| WebGLError::framebuffer_error("Failed to create point shadow map framebuffer"))?;
+        let framebuffer = context.create_framebuffer().ok_or_else(|| {
+            WebGLError::framebuffer_error("Failed to create point shadow map framebuffer")
+        })?;
 
         // Initialize matrices
         let mut projection_matrix = [0.0; 16];
@@ -354,7 +360,7 @@ impl PointShadowMap {
         mat4::perspective(
             &mut self.projection_matrix,
             std::f32::consts::PI / 2.0, // 90 degrees
-            1.0, // Aspect ratio 1:1 for cubemap faces
+            1.0,                        // Aspect ratio 1:1 for cubemap faces
             self.config.near_plane,
             Some(self.config.far_plane),
         );
@@ -373,11 +379,21 @@ impl PointShadowMap {
 
         // Positive Y
         let target = [light_pos[0], light_pos[1] + 1.0, light_pos[2]];
-        mat4::look_at(&mut self.view_matrices[2], &light_pos, &target, &[1.0, 0.0, 0.0]);
+        mat4::look_at(
+            &mut self.view_matrices[2],
+            &light_pos,
+            &target,
+            &[1.0, 0.0, 0.0],
+        );
 
         // Negative Y
         let target = [light_pos[0], light_pos[1] - 1.0, light_pos[2]];
-        mat4::look_at(&mut self.view_matrices[3], &light_pos, &target, &[1.0, 0.0, 0.0]);
+        mat4::look_at(
+            &mut self.view_matrices[3],
+            &light_pos,
+            &target,
+            &[1.0, 0.0, 0.0],
+        );
 
         // Positive Z
         let target = [light_pos[0], light_pos[1], light_pos[2] + 1.0];
@@ -389,7 +405,11 @@ impl PointShadowMap {
 
         // Calculate view-projection matrices
         for i in 0..6 {
-            mat4::multiply(&mut self.view_projection_matrices[i], &self.projection_matrix, &self.view_matrices[i]);
+            mat4::multiply(
+                &mut self.view_projection_matrices[i],
+                &self.projection_matrix,
+                &self.view_matrices[i],
+            );
         }
     }
 
@@ -443,7 +463,7 @@ impl SceneBounds {
         self.min[0] = self.min[0].min(point[0]);
         self.min[1] = self.min[1].min(point[1]);
         self.min[2] = self.min[2].min(point[2]);
-        
+
         self.max[0] = self.max[0].max(point[0]);
         self.max[1] = self.max[1].max(point[1]);
         self.max[2] = self.max[2].max(point[2]);
@@ -495,20 +515,29 @@ impl ShadowMappingManager {
     }
 
     /// Add a directional shadow map
-    pub fn add_directional_shadow_map(&mut self, name: &str, config: ShadowMapConfig) -> Result<()> {
+    pub fn add_directional_shadow_map(
+        &mut self,
+        name: &str,
+        config: ShadowMapConfig,
+    ) -> Result<()> {
         if self.directional_shadow_maps.len() >= self.max_directional_shadow_maps {
-            return Err(WebGLError::lighting_error("Maximum number of directional shadow maps reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of directional shadow maps reached",
+            ));
         }
 
         let shadow_map = DirectionalShadowMap::new(&self.context, config)?;
-        self.directional_shadow_maps.insert(name.to_string(), shadow_map);
+        self.directional_shadow_maps
+            .insert(name.to_string(), shadow_map);
         Ok(())
     }
 
     /// Add a point shadow map
     pub fn add_point_shadow_map(&mut self, name: &str, config: ShadowMapConfig) -> Result<()> {
         if self.point_shadow_maps.len() >= self.max_point_shadow_maps {
-            return Err(WebGLError::lighting_error("Maximum number of point shadow maps reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of point shadow maps reached",
+            ));
         }
 
         let shadow_map = PointShadowMap::new(&self.context, config)?;
@@ -522,7 +551,10 @@ impl ShadowMappingManager {
     }
 
     /// Get a mutable directional shadow map
-    pub fn get_directional_shadow_map_mut(&mut self, name: &str) -> Option<&mut DirectionalShadowMap> {
+    pub fn get_directional_shadow_map_mut(
+        &mut self,
+        name: &str,
+    ) -> Option<&mut DirectionalShadowMap> {
         self.directional_shadow_maps.get_mut(name)
     }
 

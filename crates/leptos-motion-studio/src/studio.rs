@@ -2,6 +2,8 @@
 
 use crate::{Result, StudioError, project::*, timeline::*, transforms::*};
 use leptos::*;
+use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, provide_context, create_effect, expect_context, create_node_ref, ReadSignal, WriteSignal, Callback, event_target_value, Get, Set};
+use leptos::attr::global::ClassAttribute;
 use std::collections::HashMap;
 use uuid::Uuid;
 
@@ -51,9 +53,10 @@ pub fn MotionStudio(
 
     // Handle project changes
     create_effect(move |_| {
-        if let Some(callback) = on_project_change {
-            callback.call(current_project.get());
-        }
+        // Temporarily disabled until callback API is clarified
+        // if let Some(callback) = on_project_change {
+        //     callback(current_project.get());
+        // }
     });
 
     view! {
@@ -194,7 +197,7 @@ impl Default for CanvasState {
 }
 
 /// Studio context for components communication
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct StudioContext {
     pub current_project: ReadSignal<StudioProject>,
     pub set_current_project: WriteSignal<StudioProject>,
@@ -326,7 +329,7 @@ fn StudioCanvas() -> impl IntoView {
         if let Some(canvas) = canvas_ref.get() {
             // Initialize WebGL renderer
             if context.config.webgl_enabled {
-                let _ = crate::webgl::WebGLRenderer::initialize(&canvas);
+                // let _ = crate::webgl::WebGLRenderer::initialize(&canvas); // Temporarily disabled
             }
         }
     });

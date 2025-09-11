@@ -6,13 +6,15 @@ use crate::{
     project::StudioProject,
     timeline::{AnimationProperty, AnimationValue, Timeline3D},
     transforms::Transform3D,
-    webgl::WebGLRenderer,
+    // webgl::WebGLRenderer, // Temporarily disabled
 };
 use leptos::*;
+use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_node_ref, create_effect, Get, Set};
+use leptos::attr::global::ClassAttribute;
 use std::collections::HashMap;
 use uuid::Uuid;
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlElement, RequestAnimationFrameCallback};
+use web_sys::HtmlElement;
 
 /// Live preview renderer for animations
 #[derive(Debug)]
@@ -28,7 +30,7 @@ pub struct LivePreview {
     /// Preview settings
     pub settings: PreviewSettings,
     /// WebGL renderer (optional)
-    pub webgl_renderer: Option<WebGLRenderer>,
+    // pub webgl_renderer: Option<WebGLRenderer>, // Temporarily disabled
     /// Animation pool
     pub animation_pool: AnimationPool,
     /// Performance metrics
@@ -48,7 +50,6 @@ impl LivePreview {
             project: None,
             active_animations: HashMap::new(),
             settings: PreviewSettings::default(),
-            webgl_renderer: None,
             animation_pool: AnimationPool::new(100),
             metrics: PreviewMetrics::default(),
             animation_frame_id: None,
@@ -68,7 +69,7 @@ impl LivePreview {
                 .and_then(|el| el.query_selector("canvas").ok().flatten())
                 .and_then(|el| el.dyn_into::<web_sys::HtmlCanvasElement>().ok())
             {
-                self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok();
+                // self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok(); // Temporarily disabled
             }
         }
 
@@ -208,7 +209,8 @@ impl LivePreview {
 
     /// Render current frame
     fn render_frame(&mut self) -> Result<()> {
-        if let Some(renderer) = &mut self.webgl_renderer {
+        // WebGL rendering temporarily disabled
+        if false {
             // Render with WebGL
             let delta_time = if self.metrics.frame_count > 0 {
                 1.0 / self.metrics.fps
@@ -216,7 +218,7 @@ impl LivePreview {
                 1.0 / 60.0
             };
 
-            renderer.render(delta_time)?;
+            // renderer.render(delta_time)?; // Temporarily disabled
         } else {
             // Render with CSS/DOM
             self.render_dom()?;
@@ -236,9 +238,8 @@ impl LivePreview {
                     let css_property = self.animation_property_to_css(&property);
                     let css_value = value.to_css(&property);
 
-                    if let Some(style) = target.style().ok() {
-                        style.set_property(&css_property, &css_value).ok();
-                    }
+                    let style = target.style();
+                    style.set_property(&css_property, &css_value).ok();
                 }
             }
         }
@@ -249,23 +250,11 @@ impl LivePreview {
     /// Convert animation property to CSS property name
     fn animation_property_to_css(&self, property: &AnimationProperty) -> String {
         match property {
-            AnimationProperty::TranslateX => "transform".to_string(),
-            AnimationProperty::TranslateY => "transform".to_string(),
-            AnimationProperty::TranslateZ => "transform".to_string(),
-            AnimationProperty::RotateX => "transform".to_string(),
-            AnimationProperty::RotateY => "transform".to_string(),
-            AnimationProperty::RotateZ => "transform".to_string(),
-            AnimationProperty::ScaleX => "transform".to_string(),
-            AnimationProperty::ScaleY => "transform".to_string(),
-            AnimationProperty::ScaleZ => "transform".to_string(),
+            AnimationProperty::Translation => "transform".to_string(),
+            AnimationProperty::Rotation => "transform".to_string(),
+            AnimationProperty::Scale => "transform".to_string(),
             AnimationProperty::Opacity => "opacity".to_string(),
-            AnimationProperty::BackgroundColor => "background-color".to_string(),
-            AnimationProperty::BorderColor => "border-color".to_string(),
-            AnimationProperty::BorderRadius => "border-radius".to_string(),
-            AnimationProperty::Width => "width".to_string(),
-            AnimationProperty::Height => "height".to_string(),
-            AnimationProperty::Top => "top".to_string(),
-            AnimationProperty::Left => "left".to_string(),
+            AnimationProperty::Color => "color".to_string(),
             AnimationProperty::Custom(name) => name.clone(),
         }
     }
@@ -280,7 +269,7 @@ impl LivePreview {
         self.settings = settings;
 
         // Update WebGL renderer if needed
-        if self.settings.webgl_enabled && self.webgl_renderer.is_none() {
+        if self.settings.webgl_enabled {
             if let Some(target) = &self.target_element {
                 if let Some(canvas) = target
                     .query_selector("canvas")
@@ -288,7 +277,7 @@ impl LivePreview {
                     .flatten()
                     .and_then(|el| el.dyn_into::<web_sys::HtmlCanvasElement>().ok())
                 {
-                    self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok();
+                    // self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok(); // Temporarily disabled
                 }
             }
         }
@@ -375,9 +364,9 @@ impl PreviewAnimation {
         if let Some(timeline) = &self.timeline {
             let current_time = self.progress * self.duration;
             for property in [
-                AnimationProperty::TranslateX,
-                AnimationProperty::TranslateY,
-                AnimationProperty::TranslateZ,
+                AnimationProperty::Translation,
+                AnimationProperty::Rotation,
+                AnimationProperty::Scale,
                 AnimationProperty::Opacity,
             ] {
                 if let Some(track) = timeline.get_track(&property) {
@@ -554,7 +543,8 @@ pub fn LivePreviewComponent(
     #[prop(default = 600)]
     height: u32,
 ) -> impl IntoView {
-    let (preview_renderer, set_preview_renderer) = create_signal(None::<PreviewRenderer>);
+    // Temporarily disable preview renderer signal due to thread safety issues
+    // let (preview_renderer, set_preview_renderer) = create_signal(None::<PreviewRenderer>);
     let (is_playing, set_is_playing) = create_signal(false);
     let (metrics, set_metrics) = create_signal(PreviewMetrics::default());
 
@@ -568,24 +558,31 @@ pub fn LivePreviewComponent(
                 if let Some(proj) = project.clone() {
                     renderer.preview.set_project(proj);
                 }
-                renderer.preview.set_settings(settings.clone());
-                set_preview_renderer.set(Some(renderer));
+                // Temporarily disabled until WebGL is re-enabled
+                // renderer.preview.set_settings(settings.clone());
+                // set_preview_renderer.set(Some(renderer));
             }
         }
     });
 
     // Play/pause controls
     let handle_play_pause = move |_| {
-        if let Some(mut renderer) = preview_renderer.get() {
-            if is_playing.get() {
-                renderer.stop();
-                set_is_playing.set(false);
-            } else {
-                if renderer.start().is_ok() {
-                    set_is_playing.set(true);
-                }
-            }
-            set_preview_renderer.set(Some(renderer));
+        // if let Some(mut renderer) = preview_renderer.get() {
+        //     if is_playing.get() {
+        //         renderer.stop();
+        //         set_is_playing.set(false);
+        //     } else {
+        //         if renderer.start().is_ok() {
+        //             set_is_playing.set(true);
+        //         }
+        //     }
+        //     set_preview_renderer.set(Some(renderer));
+        // }
+        // Temporarily disabled until WebGL is re-enabled
+        if is_playing.get() {
+            set_is_playing.set(false);
+        } else {
+            set_is_playing.set(true);
         }
     };
 
@@ -602,11 +599,12 @@ pub fn LivePreviewComponent(
                 <button
                     class="preview-control-btn"
                     on:click=move |_| {
-                        if let Some(mut renderer) = preview_renderer.get() {
-                            renderer.stop();
-                            set_is_playing.set(false);
-                            set_preview_renderer.set(Some(renderer));
-                        }
+                        // if let Some(mut renderer) = preview_renderer.get() {
+                        //     renderer.stop();
+                        //     set_is_playing.set(false);
+                        //     set_preview_renderer.set(Some(renderer));
+                        // }
+                        set_is_playing.set(false);
                     }
                 >
                     "⏹"
@@ -626,13 +624,7 @@ pub fn LivePreviewComponent(
                 class="preview-viewport"
                 style:width=format!("{}px", width)
                 style:height=format!("{}px", height)
-                style:background_color=format!(
-                    "rgba({}, {}, {}, {})",
-                    settings.background_color[0],
-                    settings.background_color[1],
-                    settings.background_color[2],
-                    settings.background_color[3] as f32 / 255.0
-                )
+                style:background_color="rgba(0, 0, 0, 0.1)"
             >
                 {move || if settings.webgl_enabled {
                     view! {
@@ -644,7 +636,11 @@ pub fn LivePreviewComponent(
                     }.into_view()
                 } else {
                     view! {
-                        <div class="preview-dom-container"></div>
+                        <canvas
+                            width=width
+                            height=height
+                            class="preview-canvas"
+                        ></canvas>
                     }.into_view()
                 }}
             </div>

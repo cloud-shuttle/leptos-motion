@@ -18,7 +18,7 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         super().end_headers()
-    
+
     def log_message(self, format, *args):
         # Suppress broken pipe errors and other noise
         if "Broken pipe" not in str(args):

@@ -570,7 +570,7 @@ proptest! {
             Easing::Linear | Easing::EaseIn | Easing::EaseOut | Easing::EaseInOut |
             Easing::BackIn | Easing::BackOut | Easing::BackInOut |
             Easing::CircIn | Easing::CircOut | Easing::CircInOut |
-            Easing::Bezier(_, _, _, _) | Easing::Spring(_) => {
+            Easing::Bezier(_, _, _, _) | Easing::CubicBezier(_) | Easing::Spring(_) => {
                 // All easing types should be valid
             }
         }

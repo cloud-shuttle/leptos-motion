@@ -11,6 +11,7 @@ Leptos Motion v0.3.2 represents a major milestone in the library's development, 
 ## ✨ What's New
 
 ### 🔧 **Complete Performance Monitoring System**
+
 - **PerformanceReport**: Comprehensive performance metrics and reporting
 - **PerformanceMonitor**: Real-time performance tracking and analysis
 - **GPULayerManager**: GPU layer management and optimization
@@ -18,11 +19,13 @@ Leptos Motion v0.3.2 represents a major milestone in the library's development, 
 - **AnimationScheduler**: Advanced animation scheduling and coordination
 
 ### 🎨 **Enhanced Component System**
+
 - **MotionDiv & MotionSpan**: Full children prop support
 - **Improved Props**: Better type safety and validation
 - **Leptos 0.8.8 Compatibility**: Full compatibility with latest Leptos version
 
 ### 📚 **Comprehensive Documentation Reorganization**
+
 - **Structured Documentation**: Organized into logical sections (01-getting-started, 02-api-reference, etc.)
 - **Release Notes**: Dedicated sections for release notes and summaries
 - **Navigation**: Improved documentation navigation and discoverability
@@ -31,18 +34,21 @@ Leptos Motion v0.3.2 represents a major milestone in the library's development, 
 ## 🐛 Bug Fixes
 
 ### **Compilation Errors (TDD Approach)**
+
 - ✅ Fixed all compilation errors using Test-Driven Development
 - ✅ Resolved missing performance module components
 - ✅ Fixed engine.rs method calls and type mismatches
 - ✅ Corrected AnimationPool and PerformanceMonitor initialization
 
 ### **Leptos 0.8.8 Compatibility**
+
 - ✅ Added missing trait imports (`ElementChild`, `ClassAttribute`, `StyleAttribute`, `OnAttribute`, `IntoAny`)
 - ✅ Fixed `MotionDiv` and `MotionSpan` children prop support
 - ✅ Resolved `AnimationTarget` type mismatches in examples
 - ✅ Fixed click handlers and event system compatibility
 
 ### **Example Fixes**
+
 - ✅ **showcase**: Fixed `motion_target!` macro issues and type mismatches
 - ✅ **basic-animations**: Added missing trait imports and signal support
 - ✅ **mobile-app**: Fixed trait imports for mobile interface
@@ -53,11 +59,13 @@ Leptos Motion v0.3.2 represents a major milestone in the library's development, 
 ## 🚀 Performance Improvements
 
 ### **Memory Optimization**
+
 - Enhanced memory profiling and monitoring
 - Improved animation resource management
 - Better garbage collection and cleanup
 
 ### **Engine Optimizations**
+
 - Streamlined animation engine architecture
 - Reduced compilation time and bundle size
 - Improved runtime performance
@@ -65,6 +73,7 @@ Leptos Motion v0.3.2 represents a major milestone in the library's development, 
 ## 📖 Documentation Updates
 
 ### **New Documentation Structure**
+
 ```
 docs/
 ├── 01-getting-started/     # Installation, quick start, first animation
@@ -80,6 +89,7 @@ docs/
 ```
 
 ### **Enhanced Navigation**
+
 - Improved main docs README with better formatting
 - Added descriptive text under each section
 - Enhanced table formatting for better readability
@@ -88,12 +98,14 @@ docs/
 ## 🧪 Testing & Quality
 
 ### **Test Coverage**
+
 - ✅ **264 tests passing** across all crates
 - ✅ **Zero compilation errors**
 - ✅ **Complete test suite** with TDD approach
 - ✅ **Example validation** - all examples compile successfully
 
 ### **Code Quality**
+
 - Enhanced error handling and validation
 - Improved type safety and documentation
 - Better separation of concerns
@@ -102,6 +114,7 @@ docs/
 ## 🎯 What You Can Build Now
 
 ### **✅ Production Ready Features**
+
 - **Basic Animations**: Fade, scale, translate, rotate
 - **Interactive Elements**: Hover effects, click animations
 - **Page Transitions**: Enter/exit animations
@@ -109,6 +122,7 @@ docs/
 - **Micro-interactions**: Button presses, card hovers
 
 ### **✅ Working Examples**
+
 - **showcase**: Complex multi-property animations
 - **basic-animations**: Simple opacity/scale with click handlers
 - **minimal-showcase**: Basic motion components
@@ -121,13 +135,14 @@ docs/
 ### **From v0.3.1 to v0.3.2**
 
 #### **Trait Imports (Required)**
+
 ```rust
 // Add these imports for Leptos 0.8.8 compatibility
 use leptos::prelude::{
-    ElementChild, 
-    ClassAttribute, 
-    StyleAttribute, 
-    OnAttribute, 
+    ElementChild,
+    ClassAttribute,
+    StyleAttribute,
+    OnAttribute,
     IntoAny,
     signal,
     Get,
@@ -136,6 +151,7 @@ use leptos::prelude::{
 ```
 
 #### **Component Props**
+
 ```rust
 // MotionDiv and MotionSpan now support children
 <MotionDiv initial={...} animate={...}>
@@ -144,6 +160,7 @@ use leptos::prelude::{
 ```
 
 #### **AnimationTarget**
+
 ```rust
 // Use explicit HashMap instead of motion_target! macro
 let mut target = HashMap::new();
@@ -154,12 +171,14 @@ target.insert("scale".to_string(), AnimationValue::Number(1.0));
 ## 🚧 Known Limitations
 
 ### **Partially Working (Use with Caution)**
+
 - **MotionDiv/MotionSpan**: Components exist but animation logic is stubbed
 - **Gesture System**: Structure exists but not fully implemented
 - **Layout Animations**: FLIP animations are partially implemented
 - **Advanced Performance**: GPU acceleration needs more work
 
 ### **Not Ready Yet**
+
 - **Complex Gestures**: Drag, swipe, pinch gestures
 - **Layout Animations**: Shared element transitions
 - **Advanced Performance**: Full GPU acceleration
@@ -168,6 +187,7 @@ target.insert("scale".to_string(), AnimationValue::Number(1.0));
 ## 🎯 Recommended Usage
 
 ### **Start Simple**
+
 ```rust
 use leptos_motion_core::*;
 use leptos::prelude::*;
@@ -175,7 +195,7 @@ use leptos::prelude::*;
 #[component]
 pub fn MyComponent() -> impl IntoView {
     let (animated, set_animated) = signal(false);
-    
+
     view! {
         <div
             style=move || format!(
@@ -192,6 +212,7 @@ pub fn MyComponent() -> impl IntoView {
 ```
 
 ### **Use MinimalEngine**
+
 ```rust
 let engine = MinimalEngine::new();
 // Engine is ready for basic animations
@@ -200,6 +221,7 @@ let engine = MinimalEngine::new();
 ## 🔮 What's Next
 
 ### **v0.4.0 Roadmap**
+
 - Complete MotionDiv/MotionSpan animation implementation
 - Full gesture system implementation
 - Advanced layout animations
@@ -207,6 +229,7 @@ let engine = MinimalEngine::new();
 - Accessibility improvements
 
 ### **Long-term Vision**
+
 - Full Framer Motion API compatibility
 - Advanced performance optimizations
 - Comprehensive testing suite
@@ -215,16 +238,19 @@ let engine = MinimalEngine::new();
 ## 📊 Technical Details
 
 ### **Dependencies**
+
 - **Leptos**: 0.8.8+ (full compatibility)
 - **Rust**: 1.70+ (stable)
 - **WASM**: Full WebAssembly support
 
 ### **Bundle Size**
+
 - **Core**: ~50KB (gzipped)
 - **DOM**: ~30KB (gzipped)
 - **Total**: ~80KB (gzipped)
 
 ### **Performance**
+
 - **60 FPS**: Smooth animations on modern devices
 - **Memory**: Optimized memory usage with pooling
 - **CPU**: Efficient animation scheduling
@@ -234,6 +260,7 @@ let engine = MinimalEngine::new();
 Leptos Motion v0.3.2 delivers a **solid foundation** for building animated applications with Leptos. While advanced features are still in development, the core animation system is **stable and production-ready**.
 
 **Key Achievements:**
+
 - ✅ **Zero compilation errors**
 - ✅ **264 tests passing**
 - ✅ **Full Leptos 0.8.8 compatibility**
@@ -256,4 +283,4 @@ Leptos Motion v0.3.2 delivers a **solid foundation** for building animated appli
 
 ---
 
-*This release represents a major milestone in the Leptos Motion journey. Thank you to all contributors and users who made this possible.*
+_This release represents a major milestone in the Leptos Motion journey. Thank you to all contributors and users who made this possible._

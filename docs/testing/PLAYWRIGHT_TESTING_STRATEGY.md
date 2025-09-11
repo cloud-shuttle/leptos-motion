@@ -199,7 +199,7 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
       - name: Install Playwright
         run: npx playwright install
       - name: Build WASM

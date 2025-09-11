@@ -6,7 +6,7 @@
 use leptos::prelude::*;
 use leptos_motion_core::*;
 use leptos_motion_dom::{
-    signal_based_animation_controller::SignalBasedAnimationController, ReactiveMotionDiv,
+    ReactiveMotionDiv, signal_based_animation_controller::SignalBasedAnimationController,
 };
 use std::collections::HashMap;
 

@@ -243,6 +243,24 @@ pub struct Transition {
     pub stagger: Option<StaggerConfig>,
 }
 
+/// Cubic Bezier curve for custom easing
+#[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
+pub struct CubicBezier(pub f64, pub f64, pub f64, pub f64);
+
+impl CubicBezier {
+    /// Create a new cubic bezier curve
+    pub fn new(x1: f64, y1: f64, x2: f64, y2: f64) -> Self {
+        Self(x1, y1, x2, y2)
+    }
+}
+
+impl From<CubicBezier> for Easing {
+    fn from(cb: CubicBezier) -> Self {
+        Easing::Bezier(cb.0, cb.1, cb.2, cb.3)
+    }
+}
+
 /// Easing function types
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
@@ -271,8 +289,10 @@ pub enum Easing {
     /// Spring physics
     #[cfg(feature = "approx")]
     Spring(SpringConfig),
-    /// Cubic bezier curve
+    /// Cubic bezier curve (tuple format)
     Bezier(f64, f64, f64, f64),
+    /// Cubic bezier curve (struct format)
+    CubicBezier(CubicBezier),
 }
 
 impl Easing {
@@ -333,6 +353,10 @@ impl Easing {
                 let mt2 = mt * mt;
 
                 3.0 * mt2 * t * y1 + 3.0 * mt * t2 * y2 + t3
+            }
+            Easing::CubicBezier(cb) => {
+                // Delegate to the Bezier variant
+                Easing::Bezier(cb.0, cb.1, cb.2, cb.3).basic_evaluate(t)
             }
         }
     }
@@ -645,6 +669,9 @@ pub mod leptos_helpers {
             Easing::Spring(_) => "cubic-bezier(0.68, -0.55, 0.265, 1.55)", // Simplified
             Easing::Bezier(a, b, c, d) => {
                 return format!("cubic-bezier({}, {}, {}, {})", a, b, c, d);
+            }
+            Easing::CubicBezier(cb) => {
+                return format!("cubic-bezier({}, {}, {}, {})", cb.0, cb.1, cb.2, cb.3);
             }
         };
 

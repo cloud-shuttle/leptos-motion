@@ -28,6 +28,7 @@ impl Easing {
                 ease_out_expo(t).powf(1.0 / factor)
             }
             Easing::Bezier(x1, y1, x2, y2) => cubic_bezier(*x1, *y1, *x2, *y2, t),
+            Easing::CubicBezier(cb) => cubic_bezier(cb.0, cb.1, cb.2, cb.3, t),
         }
     }
 
@@ -53,6 +54,13 @@ impl Easing {
                 let y1 = *y1;
                 let x2 = *x2;
                 let y2 = *y2;
+                Box::new(move |t| cubic_bezier(x1, y1, x2, y2, t))
+            }
+            Easing::CubicBezier(cb) => {
+                let x1 = cb.0;
+                let y1 = cb.1;
+                let x2 = cb.2;
+                let y2 = cb.3;
                 Box::new(move |t| cubic_bezier(x1, y1, x2, y2, t))
             }
         }

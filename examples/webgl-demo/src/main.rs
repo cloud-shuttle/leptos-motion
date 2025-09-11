@@ -4,7 +4,7 @@ mod simple_demo;
 use simple_demo::*;
 
 /// WebGL Advanced Features Demo
-/// 
+///
 /// This demo showcases the advanced WebGL capabilities implemented in Phase 3:
 /// - Post-processing effects (bloom, SSAO, tone mapping)
 /// - Shadow mapping with directional and point lights
@@ -17,7 +17,6 @@ pub fn WebGLAdvancedDemo() -> impl IntoView {
         <SimpleWebGLDemo />
     }
 }
-
 
 fn main() {
     mount_to_body(WebGLAdvancedDemo)

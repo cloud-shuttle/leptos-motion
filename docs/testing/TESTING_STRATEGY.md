@@ -191,7 +191,7 @@ export default defineConfig({
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 npx playwright install --with-deps
 
 # Build WASM

@@ -1,10 +1,10 @@
 //! Texture system for WebGL rendering
 
 use crate::error::{Result, WebGLError};
-use wasm_bindgen::JsCast;
-use web_sys::{WebGl2RenderingContext, WebGlTexture, HtmlImageElement, ImageData};
 use std::collections::HashMap;
 use std::rc::Rc;
+use wasm_bindgen::JsCast;
+use web_sys::{HtmlImageElement, ImageData, WebGl2RenderingContext, WebGlTexture};
 
 /// Texture format
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -109,7 +109,9 @@ impl TextureFiltering {
         match self {
             TextureFiltering::Nearest => WebGl2RenderingContext::NEAREST,
             TextureFiltering::Linear => WebGl2RenderingContext::LINEAR,
-            TextureFiltering::NearestMipmapNearest => WebGl2RenderingContext::NEAREST_MIPMAP_NEAREST,
+            TextureFiltering::NearestMipmapNearest => {
+                WebGl2RenderingContext::NEAREST_MIPMAP_NEAREST
+            }
             TextureFiltering::LinearMipmapNearest => WebGl2RenderingContext::LINEAR_MIPMAP_NEAREST,
             TextureFiltering::NearestMipmapLinear => WebGl2RenderingContext::NEAREST_MIPMAP_LINEAR,
             TextureFiltering::LinearMipmapLinear => WebGl2RenderingContext::LINEAR_MIPMAP_LINEAR,
@@ -237,7 +239,7 @@ impl Texture {
         let config = config.unwrap_or_default();
         let width = image.width() as u32;
         let height = image.height() as u32;
-        
+
         let info = TextureInfo {
             width,
             height,
@@ -251,14 +253,16 @@ impl Texture {
                 TextureFormat::Alpha => 1,
                 _ => 4,
             },
-            size_bytes: (width * height * match config.format {
-                TextureFormat::RGB => 3,
-                TextureFormat::RGBA => 4,
-                TextureFormat::Luminance => 1,
-                TextureFormat::LuminanceAlpha => 2,
-                TextureFormat::Alpha => 1,
-                _ => 4,
-            }) as usize,
+            size_bytes: (width
+                * height
+                * match config.format {
+                    TextureFormat::RGB => 3,
+                    TextureFormat::RGBA => 4,
+                    TextureFormat::Luminance => 1,
+                    TextureFormat::LuminanceAlpha => 2,
+                    TextureFormat::Alpha => 1,
+                    _ => 4,
+                }) as usize,
         };
 
         let texture = context
@@ -325,7 +329,7 @@ impl Texture {
         let config = config.unwrap_or_default();
         let width = image_data.width() as u32;
         let height = image_data.height() as u32;
-        
+
         let info = TextureInfo {
             width,
             height,
@@ -399,7 +403,7 @@ impl Texture {
         config: Option<TextureConfig>,
     ) -> Result<Self> {
         let config = config.unwrap_or_default();
-        
+
         let info = TextureInfo {
             width,
             height,
@@ -540,10 +544,17 @@ impl TextureManager {
     }
 
     /// Load a texture from URL
-    pub fn load_from_url(&mut self, name: &str, url: &str, config: Option<TextureConfig>) -> Result<()> {
+    pub fn load_from_url(
+        &mut self,
+        name: &str,
+        url: &str,
+        config: Option<TextureConfig>,
+    ) -> Result<()> {
         // TODO: Implement async texture loading from URL
         // This would involve creating an Image element and loading the URL
-        Err(WebGLError::texture_error("Async texture loading not yet implemented"))
+        Err(WebGLError::texture_error(
+            "Async texture loading not yet implemented",
+        ))
     }
 
     /// Create a texture from image element
@@ -637,4 +648,3 @@ impl Drop for TextureManager {
         self.clear();
     }
 }
-

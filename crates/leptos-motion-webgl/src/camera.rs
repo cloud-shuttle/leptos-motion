@@ -8,19 +8,19 @@ use std::f32::consts::PI;
 pub trait Camera {
     /// Update camera matrices
     fn update_matrix(&mut self);
-    
+
     /// Get the view matrix
     fn get_view_matrix(&self) -> [f32; 16];
-    
+
     /// Get the projection matrix
     fn get_projection_matrix(&self) -> [f32; 16];
-    
+
     /// Get the camera position
     fn get_position(&self) -> [f32; 3];
-    
+
     /// Get the camera target
     fn get_target(&self) -> [f32; 3];
-    
+
     /// Get the camera up vector
     fn get_up(&self) -> [f32; 3];
 }
@@ -127,7 +127,7 @@ impl PerspectiveCamera {
                 m
             },
         };
-        
+
         camera.update_matrix();
         camera
     }
@@ -228,13 +228,21 @@ impl OrthographicCamera {
                 m
             },
         };
-        
+
         camera.update_matrix();
         camera
     }
 
     /// Set the orthographic frustum
-    pub fn set_frustum(&mut self, left: f32, right: f32, top: f32, bottom: f32, near: f32, far: f32) {
+    pub fn set_frustum(
+        &mut self,
+        left: f32,
+        right: f32,
+        top: f32,
+        bottom: f32,
+        near: f32,
+        far: f32,
+    ) {
         self.left = left;
         self.right = right;
         self.top = top;

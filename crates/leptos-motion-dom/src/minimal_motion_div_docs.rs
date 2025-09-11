@@ -380,4 +380,3 @@
 //! ## License
 //!
 //! This component is part of the leptos-motion library and is licensed under the same terms.
-

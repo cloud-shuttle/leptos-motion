@@ -100,9 +100,9 @@ cargo install cargo-nextest
 cargo install cargo-watch
 
 # Node tools for E2E and visual testing
-npm install -g playwright
-npm install -g @percy/cli
-npm install -g backstopjs
+pnpm install -g playwright
+pnpm install -g @percy/cli
+pnpm install -g backstopjs
 
 # Browser drivers
 npx playwright install
@@ -1060,7 +1060,7 @@ jobs:
 
       - name: Install Playwright
         run: |
-          npm install -g playwright
+          pnpm install -g playwright
           npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Build examples
@@ -1095,7 +1095,7 @@ jobs:
 
       - name: Setup dependencies
         run: |
-          npm install -g backstopjs @percy/cli
+          pnpm install -g backstopjs @percy/cli
 
       - name: Build examples
         run: cargo build --examples --release

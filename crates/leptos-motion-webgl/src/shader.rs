@@ -1,10 +1,10 @@
 //! Shader management system
 
 use crate::error::{Result, WebGLError};
-use wasm_bindgen::prelude::*;
-use web_sys::{WebGl2RenderingContext, WebGlProgram, WebGlShader};
 use std::collections::HashMap;
 use std::rc::Rc;
+use wasm_bindgen::prelude::*;
+use web_sys::{WebGl2RenderingContext, WebGlProgram, WebGlShader};
 
 /// Shader type
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -49,15 +49,21 @@ impl ShaderProgram {
     }
 
     /// Get uniform location
-    pub fn get_uniform_location(&mut self, _context: &WebGl2RenderingContext, name: &str) -> Option<&()> {
+    pub fn get_uniform_location(
+        &mut self,
+        _context: &WebGl2RenderingContext,
+        name: &str,
+    ) -> Option<&()> {
         if !self.uniform_locations.contains_key(name) {
             // TODO: Fix WebGL API call when web-sys is updated
             // let location = context.get_uniform_location(&self.program, name);
             // self.uniform_locations.insert(name.to_string(), location);
             self.uniform_locations.insert(name.to_string(), None);
         }
-        
-        self.uniform_locations.get(name).and_then(|loc| loc.as_ref())
+
+        self.uniform_locations
+            .get(name)
+            .and_then(|loc| loc.as_ref())
     }
 
     /// Get attribute location
@@ -66,7 +72,7 @@ impl ShaderProgram {
             let location = context.get_attrib_location(&self.program, name) as u32;
             self.attribute_locations.insert(name.to_string(), location);
         }
-        
+
         self.attribute_locations[name]
     }
 
@@ -99,7 +105,7 @@ impl ShaderManager {
     /// Compile a shader
     pub fn compile_shader(&mut self, source: &str, shader_type: ShaderType) -> Result<WebGlShader> {
         let context = &self.context;
-        
+
         let shader = context
             .create_shader(shader_type.to_webgl_type())
             .ok_or_else(|| WebGLError::shader_compilation("Failed to create shader"))?;
@@ -115,7 +121,7 @@ impl ShaderManager {
             let error = context
                 .get_shader_info_log(&shader)
                 .unwrap_or_else(|| "Unknown shader compilation error".to_string());
-            
+
             context.delete_shader(Some(&shader));
             return Err(WebGLError::shader_compilation(&error));
         }
@@ -124,13 +130,19 @@ impl ShaderManager {
     }
 
     /// Create a shader program from vertex and fragment shader sources
-    pub fn create_program(&mut self, vertex_source: &str, fragment_source: &str, name: &str) -> Result<&mut ShaderProgram> {
+    pub fn create_program(
+        &mut self,
+        vertex_source: &str,
+        fragment_source: &str,
+        name: &str,
+    ) -> Result<&mut ShaderProgram> {
         // Compile shaders
         let vertex_shader = self.compile_shader(vertex_source, ShaderType::Vertex)?;
         let fragment_shader = self.compile_shader(fragment_source, ShaderType::Fragment)?;
 
         // Create program
-        let program = self.context
+        let program = self
+            .context
             .create_program()
             .ok_or_else(|| WebGLError::program_linking("Failed to create program"))?;
 
@@ -138,15 +150,17 @@ impl ShaderManager {
         self.context.attach_shader(&program, &fragment_shader);
         self.context.link_program(&program);
 
-        if !self.context
+        if !self
+            .context
             .get_program_parameter(&program, WebGl2RenderingContext::LINK_STATUS)
             .as_bool()
             .unwrap_or(false)
         {
-            let error = self.context
+            let error = self
+                .context
                 .get_program_info_log(&program)
                 .unwrap_or_else(|| "Unknown program linking error".to_string());
-            
+
             self.context.delete_program(Some(&program));
             self.context.delete_shader(Some(&vertex_shader));
             self.context.delete_shader(Some(&fragment_shader));
@@ -177,21 +191,21 @@ impl ShaderManager {
             in vec3 position;
             in vec3 normal;
             in vec2 uv;
-            
+
             uniform mat4 modelMatrix;
             uniform mat4 viewMatrix;
             uniform mat4 projectionMatrix;
             uniform mat3 normalMatrix;
-            
+
             out vec3 vNormal;
             out vec2 vUv;
             out vec3 vWorldPosition;
-            
+
             void main() {
                 vUv = uv;
                 vNormal = normalize(normalMatrix * normal);
                 vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-                
+
                 gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
             }
         "#;
@@ -200,26 +214,26 @@ impl ShaderManager {
         let fragment_source = r#"
             #version 300 es
             precision highp float;
-            
+
             in vec3 vNormal;
             in vec2 vUv;
             in vec3 vWorldPosition;
-            
+
             uniform vec3 diffuse;
             uniform float opacity;
             uniform vec3 ambientLightColor;
             uniform vec3 directionalLightColor;
             uniform vec3 directionalLightDirection;
-            
+
             out vec4 fragColor;
-            
+
             void main() {
                 vec3 normal = normalize(vNormal);
                 vec3 lightDirection = normalize(directionalLightDirection);
-                
+
                 float lambert = max(dot(normal, lightDirection), 0.0);
                 vec3 lightColor = ambientLightColor + directionalLightColor * lambert;
-                
+
                 vec3 color = diffuse * lightColor;
                 fragColor = vec4(color, opacity);
             }
@@ -232,13 +246,13 @@ impl ShaderManager {
             #version 300 es
             in vec3 position;
             in vec3 color;
-            
+
             uniform mat4 modelMatrix;
             uniform mat4 viewMatrix;
             uniform mat4 projectionMatrix;
-            
+
             out vec3 vColor;
-            
+
             void main() {
                 vColor = color;
                 gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
@@ -249,13 +263,13 @@ impl ShaderManager {
         let color_fragment_source = r#"
             #version 300 es
             precision highp float;
-            
+
             in vec3 vColor;
-            
+
             uniform float opacity;
-            
+
             out vec4 fragColor;
-            
+
             void main() {
                 fragColor = vec4(vColor, opacity);
             }
@@ -269,12 +283,12 @@ impl ShaderManager {
     /// Dispose of all shaders and programs
     pub fn dispose(&mut self) {
         let context = &self.context;
-        
+
         // Delete all programs
         for (_, program) in self.programs.drain() {
             context.delete_program(Some(program.get_program()));
         }
-        
+
         // Delete all shaders
         for (_, shader) in self.shaders.drain() {
             context.delete_shader(Some(&shader));

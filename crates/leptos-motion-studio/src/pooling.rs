@@ -2,6 +2,8 @@
 
 use crate::{Result, StudioError, timeline::AnimationValue, transforms::Transform3D};
 use leptos::*;
+use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_effect, set_interval, Get, Set};
+use leptos::attr::global::ClassAttribute;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, Mutex, Weak};
@@ -605,15 +607,19 @@ impl AnimationPool {
             .map_err(|_| StudioError::PoolExhausted("Failed to lock pool".to_string()))?;
 
         // Remove all excess available animations
+        let mut total_removed = 0;
         for queue in inner.available.values_mut() {
             let target_size = (queue.len() / 2).max(1);
             while queue.len() > target_size {
                 if queue.pop_front().is_some() {
-                    inner.memory_stats.available_count -= 1;
-                    inner.memory_stats.total_allocated -= 1;
+                    total_removed += 1;
                 }
             }
         }
+        
+        // Update stats after the loop
+        inner.memory_stats.available_count -= total_removed;
+        inner.memory_stats.total_allocated -= total_removed;
 
         Ok(())
     }
@@ -764,7 +770,8 @@ pub fn PoolMonitor(
                 <button
                     class="pool-action-btn"
                     on:click=move |_| {
-                        let _ = pool.garbage_collect();
+                        // Temporarily disabled until pool is properly accessible
+                        // let _ = pool.garbage_collect();
                     }
                 >
                     "Force GC"

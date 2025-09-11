@@ -429,7 +429,7 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .controls-panel {
                 order: -1;
             }
@@ -439,11 +439,11 @@
             .webgl-demo-container {
                 padding: 20px;
             }
-            
+
             h1 {
                 font-size: 2em;
             }
-            
+
             .feature-grid {
                 grid-template-columns: 1fr;
             }
@@ -454,7 +454,7 @@
     <div class="webgl-demo-container">
         <h1>🎮 WebGL Advanced Features Demo</h1>
         <p>Showcasing Phase 3: Post-processing, Shadow Mapping, and Physics</p>
-        
+
         <div class="demo-layout">
             <div class="canvas-container">
                 <div class="mock-canvas">
@@ -468,69 +468,69 @@
                                 <div class="cube-face top"></div>
                                 <div class="cube-face bottom"></div>
                             </div>
-                            
+
                             <div class="physics-sphere"></div>
                             <div class="light-source"></div>
                         </div>
-                        
+
                         <div class="post-processing-overlay">
                             <div class="bloom-effect" id="bloomEffect"></div>
                             <div class="ssao-effect" id="ssaoEffect"></div>
                         </div>
                     </div>
-                    
+
                     <div class="performance-info">
                         <div class="fps-counter">FPS: 60</div>
                         <div class="frame-time">Frame Time: 16.67ms</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="controls-panel">
                 <h3>🎛️ Demo Controls</h3>
-                
+
                 <div class="control-group">
                     <h4>🎨 Post-Processing Effects</h4>
-                    
+
                     <div class="control-item">
                         <label>Bloom Intensity: <span id="bloomValue">1.0</span></label>
                         <input type="range" id="bloomSlider" min="0.0" max="3.0" step="0.1" value="1.0">
                     </div>
-                    
+
                     <div class="control-item">
                         <label>SSAO Intensity: <span id="ssaoValue">1.0</span></label>
                         <input type="range" id="ssaoSlider" min="0.0" max="2.0" step="0.1" value="1.0">
                     </div>
-                    
+
                     <div class="control-item">
                         <label>Tone Mapping Exposure: <span id="toneMappingValue">1.0</span></label>
                         <input type="range" id="toneMappingSlider" min="0.1" max="5.0" step="0.1" value="1.0">
                     </div>
                 </div>
-                
+
                 <div class="control-group">
                     <h4>🌑 Shadow Mapping</h4>
-                    
+
                     <div class="control-item">
                         <label>Shadow Bias: <span id="shadowBiasValue">0.005</span></label>
                         <input type="range" id="shadowBiasSlider" min="0.001" max="0.02" step="0.001" value="0.005">
                     </div>
-                    
+
                     <div class="control-item">
                         <label>Light Intensity: <span id="lightIntensityValue">1.0</span></label>
                         <input type="range" id="lightIntensitySlider" min="0.1" max="3.0" step="0.1" value="1.0">
                     </div>
                 </div>
-                
+
                 <div class="control-group">
                     <h4>⚡ Animation</h4>
-                    
+
                     <div class="control-item">
                         <label>Animation Speed: <span id="animationSpeedValue">1.0</span></label>
                         <input type="range" id="animationSpeedSlider" min="0.0" max="3.0" step="0.1" value="1.0">
                     </div>
                 </div>
-                
+
                 <div class="control-group">
                     <h4>📊 System Status</h4>
                     <div class="status-item">
@@ -552,10 +552,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="feature-showcase">
             <h2>🚀 Advanced WebGL Features</h2>
-            
+
             <div class="feature-grid">
                 <div class="feature-card">
                     <h3>🎨 Post-Processing Effects</h3>
@@ -569,7 +569,7 @@
                         ✅ Implemented
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>🌑 Shadow Mapping</h3>
                     <ul>
@@ -582,7 +582,7 @@
                         ✅ Implemented
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>⚡ Physics Simulation</h3>
                     <ul>
@@ -595,7 +595,7 @@
                         ✅ Implemented
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>🎮 Interactive Controls</h3>
                     <ul>
@@ -609,7 +609,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="implementation-status">
                 <h3>📈 Implementation Status</h3>
                 <div class="status-grid">
@@ -631,7 +631,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="tech-specs">
                 <h3>🔧 Technical Specifications</h3>
                 <div class="specs-grid">
@@ -663,92 +663,92 @@
         const bloomSlider = document.getElementById('bloomSlider');
         const bloomValue = document.getElementById('bloomValue');
         const bloomEffect = document.getElementById('bloomEffect');
-        
+
         const ssaoSlider = document.getElementById('ssaoSlider');
         const ssaoValue = document.getElementById('ssaoValue');
         const ssaoEffect = document.getElementById('ssaoEffect');
-        
+
         const toneMappingSlider = document.getElementById('toneMappingSlider');
         const toneMappingValue = document.getElementById('toneMappingValue');
-        
+
         const shadowBiasSlider = document.getElementById('shadowBiasSlider');
         const shadowBiasValue = document.getElementById('shadowBiasValue');
-        
+
         const lightIntensitySlider = document.getElementById('lightIntensitySlider');
         const lightIntensityValue = document.getElementById('lightIntensityValue');
-        
+
         const animationSpeedSlider = document.getElementById('animationSpeedSlider');
         const animationSpeedValue = document.getElementById('animationSpeedValue');
-        
+
         // Update bloom effect
         bloomSlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             bloomValue.textContent = value.toFixed(1);
             bloomEffect.style.opacity = Math.min(value / 3.0, 1.0);
         });
-        
+
         // Update SSAO effect
         ssaoSlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             ssaoValue.textContent = value.toFixed(1);
             ssaoEffect.style.opacity = Math.min(value / 2.0, 1.0);
         });
-        
+
         // Update tone mapping
         toneMappingSlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             toneMappingValue.textContent = value.toFixed(1);
         });
-        
+
         // Update shadow bias
         shadowBiasSlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             shadowBiasValue.textContent = value.toFixed(3);
         });
-        
+
         // Update light intensity
         lightIntensitySlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             lightIntensityValue.textContent = value.toFixed(1);
         });
-        
+
         // Update animation speed
         animationSpeedSlider.addEventListener('input', function() {
             const value = parseFloat(this.value);
             animationSpeedValue.textContent = value.toFixed(1);
-            
+
             // Update CSS animation speed
             const cube = document.querySelector('.rotating-cube');
             const sphere = document.querySelector('.physics-sphere');
             const light = document.querySelector('.light-source');
-            
+
             cube.style.animationDuration = `${10 / value}s`;
             sphere.style.animationDuration = `${2 / value}s`;
             light.style.animationDuration = `${3 / value}s`;
         });
-        
+
         // Performance monitoring
         let frameCount = 0;
         let lastTime = performance.now();
-        
+
         function updatePerformance() {
             frameCount++;
             const currentTime = performance.now();
-            
+
             if (currentTime - lastTime >= 1000) {
                 const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
                 const frameTime = (currentTime - lastTime) / frameCount;
-                
+
                 document.querySelector('.fps-counter').textContent = `FPS: ${fps}`;
                 document.querySelector('.frame-time').textContent = `Frame Time: ${frameTime.toFixed(2)}ms`;
-                
+
                 frameCount = 0;
                 lastTime = currentTime;
             }
-            
+
             requestAnimationFrame(updatePerformance);
         }
-        
+
         // Start performance monitoring
         updatePerformance();
     </script>

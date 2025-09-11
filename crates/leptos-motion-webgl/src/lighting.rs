@@ -103,7 +103,13 @@ pub struct Light {
 
 impl Light {
     /// Create a new light
-    pub fn new(id: String, name: String, light_type: LightType, color: Color, intensity: f32) -> Self {
+    pub fn new(
+        id: String,
+        name: String,
+        light_type: LightType,
+        color: Color,
+        intensity: f32,
+    ) -> Self {
         Self {
             id,
             name,
@@ -188,7 +194,7 @@ impl DirectionalLight {
     pub fn new(name: &str, color: Color, intensity: f32, direction: [f32; 3]) -> Self {
         let mut normalized_direction = direction;
         vec3::normalize(&mut normalized_direction, &direction);
-        
+
         Self {
             light: Light::new(
                 uuid::Uuid::new_v4().to_string(),
@@ -309,10 +315,10 @@ impl PointLight {
         if distance >= self.range {
             return 0.0;
         }
-        
-        1.0 / (self.constant_attenuation + 
-               self.linear_attenuation * distance + 
-               self.quadratic_attenuation * distance * distance)
+
+        1.0 / (self.constant_attenuation
+            + self.linear_attenuation * distance
+            + self.quadratic_attenuation * distance * distance)
     }
 
     /// Enable shadow casting
@@ -379,7 +385,7 @@ impl SpotLight {
     ) -> Self {
         let mut normalized_direction = direction;
         vec3::normalize(&mut normalized_direction, &direction);
-        
+
         Self {
             light: Light::new(
                 uuid::Uuid::new_v4().to_string(),
@@ -391,7 +397,9 @@ impl SpotLight {
             position,
             direction: normalized_direction,
             inner_cone_angle: inner_cone_angle.max(0.0).min(std::f32::consts::PI),
-            outer_cone_angle: outer_cone_angle.max(inner_cone_angle).min(std::f32::consts::PI),
+            outer_cone_angle: outer_cone_angle
+                .max(inner_cone_angle)
+                .min(std::f32::consts::PI),
             range: 100.0,
             constant_attenuation: 1.0,
             linear_attenuation: 0.09,
@@ -452,20 +460,20 @@ impl SpotLight {
     pub fn calculate_spot_factor(&self, light_direction: [f32; 3]) -> f32 {
         let mut normalized_light_dir = light_direction;
         vec3::normalize(&mut normalized_light_dir, &light_direction);
-        
+
         let cos_angle = -vec3::dot(&normalized_light_dir, &self.direction);
-        
+
         if cos_angle < self.outer_cone_angle.cos() {
             return 0.0;
         }
-        
+
         if cos_angle >= self.inner_cone_angle.cos() {
             return 1.0;
         }
-        
+
         // Smooth transition between inner and outer cone
-        let smooth_factor = (cos_angle - self.outer_cone_angle.cos()) / 
-                           (self.inner_cone_angle.cos() - self.outer_cone_angle.cos());
+        let smooth_factor = (cos_angle - self.outer_cone_angle.cos())
+            / (self.inner_cone_angle.cos() - self.outer_cone_angle.cos());
         smooth_factor * smooth_factor
     }
 
@@ -474,10 +482,10 @@ impl SpotLight {
         if distance >= self.range {
             return 0.0;
         }
-        
-        1.0 / (self.constant_attenuation + 
-               self.linear_attenuation * distance + 
-               self.quadratic_attenuation * distance * distance)
+
+        1.0 / (self.constant_attenuation
+            + self.linear_attenuation * distance
+            + self.quadratic_attenuation * distance * distance)
     }
 
     /// Enable shadow casting
@@ -541,9 +549,11 @@ impl LightManager {
     /// Add an ambient light
     pub fn add_ambient_light(&mut self, name: &str, color: Color, intensity: f32) -> Result<()> {
         if self.ambient_lights.len() >= self.max_ambient_lights {
-            return Err(WebGLError::lighting_error("Maximum number of ambient lights reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of ambient lights reached",
+            ));
         }
-        
+
         let light = AmbientLight::new(name, color, intensity);
         self.ambient_lights.insert(name.to_string(), light);
         Ok(())
@@ -558,9 +568,11 @@ impl LightManager {
         direction: [f32; 3],
     ) -> Result<()> {
         if self.directional_lights.len() >= self.max_directional_lights {
-            return Err(WebGLError::lighting_error("Maximum number of directional lights reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of directional lights reached",
+            ));
         }
-        
+
         let light = DirectionalLight::new(name, color, intensity, direction);
         self.directional_lights.insert(name.to_string(), light);
         Ok(())
@@ -575,9 +587,11 @@ impl LightManager {
         position: [f32; 3],
     ) -> Result<()> {
         if self.point_lights.len() >= self.max_point_lights {
-            return Err(WebGLError::lighting_error("Maximum number of point lights reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of point lights reached",
+            ));
         }
-        
+
         let light = PointLight::new(name, color, intensity, position);
         self.point_lights.insert(name.to_string(), light);
         Ok(())
@@ -595,10 +609,20 @@ impl LightManager {
         outer_cone_angle: f32,
     ) -> Result<()> {
         if self.spot_lights.len() >= self.max_spot_lights {
-            return Err(WebGLError::lighting_error("Maximum number of spot lights reached"));
+            return Err(WebGLError::lighting_error(
+                "Maximum number of spot lights reached",
+            ));
         }
-        
-        let light = SpotLight::new(name, color, intensity, position, direction, inner_cone_angle, outer_cone_angle);
+
+        let light = SpotLight::new(
+            name,
+            color,
+            intensity,
+            position,
+            direction,
+            inner_cone_angle,
+            outer_cone_angle,
+        );
         self.spot_lights.insert(name.to_string(), light);
         Ok(())
     }
@@ -685,40 +709,40 @@ impl LightManager {
 
     /// Get total light count
     pub fn get_total_light_count(&self) -> usize {
-        self.ambient_lights.len() + 
-        self.directional_lights.len() + 
-        self.point_lights.len() + 
-        self.spot_lights.len()
+        self.ambient_lights.len()
+            + self.directional_lights.len()
+            + self.point_lights.len()
+            + self.spot_lights.len()
     }
 
     /// Get enabled light count
     pub fn get_enabled_light_count(&self) -> usize {
         let mut count = 0;
-        
+
         for light in self.ambient_lights.values() {
             if light.light.enabled {
                 count += 1;
             }
         }
-        
+
         for light in self.directional_lights.values() {
             if light.light.enabled {
                 count += 1;
             }
         }
-        
+
         for light in self.point_lights.values() {
             if light.light.enabled {
                 count += 1;
             }
         }
-        
+
         for light in self.spot_lights.values() {
             if light.light.enabled {
                 count += 1;
             }
         }
-        
+
         count
     }
 
@@ -731,7 +755,13 @@ impl LightManager {
     }
 
     /// Set maximum number of lights per type
-    pub fn set_max_lights(&mut self, ambient: usize, directional: usize, point: usize, spot: usize) {
+    pub fn set_max_lights(
+        &mut self,
+        ambient: usize,
+        directional: usize,
+        point: usize,
+        spot: usize,
+    ) {
         self.max_ambient_lights = ambient;
         self.max_directional_lights = directional;
         self.max_point_lights = point;
@@ -740,6 +770,11 @@ impl LightManager {
 
     /// Get maximum number of lights per type
     pub fn get_max_lights(&self) -> (usize, usize, usize, usize) {
-        (self.max_ambient_lights, self.max_directional_lights, self.max_point_lights, self.max_spot_lights)
+        (
+            self.max_ambient_lights,
+            self.max_directional_lights,
+            self.max_point_lights,
+            self.max_spot_lights,
+        )
     }
 }

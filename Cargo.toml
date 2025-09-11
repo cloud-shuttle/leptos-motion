@@ -7,13 +7,16 @@ members = [
     "crates/leptos-motion-scroll",
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
+    "crates/leptos-motion-studio",
+    "crates/leptos-motion-webgl",
     "examples/comprehensive-demo",
-    "benches", "crates/leptos-motion-webgl",
+    "examples/studio-demo",
+    "benches",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.8.2"
+version = "0.8.3"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2024"  # Latest edition as of September 2025
@@ -40,6 +43,8 @@ leptos-motion-gestures = { version = "0.8.1", path = "crates/leptos-motion-gestu
 leptos-motion-layout = { version = "0.8.1", path = "crates/leptos-motion-layout" }
 leptos-motion-scroll = { version = "0.8.1", path = "crates/leptos-motion-scroll" }
 leptos-motion-macros = { version = "0.8.1", path = "crates/leptos-motion-macros" }
+leptos-motion-studio = { version = "0.8.1", path = "crates/leptos-motion-studio" }
+leptos-motion-webgl = { version = "0.8.1", path = "crates/leptos-motion-webgl" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }

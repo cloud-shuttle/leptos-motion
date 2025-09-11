@@ -396,3 +396,7 @@ pub enum AnimationError {
 mod simplified_engine_tests {
     include!("simplified_engine_tests.rs");
 }
+
+// Include compatibility tests
+#[cfg(test)]
+mod compatibility_tests;

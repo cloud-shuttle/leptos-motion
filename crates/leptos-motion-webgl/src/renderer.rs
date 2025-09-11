@@ -1,15 +1,13 @@
 //! WebGL Renderer implementation
 
+use crate::camera::Camera;
 use crate::error::{Result, WebGLError};
 use crate::scene::Scene;
-use crate::camera::Camera;
 use crate::shader::ShaderManager;
-use wasm_bindgen::JsCast;
-use web_sys::{
-    WebGl2RenderingContext, HtmlCanvasElement, Performance,
-};
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
+use wasm_bindgen::JsCast;
+use web_sys::{HtmlCanvasElement, Performance, WebGl2RenderingContext};
 
 /// WebGL renderer configuration
 #[derive(Debug, Clone)]
@@ -117,7 +115,7 @@ impl WebGLRenderer {
         let context = Self::create_webgl_context(&canvas, &config)?;
         let shader_manager = Rc::new(RefCell::new(ShaderManager::new(&context)?));
         let stats = Rc::new(RefCell::new(RendererStats::default()));
-        
+
         let performance = web_sys::window()
             .ok_or_else(|| WebGLError::wasm_error("Failed to get window"))?
             .performance()
@@ -146,22 +144,44 @@ impl WebGLRenderer {
         config: &RendererConfig,
     ) -> Result<WebGl2RenderingContext> {
         let context_options = js_sys::Object::new();
-        
-        js_sys::Reflect::set(&context_options, &"antialias".into(), &config.antialias.into())?;
+
+        js_sys::Reflect::set(
+            &context_options,
+            &"antialias".into(),
+            &config.antialias.into(),
+        )?;
         js_sys::Reflect::set(&context_options, &"depth".into(), &config.depth_test.into())?;
         js_sys::Reflect::set(&context_options, &"alpha".into(), &config.alpha.into())?;
         js_sys::Reflect::set(&context_options, &"stencil".into(), &config.stencil.into())?;
-        js_sys::Reflect::set(&context_options, &"premultipliedAlpha".into(), &config.premultiplied_alpha.into())?;
-        js_sys::Reflect::set(&context_options, &"preserveDrawingBuffer".into(), &config.preserve_drawing_buffer.into())?;
-        js_sys::Reflect::set(&context_options, &"powerPreference".into(), &config.power_preference.to_webgl_string().into())?;
-        js_sys::Reflect::set(&context_options, &"failIfMajorPerformanceCaveat".into(), &config.fail_if_major_performance_caveat.into())?;
+        js_sys::Reflect::set(
+            &context_options,
+            &"premultipliedAlpha".into(),
+            &config.premultiplied_alpha.into(),
+        )?;
+        js_sys::Reflect::set(
+            &context_options,
+            &"preserveDrawingBuffer".into(),
+            &config.preserve_drawing_buffer.into(),
+        )?;
+        js_sys::Reflect::set(
+            &context_options,
+            &"powerPreference".into(),
+            &config.power_preference.to_webgl_string().into(),
+        )?;
+        js_sys::Reflect::set(
+            &context_options,
+            &"failIfMajorPerformanceCaveat".into(),
+            &config.fail_if_major_performance_caveat.into(),
+        )?;
 
         let context = canvas
             .get_context_with_context_options("webgl2", &context_options)
             .map_err(|_| WebGLError::context_creation("Failed to get WebGL2 context"))?
             .ok_or_else(|| WebGLError::context_creation("WebGL2 context is null"))?
             .dyn_into::<WebGl2RenderingContext>()
-            .map_err(|_| WebGLError::context_creation("Failed to cast to WebGL2RenderingContext"))?;
+            .map_err(|_| {
+                WebGLError::context_creation("Failed to cast to WebGL2RenderingContext")
+            })?;
 
         Ok(context)
     }
@@ -169,7 +189,7 @@ impl WebGLRenderer {
     /// Initialize the renderer
     fn initialize(&mut self) -> Result<()> {
         let context = &self.context;
-        
+
         // Set viewport
         let width = self.canvas.width() as i32;
         let height = self.canvas.height() as i32;
@@ -208,7 +228,7 @@ impl WebGLRenderer {
     /// Render a scene with a camera
     pub fn render(&mut self, scene: &Scene, camera: &mut dyn Camera) -> Result<()> {
         let start_time = self.performance.now();
-        
+
         // Clear the canvas
         self.clear();
 
@@ -228,15 +248,15 @@ impl WebGLRenderer {
     pub fn clear(&self) {
         let context = &self.context;
         let mut clear_bits = WebGl2RenderingContext::COLOR_BUFFER_BIT;
-        
+
         if self.config.depth_test {
             clear_bits |= WebGl2RenderingContext::DEPTH_BUFFER_BIT;
         }
-        
+
         if self.config.stencil {
             clear_bits |= WebGl2RenderingContext::STENCIL_BUFFER_BIT;
         }
-        
+
         context.clear(clear_bits);
     }
 
@@ -258,11 +278,11 @@ impl WebGLRenderer {
             let current_time = self.performance.now();
             let elapsed = current_time - self.fps_start_time;
             let fps = (self.frame_count as f64 * 1000.0) / elapsed;
-            
+
             let mut stats = self.stats.borrow_mut();
             stats.fps = fps;
             stats.frame_time = frame_time;
-            
+
             self.fps_start_time = current_time;
             self.frame_count = 0;
         }
@@ -272,11 +292,11 @@ impl WebGLRenderer {
     pub fn set_size(&mut self, width: u32, height: u32) -> Result<()> {
         self.canvas.set_width(width);
         self.canvas.set_height(height);
-        
+
         let width = width as i32;
         let height = height as i32;
         self.context.viewport(0, 0, width, height);
-        
+
         Ok(())
     }
 

@@ -3,7 +3,7 @@
 // This module provides basic performance testing using Criterion
 // to ensure the animation system maintains high performance standards.
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use leptos_motion_core::*;
 use leptos_motion_dom::*;
 use leptos_motion_gestures::*;

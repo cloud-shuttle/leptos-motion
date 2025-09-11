@@ -339,6 +339,10 @@ fn apply_easing(progress: f64, easing: &Easing) -> f64 {
             // Simplified spring implementation for testing
             progress
         }
+        Easing::CubicBezier(cb) => {
+            // Delegate to the Bezier variant
+            apply_easing(progress, &Easing::Bezier(cb.0, cb.1, cb.2, cb.3))
+        }
     }
 }
 

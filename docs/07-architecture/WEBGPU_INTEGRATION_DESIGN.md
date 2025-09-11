@@ -11,6 +11,7 @@ This document outlines the strategic integration of WebGPU into Leptos Motion, l
 ## Current State Analysis
 
 ### Leptos Motion v0.4.0 Strengths
+
 - **Bundle Size**: 30KB-85KB (92% reduction achieved)
 - **Performance**: 60fps with 100+ concurrent animations
 - **Architecture**: Hybrid WAAPI + RAF system
@@ -18,6 +19,7 @@ This document outlines the strategic integration of WebGPU into Leptos Motion, l
 - **TDD Methodology**: Proven optimization approach
 
 ### WebGPU Ecosystem (2025)
+
 - **Browser Support**: Chrome 113+, Safari 16.4+, Firefox 110+
 - **Rust Integration**: `wgpu` crate is mature and stable
 - **Performance**: 2-8x improvement over WebGL
@@ -100,7 +102,7 @@ impl HybridWebGPUEngine {
                 css_engine: CSSAnimationEngine::new(),
             };
         }
-        
+
         // Fallback to WebGL
         if let Ok(webgl_engine) = WebGLEngine::new() {
             return Self {
@@ -111,7 +113,7 @@ impl HybridWebGPUEngine {
                 css_engine: CSSAnimationEngine::new(),
             };
         }
-        
+
         // Fallback to Canvas 2D
         if let Ok(canvas_engine) = Canvas2DEngine::new() {
             return Self {
@@ -122,7 +124,7 @@ impl HybridWebGPUEngine {
                 css_engine: CSSAnimationEngine::new(),
             };
         }
-        
+
         // Final fallback to CSS Transforms
         Self {
             engine_type: AnimationEngineType::CSSTransforms,
@@ -132,7 +134,7 @@ impl HybridWebGPUEngine {
             css_engine: CSSAnimationEngine::new(),
         }
     }
-    
+
     pub fn animate(&self, animation: Animation) -> AnimationHandle {
         match self.engine_type {
             AnimationEngineType::WebGPU => {
@@ -155,7 +157,7 @@ impl HybridWebGPUEngine {
             },
         }
     }
-    
+
     pub fn get_capabilities(&self) -> EngineCapabilities {
         match self.engine_type {
             AnimationEngineType::WebGPU => EngineCapabilities {
@@ -206,7 +208,7 @@ impl HybridWebGPUEngine {
         }
         false
     }
-    
+
     fn detect_webgl_support() -> bool {
         #[cfg(feature = "web-sys")]
         {
@@ -215,7 +217,7 @@ impl HybridWebGPUEngine {
                 if let Ok(document) = window.document() {
                     if let Ok(canvas) = document.create_element("canvas") {
                         if let Ok(canvas) = canvas.dyn_into::<web_sys::HtmlCanvasElement>() {
-                            return canvas.get_context("webgl").is_ok() || 
+                            return canvas.get_context("webgl").is_ok() ||
                                    canvas.get_context("experimental-webgl").is_ok();
                         }
                     }
@@ -224,7 +226,7 @@ impl HybridWebGPUEngine {
         }
         false
     }
-    
+
     fn detect_canvas2d_support() -> bool {
         #[cfg(feature = "web-sys")]
         {
@@ -255,12 +257,12 @@ pub fn MotionDivProgressive(
     particle_system: Option<ParticleSystemConfig>,
     #[cfg(feature = "webgpu")]
     fluid_simulation: Option<FluidSimulationConfig>,
-    
+
     // Standard props (always available)
     initial: Option<AnimationTarget>,
     animate: Option<AnimationTarget>,
     transition: Option<Transition>,
-    
+
     // Standard HTML props
     class: String,
     style: String,
@@ -268,7 +270,7 @@ pub fn MotionDivProgressive(
 ) -> impl IntoView {
     let engine = use_context::<HybridWebGPUEngine>();
     let capabilities = engine.get_capabilities();
-    
+
     // Progressive enhancement based on capabilities
     let enhanced_animation = move || {
         if capabilities.particle_systems && particle_system.is_some() {
@@ -282,7 +284,7 @@ pub fn MotionDivProgressive(
             AnimationType::Standard(animate.unwrap_or_default())
         }
     };
-    
+
     view! {
         <div
             class=class
@@ -313,7 +315,7 @@ impl WebGPUParticleSystem {
     pub fn animate(&mut self, delta_time: f32, forces: &[Force]) {
         // GPU-accelerated particle simulation
         let mut encoder = self.device.create_command_encoder();
-        
+
         // Update particles on GPU
         {
             let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
@@ -323,7 +325,7 @@ impl WebGPUParticleSystem {
             compute_pass.set_bind_group(0, &self.bind_group, &[]);
             compute_pass.dispatch_workgroups(self.particle_count / 64, 1, 1);
         }
-        
+
         self.queue.submit(std::iter::once(encoder.finish()));
     }
 }
@@ -363,20 +365,20 @@ pub fn MotionDivWebGPU(
     initial: Option<AnimationTarget>,
     animate: Option<AnimationTarget>,
     transition: Option<Transition>,
-    
+
     // WebGPU-specific props
     #[cfg(feature = "webgpu")]
     particle_system: Option<ParticleSystemConfig>,
     #[cfg(feature = "webgpu")]
     fluid_simulation: Option<FluidSimulationConfig>,
-    
+
     // Standard HTML props
     class: String,
     style: String,
     children: Children,
 ) -> impl IntoView {
     let engine = use_context::<HybridWebGPUEngine>();
-    
+
     view! {
         <div
             class=class
@@ -405,6 +407,7 @@ pub fn MotionDivWebGPU(
 ## Bundle Size Impact Analysis
 
 ### Current Bundle Sizes (v0.4.0)
+
 - **Minimal**: 30KB
 - **Production**: 75KB
 - **Optimized**: 85KB
@@ -413,61 +416,64 @@ pub fn MotionDivWebGPU(
 
 ### WebGPU Integration Impact
 
-| Feature | Bundle Size Impact | Use Case |
-|---------|-------------------|----------|
-| **WebGPU Core** | +15KB | Basic WebGPU support |
-| **Compute Shaders** | +8KB | Particle systems, physics |
-| **Fluid Dynamics** | +12KB | Advanced fluid simulations |
-| **Particle Systems** | +6KB | GPU-accelerated particles |
-| **Total (All Features)** | +25KB | Complete WebGPU integration |
+| Feature                  | Bundle Size Impact | Use Case                    |
+| ------------------------ | ------------------ | --------------------------- |
+| **WebGPU Core**          | +15KB              | Basic WebGPU support        |
+| **Compute Shaders**      | +8KB               | Particle systems, physics   |
+| **Fluid Dynamics**       | +12KB              | Advanced fluid simulations  |
+| **Particle Systems**     | +6KB               | GPU-accelerated particles   |
+| **Total (All Features)** | +25KB              | Complete WebGPU integration |
 
 ### Updated Bundle Sizes (v1.1.0)
 
-| Build Preset | Current | v1.1.0 (WebGPU) | Impact |
-|--------------|---------|-----------------|--------|
-| **Minimal** | 30KB | 30KB | No change |
-| **Production** | 75KB | 90KB | +15KB |
-| **Optimized** | 85KB | 100KB | +15KB |
-| **Standard** | 125KB | 150KB | +25KB |
-| **Full** | 235KB | 260KB | +25KB |
+| Build Preset   | Current | v1.1.0 (WebGPU) | Impact    |
+| -------------- | ------- | --------------- | --------- |
+| **Minimal**    | 30KB    | 30KB            | No change |
+| **Production** | 75KB    | 90KB            | +15KB     |
+| **Optimized**  | 85KB    | 100KB           | +15KB     |
+| **Standard**   | 125KB   | 150KB           | +25KB     |
+| **Full**       | 235KB   | 260KB           | +25KB     |
 
 ## Performance Analysis
 
 ### WebGPU Performance Benefits
 
-| Animation Type | WebGL Performance | WebGPU Performance | Improvement |
-|----------------|-------------------|-------------------|-------------|
-| **Particle Systems** | 1000 particles @ 30fps | 10,000 particles @ 60fps | 20x |
-| **Fluid Simulation** | 64x64 grid @ 15fps | 256x256 grid @ 60fps | 16x |
-| **Complex Shaders** | 60fps (limited effects) | 60fps (full effects) | 2-3x |
-| **Compute Tasks** | CPU-bound | GPU-accelerated | 5-10x |
+| Animation Type       | WebGL Performance       | WebGPU Performance       | Improvement |
+| -------------------- | ----------------------- | ------------------------ | ----------- |
+| **Particle Systems** | 1000 particles @ 30fps  | 10,000 particles @ 60fps | 20x         |
+| **Fluid Simulation** | 64x64 grid @ 15fps      | 256x256 grid @ 60fps     | 16x         |
+| **Complex Shaders**  | 60fps (limited effects) | 60fps (full effects)     | 2-3x        |
+| **Compute Tasks**    | CPU-bound               | GPU-accelerated          | 5-10x       |
 
 ### Memory Usage
 
-| Feature | Memory Impact | Optimization |
-|---------|---------------|--------------|
-| **WebGPU Device** | ~2MB | Lazy initialization |
-| **Particle Buffers** | ~1MB per 10K particles | Dynamic allocation |
-| **Fluid Grids** | ~4MB per 256x256 grid | Configurable resolution |
-| **Shader Cache** | ~500KB | LRU eviction |
+| Feature              | Memory Impact          | Optimization            |
+| -------------------- | ---------------------- | ----------------------- |
+| **WebGPU Device**    | ~2MB                   | Lazy initialization     |
+| **Particle Buffers** | ~1MB per 10K particles | Dynamic allocation      |
+| **Fluid Grids**      | ~4MB per 256x256 grid  | Configurable resolution |
+| **Shader Cache**     | ~500KB                 | LRU eviction            |
 
 ## Implementation Timeline
 
 ### v1.1.0: WebGPU Foundation (Q1 2026)
 
 #### Month 1: Core Integration
+
 - [ ] WebGPU feature flag system
 - [ ] Basic WebGPU animation engine
 - [ ] Graceful fallback implementation
 - [ ] Bundle size optimization
 
 #### Month 2: Particle Systems
+
 - [ ] WebGPU particle system implementation
 - [ ] Compute shader development
 - [ ] Performance optimization
 - [ ] Documentation and examples
 
 #### Month 3: Testing & Polish
+
 - [ ] Cross-browser testing
 - [ ] Performance benchmarking
 - [ ] Documentation completion
@@ -476,12 +482,14 @@ pub fn MotionDivWebGPU(
 ### v1.2.0: Advanced Features (Q2 2026)
 
 #### Month 4-5: Fluid Dynamics
+
 - [ ] Navier-Stokes implementation
 - [ ] Advanced compute shaders
 - [ ] Performance optimization
 - [ ] Integration testing
 
 #### Month 6: Ecosystem Integration
+
 - [ ] Leptos component integration
 - [ ] DevTools support
 - [ ] Performance profiling
@@ -492,12 +500,14 @@ pub fn MotionDivWebGPU(
 ### High Risk
 
 #### Browser Compatibility
+
 - **Risk**: WebGPU not available in all target browsers
 - **Mitigation**: Comprehensive fallback chain (WebGPU → WebGL → Canvas 2D → CSS Transforms)
 - **Testing**: Automated cross-browser testing with fallback validation
 - **Coverage**: 100% browser compatibility through progressive enhancement
 
 #### Bundle Size Growth
+
 - **Risk**: WebGPU features increase bundle size significantly
 - **Mitigation**: Feature flags, tree shaking, lazy loading
 - **Monitoring**: Automated bundle size regression testing
@@ -505,11 +515,13 @@ pub fn MotionDivWebGPU(
 ### Medium Risk
 
 #### Performance Regression
+
 - **Risk**: WebGPU initialization overhead
 - **Mitigation**: Lazy initialization, performance monitoring
 - **Testing**: Automated performance regression testing
 
 #### Developer Experience
+
 - **Risk**: Increased complexity for developers
 - **Mitigation**: Comprehensive documentation, examples, DevTools
 - **Support**: Community support and migration guides
@@ -517,6 +529,7 @@ pub fn MotionDivWebGPU(
 ### Low Risk
 
 #### WebGPU API Changes
+
 - **Risk**: WebGPU specification changes
 - **Mitigation**: Version pinning, compatibility testing
 - **Monitoring**: WebGPU specification updates
@@ -529,29 +542,29 @@ pub fn MotionDivWebGPU(
 #[cfg(test)]
 mod fallback_tests {
     use super::*;
-    
+
     #[test]
     fn test_webgpu_fallback_chain() {
         // Test WebGPU → WebGL fallback
         let mut engine = HybridWebGPUEngine::new();
         assert!(engine.webgpu_engine.is_some() || engine.webgl_engine.is_some());
-        
+
         // Test WebGL → Canvas 2D fallback
         if engine.webgpu_engine.is_none() {
             assert!(engine.webgl_engine.is_some() || engine.canvas_engine.is_some());
         }
-        
+
         // Test Canvas 2D → CSS Transforms fallback
         if engine.webgpu_engine.is_none() && engine.webgl_engine.is_none() {
             assert!(engine.canvas_engine.is_some() || engine.css_engine.is_available());
         }
     }
-    
+
     #[test]
     fn test_capability_degradation() {
         let engine = HybridWebGPUEngine::new();
         let capabilities = engine.get_capabilities();
-        
+
         match engine.engine_type {
             AnimationEngineType::WebGPU => {
                 assert!(capabilities.particle_systems);
@@ -579,17 +592,17 @@ mod fallback_tests {
             },
         }
     }
-    
+
     #[test]
     fn test_animation_consistency() {
         let engine = HybridWebGPUEngine::new();
         let animation = Animation::new()
             .with_property("opacity", 0.0, 1.0)
             .with_duration(1.0);
-        
+
         let handle = engine.animate(animation);
         assert!(handle.is_valid());
-        
+
         // Test that animation works regardless of engine type
         match engine.engine_type {
             AnimationEngineType::WebGPU => {
@@ -613,36 +626,36 @@ mod fallback_tests {
 mod browser_fallback_tests {
     use super::*;
     use wasm_bindgen_test::*;
-    
+
     wasm_bindgen_test_configure!(run_in_browser);
-    
+
     #[wasm_bindgen_test]
     fn test_webgpu_detection() {
         let has_webgpu = HybridWebGPUEngine::detect_webgpu_support();
         // Should detect WebGPU if available
         assert!(has_webgpu || !has_webgpu); // Always true, but tests detection
     }
-    
+
     #[wasm_bindgen_test]
     fn test_webgl_detection() {
         let has_webgl = HybridWebGPUEngine::detect_webgl_support();
         // Should detect WebGL if available
         assert!(has_webgl || !has_webgl); // Always true, but tests detection
     }
-    
+
     #[wasm_bindgen_test]
     fn test_canvas2d_detection() {
         let has_canvas2d = HybridWebGPUEngine::detect_canvas2d_support();
         // Should always have Canvas 2D support
         assert!(has_canvas2d);
     }
-    
+
     #[wasm_bindgen_test]
     fn test_fallback_performance() {
         let start = web_sys::js_sys::Date::now();
         let engine = HybridWebGPUEngine::new();
         let end = web_sys::js_sys::Date::now();
-        
+
         // Fallback detection should be fast
         assert!((end - start) < 100.0); // <100ms
     }
@@ -665,6 +678,7 @@ mod browser_fallback_tests {
 ## Success Metrics
 
 ### Technical Metrics
+
 - [ ] Bundle size increase <25KB for full WebGPU features
 - [ ] 2x performance improvement for particle systems
 - [ ] 100% graceful fallback chain (WebGPU → WebGL → Canvas 2D → CSS Transforms)
@@ -673,12 +687,14 @@ mod browser_fallback_tests {
 - [ ] 100% feature parity across all fallback engines
 
 ### User Experience Metrics
+
 - [ ] 95% developer satisfaction with WebGPU features
 - [ ] 50% adoption rate of WebGPU features in production
 - [ ] <5% increase in support requests
 - [ ] 90% successful migration from WebGL
 
 ### Business Metrics
+
 - [ ] 20% increase in library adoption
 - [ ] 15% increase in community contributions
 - [ ] 10% increase in enterprise usage

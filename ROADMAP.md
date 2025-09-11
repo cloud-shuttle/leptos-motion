@@ -2,13 +2,17 @@
 
 ## 📋 **Roadmap Overview**
 
-This roadmap outlines the strategic development plan to evolve Leptos Motion from a CSS-based 3D animation library to a full-featured WebGL 3D engine that competes with Three.js while maintaining our competitive advantages of type safety, performance, and reactive integration.
+This roadmap outlines the strategic development plan to evolve Leptos Motion
+from a CSS-based 3D animation library to a full-featured WebGL 3D engine that
+competes with Three.js while maintaining our competitive advantages of type
+safety, performance, and reactive integration.
 
 ---
 
 ## 🎯 **Strategic Goals**
 
 ### **Primary Objectives**
+
 ```rust
 🎯 Achieve 80% feature parity with Three.js core functionality
 🎯 Maintain type safety and performance advantages
@@ -18,6 +22,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 ### **Success Metrics**
+
 ```rust
 ✅ 60+ FPS for complex 3D scenes
 ✅ <200KB bundle size (vs 600KB+ for Three.js)
@@ -34,9 +39,11 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ## 🚀 **Development Phases**
 
 ### **Phase 1: Foundation (Months 1-3)** 🏗️
+
 **Goal**: Establish WebGL rendering foundation
 
 #### **Month 1: WebGL Rendering Engine**
+
 ```rust
 🎯 Create leptos-motion-webgl crate
 🎯 Implement WebGL2RenderingContext wrapper
@@ -55,6 +62,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 2: Scene Graph System**
+
 ```rust
 🎯 Implement Scene struct with object hierarchy
 🎯 Create Object3D with transform management
@@ -73,6 +81,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 3: Camera System**
+
 ```rust
 🎯 Implement Camera struct with perspective/orthographic support
 🎯 Add camera controls (orbit, fly, first-person)
@@ -91,9 +100,11 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 ### **Phase 2: Core Features (Months 4-6)** 🎨
+
 **Goal**: Implement essential 3D rendering features
 
 #### **Month 4: Geometry System**
+
 ```rust
 🎯 Create Geometry struct with vertex data
 🎯 Implement basic 3D shapes (box, sphere, plane, cylinder)
@@ -112,6 +123,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 5: Material System**
+
 ```rust
 🎯 Implement Material struct with shader support
 🎯 Create basic material types (Basic, Lambert, Phong)
@@ -130,6 +142,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 6: Lighting System**
+
 ```rust
 🎯 Implement Light struct with multiple light types
 🎯 Add ambient, directional, point, and spot lights
@@ -148,9 +161,11 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 ### **Phase 3: Advanced Features (Months 7-9)** 🚀
+
 **Goal**: Add advanced 3D capabilities
 
 #### **Month 7: 3D Model Loading**
+
 ```rust
 🎯 Implement GLTF loader
 🎯 Add OBJ file support
@@ -169,6 +184,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 8: Animation System**
+
 ```rust
 🎯 Implement keyframe animation system
 🎯 Add skeletal animation support
@@ -187,6 +203,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 9: Post-Processing Effects**
+
 ```rust
 🎯 Implement post-processing pipeline
 🎯 Add common effects (bloom, SSAO, FXAA)
@@ -205,9 +222,11 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 ### **Phase 4: Integration & Polish (Months 10-12)** ✨
+
 **Goal**: Integrate with Leptos and polish the experience
 
 #### **Month 10: Leptos Integration**
+
 ```rust
 🎯 Create reactive 3D components
 🎯 Implement signal-based scene updates
@@ -226,6 +245,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 11: Performance & Optimization**
+
 ```rust
 🎯 Implement rendering optimizations
 🎯 Add memory management improvements
@@ -244,6 +264,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ```
 
 #### **Month 12: Documentation & Community**
+
 ```rust
 🎯 Create comprehensive documentation
 🎯 Build interactive examples and tutorials
@@ -268,6 +289,7 @@ This roadmap outlines the strategic development plan to evolve Leptos Motion fro
 ### **Phase 1: Foundation Implementation**
 
 #### **Week 1-2: WebGL Rendering Engine**
+
 ```rust
 // Create leptos-motion-webgl crate
 cargo new leptos-motion-webgl
@@ -286,7 +308,7 @@ impl WebGLRenderer {
         let context = canvas.get_context("webgl2")?
             .unwrap()
             .dyn_into::<WebGL2RenderingContext>()?;
-        
+
         Ok(Self {
             context,
             canvas,
@@ -295,24 +317,25 @@ impl WebGLRenderer {
             index_buffer: Self::create_index_buffer(&context)?,
         })
     }
-    
+
     pub fn render(&mut self, scene: &Scene, camera: &Camera) -> Result<(), RenderError> {
         // Clear the canvas
         self.context.clear_color(0.0, 0.0, 0.0, 1.0);
         self.context.clear(WebGL2RenderingContext::COLOR_BUFFER_BIT | WebGL2RenderingContext::DEPTH_BUFFER_BIT);
-        
+
         // Set up viewport
         self.context.viewport(0, 0, self.canvas.width() as i32, self.canvas.height() as i32);
-        
+
         // Render scene
         self.render_scene(scene, camera)?;
-        
+
         Ok(())
     }
 }
 ```
 
 #### **Week 3-4: Scene Graph System**
+
 ```rust
 // Scene graph implementation
 pub struct Scene {
@@ -333,18 +356,18 @@ impl Scene {
             fog: None,
         }
     }
-    
+
     pub fn add_object(&mut self, object: Object3D) -> Uuid {
         let id = object.id;
         self.objects.push(object);
         id
     }
-    
+
     pub fn remove_object(&mut self, id: Uuid) -> Option<Object3D> {
         self.objects.iter().position(|o| o.id == id)
             .map(|i| self.objects.remove(i))
     }
-    
+
     pub fn update_object_transform(&mut self, id: Uuid, transform: Transform3D) {
         if let Some(object) = self.objects.iter_mut().find(|o| o.id == id) {
             object.transform = transform;
@@ -354,6 +377,7 @@ impl Scene {
 ```
 
 #### **Week 5-6: Camera System**
+
 ```rust
 // Camera system implementation
 pub struct Camera {
@@ -380,7 +404,7 @@ impl Camera {
             camera_type: CameraType::Perspective { fov, aspect },
         }
     }
-    
+
     pub fn get_projection_matrix(&self) -> Matrix4 {
         match &self.camera_type {
             CameraType::Perspective { fov, aspect } => {
@@ -391,7 +415,7 @@ impl Camera {
             }
         }
     }
-    
+
     pub fn get_view_matrix(&self) -> Matrix4 {
         Matrix4::look_at(self.position, self.position + self.forward(), self.up)
     }
@@ -401,6 +425,7 @@ impl Camera {
 ### **Phase 2: Core Features Implementation**
 
 #### **Week 7-8: Geometry System**
+
 ```rust
 // Geometry system implementation
 pub struct Geometry {
@@ -418,7 +443,7 @@ impl Geometry {
     pub fn new_box(width: f64, height: f64, depth: f64) -> Self {
         let (vertices, normals, uvs, indices) = generate_box_geometry(width, height, depth);
         let bounding_box = BoundingBox::from_vertices(&vertices);
-        
+
         Self {
             id: Uuid::new_v4(),
             name: "Box".to_string(),
@@ -430,11 +455,11 @@ impl Geometry {
             geometry_type: GeometryType::Box { width, height, depth },
         }
     }
-    
+
     pub fn new_sphere(radius: f64, width_segments: u32, height_segments: u32) -> Self {
         let (vertices, normals, uvs, indices) = generate_sphere_geometry(radius, width_segments, height_segments);
         let bounding_box = BoundingBox::from_vertices(&vertices);
-        
+
         Self {
             id: Uuid::new_v4(),
             name: "Sphere".to_string(),
@@ -450,6 +475,7 @@ impl Geometry {
 ```
 
 #### **Week 9-10: Material System**
+
 ```rust
 // Material system implementation
 pub struct Material {
@@ -478,7 +504,7 @@ impl Material {
             blending: BlendingMode::Normal,
         }
     }
-    
+
     pub fn new_standard(color: Color, metalness: f64, roughness: f64) -> Self {
         Self {
             id: Uuid::new_v4(),
@@ -507,6 +533,7 @@ impl Material {
 ```
 
 #### **Week 11-12: Lighting System**
+
 ```rust
 // Lighting system implementation
 pub struct Light {
@@ -535,7 +562,7 @@ impl Light {
             shadow_map_size: 1024,
         }
     }
-    
+
     pub fn new_directional(color: Color, intensity: f64, direction: Vector3) -> Self {
         Self {
             id: Uuid::new_v4(),
@@ -557,6 +584,7 @@ impl Light {
 ## 🎯 **Milestone Timeline**
 
 ### **Q1 2025: Foundation (Months 1-3)**
+
 ```rust
 ✅ WebGL rendering engine
 ✅ Scene graph system
@@ -567,6 +595,7 @@ impl Light {
 ```
 
 ### **Q2 2025: Core Features (Months 4-6)**
+
 ```rust
 ✅ Geometry system
 ✅ Material system
@@ -577,6 +606,7 @@ impl Light {
 ```
 
 ### **Q3 2025: Advanced Features (Months 7-9)**
+
 ```rust
 ✅ 3D model loading
 ✅ Animation system
@@ -587,6 +617,7 @@ impl Light {
 ```
 
 ### **Q4 2025: Integration & Polish (Months 10-12)**
+
 ```rust
 ✅ Leptos integration
 ✅ Reactive components
@@ -601,6 +632,7 @@ impl Light {
 ## 🚀 **Resource Requirements**
 
 ### **Development Team**
+
 ```rust
 👨‍💻 Lead Developer (Rust/WebGL expertise)
 👨‍💻 3D Graphics Developer (WebGL/Shaders)
@@ -610,6 +642,7 @@ impl Light {
 ```
 
 ### **Technology Stack**
+
 ```rust
 🦀 Rust (Core language)
 🎨 WebGL2 (3D rendering)
@@ -620,6 +653,7 @@ impl Light {
 ```
 
 ### **Development Tools**
+
 ```rust
 🔧 Cargo (Package management)
 🧪 wasm-pack (WASM building)
@@ -634,28 +668,30 @@ impl Light {
 ## 🎯 **Risk Assessment & Mitigation**
 
 ### **Technical Risks**
+
 ```rust
 ⚠️ WebGL compatibility across browsers
    Mitigation: Comprehensive testing, fallback to CSS
-   
+
 ⚠️ Performance on mobile devices
    Mitigation: LOD system, performance profiling
-   
+
 ⚠️ WASM bundle size growth
    Mitigation: Modular architecture, tree shaking
-   
+
 ⚠️ Memory management in WASM
    Mitigation: Careful memory planning, profiling
 ```
 
 ### **Project Risks**
+
 ```rust
 ⚠️ Scope creep and feature bloat
    Mitigation: Strict milestone adherence, feature prioritization
-   
+
 ⚠️ Team coordination and communication
    Mitigation: Regular standups, clear documentation
-   
+
 ⚠️ Market competition and timing
    Mitigation: Focus on unique value proposition
 ```
@@ -665,6 +701,7 @@ impl Light {
 ## 🎯 **Success Metrics & KPIs**
 
 ### **Technical Metrics**
+
 ```rust
 📊 Performance: 60+ FPS for complex scenes
 📊 Bundle Size: <200KB (vs 600KB+ for Three.js)
@@ -675,6 +712,7 @@ impl Light {
 ```
 
 ### **Feature Metrics**
+
 ```rust
 📊 Feature Parity: 80% with Three.js core
 📊 Type Safety: 100% coverage
@@ -685,6 +723,7 @@ impl Light {
 ```
 
 ### **Business Metrics**
+
 ```rust
 📊 Downloads: 10K+ monthly downloads
 📊 GitHub Stars: 1K+ stars
@@ -698,16 +737,23 @@ impl Light {
 
 ## 🎯 **Conclusion**
 
-This roadmap provides a comprehensive 12-month plan to evolve Leptos Motion from a CSS-based 3D animation library to a full-featured WebGL 3D engine. The phased approach ensures steady progress while maintaining quality and performance standards.
+This roadmap provides a comprehensive 12-month plan to evolve Leptos Motion from
+a CSS-based 3D animation library to a full-featured WebGL 3D engine. The phased
+approach ensures steady progress while maintaining quality and performance
+standards.
 
 **Key Success Factors:**
-1. **Maintain competitive advantages** (type safety, performance, reactive integration)
+
+1. **Maintain competitive advantages** (type safety, performance, reactive
+   integration)
 2. **Follow phased development** with clear milestones and deliverables
-3. **Focus on developer experience** with intuitive APIs and comprehensive documentation
+3. **Focus on developer experience** with intuitive APIs and comprehensive
+   documentation
 4. **Ensure production readiness** with thorough testing and optimization
 5. **Build community** with active engagement and contribution opportunities
 
 **Next Steps:**
+
 1. Begin Phase 1 development with WebGL rendering engine
 2. Establish development team and resources
 3. Set up CI/CD pipeline and testing infrastructure
@@ -716,7 +762,4 @@ This roadmap provides a comprehensive 12-month plan to evolve Leptos Motion from
 
 ---
 
-*Last updated: December 2024*
-*Leptos Motion v0.8.2*
-*Roadmap v1.0*
-
+_Last updated: December 2024_ _Leptos Motion v0.8.2_ _Roadmap v1.0_

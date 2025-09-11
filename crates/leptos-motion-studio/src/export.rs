@@ -219,7 +219,7 @@ impl<'a> AnimationExporter<'a> {
                 continue;
             }
 
-            let animation_name = format!("motion-{}", animation.name.replace(' ', '-'));
+            let animation_name = format!("motion-{}", animation.name.replace(' ', "-"));
 
             // Generate keyframes
             css_output.push_str(&format!("@keyframes {} {{\n", animation_name));
@@ -281,7 +281,7 @@ impl<'a> AnimationExporter<'a> {
                 continue;
             }
 
-            let method_name = animation.name.replace(' ', '_').to_lowercase();
+            let method_name = animation.name.replace(' ', "_").to_lowercase();
 
             js_output.push_str(&format!("  static {}(element) {{\n", method_name));
             js_output.push_str("    const keyframes = [\n");
@@ -480,23 +480,11 @@ impl<'a> AnimationExporter<'a> {
         use crate::timeline::AnimationProperty;
 
         match property {
-            AnimationProperty::TranslateX => "translateX".to_string(),
-            AnimationProperty::TranslateY => "translateY".to_string(),
-            AnimationProperty::TranslateZ => "translateZ".to_string(),
-            AnimationProperty::RotateX => "rotateX".to_string(),
-            AnimationProperty::RotateY => "rotateY".to_string(),
-            AnimationProperty::RotateZ => "rotateZ".to_string(),
-            AnimationProperty::ScaleX => "scaleX".to_string(),
-            AnimationProperty::ScaleY => "scaleY".to_string(),
-            AnimationProperty::ScaleZ => "scaleZ".to_string(),
+            AnimationProperty::Translation => "transform".to_string(),
+            AnimationProperty::Rotation => "transform".to_string(),
+            AnimationProperty::Scale => "transform".to_string(),
             AnimationProperty::Opacity => "opacity".to_string(),
-            AnimationProperty::BackgroundColor => "background-color".to_string(),
-            AnimationProperty::BorderColor => "border-color".to_string(),
-            AnimationProperty::BorderRadius => "border-radius".to_string(),
-            AnimationProperty::Width => "width".to_string(),
-            AnimationProperty::Height => "height".to_string(),
-            AnimationProperty::Top => "top".to_string(),
-            AnimationProperty::Left => "left".to_string(),
+            AnimationProperty::Color => "color".to_string(),
             AnimationProperty::Custom(name) => name.clone(),
         }
     }

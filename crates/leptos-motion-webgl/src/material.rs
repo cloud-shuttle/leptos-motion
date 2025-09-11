@@ -464,4 +464,3 @@ impl StandardMaterial {
         self.normal_map = normal_map;
     }
 }
-

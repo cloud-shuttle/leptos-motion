@@ -161,7 +161,7 @@ fn test_simplified_animation_engine_performance_metrics() {
 
     // Get performance metrics
     let metrics = engine.get_performance_metrics();
-    
+
     #[cfg(feature = "performance-metrics")]
     {
         assert!(metrics.is_some());
@@ -169,7 +169,7 @@ fn test_simplified_animation_engine_performance_metrics() {
         assert!(metrics.active_animations >= 0);
         assert!(metrics.average_frame_time >= 0.0);
     }
-    
+
     #[cfg(not(feature = "performance-metrics"))]
     {
         // When performance metrics are disabled, should return None or ()

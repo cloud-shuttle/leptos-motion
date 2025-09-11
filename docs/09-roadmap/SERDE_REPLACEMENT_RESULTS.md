@@ -3,12 +3,14 @@
 ## 🎯 **TDD Approach: Serde Replacement (COMPLETED)**
 
 ### **Red Phase: Test Creation ✅**
+
 - Created comprehensive test suite in `crates/leptos-motion-core/src/serde_replacement_tests.rs`
 - Tests cover all core types: `AnimationValue`, `Transform`, `Transition`, `Easing`, `RepeatConfig`, `SpringConfig`, `StaggerConfig`
 - Tests verify functionality works with and without serde support
 - All tests compile and pass successfully
 
 ### **Green Phase: Implementation ✅**
+
 - Made `serde` and `serde_json` optional dependencies
 - Added `serde-support` feature flag
 - Created minimal serialization module (`minimal_serialization.rs`) with:
@@ -21,10 +23,10 @@
 
 ### **Bundle Size Results 📊**
 
-| Configuration | Bundle Size | Reduction |
-|---------------|-------------|-----------|
-| **With Serde** | 1.2MB | - |
-| **Without Serde** | 605KB | **50% reduction** |
+| Configuration     | Bundle Size | Reduction         |
+| ----------------- | ----------- | ----------------- |
+| **With Serde**    | 1.2MB       | -                 |
+| **Without Serde** | 605KB       | **50% reduction** |
 
 ### **Key Achievements 🚀**
 
@@ -37,6 +39,7 @@
 ### **Technical Implementation**
 
 #### **Conditional Compilation**
+
 ```rust
 #[cfg(feature = "serde-support")]
 use serde::{Deserialize, Serialize};
@@ -47,6 +50,7 @@ pub struct AnimationValue { ... }
 ```
 
 #### **Minimal Serialization**
+
 ```rust
 pub trait MinimalSerialize {
     fn to_json(&self) -> String;
@@ -65,12 +69,14 @@ impl MinimalSerialize for AnimationValue {
 ### **Usage Examples**
 
 #### **With Serde (Default)**
+
 ```toml
 [dependencies]
 leptos-motion-core = "0.3.2"  # Includes serde support by default
 ```
 
 #### **Without Serde (Minimal)**
+
 ```toml
 [dependencies]
 leptos-motion-core = { version = "0.3.2", default-features = false, features = ["minimal", "minimal-web-sys"] }
@@ -79,16 +85,19 @@ leptos-motion-core = { version = "0.3.2", default-features = false, features = [
 ### **Impact Analysis**
 
 #### **Bundle Size Impact**
+
 - **Serde + serde_json**: ~600KB of dependencies
 - **Custom serialization**: ~5KB of code
 - **Net reduction**: ~595KB (50% of total bundle)
 
 #### **Performance Impact**
+
 - **Serialization**: Custom implementation is faster for simple types
 - **Deserialization**: Custom implementation is faster for simple types
 - **Memory**: Reduced memory footprint without serde overhead
 
 #### **Developer Experience**
+
 - **API Compatibility**: No breaking changes to public API
 - **Feature Flags**: Easy to enable/disable serde support
 - **Documentation**: Clear usage examples for both modes

@@ -14,7 +14,7 @@ pub mod project;
 pub mod studio;
 pub mod timeline;
 pub mod transforms;
-pub mod webgl;
+// pub mod webgl; // Temporarily disabled due to web-sys API compatibility issues
 
 // Re-export main studio components
 pub use export::{AnimationExporter, CodeGenerator, ExportFormat};
@@ -25,7 +25,7 @@ pub use project::{ProjectManager, ProjectSettings, StudioProject};
 pub use studio::MotionStudio;
 pub use timeline::{AnimationTimeline, KeyframeEditor, Timeline3D};
 pub use transforms::{Perspective, Transform3D, TransformMatrix3D};
-pub use webgl::{GPUAnimation, WebGLAcceleration, WebGLRenderer};
+// pub use webgl::{GPUAnimation, WebGLAcceleration, WebGLRenderer}; // Temporarily disabled
 
 /// Result type for studio operations
 pub type Result<T> = std::result::Result<T, StudioError>;

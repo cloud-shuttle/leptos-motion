@@ -23,68 +23,74 @@
 //! #[component]
 //! fn WebGLDemo() -> impl IntoView {
 //!     let canvas_ref = NodeRef::<leptos::html::Canvas>::new();
-//!     
+//!
 //!     create_effect(move |_| {
 //!         if let Some(canvas) = canvas_ref.get() {
 //!             let mut renderer = WebGLRenderer::new(canvas).unwrap();
 //!             let scene = Scene::new();
 //!             let mut camera = PerspectiveCamera::new(75.0, 1.0, 0.1, 1000.0);
-//!             
+//!
 //!             renderer.render(&scene, &mut camera);
 //!         }
 //!     });
-//!     
+//!
 //!     view! {
 //!         <canvas node_ref=canvas_ref width="800" height="600"></canvas>
 //!     }
 //! }
 //! ```
 
+pub mod camera;
+pub mod error;
+pub mod geometry;
+pub mod lighting;
+pub mod material;
+pub mod model_loader;
+pub mod physics;
+pub mod post_processing;
 pub mod renderer;
 pub mod scene;
-pub mod camera;
-pub mod geometry;
-pub mod material;
 pub mod shader;
-pub mod utils;
-pub mod error;
-pub mod texture;
-pub mod lighting;
-pub mod model_loader;
-pub mod post_processing;
 pub mod shadow_mapping;
-pub mod physics;
+pub mod texture;
+pub mod utils;
 
 #[cfg(test)]
-mod texture_tests;
+mod integration_tests;
 #[cfg(test)]
 mod lighting_tests;
 #[cfg(test)]
 mod model_loader_tests;
 #[cfg(test)]
-mod integration_tests;
+mod phase3_integration_tests;
+#[cfg(test)]
+mod physics_tests;
 #[cfg(test)]
 mod post_processing_tests;
 #[cfg(test)]
 mod shadow_mapping_tests;
 #[cfg(test)]
-mod physics_tests;
-#[cfg(test)]
-mod phase3_integration_tests;
+mod texture_tests;
 
 // Re-export main types for convenience
-pub use renderer::WebGLRenderer;
-pub use scene::{Scene, Object3D};
-pub use camera::{Camera, PerspectiveCamera, OrthographicCamera};
+pub use camera::{Camera, OrthographicCamera, PerspectiveCamera};
+pub use error::{Result, WebGLError};
 pub use geometry::Geometry;
-pub use material::{Material, BasicMaterial, LambertMaterial, PhongMaterial, StandardMaterial};
-pub use error::{WebGLError, Result};
-pub use texture::{Texture, TextureManager, TextureConfig, TextureFormat, TextureType};
-pub use lighting::{LightManager, AmbientLight, DirectionalLight, PointLight, SpotLight, Color};
-pub use model_loader::{ModelLoader, Model, Mesh, BoundingBox, ModelFormat, ModelLoadOptions};
+pub use lighting::{AmbientLight, Color, DirectionalLight, LightManager, PointLight, SpotLight};
+pub use material::{BasicMaterial, LambertMaterial, Material, PhongMaterial, StandardMaterial};
+pub use model_loader::{BoundingBox, Mesh, Model, ModelFormat, ModelLoadOptions, ModelLoader};
+pub use physics::{
+    BoundingBox as PhysicsBoundingBox, CollisionShape, PhysicsWorld, PhysicsWorldConfig, RigidBody,
+    RigidBodyType,
+};
 pub use post_processing::{PostProcessingConfig, PostProcessingEffect};
-pub use shadow_mapping::{ShadowMappingManager, DirectionalShadowMap, PointShadowMap, ShadowMapConfig, ShadowMapResolution, ShadowMapFiltering, SceneBounds};
-pub use physics::{PhysicsWorld, RigidBody, CollisionShape, PhysicsWorldConfig, RigidBodyType, BoundingBox as PhysicsBoundingBox};
+pub use renderer::WebGLRenderer;
+pub use scene::{Object3D, Scene};
+pub use shadow_mapping::{
+    DirectionalShadowMap, PointShadowMap, SceneBounds, ShadowMapConfig, ShadowMapFiltering,
+    ShadowMapResolution, ShadowMappingManager,
+};
+pub use texture::{Texture, TextureConfig, TextureFormat, TextureManager, TextureType};
 
 /// WebGL version information
 pub const WEBGL_VERSION: &str = "2.0";
@@ -127,7 +133,10 @@ mod tests {
     fn test_material_creation() {
         let basic_material = BasicMaterial::new("TestMaterial");
         assert_eq!(basic_material.base.name, "TestMaterial");
-        assert_eq!(basic_material.base.material_type, material::MaterialType::Basic);
+        assert_eq!(
+            basic_material.base.material_type,
+            material::MaterialType::Basic
+        );
     }
 
     #[test]

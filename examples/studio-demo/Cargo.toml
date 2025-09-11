@@ -1,0 +1,30 @@
+[package]
+name = "studio-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+leptos-motion-studio = { path = "../../crates/leptos-motion-studio" }
+leptos-motion-core = { path = "../../crates/leptos-motion-core" }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom" }
+glam = { version = "0.27", features = ["serde"] }
+console_error_panic_hook = "0.1"
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3", features = [
+    "console",
+    "Window",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "HtmlCanvasElement",
+    "WebGl2RenderingContext",
+    "EventTarget",
+    "Event",
+    "MouseEvent",
+    "KeyboardEvent",
+] }
+
+[lib]
+crate-type = ["cdylib"]
+

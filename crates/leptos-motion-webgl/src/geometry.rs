@@ -1,10 +1,10 @@
 //! Geometry management system
 
 use crate::error::{Result, WebGLError};
-use wasm_bindgen::prelude::*;
-use web_sys::{WebGl2RenderingContext, WebGlBuffer, WebGlVertexArrayObject};
 use std::collections::HashMap;
 use std::rc::Rc;
+use wasm_bindgen::prelude::*;
+use web_sys::{WebGl2RenderingContext, WebGlBuffer, WebGlVertexArrayObject};
 
 /// Vertex data structure
 #[derive(Debug, Clone)]
@@ -183,7 +183,7 @@ impl BoundingBox {
         self.min[0] = self.min[0].min(point[0]);
         self.min[1] = self.min[1].min(point[1]);
         self.min[2] = self.min[2].min(point[2]);
-        
+
         self.max[0] = self.max[0].max(point[0]);
         self.max[1] = self.max[1].max(point[1]);
         self.max[2] = self.max[2].max(point[2]);
@@ -275,7 +275,7 @@ impl Geometry {
     pub fn compute_bounding_volumes(&mut self) {
         if let Some(position_attr) = self.attributes.get("position") {
             let mut bounding_box = BoundingBox::new();
-            
+
             for i in (0..position_attr.data.len()).step_by(position_attr.size as usize) {
                 if i + 2 < position_attr.data.len() {
                     let point = [
@@ -286,9 +286,10 @@ impl Geometry {
                     bounding_box.expand_by_point(point);
                 }
             }
-            
+
             self.bounding_box = bounding_box;
-            self.bounding_sphere.set_from_bounding_box(&self.bounding_box);
+            self.bounding_sphere
+                .set_from_bounding_box(&self.bounding_box);
         }
     }
 
@@ -314,184 +315,174 @@ impl Geometry {
     /// Create a box geometry
     pub fn create_box(width: f32, height: f32, depth: f32) -> Self {
         let mut geometry = Self::new("BoxGeometry");
-        
+
         // Box vertices
         let w = width * 0.5;
         let h = height * 0.5;
         let d = depth * 0.5;
-        
+
         let positions = vec![
             // Front face
-            -w, -h,  d,  w, -h,  d,  w,  h,  d, -w,  h,  d,
-            // Back face
-            -w, -h, -d, -w,  h, -d,  w,  h, -d,  w, -h, -d,
-            // Top face
-            -w,  h, -d, -w,  h,  d,  w,  h,  d,  w,  h, -d,
-            // Bottom face
-            -w, -h, -d,  w, -h, -d,  w, -h,  d, -w, -h,  d,
-            // Right face
-             w, -h, -d,  w,  h, -d,  w,  h,  d,  w, -h,  d,
-            // Left face
-            -w, -h, -d, -w, -h,  d, -w,  h,  d, -w,  h, -d,
+            -w, -h, d, w, -h, d, w, h, d, -w, h, d, // Back face
+            -w, -h, -d, -w, h, -d, w, h, -d, w, -h, -d, // Top face
+            -w, h, -d, -w, h, d, w, h, d, w, h, -d, // Bottom face
+            -w, -h, -d, w, -h, -d, w, -h, d, -w, -h, d, // Right face
+            w, -h, -d, w, h, -d, w, h, d, w, -h, d, // Left face
+            -w, -h, -d, -w, -h, d, -w, h, d, -w, h, -d,
         ];
-        
+
         let normals = vec![
             // Front face
-             0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,
-            // Back face
-             0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,
-            // Top face
-             0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,
-            // Bottom face
-             0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,
-            // Right face
-             1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,  1.0,  0.0,  0.0,
-            // Left face
-            -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0, -1.0,  0.0,  0.0,
+            0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, // Back face
+            0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, // Top face
+            0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, // Bottom face
+            0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, // Right face
+            1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, // Left face
+            -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
         ];
-        
+
         let uvs = vec![
             // Front face
-            0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-            // Back face
-            1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
-            // Top face
-            0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-            // Bottom face
-            1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-            // Right face
-            1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0,
-            // Left face
+            0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, // Back face
+            1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, // Top face
+            0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, // Bottom face
+            1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, // Right face
+            1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, // Left face
             0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
         ];
-        
+
         let indices = vec![
-            0,  1,  2,    0,  2,  3,    // front
-            4,  5,  6,    4,  6,  7,    // back
-            8,  9, 10,    8, 10, 11,    // top
-           12, 13, 14,   12, 14, 15,    // bottom
-           16, 17, 18,   16, 18, 19,    // right
-           20, 21, 22,   20, 22, 23,    // left
+            0, 1, 2, 0, 2, 3, // front
+            4, 5, 6, 4, 6, 7, // back
+            8, 9, 10, 8, 10, 11, // top
+            12, 13, 14, 12, 14, 15, // bottom
+            16, 17, 18, 16, 18, 19, // right
+            20, 21, 22, 20, 22, 23, // left
         ];
-        
+
         geometry.add_attribute("position", VertexAttribute::new("position", positions, 3));
         geometry.add_attribute("normal", VertexAttribute::new("normal", normals, 3));
         geometry.add_attribute("uv", VertexAttribute::new("uv", uvs, 2));
         geometry.set_indices(indices);
-        
+
         geometry.compute_bounding_volumes();
         geometry.update_vertex_count();
         geometry.update_index_count();
-        
+
         geometry
     }
 
     /// Create a sphere geometry
     pub fn create_sphere(radius: f32, width_segments: u32, height_segments: u32) -> Self {
         let mut geometry = Self::new("SphereGeometry");
-        
+
         let mut positions = Vec::new();
         let mut normals = Vec::new();
         let mut uvs = Vec::new();
         let mut indices = Vec::new();
-        
+
         let phi_start = 0.0;
         let phi_length = 2.0 * std::f32::consts::PI;
         let theta_start = 0.0;
         let theta_length = std::f32::consts::PI;
-        
+
         for y in 0..=height_segments {
             let v = y as f32 / height_segments as f32;
-            
+
             for x in 0..=width_segments {
                 let u = x as f32 / width_segments as f32;
-                
+
                 let phi = phi_start + u * phi_length;
                 let theta = theta_start + v * theta_length;
-                
+
                 let x_pos = radius * theta.sin() * phi.cos();
                 let y_pos = radius * theta.cos();
                 let z_pos = radius * theta.sin() * phi.sin();
-                
+
                 positions.extend_from_slice(&[x_pos, y_pos, z_pos]);
                 normals.extend_from_slice(&[x_pos / radius, y_pos / radius, z_pos / radius]);
                 uvs.extend_from_slice(&[u, v]);
             }
         }
-        
+
         for y in 0..height_segments {
             for x in 0..width_segments {
                 let a = (y * (width_segments + 1) + x) as u32;
                 let b = (y * (width_segments + 1) + x + 1) as u32;
                 let c = ((y + 1) * (width_segments + 1) + x) as u32;
                 let d = ((y + 1) * (width_segments + 1) + x + 1) as u32;
-                
+
                 indices.extend_from_slice(&[a, b, c]);
                 indices.extend_from_slice(&[b, d, c]);
             }
         }
-        
+
         geometry.add_attribute("position", VertexAttribute::new("position", positions, 3));
         geometry.add_attribute("normal", VertexAttribute::new("normal", normals, 3));
         geometry.add_attribute("uv", VertexAttribute::new("uv", uvs, 2));
         geometry.set_indices(indices);
-        
+
         geometry.compute_bounding_volumes();
         geometry.update_vertex_count();
         geometry.update_index_count();
-        
+
         geometry
     }
 
     /// Create a plane geometry
-    pub fn create_plane(width: f32, height: f32, width_segments: u32, height_segments: u32) -> Self {
+    pub fn create_plane(
+        width: f32,
+        height: f32,
+        width_segments: u32,
+        height_segments: u32,
+    ) -> Self {
         let mut geometry = Self::new("PlaneGeometry");
-        
+
         let mut positions = Vec::new();
         let mut normals = Vec::new();
         let mut uvs = Vec::new();
         let mut indices = Vec::new();
-        
+
         let _half_width = width * 0.5;
         let _half_height = height * 0.5;
-        
+
         for y in 0..=height_segments {
             let v = y as f32 / height_segments as f32;
-            
+
             for x in 0..=width_segments {
                 let u = x as f32 / width_segments as f32;
-                
+
                 let x_pos = (u - 0.5) * width;
                 let y_pos = 0.0;
                 let z_pos = (v - 0.5) * height;
-                
+
                 positions.extend_from_slice(&[x_pos, y_pos, z_pos]);
                 normals.extend_from_slice(&[0.0, 1.0, 0.0]);
                 uvs.extend_from_slice(&[u, v]);
             }
         }
-        
+
         for y in 0..height_segments {
             for x in 0..width_segments {
                 let a = (y * (width_segments + 1) + x) as u32;
                 let b = (y * (width_segments + 1) + x + 1) as u32;
                 let c = ((y + 1) * (width_segments + 1) + x) as u32;
                 let d = ((y + 1) * (width_segments + 1) + x + 1) as u32;
-                
+
                 indices.extend_from_slice(&[a, b, c]);
                 indices.extend_from_slice(&[b, d, c]);
             }
         }
-        
+
         geometry.add_attribute("position", VertexAttribute::new("position", positions, 3));
         geometry.add_attribute("normal", VertexAttribute::new("normal", normals, 3));
         geometry.add_attribute("uv", VertexAttribute::new("uv", uvs, 2));
         geometry.set_indices(indices);
-        
+
         geometry.compute_bounding_volumes();
         geometry.update_vertex_count();
         geometry.update_index_count();
-        
+
         geometry
     }
 }

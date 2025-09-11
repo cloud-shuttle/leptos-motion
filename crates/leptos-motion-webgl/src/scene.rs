@@ -56,7 +56,7 @@ impl Object3D {
             visible: true,
             user_data: HashMap::new(),
         };
-        
+
         object.update_matrix();
         object
     }
@@ -65,11 +65,11 @@ impl Object3D {
     pub fn update_matrix(&mut self) {
         let mut matrix = [0.0; 16];
         mat4::identity(&mut matrix);
-        
+
         // Apply translation
         let mut temp = matrix;
         mat4::translate(&mut matrix, &temp, &self.position);
-        
+
         // Apply rotation (ZYX order)
         temp = matrix;
         mat4::rotate_z(&mut matrix, &temp, self.rotation[2]);
@@ -77,11 +77,11 @@ impl Object3D {
         mat4::rotate_y(&mut matrix, &temp, self.rotation[1]);
         temp = matrix;
         mat4::rotate_x(&mut matrix, &temp, self.rotation[0]);
-        
+
         // Apply scale
         temp = matrix;
         mat4::scale(&mut matrix, &temp, &self.scale);
-        
+
         self.matrix = matrix;
     }
 

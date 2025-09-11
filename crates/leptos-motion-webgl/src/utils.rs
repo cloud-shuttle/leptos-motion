@@ -1,9 +1,9 @@
 //! Utility functions for WebGL operations
 
 use crate::error::{Result, WebGLError};
+use gl_matrix::mat4;
 use wasm_bindgen::prelude::*;
 use web_sys::{WebGl2RenderingContext, WebGlBuffer, WebGlVertexArrayObject};
-use gl_matrix::mat4;
 
 /// WebGL utility functions
 pub struct WebGLUtils;
@@ -17,7 +17,9 @@ impl WebGLUtils {
     }
 
     /// Create a vertex array object
-    pub fn create_vertex_array_object(context: &WebGl2RenderingContext) -> Result<WebGlVertexArrayObject> {
+    pub fn create_vertex_array_object(
+        context: &WebGl2RenderingContext,
+    ) -> Result<WebGlVertexArrayObject> {
         context
             .create_vertex_array()
             .ok_or_else(|| WebGLError::buffer_error("Failed to create vertex array object"))
@@ -78,14 +80,8 @@ impl WebGLUtils {
         offset: i32,
     ) {
         context.enable_vertex_attrib_array(location);
-        context.vertex_attrib_pointer_with_i32(
-            location,
-            size,
-            data_type,
-            normalized,
-            stride,
-            offset,
-        );
+        context
+            .vertex_attrib_pointer_with_i32(location, size, data_type, normalized, stride, offset);
     }
 
     /// Create a perspective matrix
@@ -110,11 +106,7 @@ impl WebGLUtils {
     }
 
     /// Create a look-at matrix
-    pub fn create_look_at_matrix(
-        eye: &[f32; 3],
-        center: &[f32; 3],
-        up: &[f32; 3],
-    ) -> [f32; 16] {
+    pub fn create_look_at_matrix(eye: &[f32; 3], center: &[f32; 3], up: &[f32; 3]) -> [f32; 16] {
         let mut matrix = [0.0; 16];
         mat4::look_at(&mut matrix, eye, center, up);
         matrix
@@ -159,11 +151,11 @@ impl WebGLUtils {
     ) -> [f32; 16] {
         let mut matrix = [0.0; 16];
         mat4::identity(&mut matrix);
-        
+
         // Apply translation
         let mut temp = matrix;
         mat4::translate(&mut matrix, &temp, translation);
-        
+
         // Apply rotation (ZYX order)
         temp = matrix;
         mat4::rotate_z(&mut matrix, &temp, rotation[2]);
@@ -171,11 +163,11 @@ impl WebGLUtils {
         mat4::rotate_y(&mut matrix, &temp, rotation[1]);
         temp = matrix;
         mat4::rotate_x(&mut matrix, &temp, rotation[0]);
-        
+
         // Apply scale
         temp = matrix;
         mat4::scale(&mut matrix, &temp, scale);
-        
+
         matrix
     }
 
@@ -217,7 +209,9 @@ impl WebGLUtils {
             WebGl2RenderingContext::INVALID_ENUM => "INVALID_ENUM",
             WebGl2RenderingContext::INVALID_VALUE => "INVALID_VALUE",
             WebGl2RenderingContext::INVALID_OPERATION => "INVALID_OPERATION",
-            WebGl2RenderingContext::INVALID_FRAMEBUFFER_OPERATION => "INVALID_FRAMEBUFFER_OPERATION",
+            WebGl2RenderingContext::INVALID_FRAMEBUFFER_OPERATION => {
+                "INVALID_FRAMEBUFFER_OPERATION"
+            }
             WebGl2RenderingContext::OUT_OF_MEMORY => "OUT_OF_MEMORY",
             WebGl2RenderingContext::CONTEXT_LOST_WEBGL => "CONTEXT_LOST_WEBGL",
             _ => "UNKNOWN_ERROR",
@@ -229,7 +223,10 @@ impl WebGLUtils {
         let error = context.get_error();
         if error != WebGl2RenderingContext::NO_ERROR {
             let error_string = Self::get_webgl_error_string(context, error);
-            return Err(WebGLError::invalid_operation(&format!("WebGL error: {}", error_string)));
+            return Err(WebGLError::invalid_operation(&format!(
+                "WebGL error: {}",
+                error_string
+            )));
         }
         Ok(())
     }
@@ -237,39 +234,48 @@ impl WebGLUtils {
     /// Get WebGL context info
     pub fn get_context_info(context: &WebGl2RenderingContext) -> ContextInfo {
         ContextInfo {
-            version: context.get_parameter(WebGl2RenderingContext::VERSION)
+            version: context
+                .get_parameter(WebGl2RenderingContext::VERSION)
                 .unwrap_or_else(|_| "Unknown".into())
                 .as_string()
                 .unwrap_or_else(|| "Unknown".to_string()),
-            vendor: context.get_parameter(WebGl2RenderingContext::VENDOR)
+            vendor: context
+                .get_parameter(WebGl2RenderingContext::VENDOR)
                 .unwrap_or_else(|_| "Unknown".into())
                 .as_string()
                 .unwrap_or_else(|| "Unknown".to_string()),
-            renderer: context.get_parameter(WebGl2RenderingContext::RENDERER)
+            renderer: context
+                .get_parameter(WebGl2RenderingContext::RENDERER)
                 .unwrap_or_else(|_| "Unknown".into())
                 .as_string()
                 .unwrap_or_else(|| "Unknown".to_string()),
-            shading_language_version: context.get_parameter(WebGl2RenderingContext::SHADING_LANGUAGE_VERSION)
+            shading_language_version: context
+                .get_parameter(WebGl2RenderingContext::SHADING_LANGUAGE_VERSION)
                 .unwrap_or_else(|_| "Unknown".into())
                 .as_string()
                 .unwrap_or_else(|| "Unknown".to_string()),
-            max_texture_size: context.get_parameter(WebGl2RenderingContext::MAX_TEXTURE_SIZE)
+            max_texture_size: context
+                .get_parameter(WebGl2RenderingContext::MAX_TEXTURE_SIZE)
                 .unwrap_or_else(|_| 0.into())
                 .as_f64()
                 .unwrap_or(0.0) as u32,
-            max_vertex_attribs: context.get_parameter(WebGl2RenderingContext::MAX_VERTEX_ATTRIBS)
+            max_vertex_attribs: context
+                .get_parameter(WebGl2RenderingContext::MAX_VERTEX_ATTRIBS)
                 .unwrap_or_else(|_| 0.into())
                 .as_f64()
                 .unwrap_or(0.0) as u32,
-            max_vertex_uniform_vectors: context.get_parameter(WebGl2RenderingContext::MAX_VERTEX_UNIFORM_VECTORS)
+            max_vertex_uniform_vectors: context
+                .get_parameter(WebGl2RenderingContext::MAX_VERTEX_UNIFORM_VECTORS)
                 .unwrap_or_else(|_| 0.into())
                 .as_f64()
                 .unwrap_or(0.0) as u32,
-            max_fragment_uniform_vectors: context.get_parameter(WebGl2RenderingContext::MAX_FRAGMENT_UNIFORM_VECTORS)
+            max_fragment_uniform_vectors: context
+                .get_parameter(WebGl2RenderingContext::MAX_FRAGMENT_UNIFORM_VECTORS)
                 .unwrap_or_else(|_| 0.into())
                 .as_f64()
                 .unwrap_or(0.0) as u32,
-            max_varying_vectors: context.get_parameter(WebGl2RenderingContext::MAX_VARYING_VECTORS)
+            max_varying_vectors: context
+                .get_parameter(WebGl2RenderingContext::MAX_VARYING_VECTORS)
                 .unwrap_or_else(|_| 0.into())
                 .as_f64()
                 .unwrap_or(0.0) as u32,

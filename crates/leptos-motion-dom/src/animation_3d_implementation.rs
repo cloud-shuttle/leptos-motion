@@ -3,7 +3,7 @@
 //! This module implements 3D animation capabilities for the Leptos Motion library.
 //! It provides support for 3D transforms, perspective, and advanced 3D animations.
 
-use leptos_motion_core::{AnimationValue, Transition, Easing, RepeatConfig};
+use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
 use std::collections::HashMap;
 
 /// 3D Transform properties for animations

@@ -1,5 +1,6 @@
 # Rust
 /target
+**/target/
 **/*.rs.bk
 Cargo.lock
 
@@ -134,6 +135,16 @@ wasm_optimization_tests
 *.spv
 *.wgsl
 *.glsl
+
+# WASM files (should be built, not committed)
+*.wasm
+**/pkg/*.wasm
+
+# Large screenshot files
+assets/screenshots/*.png
+**/tests/**/*.png
+**/*-snapshots/*.png
+**/manual-init-screenshot.png
 *.hlsl
 *.metal
 *.dxil

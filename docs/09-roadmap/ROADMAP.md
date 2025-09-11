@@ -85,6 +85,7 @@
 ### Strategic Technology Integration
 
 **WebGPU Integration Strategy**:
+
 - **Timeline**: Q1 2026 (v1.1.0)
 - **Bundle Impact**: +15-25KB (acceptable given current 30KB minimal)
 - **Performance**: 2-8x improvement for particle systems and compute shaders

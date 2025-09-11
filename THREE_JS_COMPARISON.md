@@ -2,21 +2,22 @@
 
 ## 📊 **Executive Summary**
 
-| Aspect | Leptos Motion | Three.js | Winner |
-|--------|---------------|----------|---------|
-| **Performance** | ⚡ 60+ FPS, WASM-optimized | ⚡ 60+ FPS, JS-optimized | 🤝 **Tie** |
-| **Bundle Size** | 📦 ~50KB (WASM) | 📦 ~600KB+ (JS) | 🏆 **Leptos Motion** |
-| **Learning Curve** | 📚 Rust + Leptos | 📚 JavaScript + WebGL | 🏆 **Leptos Motion** |
-| **3D Capabilities** | 🎨 CSS 3D Transforms | 🎨 Full WebGL/WebGPU | 🏆 **Three.js** |
-| **Reactive Integration** | ⚡ Native Leptos signals | 🔧 Manual integration | 🏆 **Leptos Motion** |
-| **Type Safety** | 🛡️ Compile-time safety | ⚠️ Runtime errors | 🏆 **Leptos Motion** |
-| **Memory Management** | 🧠 Zero-cost abstractions | 🧠 Garbage collection | 🏆 **Leptos Motion** |
+| Aspect                   | Leptos Motion              | Three.js                 | Winner               |
+| ------------------------ | -------------------------- | ------------------------ | -------------------- |
+| **Performance**          | ⚡ 60+ FPS, WASM-optimized | ⚡ 60+ FPS, JS-optimized | 🤝 **Tie**           |
+| **Bundle Size**          | 📦 ~50KB (WASM)            | 📦 ~600KB+ (JS)          | 🏆 **Leptos Motion** |
+| **Learning Curve**       | 📚 Rust + Leptos           | 📚 JavaScript + WebGL    | 🏆 **Leptos Motion** |
+| **3D Capabilities**      | 🎨 CSS 3D Transforms       | 🎨 Full WebGL/WebGPU     | 🏆 **Three.js**      |
+| **Reactive Integration** | ⚡ Native Leptos signals   | 🔧 Manual integration    | 🏆 **Leptos Motion** |
+| **Type Safety**          | 🛡️ Compile-time safety     | ⚠️ Runtime errors        | 🏆 **Leptos Motion** |
+| **Memory Management**    | 🧠 Zero-cost abstractions  | 🧠 Garbage collection    | 🏆 **Leptos Motion** |
 
 ---
 
 ## 🎨 **3D Animation Capabilities Comparison**
 
 ### **Leptos Motion 3D Features** ✅
+
 ```rust
 // ✅ What we have implemented:
 - 3D Transforms (translateX/Y/Z, rotateX/Y/Z, scaleX/Y/Z)
@@ -31,6 +32,7 @@
 ```
 
 ### **Three.js 3D Features** 🎯
+
 ```javascript
 // 🎯 What Three.js offers:
 - Full WebGL/WebGPU rendering
@@ -49,10 +51,11 @@
 ## 🚀 **Performance Analysis**
 
 ### **Leptos Motion Performance** ⚡
+
 ```rust
 // Performance test results from our TDD implementation:
 ✅ Basic animations: 45.81 FPS
-✅ 3D animations: 45.15 FPS  
+✅ 3D animations: 45.15 FPS
 ✅ Complex animations: 47.08 FPS
 ✅ Spring animations: 44.76 FPS
 ✅ Concurrent animations: 48.47 FPS
@@ -62,6 +65,7 @@
 ```
 
 ### **Three.js Performance** ⚡
+
 ```javascript
 // Typical Three.js performance:
 ✅ 60+ FPS for complex scenes
@@ -77,6 +81,7 @@
 ## 🎯 **Use Case Analysis**
 
 ### **Choose Leptos Motion When:** 🏆
+
 ```rust
 ✅ Building Leptos web applications
 ✅ Need reactive, signal-based animations
@@ -90,6 +95,7 @@
 ```
 
 ### **Choose Three.js When:** 🎯
+
 ```javascript
 ✅ Building 3D games or simulations
 ✅ Need full WebGL/WebGPU rendering
@@ -107,6 +113,7 @@
 ## 🔧 **Technical Architecture Comparison**
 
 ### **Leptos Motion Architecture** 🏗️
+
 ```rust
 // Clean, modular architecture:
 leptos-motion-core/     // Core animation engine
@@ -125,6 +132,7 @@ leptos-motion-macros/   // Compile-time optimizations
 ```
 
 ### **Three.js Architecture** 🏗️
+
 ```javascript
 // Comprehensive 3D engine:
 Core/           // Scene, Camera, Renderer
@@ -149,6 +157,7 @@ Postprocessing/ // Effects pipeline
 ## 📈 **Feature Parity Analysis**
 
 ### **What Leptos Motion Does Better** 🏆
+
 ```rust
 // Areas where we excel:
 ✅ Reactive animations with Leptos signals
@@ -165,6 +174,7 @@ Postprocessing/ // Effects pipeline
 ```
 
 ### **What Three.js Does Better** 🎯
+
 ```javascript
 // Areas where Three.js excels:
 ✅ Full 3D rendering pipeline
@@ -184,6 +194,7 @@ Postprocessing/ // Effects pipeline
 ## 🎨 **Animation Examples Comparison**
 
 ### **Leptos Motion: 3D Card Flip** 🃏
+
 ```rust
 // Type-safe, reactive 3D animation
 let (is_flipped, set_flipped) = create_signal(false);
@@ -212,6 +223,7 @@ view! {
 ```
 
 ### **Three.js: 3D Card Flip** 🃏
+
 ```javascript
 // WebGL-based 3D animation
 const geometry = new THREE.PlaneGeometry(1, 1);
@@ -219,9 +231,9 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const card = new THREE.Mesh(geometry, material);
 
 function animate() {
-    requestAnimationFrame(animate);
-    card.rotation.y += 0.01;
-    renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+  card.rotation.y += 0.01;
+  renderer.render(scene, camera);
 }
 ```
 
@@ -230,6 +242,7 @@ function animate() {
 ## 🚀 **Performance Benchmarks**
 
 ### **Bundle Size Comparison** 📦
+
 ```
 Leptos Motion:  ~50KB (WASM)
 Three.js:       ~600KB+ (minified)
@@ -237,6 +250,7 @@ Winner:         🏆 Leptos Motion (12x smaller)
 ```
 
 ### **Memory Usage** 🧠
+
 ```
 Leptos Motion:  Minimal (zero-cost abstractions)
 Three.js:       Higher (JS objects, GC pressure)
@@ -244,6 +258,7 @@ Winner:         🏆 Leptos Motion
 ```
 
 ### **Animation Performance** ⚡
+
 ```
 Leptos Motion:  45-48 FPS (CSS transforms)
 Three.js:       60+ FPS (WebGL)
@@ -251,6 +266,7 @@ Winner:         🎯 Three.js (for complex 3D)
 ```
 
 ### **Startup Time** 🚀
+
 ```
 Leptos Motion:  <100ms
 Three.js:       200-500ms
@@ -262,6 +278,7 @@ Winner:         🏆 Leptos Motion
 ## 🎯 **Recommendations**
 
 ### **For UI/UX Animations** 🎨
+
 ```rust
 // Choose Leptos Motion for:
 ✅ Button hover effects
@@ -275,6 +292,7 @@ Winner:         🏆 Leptos Motion
 ```
 
 ### **For 3D Games/Simulations** 🎮
+
 ```javascript
 // Choose Three.js for:
 ✅ 3D games
@@ -292,6 +310,7 @@ Winner:         🏆 Leptos Motion
 ## 🔮 **Future Roadmap**
 
 ### **Leptos Motion v0.9+** 🚀
+
 ```rust
 // Planned enhancements:
 🎯 WebGL integration for advanced 3D
@@ -305,6 +324,7 @@ Winner:         🏆 Leptos Motion
 ```
 
 ### **Three.js Evolution** 🔮
+
 ```javascript
 // Ongoing development:
 🎯 WebGPU support
@@ -320,6 +340,7 @@ Winner:         🏆 Leptos Motion
 ## 🏆 **Final Verdict**
 
 ### **Leptos Motion Wins When:** 🏆
+
 - Building **Leptos applications**
 - Need **reactive animations**
 - Want **type safety**
@@ -329,6 +350,7 @@ Winner:         🏆 Leptos Motion
 - Want **zero-cost abstractions**
 
 ### **Three.js Wins When:** 🎯
+
 - Building **3D games/simulations**
 - Need **full WebGL rendering**
 - Require **complex 3D models**
@@ -343,15 +365,14 @@ Winner:         🏆 Leptos Motion
 
 **Leptos Motion** and **Three.js** serve different but complementary purposes:
 
-- **Leptos Motion** is the **perfect choice** for Leptos applications requiring reactive, type-safe, high-performance animations with minimal overhead.
+- **Leptos Motion** is the **perfect choice** for Leptos applications requiring
+  reactive, type-safe, high-performance animations with minimal overhead.
 
-- **Three.js** remains the **gold standard** for complex 3D rendering, games, and simulations requiring full WebGL capabilities.
+- **Three.js** remains the **gold standard** for complex 3D rendering, games,
+  and simulations requiring full WebGL capabilities.
 
 **The future is bright for both libraries!** 🌟
 
 ---
 
-*Last updated: December 2024*
-*Leptos Motion v0.8.2*
-*Three.js r160+*
-
+_Last updated: December 2024_ _Leptos Motion v0.8.2_ _Three.js r160+_

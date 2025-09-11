@@ -7,42 +7,47 @@
 ## 🎯 **Current Bundle Sizes**
 
 ### **Core Library Crates**
-| Crate | WASM Size | RLIB Size | Status |
-|-------|-----------|-----------|---------|
-| `leptos_motion.wasm` | **1.2MB** | 27KB | 🚨 67x target |
-| `leptos_motion_core.wasm` | **1.2MB** | 1.9MB | 🚨 67x target |
-| `leptos_motion_dom.wasm` | **1.2MB** | 787KB | 🚨 67x target |
-| `leptos_motion_gestures.wasm` | **1.1MB** | 1.0MB | 🚨 61x target |
-| `leptos_motion_layout.wasm` | **1.1MB** | 542KB | 🚨 61x target |
-| `leptos_motion_scroll.wasm` | **371KB** | 91KB | 🚨 21x target |
+
+| Crate                         | WASM Size | RLIB Size | Status        |
+| ----------------------------- | --------- | --------- | ------------- |
+| `leptos_motion.wasm`          | **1.2MB** | 27KB      | 🚨 67x target |
+| `leptos_motion_core.wasm`     | **1.2MB** | 1.9MB     | 🚨 67x target |
+| `leptos_motion_dom.wasm`      | **1.2MB** | 787KB     | 🚨 67x target |
+| `leptos_motion_gestures.wasm` | **1.1MB** | 1.0MB     | 🚨 61x target |
+| `leptos_motion_layout.wasm`   | **1.1MB** | 542KB     | 🚨 61x target |
+| `leptos_motion_scroll.wasm`   | **371KB** | 91KB      | 🚨 21x target |
 
 ### **Example Applications**
-| Example | WASM Size | Status |
-|---------|-----------|---------|
-| `showcase.wasm` | **1.5MB** | 🚨 83x target |
+
+| Example                   | WASM Size | Status        |
+| ------------------------- | --------- | ------------- |
+| `showcase.wasm`           | **1.5MB** | 🚨 83x target |
 | `e_commerce_gallery.wasm` | **1.4MB** | 🚨 78x target |
-| `advanced_gestures.wasm` | **1.3MB** | 🚨 72x target |
+| `advanced_gestures.wasm`  | **1.3MB** | 🚨 72x target |
 | `css_class_showcase.wasm` | **1.3MB** | 🚨 72x target |
-| `basic_animations.wasm` | **1.2MB** | 🚨 67x target |
-| `mobile_app.wasm` | **1.2MB** | 🚨 67x target |
-| `dashboard_app.wasm` | **1.2MB** | 🚨 67x target |
-| `minimal_showcase.wasm` | **1.2MB** | 🚨 67x target |
-| `ultra_minimal.wasm` | **1.2MB** | 🚨 67x target |
+| `basic_animations.wasm`   | **1.2MB** | 🚨 67x target |
+| `mobile_app.wasm`         | **1.2MB** | 🚨 67x target |
+| `dashboard_app.wasm`      | **1.2MB** | 🚨 67x target |
+| `minimal_showcase.wasm`   | **1.2MB** | 🚨 67x target |
+| `ultra_minimal.wasm`      | **1.2MB** | 🚨 67x target |
 
 ## 🚨 **Critical Issues Identified**
 
 ### **1. Massive Bundle Sizes**
+
 - **Current**: 1.1MB - 1.5MB per crate
 - **Target**: <50KB total
 - **Gap**: **20-30x larger** than target
 - **Impact**: Completely impractical for production use
 
 ### **2. Uniform Size Problem**
+
 - All crates are ~1.2MB regardless of functionality
 - Suggests **massive dependency bloat**
 - No tree shaking or dead code elimination
 
 ### **3. Example Applications**
+
 - Even "ultra-minimal" example is 1.2MB
 - No size difference between simple and complex examples
 - Indicates **entire dependency tree** is being included
@@ -50,6 +55,7 @@
 ## 🔍 **Root Cause Analysis**
 
 ### **Likely Culprits**
+
 1. **Leptos Framework**: Full framework included in every crate
 2. **Web-sys**: Massive web API bindings
 3. **Serde**: JSON serialization (may be overkill)
@@ -58,6 +64,7 @@
 6. **No Feature Flags**: Optional features always included
 
 ### **Dependency Analysis Needed**
+
 ```bash
 # Let's analyze what's taking up space
 cargo tree --duplicates
@@ -67,6 +74,7 @@ cargo tree --format "{p} {f}"
 ## 🎯 **Optimization Strategy (TDD Approach)**
 
 ### **Phase 1: Dependency Analysis (Week 1)**
+
 - [ ] **Identify Largest Dependencies**
   - [ ] Analyze `cargo tree` output
   - [ ] Find unused dependencies
@@ -78,6 +86,7 @@ cargo tree --format "{p} {f}"
   - [ ] Create minimal feature set
 
 ### **Phase 2: Tree Shaking (Week 2)**
+
 - [ ] **Dead Code Elimination**
   - [ ] Remove unused code paths
   - [ ] Implement conditional compilation
@@ -89,6 +98,7 @@ cargo tree --format "{p} {f}"
   - [ ] Implement code splitting
 
 ### **Phase 3: Architecture Optimization (Week 3)**
+
 - [ ] **Modular Architecture**
   - [ ] Split into smaller crates
   - [ ] Implement lazy loading
@@ -102,16 +112,18 @@ cargo tree --format "{p} {f}"
 ## 📊 **Target Metrics**
 
 ### **Bundle Size Targets**
-| Component | Current | Target | Reduction Needed |
-|-----------|---------|--------|------------------|
-| **Core Library** | 1.2MB | <20KB | 98.3% reduction |
-| **DOM Components** | 1.2MB | <15KB | 98.8% reduction |
-| **Gestures** | 1.1MB | <10KB | 99.1% reduction |
-| **Layout** | 1.1MB | <10KB | 99.1% reduction |
-| **Scroll** | 371KB | <5KB | 98.7% reduction |
-| **Total** | **~6MB** | **<50KB** | **99.2% reduction** |
+
+| Component          | Current  | Target    | Reduction Needed    |
+| ------------------ | -------- | --------- | ------------------- |
+| **Core Library**   | 1.2MB    | <20KB     | 98.3% reduction     |
+| **DOM Components** | 1.2MB    | <15KB     | 98.8% reduction     |
+| **Gestures**       | 1.1MB    | <10KB     | 99.1% reduction     |
+| **Layout**         | 1.1MB    | <10KB     | 99.1% reduction     |
+| **Scroll**         | 371KB    | <5KB      | 98.7% reduction     |
+| **Total**          | **~6MB** | **<50KB** | **99.2% reduction** |
 
 ### **Success Criteria**
+
 - [ ] **Total bundle size**: <50KB
 - [ ] **Core library**: <20KB
 - [ ] **Individual crates**: <15KB each
@@ -121,6 +133,7 @@ cargo tree --format "{p} {f}"
 ## 🚀 **Immediate Action Plan**
 
 ### **Step 1: Dependency Analysis (Today)**
+
 ```bash
 # Analyze dependency tree
 cargo tree --duplicates
@@ -134,11 +147,13 @@ wasm-bindgen --target web --out-dir pkg target/wasm32-unknown-unknown/release/le
 ```
 
 ### **Step 2: Feature Flag Implementation (This Week)**
+
 - [ ] Create `minimal` feature flag
 - [ ] Make heavy dependencies optional
 - [ ] Implement core-only builds
 
 ### **Step 3: Tree Shaking (Next Week)**
+
 - [ ] Remove unused code paths
 - [ ] Implement conditional compilation
 - [ ] Optimize WASM compilation
@@ -146,12 +161,14 @@ wasm-bindgen --target web --out-dir pkg target/wasm32-unknown-unknown/release/le
 ## 🎯 **Expected Outcomes**
 
 ### **After Optimization**
+
 - **Bundle size**: <50KB total
 - **Performance**: Faster loading
 - **Production ready**: Viable for real applications
 - **Competitive**: Comparable to Motion.js
 
 ### **Risk Mitigation**
+
 - **Incremental approach**: Optimize one crate at a time
 - **Test coverage**: Ensure functionality remains intact
 - **Feature flags**: Maintain full functionality for those who need it

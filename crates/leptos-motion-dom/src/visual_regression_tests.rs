@@ -428,7 +428,7 @@ proptest! {
     ) {
         let mut target = AnimationTarget::new();
         let mut unique_keys = std::collections::HashSet::new();
-        
+
         for (i, key) in unicode_keys.iter().enumerate() {
             if i < values.len() && !key.is_empty() && unique_keys.insert(key.clone()) {
                 target.insert(key.clone(), AnimationValue::Number(values[i]));

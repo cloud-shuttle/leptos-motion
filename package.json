@@ -1,6 +1,6 @@
 {
   "name": "leptos-motion",
-  "version": "0.1.0-alpha",
+  "version": "0.8.3",
   "description": "A comprehensive animation library for Rust and Leptos",
   "private": true,
   "scripts": {

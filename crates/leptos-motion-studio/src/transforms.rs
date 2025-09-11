@@ -2,7 +2,10 @@
 
 use crate::{Result, StudioError};
 use glam::{Mat4, Quat, Vec3, Vec4};
-use leptos::*;
+use leptos::prelude::*;
+use leptos::html::ElementChild;
+use leptos::attr::global::ClassAttribute;
+use leptos::prelude::{NodeRefAttribute, StyleAttribute, OnAttribute};
 use serde::{Deserialize, Serialize};
 
 /// 3D transform component with translation, rotation, and scale
@@ -439,9 +442,10 @@ pub fn Transform3DEditor(
     // Handle transform updates
     let handle_transform_change = move |new_transform: Transform3D| {
         set_transform.set(new_transform);
-        if let Some(callback) = on_change {
-            callback.call(new_transform);
-        }
+        // Temporarily disabled until callback API is clarified
+        // if let Some(callback) = on_change {
+        //     callback(new_transform);
+        // }
     };
 
     view! {

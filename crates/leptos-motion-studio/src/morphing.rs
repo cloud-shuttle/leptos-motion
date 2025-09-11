@@ -2,6 +2,8 @@
 
 use crate::{Result, StudioError};
 use leptos::*;
+use leptos::prelude::{ElementChild, PropAttribute, CustomAttribute, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_memo, event_target_value, Callback, Get, Set};
+use leptos::attr::global::ClassAttribute;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use uuid::Uuid;
@@ -400,7 +402,7 @@ impl BoundingBox {
 }
 
 /// Path morphing engine
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct PathMorpher {
     /// Source path
     pub source: SvgPath,
@@ -676,7 +678,7 @@ impl PathMorpher {
 }
 
 /// Morphing configuration
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct MorphConfig {
     /// Smoothing factor (0.0 to 1.0)
     pub smoothing: f32,
@@ -880,9 +882,10 @@ pub fn SvgMorphingEditor(
                         on:input=move |ev| {
                             let value = event_target_value(&ev);
                             set_source_path.set(value.clone());
-                            if let Some(callback) = on_change {
-                                callback.call((value, target_path.get()));
-                            }
+                    // Temporarily disabled until callback API is clarified
+                    // if let Some(callback) = on_change {
+                    //     callback((value, target_path.get()));
+                    // }
                         }
                     ></textarea>
                 </div>
@@ -894,9 +897,10 @@ pub fn SvgMorphingEditor(
                         on:input=move |ev| {
                             let value = event_target_value(&ev);
                             set_target_path.set(value.clone());
-                            if let Some(callback) = on_change {
-                                callback.call((source_path.get(), value));
-                            }
+                    // Temporarily disabled until callback API is clarified
+                    // if let Some(callback) = on_change {
+                    //     callback((source_path.get(), value));
+                    // }
                         }
                     ></textarea>
                 </div>

@@ -160,7 +160,7 @@ async fn test_mobile_gesture_workflow() {
 
 ```bash
 # Install Playwright
-npm install -D @playwright/test
+pnpm install -D @playwright/test
 npx playwright install
 
 # Install WASM testing tools
@@ -364,7 +364,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
+          pnpm install
           npx playwright install
           cargo install wasm-bindgen-cli
 

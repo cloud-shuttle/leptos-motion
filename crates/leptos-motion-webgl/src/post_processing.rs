@@ -1,8 +1,8 @@
 //! Post-processing effects system for WebGL rendering
 
 use crate::error::{Result, WebGLError};
-use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlTexture, WebGlRenderbuffer};
 use std::collections::HashMap;
+use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlRenderbuffer, WebGlTexture};
 
 /// Post-processing effect types
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -132,7 +132,10 @@ impl PostProcessingFramebuffer {
             .create_renderbuffer()
             .ok_or_else(|| WebGLError::framebuffer_error("Failed to create depth renderbuffer"))?;
 
-        context.bind_renderbuffer(WebGl2RenderingContext::RENDERBUFFER, Some(&depth_renderbuffer));
+        context.bind_renderbuffer(
+            WebGl2RenderingContext::RENDERBUFFER,
+            Some(&depth_renderbuffer),
+        );
         context.renderbuffer_storage(
             WebGl2RenderingContext::RENDERBUFFER,
             WebGl2RenderingContext::DEPTH_COMPONENT24,
@@ -193,12 +196,20 @@ impl PostProcessingFramebuffer {
     }
 
     /// Resize the framebuffer
-    pub fn resize(&mut self, context: &WebGl2RenderingContext, width: u32, height: u32) -> Result<()> {
+    pub fn resize(
+        &mut self,
+        context: &WebGl2RenderingContext,
+        width: u32,
+        height: u32,
+    ) -> Result<()> {
         self.width = width;
         self.height = height;
 
         // Update color texture
-        context.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(&self.color_texture));
+        context.bind_texture(
+            WebGl2RenderingContext::TEXTURE_2D,
+            Some(&self.color_texture),
+        );
         context.tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_opt_u8_array(
             WebGl2RenderingContext::TEXTURE_2D,
             0,
@@ -212,7 +223,10 @@ impl PostProcessingFramebuffer {
         )?;
 
         // Update depth renderbuffer
-        context.bind_renderbuffer(WebGl2RenderingContext::RENDERBUFFER, Some(&self.depth_renderbuffer));
+        context.bind_renderbuffer(
+            WebGl2RenderingContext::RENDERBUFFER,
+            Some(&self.depth_renderbuffer),
+        );
         context.renderbuffer_storage(
             WebGl2RenderingContext::RENDERBUFFER,
             WebGl2RenderingContext::DEPTH_COMPONENT24,
@@ -337,10 +351,10 @@ impl ScreenQuad {
     fn new(context: &WebGl2RenderingContext) -> Result<Self> {
         // Create vertex data for a full-screen quad
         let vertices = vec![
-            -1.0, -1.0, 0.0, 0.0,  // Bottom-left
-             1.0, -1.0, 1.0, 0.0,  // Bottom-right
-             1.0,  1.0, 1.0, 1.0,  // Top-right
-            -1.0,  1.0, 0.0, 1.0,  // Top-left
+            -1.0, -1.0, 0.0, 0.0, // Bottom-left
+            1.0, -1.0, 1.0, 0.0, // Bottom-right
+            1.0, 1.0, 1.0, 1.0, // Top-right
+            -1.0, 1.0, 0.0, 1.0, // Top-left
         ];
 
         // Create vertex buffer
@@ -376,10 +390,7 @@ impl ScreenQuad {
         context.bind_vertex_array(None);
         context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, None);
 
-        Ok(Self {
-            vertex_buffer,
-            vao,
-        })
+        Ok(Self { vertex_buffer, vao })
     }
 
     /// Draw the screen quad
@@ -491,7 +502,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply a specific effect
-    fn apply_effect(&self, effect: &PostProcessingConfig, input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // This is a simplified implementation
         // In a real implementation, this would:
         // 1. Bind the appropriate shader program
@@ -538,7 +553,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply bloom effect
-    fn apply_bloom_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_bloom_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified bloom implementation
         // In a real implementation, this would:
         // 1. Extract bright areas above threshold
@@ -553,7 +572,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply SSAO effect
-    fn apply_ssao_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_ssao_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified SSAO implementation
         // In a real implementation, this would:
         // 1. Sample depth buffer
@@ -569,7 +592,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply tone mapping effect
-    fn apply_tone_mapping_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_tone_mapping_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified tone mapping implementation
         // In a real implementation, this would:
         // 1. Apply exposure adjustment
@@ -584,7 +611,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply Gaussian blur effect
-    fn apply_gaussian_blur_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_gaussian_blur_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified Gaussian blur implementation
         // In a real implementation, this would:
         // 1. Apply horizontal blur pass
@@ -599,7 +630,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply edge detection effect
-    fn apply_edge_detection_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_edge_detection_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified edge detection implementation
         // In a real implementation, this would:
         // 1. Apply Sobel or similar edge detection kernel
@@ -614,7 +649,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply color grading effect
-    fn apply_color_grading_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_color_grading_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified color grading implementation
         // In a real implementation, this would:
         // 1. Apply color curves
@@ -629,7 +668,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply vignette effect
-    fn apply_vignette_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_vignette_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified vignette implementation
         // In a real implementation, this would:
         // 1. Calculate distance from center
@@ -644,7 +687,11 @@ impl PostProcessingPipeline {
     }
 
     /// Apply chromatic aberration effect
-    fn apply_chromatic_aberration_effect(&self, effect: &PostProcessingConfig, _input_texture: &WebGlTexture) -> Result<()> {
+    fn apply_chromatic_aberration_effect(
+        &self,
+        effect: &PostProcessingConfig,
+        _input_texture: &WebGlTexture,
+    ) -> Result<()> {
         // Simplified chromatic aberration implementation
         // In a real implementation, this would:
         // 1. Offset red and blue channels

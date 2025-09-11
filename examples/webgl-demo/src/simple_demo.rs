@@ -11,12 +11,12 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
     let (shadow_bias, set_shadow_bias) = create_signal(0.005);
     let (light_intensity, set_light_intensity) = create_signal(1.0);
     let (animation_speed, set_animation_speed) = create_signal(1.0);
-    
+
     view! {
         <div class="webgl-demo-container">
             <h1>"🎮 WebGL Advanced Features Demo"</h1>
             <p>"Showcasing Phase 3: Post-processing, Shadow Mapping, and Physics"</p>
-            
+
             <div class="demo-layout">
                 <div class="canvas-container">
                     <div class="mock-canvas">
@@ -30,36 +30,36 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                                     <div class="cube-face top"></div>
                                     <div class="cube-face bottom"></div>
                                 </div>
-                                
+
                                 <div class="physics-sphere"></div>
                                 <div class="light-source"></div>
                             </div>
-                            
+
                             <div class="post-processing-overlay">
-                                <div 
-                                    class="bloom-effect" 
+                                <div
+                                    class="bloom-effect"
                                     style:opacity=move || (bloom_intensity.get() / 3.0_f32).min(1.0_f32)
                                 ></div>
-                                <div 
-                                    class="ssao-effect" 
+                                <div
+                                    class="ssao-effect"
                                     style:opacity=move || (ssao_intensity.get() / 2.0_f32).min(1.0_f32)
                                 ></div>
                             </div>
                         </div>
-                        
+
                         <div class="performance-info">
                             <div class="fps-counter">"FPS: 60"</div>
                             <div class="frame-time">"Frame Time: 16.67ms"</div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="controls-panel">
                     <h3>"🎛️ Demo Controls"</h3>
-                    
+
                     <div class="control-group">
                         <h4>"🎨 Post-Processing Effects"</h4>
-                        
+
                         <div class="control-item">
                             <label>"Bloom Intensity: " {bloom_intensity.get()}</label>
                             <input
@@ -74,7 +74,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                                 }
                             />
                         </div>
-                        
+
                         <div class="control-item">
                             <label>"SSAO Intensity: " {ssao_intensity.get()}</label>
                             <input
@@ -89,7 +89,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                                 }
                             />
                         </div>
-                        
+
                         <div class="control-item">
                             <label>"Tone Mapping Exposure: " {tone_mapping_exposure.get()}</label>
                             <input
@@ -105,10 +105,10 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             />
                         </div>
                     </div>
-                    
+
                     <div class="control-group">
                         <h4>"🌑 Shadow Mapping"</h4>
-                        
+
                         <div class="control-item">
                             <label>"Shadow Bias: " {shadow_bias.get()}</label>
                             <input
@@ -123,7 +123,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                                 }
                             />
                         </div>
-                        
+
                         <div class="control-item">
                             <label>"Light Intensity: " {light_intensity.get()}</label>
                             <input
@@ -139,10 +139,10 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             />
                         </div>
                     </div>
-                    
+
                     <div class="control-group">
                         <h4>"⚡ Animation"</h4>
-                        
+
                         <div class="control-item">
                             <label>"Animation Speed: " {animation_speed.get()}</label>
                             <input
@@ -158,7 +158,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             />
                         </div>
                     </div>
-                    
+
                     <div class="control-group">
                         <h4>"📊 System Status"</h4>
                         <div class="status-item">
@@ -180,10 +180,10 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                     </div>
                 </div>
             </div>
-            
+
             <div class="feature-showcase">
                 <h2>"🚀 Advanced WebGL Features"</h2>
-                
+
                 <div class="feature-grid">
                     <div class="feature-card">
                         <h3>"🎨 Post-Processing Effects"</h3>
@@ -197,7 +197,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             "✅ Implemented"
                         </div>
                     </div>
-                    
+
                     <div class="feature-card">
                         <h3>"🌑 Shadow Mapping"</h3>
                         <ul>
@@ -210,7 +210,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             "✅ Implemented"
                         </div>
                     </div>
-                    
+
                     <div class="feature-card">
                         <h3>"⚡ Physics Simulation"</h3>
                         <ul>
@@ -223,7 +223,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                             "✅ Implemented"
                         </div>
                     </div>
-                    
+
                     <div class="feature-card">
                         <h3>"🎮 Interactive Controls"</h3>
                         <ul>
@@ -237,7 +237,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="implementation-status">
                     <h3>"📈 Implementation Status"</h3>
                     <div class="status-grid">
@@ -259,7 +259,7 @@ pub fn SimpleWebGLDemo() -> impl IntoView {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="tech-specs">
                     <h3>"🔧 Technical Specifications"</h3>
                     <div class="specs-grid">

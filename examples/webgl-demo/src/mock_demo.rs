@@ -8,11 +8,11 @@ use leptos_motion_webgl::*;
 pub fn MockWebGLDemo() -> impl IntoView {
     let (demo_state, set_demo_state) = create_signal(MockDemoState::new());
     let (is_running, set_running) = create_signal(false);
-    
+
     // Simulate demo updates
     let start_demo = move || {
         set_running.set(true);
-        
+
         // Simulate real-time updates
         let interval = set_interval_with_handle(
             move || {
@@ -22,25 +22,25 @@ pub fn MockWebGLDemo() -> impl IntoView {
             },
             std::time::Duration::from_millis(16), // ~60 FPS
         );
-        
+
         // Store interval handle for cleanup
         on_cleanup(move || {
             interval.clear();
         });
     };
-    
+
     // Start demo automatically
     create_effect(move |_| {
         if !is_running.get() {
             start_demo();
         }
     });
-    
+
     view! {
         <div class="webgl-demo-container">
             <h1>"WebGL Advanced Features Demo"</h1>
             <p>"Showcasing Phase 3: Post-processing, Shadow Mapping, and Physics"</p>
-            
+
             <div class="demo-layout">
                 <div class="canvas-container">
                     <div class="mock-canvas">
@@ -48,9 +48,9 @@ pub fn MockWebGLDemo() -> impl IntoView {
                             <div class="scene-objects">
                                 <div class="rotating-cube" style:transform=move || {
                                     let state = demo_state.get();
-                                    format!("rotateX({}deg) rotateY({}deg) rotateZ({}deg)", 
-                                        state.cube_rotation[0], 
-                                        state.cube_rotation[1], 
+                                    format!("rotateX({}deg) rotateY({}deg) rotateZ({}deg)",
+                                        state.cube_rotation[0],
+                                        state.cube_rotation[1],
                                         state.cube_rotation[2])
                                 }>
                                     <div class="cube-face front"></div>
@@ -60,24 +60,24 @@ pub fn MockWebGLDemo() -> impl IntoView {
                                     <div class="cube-face top"></div>
                                     <div class="cube-face bottom"></div>
                                 </div>
-                                
+
                                 <div class="physics-sphere" style:transform=move || {
                                     let state = demo_state.get();
-                                    format!("translate3d({}px, {}px, {}px)", 
-                                        state.sphere_position[0] * 100.0, 
-                                        state.sphere_position[1] * 100.0, 
+                                    format!("translate3d({}px, {}px, {}px)",
+                                        state.sphere_position[0] * 100.0,
+                                        state.sphere_position[1] * 100.0,
                                         state.sphere_position[2] * 100.0)
                                 }></div>
-                                
+
                                 <div class="light-source" style:transform=move || {
                                     let state = demo_state.get();
-                                    format!("translate3d({}px, {}px, {}px)", 
-                                        state.light_position[0] * 150.0, 
-                                        state.light_position[1] * 150.0, 
+                                    format!("translate3d({}px, {}px, {}px)",
+                                        state.light_position[0] * 150.0,
+                                        state.light_position[1] * 150.0,
                                         state.light_position[2] * 150.0)
                                 }></div>
                             </div>
-                            
+
                             <div class="post-processing-overlay">
                                 <div class="bloom-effect" style:opacity=move || {
                                     let state = demo_state.get();
@@ -89,7 +89,7 @@ pub fn MockWebGLDemo() -> impl IntoView {
                                 }></div>
                             </div>
                         </div>
-                        
+
                         <div class="performance-info">
                             <div class="fps-counter">
                                 "FPS: " {move || demo_state.get().fps}
@@ -100,12 +100,12 @@ pub fn MockWebGLDemo() -> impl IntoView {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="controls-panel">
                     <MockDemoControls demo_state=demo_state set_demo_state=set_demo_state />
                 </div>
             </div>
-            
+
             <div class="feature-showcase">
                 <FeatureShowcase />
             </div>
@@ -122,13 +122,13 @@ pub struct MockDemoState {
     pub shadow_bias: f32,
     pub light_intensity: f32,
     pub animation_speed: f32,
-    
+
     // Animation state
     pub time: f32,
     pub cube_rotation: [f32; 3],
     pub sphere_position: [f32; 3],
     pub light_position: [f32; 3],
-    
+
     // Performance simulation
     pub fps: u32,
     pub frame_time: f32,
@@ -153,26 +153,26 @@ impl MockDemoState {
             frame_count: 0,
         }
     }
-    
+
     pub fn update(&mut self) {
         self.time += 0.016 * self.animation_speed; // ~60 FPS
         self.frame_count += 1;
-        
+
         // Update cube rotation
         self.cube_rotation[0] = (self.time * 0.5).sin() * 30.0;
         self.cube_rotation[1] = (self.time * 0.3).cos() * 45.0;
         self.cube_rotation[2] = (self.time * 0.7).sin() * 20.0;
-        
+
         // Update sphere position (physics simulation)
         self.sphere_position[0] = (self.time * 0.8).sin() * 0.5;
         self.sphere_position[1] = (self.time * 1.2).cos() * 0.3;
         self.sphere_position[2] = (self.time * 0.6).sin() * 0.4;
-        
+
         // Update light position
         self.light_position[0] = (self.time * 0.4).cos() * 0.8;
         self.light_position[1] = (self.time * 0.6).sin() * 0.6;
         self.light_position[2] = (self.time * 0.3).cos() * 0.7;
-        
+
         // Simulate performance metrics
         self.fps = 60 + ((self.time * 2.0).sin() * 10.0) as u32;
         self.frame_time = 16.67 + ((self.time * 1.5).cos() * 2.0);
@@ -190,44 +190,44 @@ pub fn MockDemoControls(
         state.bloom_intensity = value;
         set_demo_state.set(state);
     };
-    
+
     let update_ssao = move |value: f32| {
         let mut state = demo_state.get();
         state.ssao_intensity = value;
         set_demo_state.set(state);
     };
-    
+
     let update_tone_mapping = move |value: f32| {
         let mut state = demo_state.get();
         state.tone_mapping_exposure = value;
         set_demo_state.set(state);
     };
-    
+
     let update_shadow_bias = move |value: f32| {
         let mut state = demo_state.get();
         state.shadow_bias = value;
         set_demo_state.set(state);
     };
-    
+
     let update_light_intensity = move |value: f32| {
         let mut state = demo_state.get();
         state.light_intensity = value;
         set_demo_state.set(state);
     };
-    
+
     let update_animation_speed = move |value: f32| {
         let mut state = demo_state.get();
         state.animation_speed = value;
         set_demo_state.set(state);
     };
-    
+
     view! {
         <div class="controls-panel">
             <h3>"Demo Controls"</h3>
-            
+
             <div class="control-group">
                 <h4>"Post-Processing Effects"</h4>
-                
+
                 <div class="control-item">
                     <label>"Bloom Intensity: " {demo_state.get().bloom_intensity}</label>
                     <input
@@ -242,7 +242,7 @@ pub fn MockDemoControls(
                         }
                     />
                 </div>
-                
+
                 <div class="control-item">
                     <label>"SSAO Intensity: " {demo_state.get().ssao_intensity}</label>
                     <input
@@ -257,7 +257,7 @@ pub fn MockDemoControls(
                         }
                     />
                 </div>
-                
+
                 <div class="control-item">
                     <label>"Tone Mapping Exposure: " {demo_state.get().tone_mapping_exposure}</label>
                     <input
@@ -273,10 +273,10 @@ pub fn MockDemoControls(
                     />
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <h4>"Shadow Mapping"</h4>
-                
+
                 <div class="control-item">
                     <label>"Shadow Bias: " {demo_state.get().shadow_bias}</label>
                     <input
@@ -291,7 +291,7 @@ pub fn MockDemoControls(
                         }
                     />
                 </div>
-                
+
                 <div class="control-item">
                     <label>"Light Intensity: " {demo_state.get().light_intensity}</label>
                     <input
@@ -307,10 +307,10 @@ pub fn MockDemoControls(
                     />
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <h4>"Animation"</h4>
-                
+
                 <div class="control-item">
                     <label>"Animation Speed: " {demo_state.get().animation_speed}</label>
                     <input
@@ -326,7 +326,7 @@ pub fn MockDemoControls(
                     />
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <h4>"System Status"</h4>
                 <div class="status-item">
@@ -356,7 +356,7 @@ pub fn FeatureShowcase() -> impl IntoView {
     view! {
         <div class="feature-showcase">
             <h2>"Advanced WebGL Features"</h2>
-            
+
             <div class="feature-grid">
                 <div class="feature-card">
                     <h3>"🎨 Post-Processing Effects"</h3>
@@ -370,7 +370,7 @@ pub fn FeatureShowcase() -> impl IntoView {
                         "Implemented"
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>"🌑 Shadow Mapping"</h3>
                     <ul>
@@ -383,7 +383,7 @@ pub fn FeatureShowcase() -> impl IntoView {
                         "Implemented"
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>"⚡ Physics Simulation"</h3>
                     <ul>
@@ -396,7 +396,7 @@ pub fn FeatureShowcase() -> impl IntoView {
                         "Implemented"
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <h3>"🎮 Interactive Controls"</h3>
                     <ul>
@@ -410,7 +410,7 @@ pub fn FeatureShowcase() -> impl IntoView {
                     </div>
                 </div>
             </div>
-            
+
             <div class="implementation-status">
                 <h3>"Implementation Status"</h3>
                 <div class="status-grid">

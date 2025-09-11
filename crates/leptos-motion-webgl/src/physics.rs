@@ -101,24 +101,18 @@ impl CollisionShape {
     /// Get the bounding box of the collision shape
     pub fn get_bounding_box(&self) -> BoundingBox {
         match self {
-            CollisionShape::Box { half_extents } => {
-                BoundingBox {
-                    min: [-half_extents[0], -half_extents[1], -half_extents[2]],
-                    max: [half_extents[0], half_extents[1], half_extents[2]],
-                }
-            }
-            CollisionShape::Sphere { radius } => {
-                BoundingBox {
-                    min: [-*radius, -*radius, -*radius],
-                    max: [*radius, *radius, *radius],
-                }
-            }
-            CollisionShape::Plane { .. } => {
-                BoundingBox {
-                    min: [-f32::INFINITY, -f32::INFINITY, -f32::INFINITY],
-                    max: [f32::INFINITY, f32::INFINITY, f32::INFINITY],
-                }
-            }
+            CollisionShape::Box { half_extents } => BoundingBox {
+                min: [-half_extents[0], -half_extents[1], -half_extents[2]],
+                max: [half_extents[0], half_extents[1], half_extents[2]],
+            },
+            CollisionShape::Sphere { radius } => BoundingBox {
+                min: [-*radius, -*radius, -*radius],
+                max: [*radius, *radius, *radius],
+            },
+            CollisionShape::Plane { .. } => BoundingBox {
+                min: [-f32::INFINITY, -f32::INFINITY, -f32::INFINITY],
+                max: [f32::INFINITY, f32::INFINITY, f32::INFINITY],
+            },
             CollisionShape::Capsule { radius, height } => {
                 let half_height = height * 0.5;
                 BoundingBox {
@@ -126,12 +120,10 @@ impl CollisionShape {
                     max: [*radius, half_height, *radius],
                 }
             }
-            CollisionShape::Cylinder { half_extents } => {
-                BoundingBox {
-                    min: [-half_extents[0], -half_extents[1], -half_extents[2]],
-                    max: [half_extents[0], half_extents[1], half_extents[2]],
-                }
-            }
+            CollisionShape::Cylinder { half_extents } => BoundingBox {
+                min: [-half_extents[0], -half_extents[1], -half_extents[2]],
+                max: [half_extents[0], half_extents[1], half_extents[2]],
+            },
         }
     }
 }
@@ -164,7 +156,7 @@ impl BoundingBox {
         self.min[0] = self.min[0].min(point[0]);
         self.min[1] = self.min[1].min(point[1]);
         self.min[2] = self.min[2].min(point[2]);
-        
+
         self.max[0] = self.max[0].max(point[0]);
         self.max[1] = self.max[1].max(point[1]);
         self.max[2] = self.max[2].max(point[2]);
@@ -172,9 +164,12 @@ impl BoundingBox {
 
     /// Check if this bounding box intersects with another
     pub fn intersects(&self, other: &BoundingBox) -> bool {
-        self.min[0] <= other.max[0] && self.max[0] >= other.min[0] &&
-        self.min[1] <= other.max[1] && self.max[1] >= other.min[1] &&
-        self.min[2] <= other.max[2] && self.max[2] >= other.min[2]
+        self.min[0] <= other.max[0]
+            && self.max[0] >= other.min[0]
+            && self.min[1] <= other.max[1]
+            && self.max[1] >= other.min[1]
+            && self.min[2] <= other.max[2]
+            && self.max[2] >= other.min[2]
     }
 
     /// Get the center of the bounding box
@@ -254,15 +249,15 @@ impl RigidBody {
             RigidBodyType::Dynamic => 1.0,
             RigidBodyType::Kinematic => 0.0,
         };
-        
+
         let inverse_mass = if mass > 0.0 { 1.0 / mass } else { 0.0 };
-        
+
         // Calculate inertia tensor based on collision shape
         let inertia = Self::calculate_inertia_tensor(&collision_shape, mass);
         let inverse_inertia = Self::calculate_inverse_inertia_tensor(&inertia);
-        
+
         let bounding_box = collision_shape.get_bounding_box();
-        
+
         Self {
             id,
             name: name.to_string(),
@@ -297,20 +292,22 @@ impl RigidBody {
                 let y = half_extents[1];
                 let z = half_extents[2];
                 let factor = mass / 12.0;
-                
+
                 [
-                    factor * (y * y + z * z), 0.0, 0.0,
-                    0.0, factor * (x * x + z * z), 0.0,
-                    0.0, 0.0, factor * (x * x + y * y),
+                    factor * (y * y + z * z),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (x * x + z * z),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (x * x + y * y),
                 ]
             }
             CollisionShape::Sphere { radius } => {
                 let factor = 2.0 * mass * radius * radius / 5.0;
-                [
-                    factor, 0.0, 0.0,
-                    0.0, factor, 0.0,
-                    0.0, 0.0, factor,
-                ]
+                [factor, 0.0, 0.0, 0.0, factor, 0.0, 0.0, 0.0, factor]
             }
             CollisionShape::Plane { .. } => {
                 [0.0; 9] // Infinite inertia for planes
@@ -319,11 +316,17 @@ impl RigidBody {
                 let r = radius;
                 let h = height;
                 let factor = mass / 12.0;
-                
+
                 [
-                    factor * (3.0 * r * r + h * h), 0.0, 0.0,
-                    0.0, factor * (3.0 * r * r + h * h), 0.0,
-                    0.0, 0.0, factor * (6.0 * r * r),
+                    factor * (3.0 * r * r + h * h),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (3.0 * r * r + h * h),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (6.0 * r * r),
                 ]
             }
             CollisionShape::Cylinder { half_extents } => {
@@ -331,11 +334,17 @@ impl RigidBody {
                 let y = half_extents[1];
                 let z = half_extents[2];
                 let factor = mass / 12.0;
-                
+
                 [
-                    factor * (y * y + z * z), 0.0, 0.0,
-                    0.0, factor * (x * x + z * z), 0.0,
-                    0.0, 0.0, factor * (x * x + y * y),
+                    factor * (y * y + z * z),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (x * x + z * z),
+                    0.0,
+                    0.0,
+                    0.0,
+                    factor * (x * x + y * y),
                 ]
             }
         }
@@ -367,9 +376,13 @@ impl RigidBody {
     pub fn apply_force_at_point(&mut self, force: [f32; 3], point: [f32; 3]) {
         if self.body_type == RigidBodyType::Dynamic {
             self.apply_force(force);
-            
+
             // Calculate torque
-            let r = [point[0] - self.position[0], point[1] - self.position[1], point[2] - self.position[2]];
+            let r = [
+                point[0] - self.position[0],
+                point[1] - self.position[1],
+                point[2] - self.position[2],
+            ];
             let torque = [
                 r[1] * force[2] - r[2] * force[1],
                 r[2] * force[0] - r[0] * force[2],
@@ -421,14 +434,16 @@ impl RigidBody {
 
     /// Check if the body is moving slowly enough to sleep
     fn should_sleep(&self) -> bool {
-        let linear_speed = (self.linear_velocity[0] * self.linear_velocity[0] +
-                           self.linear_velocity[1] * self.linear_velocity[1] +
-                           self.linear_velocity[2] * self.linear_velocity[2]).sqrt();
-        
-        let angular_speed = (self.angular_velocity[0] * self.angular_velocity[0] +
-                            self.angular_velocity[1] * self.angular_velocity[1] +
-                            self.angular_velocity[2] * self.angular_velocity[2]).sqrt();
-        
+        let linear_speed = (self.linear_velocity[0] * self.linear_velocity[0]
+            + self.linear_velocity[1] * self.linear_velocity[1]
+            + self.linear_velocity[2] * self.linear_velocity[2])
+            .sqrt();
+
+        let angular_speed = (self.angular_velocity[0] * self.angular_velocity[0]
+            + self.angular_velocity[1] * self.angular_velocity[1]
+            + self.angular_velocity[2] * self.angular_velocity[2])
+            .sqrt();
+
         linear_speed < self.sleep_threshold && angular_speed < self.sleep_threshold
     }
 
@@ -440,7 +455,8 @@ impl RigidBody {
 
         if self.should_sleep() {
             self.sleep_time += delta_time;
-            if self.sleep_time > 1.0 { // Sleep after 1 second of inactivity
+            if self.sleep_time > 1.0 {
+                // Sleep after 1 second of inactivity
                 self.is_sleeping = true;
             }
         } else {
@@ -509,9 +525,11 @@ impl PhysicsWorld {
     /// Add a rigid body to the world
     pub fn add_body(&mut self, body: RigidBody) -> Result<()> {
         if self.bodies.contains_key(&body.id) {
-            return Err(WebGLError::lighting_error("Body with this ID already exists"));
+            return Err(WebGLError::lighting_error(
+                "Body with this ID already exists",
+            ));
         }
-        
+
         self.bodies.insert(body.id.clone(), body);
         Ok(())
     }
@@ -549,22 +567,22 @@ impl PhysicsWorld {
     /// Step the physics simulation
     pub fn step(&mut self, delta_time: f32) -> Result<()> {
         self.accumulated_time += delta_time;
-        
+
         // Fixed time step simulation
         while self.accumulated_time >= self.config.time_step {
             self.current_time_step = self.config.time_step;
             self.accumulated_time -= self.config.time_step;
-            
+
             // Update bodies
             self.update_bodies()?;
-            
+
             // Detect collisions
             self.detect_collisions()?;
-            
+
             // Resolve collisions
             self.resolve_collisions()?;
         }
-        
+
         Ok(())
     }
 
@@ -578,69 +596,78 @@ impl PhysicsWorld {
                     self.config.gravity[1] * body.mass,
                     self.config.gravity[2] * body.mass,
                 ]);
-                
+
                 // Update linear velocity
-                body.linear_velocity[0] += body.forces[0] * body.inverse_mass * self.current_time_step;
-                body.linear_velocity[1] += body.forces[1] * body.inverse_mass * self.current_time_step;
-                body.linear_velocity[2] += body.forces[2] * body.inverse_mass * self.current_time_step;
-                
+                body.linear_velocity[0] +=
+                    body.forces[0] * body.inverse_mass * self.current_time_step;
+                body.linear_velocity[1] +=
+                    body.forces[1] * body.inverse_mass * self.current_time_step;
+                body.linear_velocity[2] +=
+                    body.forces[2] * body.inverse_mass * self.current_time_step;
+
                 // Apply linear damping
                 body.linear_velocity[0] *= body.linear_damping;
                 body.linear_velocity[1] *= body.linear_damping;
                 body.linear_velocity[2] *= body.linear_damping;
-                
+
                 // Update angular velocity
-                body.angular_velocity[0] += body.torques[0] * body.inverse_inertia[0] * self.current_time_step;
-                body.angular_velocity[1] += body.torques[1] * body.inverse_inertia[4] * self.current_time_step;
-                body.angular_velocity[2] += body.torques[2] * body.inverse_inertia[8] * self.current_time_step;
-                
+                body.angular_velocity[0] +=
+                    body.torques[0] * body.inverse_inertia[0] * self.current_time_step;
+                body.angular_velocity[1] +=
+                    body.torques[1] * body.inverse_inertia[4] * self.current_time_step;
+                body.angular_velocity[2] +=
+                    body.torques[2] * body.inverse_inertia[8] * self.current_time_step;
+
                 // Apply angular damping
                 body.angular_velocity[0] *= body.angular_damping;
                 body.angular_velocity[1] *= body.angular_damping;
                 body.angular_velocity[2] *= body.angular_damping;
-                
+
                 // Update position
                 body.position[0] += body.linear_velocity[0] * self.current_time_step;
                 body.position[1] += body.linear_velocity[1] * self.current_time_step;
                 body.position[2] += body.linear_velocity[2] * self.current_time_step;
-                
+
                 // Update bounding box
                 body.update_bounding_box();
-                
+
                 // Clear forces and torques
                 body.forces = [0.0, 0.0, 0.0];
                 body.torques = [0.0, 0.0, 0.0];
-                
+
                 // Update sleep state
                 body.update_sleep_state(self.current_time_step);
             }
         }
-        
+
         Ok(())
     }
 
     /// Detect collisions between rigid bodies
     fn detect_collisions(&mut self) -> Result<()> {
         self.collisions.clear();
-        
+
         let body_ids: Vec<String> = self.bodies.keys().cloned().collect();
-        
+
         for i in 0..body_ids.len() {
             for j in (i + 1)..body_ids.len() {
                 let id_a = &body_ids[i];
                 let id_b = &body_ids[j];
-                
-                if let (Some(body_a), Some(body_b)) = (self.bodies.get(id_a), self.bodies.get(id_b)) {
+
+                if let (Some(body_a), Some(body_b)) = (self.bodies.get(id_a), self.bodies.get(id_b))
+                {
                     // Skip if both bodies are static
-                    if body_a.body_type == RigidBodyType::Static && body_b.body_type == RigidBodyType::Static {
+                    if body_a.body_type == RigidBodyType::Static
+                        && body_b.body_type == RigidBodyType::Static
+                    {
                         continue;
                     }
-                    
+
                     // Skip if both bodies are sleeping
                     if body_a.is_sleeping && body_b.is_sleeping {
                         continue;
                     }
-                    
+
                     // Check bounding box intersection first
                     if body_a.bounding_box.intersects(&body_b.bounding_box) {
                         // Perform detailed collision detection
@@ -651,35 +678,40 @@ impl PhysicsWorld {
                 }
             }
         }
-        
+
         Ok(())
     }
 
     /// Perform detailed collision detection between two bodies
-    fn detect_collision_detailed(&self, body_a: &RigidBody, body_b: &RigidBody) -> Option<Collision> {
+    fn detect_collision_detailed(
+        &self,
+        body_a: &RigidBody,
+        body_b: &RigidBody,
+    ) -> Option<Collision> {
         // Simple sphere-sphere collision detection for now
-        if let (CollisionShape::Sphere { radius: r_a }, CollisionShape::Sphere { radius: r_b }) = 
-            (&body_a.collision_shape, &body_b.collision_shape) {
-            
-            let distance = ((body_a.position[0] - body_b.position[0]).powi(2) +
-                           (body_a.position[1] - body_b.position[1]).powi(2) +
-                           (body_a.position[2] - body_b.position[2]).powi(2)).sqrt();
-            
+        if let (CollisionShape::Sphere { radius: r_a }, CollisionShape::Sphere { radius: r_b }) =
+            (&body_a.collision_shape, &body_b.collision_shape)
+        {
+            let distance = ((body_a.position[0] - body_b.position[0]).powi(2)
+                + (body_a.position[1] - body_b.position[1]).powi(2)
+                + (body_a.position[2] - body_b.position[2]).powi(2))
+            .sqrt();
+
             let penetration = (r_a + r_b) - distance;
-            
+
             if penetration > 0.0 {
                 let normal = [
                     (body_b.position[0] - body_a.position[0]) / distance,
                     (body_b.position[1] - body_a.position[1]) / distance,
                     (body_b.position[2] - body_a.position[2]) / distance,
                 ];
-                
+
                 let contact_point = [
                     body_a.position[0] + normal[0] * r_a,
                     body_a.position[1] + normal[1] * r_a,
                     body_a.position[2] + normal[2] * r_a,
                 ];
-                
+
                 let contact = ContactPoint {
                     position: contact_point,
                     normal,
@@ -687,7 +719,7 @@ impl PhysicsWorld {
                     point_a: contact_point,
                     point_b: contact_point,
                 };
-                
+
                 return Some(Collision {
                     body_a: body_a.id.clone(),
                     body_b: body_b.id.clone(),
@@ -697,7 +729,7 @@ impl PhysicsWorld {
                 });
             }
         }
-        
+
         None
     }
 
@@ -706,17 +738,16 @@ impl PhysicsWorld {
         for collision in &self.collisions {
             let body_a_id = collision.body_a.clone();
             let body_b_id = collision.body_b.clone();
-            
+
             // Get velocities first to avoid borrow checker issues
-            let (velocity_a, velocity_b) = if let (Some(body_a), Some(body_b)) = (
-                self.bodies.get(&body_a_id),
-                self.bodies.get(&body_b_id)
-            ) {
+            let (velocity_a, velocity_b) = if let (Some(body_a), Some(body_b)) =
+                (self.bodies.get(&body_a_id), self.bodies.get(&body_b_id))
+            {
                 (body_a.linear_velocity, body_b.linear_velocity)
             } else {
                 continue;
             };
-            
+
             for contact in &collision.contacts {
                 // Calculate relative velocity
                 let relative_velocity = [
@@ -724,41 +755,45 @@ impl PhysicsWorld {
                     velocity_b[1] - velocity_a[1],
                     velocity_b[2] - velocity_a[2],
                 ];
-                
+
                 // Calculate relative velocity along normal
-                let velocity_along_normal = relative_velocity[0] * contact.normal[0] +
-                                           relative_velocity[1] * contact.normal[1] +
-                                           relative_velocity[2] * contact.normal[2];
-                
+                let velocity_along_normal = relative_velocity[0] * contact.normal[0]
+                    + relative_velocity[1] * contact.normal[1]
+                    + relative_velocity[2] * contact.normal[2];
+
                 // Don't resolve if velocities are separating
                 if velocity_along_normal > 0.0 {
                     continue;
                 }
-                
+
                 // Calculate restitution
                 let restitution = collision.restitution;
-                
+
                 // Get masses for impulse calculation
-                let (mass_a, mass_b, type_a, type_b) = if let (Some(body_a), Some(body_b)) = (
-                    self.bodies.get(&body_a_id),
-                    self.bodies.get(&body_b_id)
-                ) {
-                    (body_a.inverse_mass, body_b.inverse_mass, body_a.body_type, body_b.body_type)
+                let (mass_a, mass_b, type_a, type_b) = if let (Some(body_a), Some(body_b)) =
+                    (self.bodies.get(&body_a_id), self.bodies.get(&body_b_id))
+                {
+                    (
+                        body_a.inverse_mass,
+                        body_b.inverse_mass,
+                        body_a.body_type,
+                        body_b.body_type,
+                    )
                 } else {
                     continue;
                 };
-                
+
                 // Calculate impulse scalar
                 let mut impulse_scalar = -(1.0 + restitution) * velocity_along_normal;
                 impulse_scalar /= mass_a + mass_b;
-                
+
                 // Apply impulse
                 let impulse = [
                     impulse_scalar * contact.normal[0],
                     impulse_scalar * contact.normal[1],
                     impulse_scalar * contact.normal[2],
                 ];
-                
+
                 // Apply velocity changes
                 if let Some(body_a) = self.bodies.get_mut(&body_a_id) {
                     if type_a == RigidBodyType::Dynamic {
@@ -767,7 +802,7 @@ impl PhysicsWorld {
                         body_a.linear_velocity[2] -= impulse[2] * mass_a;
                     }
                 }
-                
+
                 if let Some(body_b) = self.bodies.get_mut(&body_b_id) {
                     if type_b == RigidBodyType::Dynamic {
                         body_b.linear_velocity[0] += impulse[0] * mass_b;
@@ -775,19 +810,19 @@ impl PhysicsWorld {
                         body_b.linear_velocity[2] += impulse[2] * mass_b;
                     }
                 }
-                
+
                 // Position correction
                 let correction_percent = 0.8;
                 let correction_slop = 0.01;
                 let correction = contact.penetration - correction_slop;
-                
+
                 if correction > 0.0 {
                     let correction_vector = [
                         correction * contact.normal[0] * correction_percent,
                         correction * contact.normal[1] * correction_percent,
                         correction * contact.normal[2] * correction_percent,
                     ];
-                    
+
                     if let Some(body_a) = self.bodies.get_mut(&body_a_id) {
                         if type_a == RigidBodyType::Dynamic {
                             let correction_factor = mass_a / (mass_a + mass_b);
@@ -796,7 +831,7 @@ impl PhysicsWorld {
                             body_a.position[2] -= correction_vector[2] * correction_factor;
                         }
                     }
-                    
+
                     if let Some(body_b) = self.bodies.get_mut(&body_b_id) {
                         if type_b == RigidBodyType::Dynamic {
                             let correction_factor = mass_b / (mass_a + mass_b);
@@ -808,7 +843,7 @@ impl PhysicsWorld {
                 }
             }
         }
-        
+
         Ok(())
     }
 

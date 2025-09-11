@@ -55,7 +55,6 @@ pub struct Animation3D {
     pub transition: Transition,
 }
 
-
 impl Transform3D {
     /// Create a new 3D transform
     pub fn new() -> Self {

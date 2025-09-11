@@ -6,9 +6,6 @@ members = [
     "crates/leptos-motion-layout",
     "crates/leptos-motion-scroll",
     "crates/leptos-motion-macros",
-    "crates/leptos-motion",
-    "examples/v0.7-showcase",
-    "examples/comprehensive-demo",
     "benches",
 ]
 resolver = "2"
@@ -35,7 +32,6 @@ leptos_meta = "0.8.5"
 leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
-leptos-motion = { path = "crates/leptos-motion" }
 leptos-motion-core = { version = "0.8.1", path = "crates/leptos-motion-core" }
 leptos-motion-dom = { version = "0.8.1", path = "crates/leptos-motion-dom" }
 leptos-motion-gestures = { version = "0.8.1", path = "crates/leptos-motion-gestures" }

@@ -46,7 +46,9 @@ pub struct SignalBasedAnimationController {
     /// Write signals for updating state
     set_animation_state: WriteSignal<AnimationState>,
     set_target_values: WriteSignal<HashMap<String, AnimationValue>>,
+    #[allow(dead_code)]
     set_is_playing: WriteSignal<bool>,
+    #[allow(dead_code)]
     set_progress: WriteSignal<f32>,
     /// Cleanup handles for WASM memory management
     #[allow(dead_code)]
@@ -223,6 +225,12 @@ pub struct WasmSignalHandler {
     // ✅ Store signals in a way that works with WASM
     animation_signals: std::collections::HashMap<String, WriteSignal<AnimationValue>>,
     cleanup_handles: Vec<Box<dyn Fn()>>,
+}
+
+impl Default for WasmSignalHandler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl WasmSignalHandler {

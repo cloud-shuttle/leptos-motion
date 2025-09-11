@@ -10,8 +10,8 @@ rust-version.workspace = true
 leptos = { version = "0.8.8", features = ["csr", "hydrate", "ssr"] }
 leptos_macro = "0.8.8"  # Published version
 reactive_graph = "0.2.6"  # Published version
-leptos-motion = { version = "0.8.0", path = "../../crates/leptos-motion" }
-leptos-motion-dom = { version = "0.8.0", path = "../../crates/leptos-motion-dom" }
+leptos-motion = "0.8.1"
+leptos-motion-dom = "0.8.1"
 log = "0.4"
 wasm-bindgen = "0.2"
 js-sys = "0.3"

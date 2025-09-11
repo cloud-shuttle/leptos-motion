@@ -30,7 +30,7 @@ advanced-gestures = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = "0.8.0"
+leptos-motion-core = "0.8.1"
 
 # Leptos
 leptos.workspace = true

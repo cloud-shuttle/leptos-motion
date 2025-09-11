@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos::web_sys;
-use leptos_motion_dom::{AnimationValue, ReactiveMotionDiv, signal_animate};
+use leptos_motion_dom::{AnimationValue, ReactiveMotionDiv};
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 

@@ -3,43 +3,41 @@
 [![Crates.io](https://img.shields.io/crates/v/leptos-motion)](https://crates.io/crates/leptos-motion)
 [![Documentation](https://img.shields.io/docsrs/leptos-motion)](https://docs.rs/leptos-motion)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Rust](https://img.shields.io/badge/rust-1.70+-blue.svg)](https://www.rust-lang.org)
+[![Rust](https://img.shields.io/badge/rust-1.89+-blue.svg)](https://www.rust-lang.org)
+[![pnpm](https://img.shields.io/badge/package%20manager-pnpm-blue.svg)](https://pnpm.io/)
 
-**High-performance animation library for [Leptos](https://github.com/leptos-rs/leptos) with Framer Motion-inspired API**
+**Production-ready animation library for [Leptos](https://github.com/leptos-rs/leptos) with complete Motion Studio, WebGL acceleration, and Framer Motion-inspired API**
 
-Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance.
+Leptos Motion brings smooth, performant animations to your Leptos applications with a familiar API that feels like home for React developers. Built with Rust and WebAssembly for maximum performance, featuring a complete animation studio, WebGL acceleration, and enterprise-grade development practices.
 
-> **🚀 Latest Release!** Version 0.7.0 with advanced animation features is now available.
+> **🚀 Latest Release!** Version 0.8.3 with complete Motion Studio and WebGL acceleration is now available.
 
 ## 🎉 Latest Release Status
 
-**Version 0.7.0** is now available with advanced animation features and performance optimizations!
+**Version 0.8.3** is now available with complete Motion Studio, WebGL acceleration, and enterprise-grade development practices!
 
-- ✅ **Solid Foundation**: Core animation engine, gestures, layout animations
-- ✅ **Comprehensive Testing**: 235+ tests passing with full coverage
-- ✅ **Type Safety**: Full Rust compile-time guarantees
-- ✅ **Simplified APIs**: Clean, user-friendly interfaces
-- ✅ **All Examples Working**: Advanced features, mobile app, dashboard, e-commerce
-- ✅ **API Compatibility**: Consistent and stable API across all components
-- ✅ **Production Ready**: Optimized for real-world applications
-- ✅ **🎨 FLIP Layout Animations**: Complete FLIP animation system with element tracking
-- ✅ **🎬 Keyframe Animations**: Multi-step animations with precise control
-- ✅ **⚡ Stagger Animations**: Sequential animations with configurable delays
-- ✅ **🚀 Performance Benchmarking**: Advanced performance testing and optimization
-- ✅ **🌐 Cross-Browser Testing**: Comprehensive compatibility validation
-- ✅ **🌊 Spring Physics Engine**: Natural motion with configurable tension, friction, and mass
-- ✅ **👻 AnimatePresence**: Enter/exit animations with multiple presence modes
-- ✅ **🎭 Variants System**: Named animation states with smooth transitions
-- ✅ **⏰ Timeline Sequences**: Advanced orchestration for complex animation sequences
-- ✅ **⚡ Performance Optimizations**: Memory pools, caching, and edge case handling
+- ✅ **🎬 Complete Motion Studio**: Full-featured animation studio with timeline editor, 3D transforms, and path morphing
+- ✅ **🚀 WebGL Acceleration**: GPU-accelerated animations with post-processing effects and physics simulation
+- ✅ **📦 pnpm Migration**: Modern package management with pnpm as primary package manager
+- ✅ **📋 Architecture Decision Records**: Comprehensive ADRs documenting development practices and standards
+- ✅ **🧪 Near-100% Test Coverage**: Comprehensive testing pyramid with Playwright E2E testing
+- ✅ **🔧 Latest Rust Practices**: Modern Rust toolchain with strict linting and formatting
+- ✅ **🌊 Enhanced CubicBezier**: Custom curve support with advanced easing functions
+- ✅ **📤 Export Functionality**: Support for CSS, WAAPI, Leptos Motion, and Framer Motion formats
+- ✅ **🎯 Leptos v0.8.8 Compatibility**: Always supporting the latest stable Leptos version
+- ✅ **⚡ Performance Optimizations**: Memory efficiency and zero-allocation animation loops
+- ✅ **🌐 Cross-browser Testing**: Playwright automation for all demos and examples
+- ✅ **📚 Comprehensive Documentation**: Complete ADRs, migration guides, and compatibility analysis
 
-> **Note**: This is a stable release ready for production use with advanced animation capabilities.
+> **Note**: This is a production-ready release with enterprise-grade development practices and comprehensive animation capabilities.
 
 ## ✨ Features
 
 - 🚀 **High Performance**: Built with Rust and WebAssembly for 60fps animations
 - 🎯 **Framer Motion Inspired**: Familiar API for React developers
-- 🎨 **Rich Animation Types**: Spring, tween, and custom easing functions
+- 🎬 **Complete Motion Studio**: Full-featured animation studio with timeline editor, 3D transforms, and path morphing
+- 🚀 **WebGL Acceleration**: GPU-accelerated animations with post-processing effects and physics simulation
+- 🎨 **Rich Animation Types**: Spring, tween, CubicBezier, and custom easing functions
 - 🖱️ **Gesture Support**: Multi-touch, drag, hover, tap, and scroll animations
 - 📱 **Layout Animations**: FLIP-based smooth transitions when elements change position
 - 🎭 **Presence Animations**: Enter/exit animations with automatic cleanup
@@ -47,9 +45,12 @@ Leptos Motion brings smooth, performant animations to your Leptos applications w
 - 👻 **AnimatePresence**: Advanced enter/exit animations with multiple presence modes
 - 🎭 **Variants System**: Named animation states with smooth transitions
 - ⏰ **Timeline Sequences**: Advanced orchestration for complex animation sequences
+- 📤 **Export Functionality**: Support for CSS, WAAPI, Leptos Motion, and Framer Motion formats
 - ⚡ **Performance Optimizations**: Memory pools, caching, and edge case handling
 - 🔧 **Type Safe**: Full Rust type safety and compile-time guarantees
 - 🌐 **Cross Platform**: Works in browsers and server-side rendering
+- 📦 **Modern Tooling**: pnpm package management with comprehensive ADRs
+- 🧪 **Enterprise Testing**: Near-100% test coverage with Playwright E2E testing
 
 ## 📦 Installation
 
@@ -57,7 +58,20 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-leptos-motion = "0.7.0"
+leptos-motion = "0.8.3"
+leptos-motion-studio = "0.8.3"  # Optional: Complete animation studio
+```
+
+### Package Manager
+
+We use **pnpm** as our primary package manager for optimal performance and disk efficiency:
+
+```bash
+# Install pnpm (if not already installed)
+npm install -g pnpm
+
+# Install dependencies
+pnpm install
 ```
 
 ## 🚀 Quick Start
@@ -237,7 +251,133 @@ pub fn AnimatedList() -> impl IntoView {
 }
 ```
 
-## 🌟 New in v0.7.0
+## 🎬 Motion Studio
+
+The complete animation studio provides professional-grade tools for creating complex animations:
+
+### Timeline Editor
+```rust
+use leptos_motion_studio::timeline::{TimelineEditor, AnimationProperty, AnimationValue};
+
+#[component]
+pub fn AnimationTimeline() -> impl IntoView {
+    let (timeline, set_timeline) = create_signal(Timeline3D::new("My Animation".to_string(), 10.0));
+    
+    view! {
+        <TimelineEditor
+            timeline=timeline
+            on_timeline_change=move |new_timeline| set_timeline.set(new_timeline)
+        />
+    }
+}
+```
+
+### 3D Transforms
+```rust
+use leptos_motion_studio::transforms::{Transform3D, Transform3DEditor};
+
+#[component]
+pub fn Transform3DDemo() -> impl IntoView {
+    let (transform, set_transform) = create_signal(Transform3D::new());
+    
+    view! {
+        <Transform3DEditor
+            transform=transform
+            on_change=move |new_transform| set_transform.set(new_transform)
+        />
+    }
+}
+```
+
+### SVG Path Morphing
+```rust
+use leptos_motion_studio::morphing::SvgMorphingEditor;
+
+#[component]
+pub fn PathMorphingDemo() -> impl IntoView {
+    view! {
+        <SvgMorphingEditor
+            source_path="M 50 50 L 150 50 L 100 150 Z"
+            target_path="M 50 100 L 150 100 L 100 50 Z"
+            progress=0.5
+        />
+    }
+}
+```
+
+## 🚀 WebGL Acceleration
+
+GPU-accelerated animations with advanced post-processing effects:
+
+```rust
+use leptos_motion_studio::webgl::{WebGLRenderer, GPUAnimation};
+
+#[component]
+pub fn WebGLDemo() -> impl IntoView {
+    let renderer = WebGLRenderer::new();
+    
+    view! {
+        <div class="webgl-container">
+            <GPUAnimation
+                renderer=renderer
+                effects=vec![
+                    "bloom".to_string(),
+                    "ssao".to_string(),
+                    "tone_mapping".to_string()
+                ]
+            />
+        </div>
+    }
+}
+```
+
+## 🌟 New in v0.8.3
+
+### Complete Motion Studio
+
+Professional-grade animation tools with timeline editor, 3D transforms, and path morphing:
+
+### Enhanced CubicBezier Easing
+
+Advanced easing functions with custom curve support:
+
+```rust
+use leptos_motion_core::easing::{Easing, CubicBezier};
+
+<MotionDiv
+    animate=motion_target!(
+        "x" => AnimationValue::Pixels(200.0)
+    )
+    transition=Transition {
+        duration: Some(0.6),
+        ease: Easing::CubicBezier(CubicBezier::new(0.4, 0.0, 0.2, 1.0)),
+        ..Default::default()
+    }
+>
+    "Custom CubicBezier Animation"
+</MotionDiv>
+```
+
+### Export Functionality
+
+Export animations to multiple formats:
+
+```rust
+use leptos_motion_studio::export::{AnimationExporter, ExportFormat};
+
+let exporter = AnimationExporter::new(&project);
+let css_result = exporter.export(ExportFormat::CSS);
+let waapi_result = exporter.export(ExportFormat::WAAPI);
+let framer_result = exporter.export(ExportFormat::FramerMotion);
+```
+
+### pnpm Package Management
+
+Modern package management with pnpm for optimal performance and disk efficiency.
+
+### Architecture Decision Records
+
+Comprehensive ADRs documenting our development practices and standards for enterprise-grade development.
 
 ### Spring Physics Engine
 
@@ -652,7 +792,12 @@ let keyframes = Keyframes::new()
 
 - [API Reference](https://docs.rs/leptos-motion)
 - [Examples](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples)
-- [Migration Guide](https://github.com/cloud-shuttle/leptos-motion/blob/main/docs/migration/framer-motion.md)
+- [Motion Studio Guide](https://github.com/cloud-shuttle/leptos-motion/tree/main/crates/leptos-motion-studio)
+- [WebGL Demo](https://github.com/cloud-shuttle/leptos-motion/tree/main/examples/webgl-demo)
+- [Architecture Decision Records](https://github.com/cloud-shuttle/leptos-motion/tree/main/docs/adr)
+- [Migration Guide](https://github.com/cloud-shuttle/leptos-motion/blob/main/MIGRATION_GUIDE.md)
+- [Compatibility Analysis](https://github.com/cloud-shuttle/leptos-motion/blob/main/COMPATIBILITY_ANALYSIS.md)
+- [Release Notes v0.8.3](https://github.com/cloud-shuttle/leptos-motion/blob/main/RELEASE_NOTES_v0.8.3.md)
 
 ## 🤝 Contributing
 

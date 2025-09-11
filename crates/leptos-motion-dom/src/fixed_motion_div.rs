@@ -7,11 +7,16 @@ use leptos_motion_core::*;
 use std::collections::HashMap;
 
 /// ✅ FIXED: Signal-based animation controller using proven patterns
+/// A fixed animation controller that manages animation state using Leptos signals
 #[derive(Clone)]
 pub struct FixedAnimationController {
+    /// Current animation values
     pub current_values: ReadSignal<HashMap<String, AnimationValue>>,
+    /// Target animation values
     pub target_values: ReadSignal<HashMap<String, AnimationValue>>,
+    /// Whether the animation is currently playing
     pub is_playing: ReadSignal<bool>,
+    /// Animation progress from 0.0 to 1.0
     pub progress: ReadSignal<f32>,
     // Store write signals for updates
     _set_current_values: WriteSignal<HashMap<String, AnimationValue>>,
@@ -21,6 +26,7 @@ pub struct FixedAnimationController {
 }
 
 impl FixedAnimationController {
+    /// Create a new fixed animation controller with initial values
     pub fn new(initial_values: HashMap<String, AnimationValue>) -> Self {
         let (current_values, set_current_values) = signal(initial_values.clone());
         let (target_values, set_target_values) = signal(initial_values);
@@ -52,6 +58,7 @@ impl FixedAnimationController {
         }
     }
 
+    /// Animate to the specified target values
     pub fn animate_to(&self, target: HashMap<String, AnimationValue>) {
         // ✅ Update target values (triggers effect)
         self._set_target_values.set(target);

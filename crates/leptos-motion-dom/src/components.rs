@@ -110,12 +110,9 @@ pub fn MotionDiv(
 
     // ✅ CRITICAL FIX: Handle animate prop with proper signal tracking
     if let Some(animate_target) = animate {
-        // Convert static animate target to reactive signal
-        let (animate_signal, set_animate_signal) = signal(animate_target.clone());
-
-        // Create a reactive effect that updates styles when animate signal changes
+        // Create a reactive effect that updates styles when animate target changes
         Effect::new(move |_| {
-            let animate_values = animate_signal.get();
+            let animate_values = animate_target.clone();
             let mut styles = current_styles.get();
             for (key, value) in animate_values.iter() {
                 styles.insert(key.clone(), value.to_string_value());

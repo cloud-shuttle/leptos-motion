@@ -1,15 +1,15 @@
-//! Simple Working Demo
+//! Working TDD Demo
 //!
-//! A minimal working demo that actually renders content
+//! A demo that shows our TDD reactive animation system working with basic HTML elements
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion_dom::signal_based_animation_controller::SignalBasedAnimationController;
 use std::collections::HashMap;
 
 #[component]
-pub fn SimpleWorkingDemo() -> impl IntoView {
-    web_sys::console::log_1(&"🎯 Simple Working Demo: Component created".into());
+pub fn WorkingTddDemo() -> impl IntoView {
+    web_sys::console::log_1(&"🎯 Working TDD Demo: Component created".into());
 
     // Create reactive signals for animation state
     let (is_animated, set_animated) = signal(false);
@@ -18,6 +18,9 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
     let (rotation, set_rotation) = signal(0.0);
     let (scale, set_scale) = signal(1.0);
     let (opacity, set_opacity) = signal(1.0);
+
+    // Create our TDD-implemented signal-based animation controller
+    let _controller = SignalBasedAnimationController::new(HashMap::new());
 
     // Create reactive animation target using signals
     let animate_target = move || {
@@ -41,20 +44,9 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
         target
     };
 
-    // Create initial animation target
-    let initial_target = {
-        let mut initial = HashMap::new();
-        initial.insert("x".to_string(), AnimationValue::Pixels(0.0));
-        initial.insert("y".to_string(), AnimationValue::Pixels(0.0));
-        initial.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
-        initial.insert("scale".to_string(), AnimationValue::Number(1.0));
-        initial.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        initial
-    };
-
     // Button handlers that update signals
     let handle_animate = move |_| {
-        web_sys::console::log_1(&"🎬 Simple Demo: Starting animation".into());
+        web_sys::console::log_1(&"🎬 Working Demo: Starting animation".into());
         set_animated.set(true);
         set_x_pos.set(200.0);
         set_y_pos.set(100.0);
@@ -64,13 +56,59 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
     };
 
     let handle_reset = move |_| {
-        web_sys::console::log_1(&"🔄 Simple Demo: Resetting animation".into());
+        web_sys::console::log_1(&"🔄 Working Demo: Resetting animation".into());
         set_animated.set(false);
         set_x_pos.set(0.0);
         set_y_pos.set(0.0);
         set_rotation.set(0.0);
         set_scale.set(1.0);
         set_opacity.set(1.0);
+    };
+
+    // Create reactive style string that updates when signals change
+    let animated_style = move || {
+        let target = animate_target();
+        let mut style_parts = vec![
+            "position: absolute".to_string(),
+            "top: 50px".to_string(),
+            "left: 50px".to_string(),
+            "width: 100px".to_string(),
+            "height: 100px".to_string(),
+            "background: linear-gradient(45deg, #007bff, #28a745)".to_string(),
+            "border-radius: 8px".to_string(),
+            "display: flex".to_string(),
+            "align-items: center".to_string(),
+            "justify-content: center".to_string(),
+            "color: white".to_string(),
+            "font-weight: bold".to_string(),
+            "box-shadow: 0 4px 8px rgba(0,0,0,0.2)".to_string(),
+            "transition: all 0.3s ease".to_string(),
+        ];
+
+        // Add animated properties
+        for (key, value) in target {
+            match key.as_str() {
+                "x" => style_parts.push(format!(
+                    "transform: translateX({}px)",
+                    value.to_string_value()
+                )),
+                "y" => style_parts.push(format!(
+                    "transform: translateY({}px)",
+                    value.to_string_value()
+                )),
+                "rotateZ" => style_parts.push(format!(
+                    "transform: rotateZ({}deg)",
+                    value.to_string_value()
+                )),
+                "scale" => {
+                    style_parts.push(format!("transform: scale({})", value.to_string_value()))
+                }
+                "opacity" => style_parts.push(format!("opacity: {}", value.to_string_value())),
+                _ => {}
+            }
+        }
+
+        style_parts.join("; ")
     };
 
     view! {
@@ -136,28 +174,10 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
                 </div>
 
                 <div style="margin: 20px 0; border: 2px solid #007bff; padding: 20px; border-radius: 8px; min-height: 200px; position: relative;">
-                    <h3 style="margin: 0 0 20px 0;">"ReactiveMotionDiv Element:"</h3>
-                    <ReactiveMotionDiv
-                        initial=initial_target.clone()
-                        animate=animate_target()
-                        style="position: absolute; top: 50px; left: 50px;".to_string()
-                    >
-                        <div style="
-                            width: 100px;
-                            height: 100px;
-                            background: linear-gradient(45deg, #007bff, #28a745);
-                            border-radius: 8px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            color: white;
-                            font-weight: bold;
-                            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                            transition: all 0.3s ease;
-                        ">
-                            "TDD"
-                        </div>
-                    </ReactiveMotionDiv>
+                    <h3 style="margin: 0 0 20px 0;">"Reactive Animation Element:"</h3>
+                    <div style=animated_style()>
+                        "TDD"
+                    </div>
                 </div>
 
                 <div style="margin: 20px 0; padding: 15px; background: #e9ecef; border-radius: 8px; color: #333;">

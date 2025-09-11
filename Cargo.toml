@@ -7,7 +7,6 @@ members = [
     "crates/leptos-motion-scroll",
     "crates/leptos-motion-macros",
     "crates/leptos-motion",
-    "crates/leptos-motion-studio",
     "examples/v0.7-showcase",
     "examples/comprehensive-demo",
     "benches",

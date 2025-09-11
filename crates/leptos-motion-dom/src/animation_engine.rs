@@ -9,6 +9,7 @@
 //! - Transform animations
 
 use leptos_motion_core::*;
+#[allow(unused_imports)]
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -235,6 +236,7 @@ impl AnimationEngine {
     }
 
     /// Update all animations
+    #[allow(dead_code)]
     fn update_animations(&mut self) {
         let mut completed_animations = Vec::new();
         let mut current_values = HashMap::new();
@@ -285,6 +287,7 @@ impl AnimationEngine {
     }
 
     /// Update a single animation
+    #[allow(dead_code)]
     fn update_single_animation(&self, animation: &mut PropertyAnimation) {
         let delta_time = 1.0 / 60.0; // Assume 60fps
         animation.current_time += delta_time;
@@ -297,6 +300,7 @@ impl AnimationEngine {
     }
 
     /// Update a spring animation (static version)
+    #[allow(dead_code)]
     fn update_spring_animation_static(animation: &mut PropertyAnimation, delta_time: f64) {
         // Spring physics implementation
         let spring_config = match &animation.transition.ease {
@@ -326,6 +330,7 @@ impl AnimationEngine {
     }
 
     /// Update an eased animation (static version)
+    #[allow(dead_code)]
     fn update_eased_animation_static(animation: &mut PropertyAnimation) {
         let progress = (animation.current_time / animation.duration).min(1.0);
         let eased_progress = Self::apply_easing_static(progress, &animation.transition.ease);
@@ -340,6 +345,7 @@ impl AnimationEngine {
     }
 
     /// Apply easing function to progress (static version)
+    #[allow(dead_code)]
     fn apply_easing_static(progress: f64, easing: &Easing) -> f64 {
         match easing {
             Easing::Linear => progress,

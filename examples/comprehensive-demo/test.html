@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Test</title>
+</head>
+<body>
+    <h1>WASM Test</h1>
+    <div id="output"></div>
+    <script type="module">
+        try {
+            console.log('Loading WASM module...');
+            import('./pkg/comprehensive_demo.js').then(module => {
+                console.log('WASM module loaded successfully:', module);
+                document.getElementById('output').textContent = 'WASM module loaded successfully!';
+            }).catch(error => {
+                console.error('Failed to load WASM module:', error);
+                document.getElementById('output').textContent = 'Failed to load WASM module: ' + error.message;
+            });
+        } catch (error) {
+            console.error('Error in script:', error);
+            document.getElementById('output').textContent = 'Error in script: ' + error.message;
+        }
+    </script>
+</body>
+</html>

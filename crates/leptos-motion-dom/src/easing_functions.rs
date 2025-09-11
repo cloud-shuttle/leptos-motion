@@ -299,6 +299,7 @@ impl CubicBezier {
     }
 
     /// Find the x value for a given t using Newton's method
+    #[allow(dead_code)]
     fn cubic_bezier_x(&self, t: f64) -> f64 {
         let mut t = t;
         for _ in 0..8 {
@@ -312,11 +313,13 @@ impl CubicBezier {
     }
 
     /// Calculate x value for given t
+    #[allow(dead_code)]
     fn cubic_bezier_x_t(&self, t: f64) -> f64 {
         3.0 * (1.0 - t) * (1.0 - t) * t * self.x1 + 3.0 * (1.0 - t) * t * t * self.x2 + t * t * t
     }
 
     /// Calculate derivative of x with respect to t
+    #[allow(dead_code)]
     fn cubic_bezier_x_derivative(&self, t: f64) -> f64 {
         3.0 * (1.0 - t) * (1.0 - t) * self.x1
             + 6.0 * (1.0 - t) * t * (self.x2 - self.x1)

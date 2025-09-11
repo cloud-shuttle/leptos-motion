@@ -1,5 +1,5 @@
 //! Comprehensive test suite for Motion Studio
-//! 
+//!
 //! This test suite ensures all studio functionality works correctly
 //! without panics and handles edge cases gracefully.
 
@@ -46,22 +46,22 @@ fn test_project_creation(test_project: StudioProject) {
 #[wasm_bindgen_test]
 fn test_project_animation_management() {
     let mut project = StudioProject::new("Test Project");
-    
+
     // Add animation
     let anim_id = project.add_animation("Test Animation");
     assert!(!anim_id.is_nil());
     assert_eq!(project.animations().len(), 1);
-    
+
     // Get animation
     let animation = project.get_animation(anim_id);
     assert!(animation.is_some());
     assert_eq!(animation.unwrap().name, "Test Animation");
-    
+
     // Remove animation
     let result = project.remove_animation(anim_id);
     assert!(result.is_ok());
     assert_eq!(project.animations().len(), 0);
-    
+
     // Try to remove non-existent animation
     let result = project.remove_animation(anim_id);
     assert!(result.is_err());
@@ -72,16 +72,16 @@ fn test_project_animation_management() {
 fn test_project_serialization() {
     let mut project = StudioProject::new("Serialization Test");
     project.add_animation("Test Animation");
-    
+
     // Test JSON serialization
     let json = serde_json::to_string(&project);
     assert!(json.is_ok());
-    
+
     // Test JSON deserialization
     let json_str = json.unwrap();
     let deserialized: std::result::Result<StudioProject, _> = serde_json::from_str(&json_str);
     assert!(deserialized.is_ok());
-    
+
     let deserialized_project = deserialized.unwrap();
     assert_eq!(deserialized_project.name(), "Serialization Test");
     assert_eq!(deserialized_project.animations().len(), 1);
@@ -105,7 +105,7 @@ fn test_timeline_creation(test_timeline: Timeline3D) {
 #[wasm_bindgen_test]
 fn test_timeline_keyframe_management() {
     let mut timeline = Timeline3D::new("Test".to_string(), 10.0);
-    
+
     // Add keyframes
     let kf1 = timeline.add_keyframe(
         AnimationProperty::TranslateX,
@@ -113,29 +113,29 @@ fn test_timeline_keyframe_management() {
         AnimationValue::Number(50.0),
     );
     assert!(kf1.is_ok());
-    
+
     let kf2 = timeline.add_keyframe(
         AnimationProperty::TranslateX,
         5.0,
         AnimationValue::Number(100.0),
     );
     assert!(kf2.is_ok());
-    
+
     // Check keyframes were added
     assert_eq!(timeline.keyframes().len(), 2);
-    
+
     // Test interpolation
     let state = timeline.current_state();
     assert!(state.is_ok());
-    
+
     // Test seeking
     timeline.seek(3.5);
     assert_eq!(timeline.current_time, 3.5);
-    
+
     // Test playback
     timeline.play();
     assert!(timeline.is_playing);
-    
+
     // Test update
     let state = timeline.update(1.0);
     assert!(state.is_ok());
@@ -146,7 +146,7 @@ fn test_timeline_keyframe_management() {
 #[wasm_bindgen_test]
 fn test_timeline_edge_cases() {
     let mut timeline = Timeline3D::new("Edge Cases".to_string(), 5.0);
-    
+
     // Test negative time
     let result = timeline.add_keyframe(
         AnimationProperty::TranslateX,
@@ -154,7 +154,7 @@ fn test_timeline_edge_cases() {
         AnimationValue::Number(0.0),
     );
     assert!(result.is_err());
-    
+
     // Test time beyond duration
     let result = timeline.add_keyframe(
         AnimationProperty::TranslateX,
@@ -162,11 +162,11 @@ fn test_timeline_edge_cases() {
         AnimationValue::Number(0.0),
     );
     assert!(result.is_err());
-    
+
     // Test seeking beyond bounds
     timeline.seek(-1.0);
     assert_eq!(timeline.current_time, 0.0);
-    
+
     timeline.seek(10.0);
     assert_eq!(timeline.current_time, 5.0);
 }
@@ -187,20 +187,20 @@ fn test_3d_transform_creation(test_transform: Transform3D) {
 #[wasm_bindgen_test]
 fn test_3d_transform_operations() {
     let mut transform = Transform3D::new();
-    
+
     // Test translation
     transform.translation = glam::Vec3::new(10.0, 20.0, 30.0);
     assert_eq!(transform.translation(), glam::Vec3::new(10.0, 20.0, 30.0));
-    
+
     // Test rotation
     let rotation = glam::Quat::from_rotation_z(std::f32::consts::PI / 4.0);
     transform.rotation = rotation;
     assert_eq!(transform.rotation(), rotation);
-    
+
     // Test scale
     transform.scale = glam::Vec3::new(2.0, 2.0, 2.0);
     assert_eq!(transform.scale(), glam::Vec3::new(2.0, 2.0, 2.0));
-    
+
     // Test matrix conversion
     let matrix = transform.to_matrix();
     assert_ne!(matrix, glam::Mat4::IDENTITY);
@@ -211,25 +211,34 @@ fn test_3d_transform_operations() {
 fn test_3d_transform_interpolation() {
     let transform1 = Transform3D::from_translation(glam::Vec3::new(0.0, 0.0, 0.0));
     let transform2 = Transform3D::from_translation(glam::Vec3::new(100.0, 100.0, 100.0));
-    
+
     // Test interpolation at t=0
     let interpolated = transform1.lerp(&transform2, 0.0);
     assert_eq!(interpolated.translation(), glam::Vec3::new(0.0, 0.0, 0.0));
-    
+
     // Test interpolation at t=1
     let interpolated = transform1.lerp(&transform2, 1.0);
-    assert_eq!(interpolated.translation(), glam::Vec3::new(100.0, 100.0, 100.0));
-    
+    assert_eq!(
+        interpolated.translation(),
+        glam::Vec3::new(100.0, 100.0, 100.0)
+    );
+
     // Test interpolation at t=0.5
     let interpolated = transform1.lerp(&transform2, 0.5);
-    assert_eq!(interpolated.translation(), glam::Vec3::new(50.0, 50.0, 50.0));
-    
+    assert_eq!(
+        interpolated.translation(),
+        glam::Vec3::new(50.0, 50.0, 50.0)
+    );
+
     // Test clamping
     let interpolated = transform1.lerp(&transform2, -0.5);
     assert_eq!(interpolated.translation(), glam::Vec3::new(0.0, 0.0, 0.0));
-    
+
     let interpolated = transform1.lerp(&transform2, 1.5);
-    assert_eq!(interpolated.translation(), glam::Vec3::new(100.0, 100.0, 100.0));
+    assert_eq!(
+        interpolated.translation(),
+        glam::Vec3::new(100.0, 100.0, 100.0)
+    );
 }
 
 // ============================================================================
@@ -242,7 +251,7 @@ fn test_svg_path_parsing() {
     let path_data = "M 10 10 L 90 90 Z";
     let path = SvgPath::from_data(path_data);
     assert!(path.is_ok());
-    
+
     let path = path.unwrap();
     assert_eq!(path.commands.len(), 3);
     assert!(!path.data.is_empty());
@@ -260,7 +269,7 @@ fn test_path_morphing_basic() {
     let morpher = morpher.unwrap();
     let interpolated = morpher.interpolate(0.5);
     assert!(interpolated.is_ok());
-    
+
     let result = interpolated.unwrap();
     assert!(!result.data.is_empty());
 }
@@ -272,19 +281,19 @@ fn test_path_morphing_edge_cases() {
     let invalid_path = "INVALID PATH DATA";
     let result = SvgPath::from_data(invalid_path);
     assert!(result.is_err());
-    
+
     // Test empty path
     let empty_path = "";
     let result = SvgPath::from_data(empty_path);
     assert!(result.is_err());
-    
+
     // Test morphing with incompatible paths
     let path1 = "M 0 0 L 100 0 Z";
     let path2 = "M 0 0 C 50 50 100 100 200 0 Z";
-    
+
     let morpher = PathMorpher::new(path1, path2);
     assert!(morpher.is_ok());
-    
+
     // Should handle interpolation gracefully
     let morpher = morpher.unwrap();
     let result = morpher.interpolate(0.5);
@@ -300,7 +309,7 @@ fn test_path_morphing_edge_cases() {
 fn test_export_formats(test_project: StudioProject) {
     let exporter = AnimationExporter::new(&test_project);
     let formats = exporter.supported_formats();
-    
+
     assert!(formats.contains(&ExportFormat::CSS));
     assert!(formats.contains(&ExportFormat::WAAPI));
     assert!(formats.contains(&ExportFormat::LeptosMotion));
@@ -312,11 +321,11 @@ fn test_export_formats(test_project: StudioProject) {
 fn test_css_export() {
     let mut project = StudioProject::new("CSS Export Test");
     project.add_animation("test-animation");
-    
+
     let exporter = AnimationExporter::new(&project);
     let result = exporter.export(ExportFormat::CSS);
     assert!(result.is_ok());
-    
+
     let export_result = result.unwrap();
     assert!(!export_result.content.is_empty());
     assert_eq!(export_result.mime_type, "text/css");
@@ -328,11 +337,11 @@ fn test_css_export() {
 fn test_waapi_export() {
     let mut project = StudioProject::new("WAAPI Export Test");
     project.add_animation("test-animation");
-    
+
     let exporter = AnimationExporter::new(&project);
     let result = exporter.export(ExportFormat::WAAPI);
     assert!(result.is_ok());
-    
+
     let export_result = result.unwrap();
     assert!(!export_result.content.is_empty());
     assert_eq!(export_result.mime_type, "text/javascript");
@@ -345,11 +354,11 @@ fn test_waapi_export() {
 fn test_leptos_motion_export() {
     let mut project = StudioProject::new("Leptos Export Test");
     project.add_animation("TestAnimation");
-    
+
     let exporter = AnimationExporter::new(&project);
     let result = exporter.export(ExportFormat::LeptosMotion);
     assert!(result.is_ok());
-    
+
     let export_result = result.unwrap();
     assert!(!export_result.content.is_empty());
     assert_eq!(export_result.mime_type, "text/x-rust");
@@ -389,7 +398,7 @@ fn test_webgl_error_handling() {
             }
         }
     });
-    
+
     // Should not panic
     assert!(result.is_ok());
 }
@@ -411,7 +420,7 @@ fn test_animation_pool_creation() {
 #[wasm_bindgen_test]
 fn test_animation_pool_allocation() {
     let pool = AnimationPool::new(5);
-    
+
     // Allocate all available animations
     let mut allocated = Vec::new();
     for _ in 0..5 {
@@ -419,14 +428,14 @@ fn test_animation_pool_allocation() {
             allocated.push(anim);
         }
     }
-    
+
     assert_eq!(pool.active_count(), 5);
     assert_eq!(pool.available_count(), 0);
-    
+
     // Try to allocate one more (should fail gracefully)
     let result = pool.allocate();
     assert!(result.is_err());
-    
+
     // Deallocate one
     if let Some(anim) = allocated.pop() {
         pool.deallocate(anim);
@@ -444,15 +453,15 @@ fn test_animation_pool_allocation() {
 fn test_perspective_creation() {
     let perspective = Perspective::new(45.0, 1.0, 0.1, 100.0);
     let matrix = perspective.to_matrix();
-    
+
     // Basic sanity check - matrix should not be identity
     assert_ne!(matrix, glam::Mat4::IDENTITY);
-    
+
     // Test edge cases
     let perspective_zero = Perspective::new(0.0, 1.0, 0.1, 100.0);
     let matrix_zero = perspective_zero.to_matrix();
     assert_ne!(matrix_zero, glam::Mat4::IDENTITY);
-    
+
     let perspective_negative = Perspective::new(-45.0, 1.0, 0.1, 100.0);
     let matrix_negative = perspective_negative.to_matrix();
     assert_ne!(matrix_negative, glam::Mat4::IDENTITY);
@@ -466,7 +475,7 @@ fn test_perspective_creation() {
 #[wasm_bindgen_test]
 fn test_easing_functions() {
     use crate::transforms::EasingFunction;
-    
+
     // Test all easing functions
     let easing_functions = [
         EasingFunction::Linear,
@@ -474,24 +483,24 @@ fn test_easing_functions() {
         EasingFunction::EaseOut,
         EasingFunction::EaseInOut,
     ];
-    
+
     for easing in easing_functions {
         // Test at t=0
         let result_0 = easing.apply(0.0);
         assert_eq!(result_0, 0.0);
-        
+
         // Test at t=1
         let result_1 = easing.apply(1.0);
         assert_eq!(result_1, 1.0);
-        
+
         // Test at t=0.5 (should be between 0 and 1)
         let result_05 = easing.apply(0.5);
         assert!(result_05 >= 0.0 && result_05 <= 1.0);
-        
+
         // Test clamping
         let result_negative = easing.apply(-0.5);
         assert_eq!(result_negative, 0.0);
-        
+
         let result_positive = easing.apply(1.5);
         assert_eq!(result_positive, 1.0);
     }
@@ -505,7 +514,7 @@ fn test_easing_functions() {
 #[wasm_bindgen_test]
 fn test_timeline_stress_test() {
     let mut timeline = Timeline3D::new("Stress Test".to_string(), 100.0);
-    
+
     // Add many keyframes
     for i in 0..100 {
         let time = (i as f32) * 0.1;
@@ -516,9 +525,9 @@ fn test_timeline_stress_test() {
         );
         assert!(result.is_ok());
     }
-    
+
     assert_eq!(timeline.keyframes().len(), 100);
-    
+
     // Test seeking to various positions
     for i in 0..1000 {
         let time = (i as f32) * 0.1;
@@ -532,23 +541,23 @@ fn test_timeline_stress_test() {
 #[wasm_bindgen_test]
 fn test_project_stress_test() {
     let mut project = StudioProject::new("Stress Test Project");
-    
+
     // Add many animations
     for i in 0..100 {
         let anim_id = project.add_animation(&format!("Animation {}", i));
         assert!(!anim_id.is_nil());
     }
-    
+
     assert_eq!(project.animations().len(), 100);
-    
+
     // Test serialization with many animations
     let json = serde_json::to_string(&project);
     assert!(json.is_ok());
-    
+
     let json_str = json.unwrap();
     let deserialized: std::result::Result<StudioProject, _> = serde_json::from_str(&json_str);
     assert!(deserialized.is_ok());
-    
+
     let deserialized_project = deserialized.unwrap();
     assert_eq!(deserialized_project.animations().len(), 100);
 }
@@ -557,14 +566,14 @@ fn test_project_stress_test() {
 #[wasm_bindgen_test]
 fn test_export_stress_test() {
     let mut project = StudioProject::new("Export Stress Test");
-    
+
     // Add many animations
     for i in 0..50 {
         project.add_animation(&format!("Animation_{}", i));
     }
-    
+
     let exporter = AnimationExporter::new(&project);
-    
+
     // Test all export formats
     let formats = exporter.supported_formats();
     for format in formats {
@@ -575,7 +584,7 @@ fn test_export_stress_test() {
             ExportFormat::FramerMotion => exporter.export(ExportFormat::FramerMotion),
             _ => continue, // Skip unimplemented formats
         };
-        
+
         assert!(result.is_ok());
         let export_result = result.unwrap();
         assert!(!export_result.content.is_empty());

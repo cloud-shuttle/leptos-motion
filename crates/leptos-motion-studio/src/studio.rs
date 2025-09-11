@@ -1,9 +1,13 @@
 //! Main Motion Studio component and API
 
 use crate::{Result, StudioError, project::*, timeline::*, transforms::*};
-use leptos::*;
-use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, provide_context, create_effect, expect_context, create_node_ref, ReadSignal, WriteSignal, Callback, event_target_value, Get, Set};
 use leptos::attr::global::ClassAttribute;
+use leptos::prelude::{
+    Callback, ElementChild, Get, NodeRefAttribute, OnAttribute, ReadSignal, Set, StyleAttribute,
+    WriteSignal, create_effect, create_node_ref, create_signal, event_target_value, expect_context,
+    provide_context,
+};
+use leptos::*;
 use std::collections::HashMap;
 use uuid::Uuid;
 

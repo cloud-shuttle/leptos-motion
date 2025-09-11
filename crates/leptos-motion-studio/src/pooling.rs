@@ -1,9 +1,12 @@
 //! Animation pooling and memory management for optimized performance
 
 use crate::{Result, StudioError, timeline::AnimationValue, transforms::Transform3D};
-use leptos::*;
-use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_effect, set_interval, Get, Set};
 use leptos::attr::global::ClassAttribute;
+use leptos::prelude::{
+    ElementChild, Get, NodeRefAttribute, OnAttribute, Set, StyleAttribute, create_effect,
+    create_signal, set_interval,
+};
+use leptos::*;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, Mutex, Weak};
@@ -616,7 +619,7 @@ impl AnimationPool {
                 }
             }
         }
-        
+
         // Update stats after the loop
         inner.memory_stats.available_count -= total_removed;
         inner.memory_stats.total_allocated -= total_removed;

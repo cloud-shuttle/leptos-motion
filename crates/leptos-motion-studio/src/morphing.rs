@@ -1,9 +1,12 @@
 //! SVG path morphing functionality for Motion Studio
 
 use crate::{Result, StudioError};
-use leptos::*;
-use leptos::prelude::{ElementChild, PropAttribute, CustomAttribute, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_memo, event_target_value, Callback, Get, Set};
 use leptos::attr::global::ClassAttribute;
+use leptos::prelude::{
+    Callback, CustomAttribute, ElementChild, Get, NodeRefAttribute, OnAttribute, PropAttribute,
+    Set, StyleAttribute, create_memo, create_signal, event_target_value,
+};
+use leptos::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use uuid::Uuid;

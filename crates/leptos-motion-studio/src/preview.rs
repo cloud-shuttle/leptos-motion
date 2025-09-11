@@ -1,16 +1,20 @@
 //! Live preview functionality for Motion Studio
 
 use crate::{
-    Result, StudioError,
+    // webgl::WebGLRenderer, // Temporarily disabled
+    Result,
+    StudioError,
     pooling::AnimationPool,
     project::StudioProject,
     timeline::{AnimationProperty, AnimationValue, Timeline3D},
     transforms::Transform3D,
-    // webgl::WebGLRenderer, // Temporarily disabled
+};
+use leptos::attr::global::ClassAttribute;
+use leptos::prelude::{
+    ElementChild, Get, NodeRefAttribute, OnAttribute, Set, StyleAttribute, create_effect,
+    create_node_ref, create_signal,
 };
 use leptos::*;
-use leptos::prelude::{ElementChild, NodeRefAttribute, StyleAttribute, OnAttribute, create_signal, create_node_ref, create_effect, Get, Set};
-use leptos::attr::global::ClassAttribute;
 use std::collections::HashMap;
 use uuid::Uuid;
 use wasm_bindgen::prelude::*;

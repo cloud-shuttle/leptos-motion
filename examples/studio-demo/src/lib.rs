@@ -8,10 +8,10 @@
 //! - Export functionality
 
 use leptos::*;
-use leptos_motion_studio::*;
-use leptos_motion_studio::timeline::{AnimationProperty, AnimationValue, TimelineEditor};
+use leptos_motion_studio::export::{ExportFormat, ExportResult};
 use leptos_motion_studio::morphing::SvgMorphingEditor;
-use leptos_motion_studio::export::{ExportResult, ExportFormat};
+use leptos_motion_studio::timeline::{AnimationProperty, AnimationValue, TimelineEditor};
+use leptos_motion_studio::*;
 use wasm_bindgen::prelude::*;
 
 /// Main studio demo component
@@ -22,11 +22,11 @@ pub fn StudioDemo() -> impl IntoView {
 
     view! {
         <div class="studio-demo">
-            <StudioDemoHeader 
+            <StudioDemoHeader
                 demo_mode=demo_mode
                 set_demo_mode=set_demo_mode
             />
-            
+
             <div class="studio-demo__content">
                 {move || match demo_mode.get() {
                     DemoMode::Timeline => view! { <TimelineDemo /> },
@@ -94,7 +94,8 @@ fn StudioDemoHeader(
 /// Timeline demo component
 #[component]
 fn TimelineDemo() -> impl IntoView {
-    let (timeline, set_timeline) = create_signal(Timeline3D::new("Demo Timeline".to_string(), 10.0));
+    let (timeline, set_timeline) =
+        create_signal(Timeline3D::new("Demo Timeline".to_string(), 10.0));
     let (selected_property, set_selected_property) = create_signal(AnimationProperty::Translation);
 
     view! {
@@ -120,7 +121,7 @@ fn TimelineDemo() -> impl IntoView {
                         <option value="Opacity">"Opacity"</option>
                     </select>
                 </div>
-                
+
                 <div class="timeline-actions">
                     <button on:click=move |_| {
                         let mut tl = timeline.get();
@@ -133,7 +134,7 @@ fn TimelineDemo() -> impl IntoView {
                     }>
                         "Add Keyframe"
                     </button>
-                    
+
                     <button on:click=move |_| {
                         let mut tl = timeline.get();
                         tl.play();
@@ -141,7 +142,7 @@ fn TimelineDemo() -> impl IntoView {
                     }>
                         "Play"
                     </button>
-                    
+
                     <button on:click=move |_| {
                         let mut tl = timeline.get();
                         tl.pause();
@@ -151,7 +152,7 @@ fn TimelineDemo() -> impl IntoView {
                     </button>
                 </div>
             </div>
-            
+
             <div class="timeline-demo__editor">
                 <TimelineEditor
                     timeline=Some(timeline.get())
@@ -172,7 +173,7 @@ fn Transform3DDemo() -> impl IntoView {
         <div class="transform-3d-demo">
             <div class="transform-3d-demo__controls">
                 <h3>"3D Transform Controls"</h3>
-                
+
                 <div class="transform-controls">
                     <div class="control-group">
                         <label>"Translation X:"</label>
@@ -189,7 +190,7 @@ fn Transform3DDemo() -> impl IntoView {
                             }
                         />
                     </div>
-                    
+
                     <div class="control-group">
                         <label>"Translation Y:"</label>
                         <input
@@ -202,7 +203,7 @@ fn Transform3DDemo() -> impl IntoView {
                             }
                         />
                     </div>
-                    
+
                     <div class="control-group">
                         <label>"Rotation Z:"</label>
                         <input
@@ -217,9 +218,9 @@ fn Transform3DDemo() -> impl IntoView {
                     </div>
                 </div>
             </div>
-            
+
             <div class="transform-3d-demo__preview">
-                <div 
+                <div
                     class="transform-preview"
                     style:transform=move || {
                         let t = transform.get();
@@ -261,7 +262,7 @@ fn MorphingDemo() -> impl IntoView {
         <div class="morphing-demo">
             <div class="morphing-demo__controls">
                 <h3>"SVG Path Morphing"</h3>
-                
+
                 <div class="path-inputs">
                     <div class="path-input">
                         <label>"Source Path:"</label>
@@ -270,7 +271,7 @@ fn MorphingDemo() -> impl IntoView {
                             on:input=move |ev| set_source_path.set(event_target_value(&ev))
                         ></textarea>
                     </div>
-                    
+
                     <div class="path-input">
                         <label>"Target Path:"</label>
                         <textarea
@@ -279,7 +280,7 @@ fn MorphingDemo() -> impl IntoView {
                         ></textarea>
                     </div>
                 </div>
-                
+
                 <div class="morph-controls">
                     <label>"Morph Progress:"</label>
                     <input
@@ -296,7 +297,7 @@ fn MorphingDemo() -> impl IntoView {
                     <span>{move || format!("{:.2}", morph_progress.get())}</span>
                 </div>
             </div>
-            
+
             <div class="morphing-demo__preview">
                 <SvgMorphingEditor
                     from_path=Some(source_path.get())
@@ -330,7 +331,7 @@ fn ExportDemo() -> impl IntoView {
         <div class="export-demo">
             <div class="export-demo__controls">
                 <h3>"Export Animation"</h3>
-                
+
                 <div class="format-selector">
                     <label>"Export Format:"</label>
                     <select
@@ -349,7 +350,7 @@ fn ExportDemo() -> impl IntoView {
                         <option value="FramerMotion">"Framer Motion"</option>
                     </select>
                 </div>
-                
+
                 <button on:click=move |_| {
                     let exporter = AnimationExporter::new(&project.get());
                     let result = match export_format.get() {
@@ -364,7 +365,7 @@ fn ExportDemo() -> impl IntoView {
                             metadata: std::collections::HashMap::new(),
                         }),
                     };
-                    
+
                     if let Ok(export_result) = result {
                         set_export_result.set(Some(export_result.content));
                     }
@@ -372,7 +373,7 @@ fn ExportDemo() -> impl IntoView {
                     "Export"
                 </button>
             </div>
-            
+
             <div class="export-demo__result">
                 <h4>"Exported Code:"</h4>
                 <pre class="export-code">
@@ -389,4 +390,3 @@ pub fn main() {
     console_error_panic_hook::set_once();
     mount_to_body(StudioDemo);
 }
-

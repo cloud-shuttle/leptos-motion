@@ -135,9 +135,9 @@ impl KeyframeEditor {
 
     /// Remove a keyframe
     pub fn remove_keyframe(&mut self, property: &AnimationProperty, time: f64) {
-        self.timeline.keyframes.retain(|kf| {
-            !(&kf.property == property && (kf.time - time).abs() < f64::EPSILON)
-        });
+        self.timeline
+            .keyframes
+            .retain(|kf| !(&kf.property == property && (kf.time - time).abs() < f64::EPSILON));
     }
 }
 

@@ -17,8 +17,7 @@ pub enum DragAxis {
 }
 
 /// Drag constraints for limiting drag movement
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct DragConstraints {
     /// Left boundary
     pub left: Option<f64>,
@@ -29,7 +28,6 @@ pub struct DragConstraints {
     /// Bottom boundary
     pub bottom: Option<f64>,
 }
-
 
 /// Drag configuration
 #[derive(Clone, Debug)]
@@ -100,8 +98,7 @@ pub struct EventHandlers {
 /// This is the main public API for motion component props. It provides
 /// a clean, simple interface while hiding the complexity of the
 /// underlying event system.
-#[derive(Clone, Debug)]
-#[derive(Default)]
+#[derive(Clone, Debug, Default)]
 pub struct SimplifiedMotionProps {
     /// Initial animation state
     pub initial: Option<AnimationTarget>,
@@ -784,7 +781,6 @@ impl SimplifiedDragConfig {
         self.elastic > 0.0
     }
 }
-
 
 impl Default for SimplifiedDragConfig {
     fn default() -> Self {

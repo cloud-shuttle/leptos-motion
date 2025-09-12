@@ -6,10 +6,7 @@
 //! - Performance-Optimized Templates for different device tiers
 //! - Real-world Use Case Examples with complete implementations
 
-use crate::{
-    Easing, StaggerConfig, TDDAnimationEngine,
-    TDDAnimationHandle,
-};
+use crate::{Easing, StaggerConfig, TDDAnimationEngine, TDDAnimationHandle};
 use std::collections::HashMap;
 
 /// Builder for creating complex animation sequences
@@ -359,10 +356,7 @@ impl UIPatternLibrary {
 
         self.patterns.insert(name.clone(), pattern);
 
-        self.categories
-            .entry(category)
-            .or_default()
-            .push(name);
+        self.categories.entry(category).or_default().push(name);
     }
 }
 
@@ -570,10 +564,7 @@ impl OptimizedTemplateManager {
 
         self.templates.insert(name.clone(), template);
 
-        self.tier_templates
-            .entry(tier)
-            .or_default()
-            .push(name);
+        self.tier_templates.entry(tier).or_default().push(name);
     }
 }
 

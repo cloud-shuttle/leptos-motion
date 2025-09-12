@@ -6,10 +6,7 @@
 //! - Interactive Animation Builder for visual design
 //! - Debug Console with hierarchical state visualization
 
-use crate::{
-    AnimationValue, Easing, TDDAnimationConfig, TDDAnimationEngine,
-    TDDAnimationHandle,
-};
+use crate::{AnimationValue, Easing, TDDAnimationConfig, TDDAnimationEngine, TDDAnimationHandle};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};

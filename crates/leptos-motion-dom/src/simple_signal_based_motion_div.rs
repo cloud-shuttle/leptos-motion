@@ -104,22 +104,21 @@ pub fn ReactiveSimpleMotionDiv(
         let animate_values = animate.get(); // Dependency 1
         let visible = is_visible.get(); // Dependency 2
 
-        if visible
-            && let Some(div) = node_ref.get() {
-                // Apply animation to DOM element
-                for (property, value) in animate_values {
-                    let css_value = animation_value_to_css(&value);
-                    if let Err(e) = div
-                        .unchecked_ref::<web_sys::HtmlElement>()
-                        .style()
-                        .set_property(&property, &css_value)
-                    {
-                        web_sys::console::error_1(
-                            &format!("Failed to set CSS property {}: {:?}", property, e).into(),
-                        );
-                    }
+        if visible && let Some(div) = node_ref.get() {
+            // Apply animation to DOM element
+            for (property, value) in animate_values {
+                let css_value = animation_value_to_css(&value);
+                if let Err(e) = div
+                    .unchecked_ref::<web_sys::HtmlElement>()
+                    .style()
+                    .set_property(&property, &css_value)
+                {
+                    web_sys::console::error_1(
+                        &format!("Failed to set CSS property {}: {:?}", property, e).into(),
+                    );
                 }
             }
+        }
     });
 
     view! {

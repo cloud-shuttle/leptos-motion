@@ -217,10 +217,12 @@ fn test_simplified_gesture_result() {
 /// Test that multi-touch gesture types are properly defined
 #[wasm_bindgen_test]
 fn test_multi_touch_gesture_types() {
-    let gesture_types = [MultiTouchGestureType::None,
+    let gesture_types = [
+        MultiTouchGestureType::None,
         MultiTouchGestureType::Pinch,
         MultiTouchGestureType::Rotation,
-        MultiTouchGestureType::PinchAndRotate];
+        MultiTouchGestureType::PinchAndRotate,
+    ];
 
     assert_eq!(gesture_types.len(), 4);
     assert_eq!(gesture_types[0], MultiTouchGestureType::None);
@@ -232,11 +234,13 @@ fn test_multi_touch_gesture_types() {
 /// Test that simplified gesture types are properly defined
 #[wasm_bindgen_test]
 fn test_simplified_gesture_types() {
-    let gesture_types = [SimplifiedGestureType::None,
+    let gesture_types = [
+        SimplifiedGestureType::None,
         SimplifiedGestureType::Pinch,
         SimplifiedGestureType::Rotation,
         SimplifiedGestureType::Pan,
-        SimplifiedGestureType::MultiTouch];
+        SimplifiedGestureType::MultiTouch,
+    ];
 
     assert_eq!(gesture_types.len(), 5);
     assert_eq!(gesture_types[0], SimplifiedGestureType::None);

@@ -129,9 +129,10 @@ impl Timeline {
         let mut elements = Vec::new();
         for keyframe in &self.keyframes {
             if let Some(ref element_id) = keyframe.element_id
-                && !elements.contains(element_id) {
-                    elements.push(element_id.clone());
-                }
+                && !elements.contains(element_id)
+            {
+                elements.push(element_id.clone());
+            }
         }
         elements
     }

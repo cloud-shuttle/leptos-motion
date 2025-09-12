@@ -16,8 +16,7 @@ type UseAnimatePresenceReturn = (
 );
 
 /// Mode for handling presence animations
-#[derive(Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub enum PresenceMode {
     /// Synchronous mode - all animations complete before next state
     #[default]
@@ -30,10 +29,8 @@ pub enum PresenceMode {
     PopLayout,
 }
 
-
 /// Configuration for AnimatePresence
-#[derive(Debug, Clone)]
-#[derive(Default)]
+#[derive(Debug, Clone, Default)]
 pub struct AnimatePresenceConfig {
     /// Presence mode
     pub mode: PresenceMode,
@@ -42,7 +39,6 @@ pub struct AnimatePresenceConfig {
     /// Default enter transition
     pub enter_transition: Option<Transition>,
 }
-
 
 /// AnimatePresence component for handling enter/exit animations
 #[component]

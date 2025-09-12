@@ -283,10 +283,10 @@ impl CSSAnimationManager {
                 && let Some(element) = style_element
                     .owner_document()
                     .and_then(|doc| doc.get_element_by_id(&state.element_id))
-                {
-                    element.class_list().remove_1(&self.config.base_class)?;
-                    element.class_list().remove_1(&state.class_name)?;
-                }
+            {
+                element.class_list().remove_1(&self.config.base_class)?;
+                element.class_list().remove_1(&state.class_name)?;
+            }
         }
 
         self.active_animations.clear();

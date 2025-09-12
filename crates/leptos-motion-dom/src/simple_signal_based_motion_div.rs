@@ -104,8 +104,8 @@ pub fn ReactiveSimpleMotionDiv(
         let animate_values = animate.get(); // Dependency 1
         let visible = is_visible.get(); // Dependency 2
 
-        if visible {
-            if let Some(div) = node_ref.get() {
+        if visible
+            && let Some(div) = node_ref.get() {
                 // Apply animation to DOM element
                 for (property, value) in animate_values {
                     let css_value = animation_value_to_css(&value);
@@ -120,7 +120,6 @@ pub fn ReactiveSimpleMotionDiv(
                     }
                 }
             }
-        }
     });
 
     view! {

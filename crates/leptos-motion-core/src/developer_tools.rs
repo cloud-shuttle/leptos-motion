@@ -7,8 +7,8 @@
 //! - Debug Console with hierarchical state visualization
 
 use crate::{
-    AnimationValue, Easing, SpringConfig, TDDAnimationConfig, TDDAnimationEngine,
-    TDDAnimationHandle, Transform, Transition,
+    AnimationValue, Easing, TDDAnimationConfig, TDDAnimationEngine,
+    TDDAnimationHandle,
 };
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -51,6 +51,12 @@ pub struct PropertyDebugInfo {
     pub target_value: AnimationValue,
     pub current_value: Option<AnimationValue>,
     pub interpolation_progress: f64,
+}
+
+impl Default for AnimationInspector {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AnimationInspector {
@@ -161,6 +167,12 @@ pub enum BottleneckCategory {
 pub struct PerformanceReport {
     pub total_frames: u32,
     pub average_frame_time_ms: f64,
+}
+
+impl Default for PerformanceProfiler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PerformanceProfiler {
@@ -290,6 +302,12 @@ pub struct AnimationBuilder {
     from_properties: HashMap<String, f64>,
     to_properties: HashMap<String, f64>,
     easing: Easing,
+}
+
+impl Default for InteractiveAnimationBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl InteractiveAnimationBuilder {
@@ -487,6 +505,12 @@ pub enum ExportFormat {
     CSV,
 }
 
+impl Default for DebugConsole {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DebugConsole {
     /// Create a new debug console
     pub fn new() -> Self {
@@ -587,6 +611,12 @@ pub struct UnifiedReport {
     pub active_animations: Vec<TDDAnimationHandle>,
     pub memory_usage_mb: f64,
     pub timestamp: u64,
+}
+
+impl Default for DeveloperTools {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DeveloperTools {

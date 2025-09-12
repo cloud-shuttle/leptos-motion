@@ -145,7 +145,7 @@ fn test_complex_animations_60fps_performance() {
     while start_time.elapsed() < test_duration {
         for target in &targets {
             // Simulate all property calculations
-            for (_, value) in target {
+            for value in target.values() {
                 match value {
                     AnimationValue::Number(n) => {
                         let _ = n * 1.1; // Simulate calculation
@@ -414,7 +414,7 @@ fn test_concurrent_animations_60fps_performance() {
     while start_time.elapsed() < test_duration {
         for target in &animation_targets {
             // Simulate concurrent animation calculations
-            for (_, value) in target {
+            for value in target.values() {
                 match value {
                     AnimationValue::Number(n) => {
                         let _ = n * 1.05; // Simulate animation step

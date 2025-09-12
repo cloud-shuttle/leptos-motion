@@ -299,16 +299,16 @@ fn benchmark_drag_event_processing() {
         let new_y = mouse_y + delta_y;
 
         // Apply constraints
-        let constrained_x = new_x.max(-100.0).min(100.0);
-        let constrained_y = new_y.max(-50.0).min(50.0);
+        let constrained_x = new_x.clamp(-100.0, 100.0);
+        let constrained_y = new_y.clamp(-50.0, 50.0);
 
         // Calculate velocity
         let _velocity_x = delta_x;
         let _velocity_y = delta_y;
 
         // Verify processing
-        assert!(constrained_x >= -100.0 && constrained_x <= 100.0);
-        assert!(constrained_y >= -50.0 && constrained_y <= 50.0);
+        assert!((-100.0..=100.0).contains(&constrained_x));
+        assert!((-50.0..=50.0).contains(&constrained_y));
     }
 
     let duration = start_time.elapsed();
@@ -388,11 +388,12 @@ fn benchmark_memory_pool_usage() {
 
     for i in 0..iterations {
         // Allocate from pool
-        let mut animation_data = Vec::with_capacity(4);
-        animation_data.push(i as f64);
-        animation_data.push(i as f64 * 0.5);
-        animation_data.push(1.0);
-        animation_data.push(0.0);
+        let animation_data = vec![
+            i as f64,
+            i as f64 * 0.5,
+            1.0,
+            0.0,
+        ];
         pool.push(animation_data);
     }
 

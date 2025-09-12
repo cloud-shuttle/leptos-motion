@@ -1,53 +1,72 @@
 # Architecture Decision Records (ADRs)
 
-This directory contains Architecture Decision Records for the leptos-motion project. ADRs document important architectural decisions, their context, and consequences.
+This directory contains the Architecture Decision Records (ADRs) for our data engineering consultancy. These documents capture important architectural decisions, their context, and consequences.
 
 ## ADR Index
 
-- [ADR-001: Package Manager - pnpm](./001-package-manager-pnpm.md)
-- [ADR-002: Leptos Version Support Strategy](./002-leptos-version-support.md)
-- [ADR-003: Rust Coding Practices and Version Strategy](./003-rust-coding-practices.md)
-- [ADR-004: Testing Pyramid and Coverage Standards](./004-testing-strategy.md)
-- [ADR-005: Playwright Testing Strategy](./005-playwright-testing.md)
-- [ADR-006: Competitor Analysis and Capability Matching](./006-competitor-analysis.md)
+| ADR | Title | Status | Date |
+|-----|-------|--------|------|
+| [ADR-001](./001-tdd-first-approach.md) | Test-Driven Development (TDD) First Approach | ACCEPTED | 2024-09-08 |
+| [ADR-002](./002-testing-pyramid-strategy.md) | Testing Pyramid Strategy | ACCEPTED | 2024-09-08 |
+| [ADR-003](./003-playwright-testing-demos.md) | Playwright Testing for Demos and Applications | ACCEPTED | 2024-09-08 |
+| [ADR-004](./004-api-contracts-and-testing.md) | API Contracts and Testing Strategy | ACCEPTED | 2024-09-08 |
+| [ADR-005](./005-pnpm-package-management.md) | PNPM Package Management Strategy | ACCEPTED | 2024-09-08 |
+| [ADR-006](./006-leptos-versioning-strategy.md) | Leptos Versioning and Latest Support Strategy | ACCEPTED | 2024-09-08 |
+| [ADR-007](./007-rust-coding-standards.md) | Rust Coding Standards and Latest Practices | ACCEPTED | 2024-09-08 |
+| [ADR-008](./008-competitive-analysis-strategy.md) | Competitive Analysis and Capability Matching Strategy | ACCEPTED | 2024-09-08 |
 
 ## ADR Template
 
-When creating a new ADR, use the following template:
+When creating new ADRs, use the following template:
 
 ```markdown
 # ADR-XXX: [Title]
 
 ## Status
-[Proposed | Accepted | Rejected | Deprecated | Superseded]
+**PROPOSED** / **ACCEPTED** / **DEPRECATED** / **SUPERSEDED** - YYYY-MM-DD
 
 ## Context
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+[Describe the context and problem statement]
 
 ## Decision
-[Describe the change that we're proposing or have agreed to implement.]
+[State the architectural decision]
 
 ## Consequences
-[Describe the resulting context, after applying the decision. All consequences should be listed here, not just the "positive" ones. A particular decision may have positive, negative, and neutral consequences, but all of them affect the team and project in the future.]
 
-## Implementation Notes
-[Optional: Any specific implementation details, code examples, or migration steps.]
+### Positive
+[Describe the positive consequences]
 
-## References
-[Optional: Links to related issues, PRs, or external resources.]
+### Negative
+[Describe the negative consequences]
+
+### Mitigation
+[Describe how negative consequences will be mitigated]
+
+## Implementation
+[Describe the implementation details]
+
+## Review and Updates
+[Describe the review process and update triggers]
+
+## Related ADRs
+[List related ADRs]
 ```
 
-## Contributing
+## ADR Process
 
-When making architectural decisions:
+1. **Proposal**: Create ADR with PROPOSED status
+2. **Review**: Team review and discussion
+3. **Decision**: Accept, reject, or modify
+4. **Implementation**: Implement the decision
+5. **Review**: Regular review and updates
 
-1. Create a new ADR using the template above
-2. Update this README with the new ADR entry
-3. Submit a PR for review
-4. Once accepted, the ADR becomes part of our architectural documentation
+## ADR Maintenance
 
-## Review Process
+- **Regular Reviews**: ADRs are reviewed quarterly
+- **Updates**: ADRs are updated when decisions change
+- **Deprecation**: ADRs are deprecated when superseded
+- **Archival**: Deprecated ADRs are archived but not deleted
 
-- All ADRs must be reviewed by at least two team members
-- ADRs should be discussed in team meetings when they affect multiple areas
-- Deprecated ADRs should be marked as such and linked to their superseding ADRs
+## Contact
+
+For questions about ADRs, contact the architecture team at architecture@dataengineeringpro.com.

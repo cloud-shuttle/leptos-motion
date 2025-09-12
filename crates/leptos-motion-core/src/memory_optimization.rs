@@ -22,6 +22,12 @@ pub struct MemoryProfiler {
     _start_time: Instant,
 }
 
+impl Default for MemoryProfiler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MemoryProfiler {
     /// Create a new memory profiler
     pub fn new() -> Self {

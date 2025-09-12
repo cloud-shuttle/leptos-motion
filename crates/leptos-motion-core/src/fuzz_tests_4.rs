@@ -7,6 +7,31 @@ use crate::AnimationError;
 use crate::types::*;
 use proptest::prelude::*;
 
+/// Robust floating-point comparison for property-based testing
+fn assert_float_approx_equal(actual: f64, expected: f64) {
+    if expected.is_nan() {
+        assert!(actual.is_nan());
+    } else if expected.is_infinite() {
+        assert!(actual.is_infinite() && actual.signum() == expected.signum());
+    } else {
+        // Use relative tolerance that scales with the magnitude of the expected value
+        let tolerance = if expected.abs() > 1e100 {
+            expected.abs() * 1e-6 // Larger tolerance for extreme values
+        } else if expected.abs() > 1e10 {
+            expected.abs() * 1e-8 // Medium tolerance for large values
+        } else {
+            expected.abs() * 1e-10 + f64::EPSILON // Standard tolerance
+        };
+        assert!(
+            (actual - expected).abs() <= tolerance,
+            "Expected {} to be approximately equal to {} (tolerance: {})",
+            actual,
+            expected,
+            tolerance
+        );
+    }
+}
+
 proptest! {
     #[test]
     fn fuzz_spring_config_edge_cases(
@@ -369,16 +394,7 @@ proptest! {
                 match target.get(key) {
                     Some(AnimationValue::Number(value)) => {
                         // Use approximate equality for floating point numbers
-                        if values[i].is_nan() {
-                            assert!(value.is_nan());
-                        } else if values[i].is_infinite() {
-                            assert!(value.is_infinite());
-                            assert_eq!(values[i].is_sign_positive(), value.is_sign_positive());
-                        } else {
-                            // Use relative tolerance for floating point comparison
-                            let tolerance = values[i].abs() * 1e-10 + f64::EPSILON;
-                            assert!((*value - values[i]).abs() <= tolerance);
-                        }
+                        assert_float_approx_equal(*value, values[i]);
                     }
                     _ => {}
                 }

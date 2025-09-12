@@ -1,206 +1,27 @@
-# Pre-commit hooks configuration for leptos-motion
-# A comprehensive animation library for Leptos with Motion-inspired API
-
 repos:
-  # General file checks
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: trailing-whitespace
-        exclude: '\.md$'  # Allow trailing whitespace in markdown for line breaks
-      - id: end-of-file-fixer
-        exclude: '\.md$'  # Allow no newline at end of markdown files
-      - id: check-yaml
-        args: ['--unsafe']  # Allow custom YAML tags
-      - id: check-json
-      - id: check-toml
-      - id: check-merge-conflict
-      - id: check-case-conflict
-      - id: check-added-large-files
-        args: ['--maxkb=1000']  # 1MB limit
-      - id: check-merge-conflict
-      - id: mixed-line-ending
-        args: ['--fix=lf']
-      - id: check-docstring-first
-        language: python
-      - id: debug-statements
-        language: python
-
-  # Rust-specific hooks
-  - repo: https://github.com/doublify/pre-commit-rust
-    rev: v1.0
-    hooks:
-      - id: fmt
-      - id: clippy
-        args: [--, -D, warnings]
-      - id: cargo-check
-
-  # License header checks
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.4.2
-    hooks:
-      - id: python-safety-dependencies-check
-        files: 'requirements.*\.txt$'
-
-  # Markdown linting
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
-    hooks:
-      - id: markdownlint
-        args: ['--fix', '--ignore', 'node_modules', '--ignore', 'target', '--ignore', 'dist']
-        additional_dependencies: ['markdownlint-cli2']
-
-  # TypeScript/JavaScript linting (for E2E tests and tooling)
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.34.0
-    hooks:
-      - id: eslint
-        files: \.(js|ts|jsx|tsx)$
-        exclude: '^(node_modules/|target/|dist/)'
-        additional_dependencies:
-          - eslint@^8.57.0
-          - '@typescript-eslint/eslint-plugin@^6.0.0'
-          - '@typescript-eslint/parser@^6.0.0'
-          - 'typescript@^5.0.0'
-
-  # Prettier for consistent formatting
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        files: \.(js|ts|jsx|tsx|json|css|scss|md|yaml|yml)$
-        exclude: '^(node_modules/|target/|dist/)'
-
-  # Commit message linting
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.8.4
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]
-
-  # Custom hooks for leptos-motion specific checks
   - repo: local
     hooks:
-      # Security audit
-      - id: cargo-audit
-        name: Cargo audit
-        entry: bash -c 'cargo audit --deny warnings'
-        language: system
-        files: ^Cargo\.lock$
-        pass_filenames: false
-      # Check that showcase example builds (main example)
-      - id: check-examples-build
-        name: Check examples build
-        entry: bash -c 'cd examples/showcase && cargo check'
-        language: system
-        files: ^examples/showcase/.*\.(rs|toml)$
-        pass_filenames: false
-
-      # Check that documentation builds (temporarily disabled due to example issues)
-      # - id: check-docs-build
-      #   name: Check documentation builds
-      #   entry: bash -c 'cargo doc --workspace --no-deps --offline --exclude mobile-app --exclude dashboard-app --exclude e-commerce-gallery --exclude advanced-features'
-      #   language: system
-      #   files: ^(crates/|docs/).*\.(rs|md)$
-      #   pass_filenames: false
-
-      # Ensure version consistency across workspace
-      - id: check-version-consistency
-        name: Check version consistency
-        entry: ./scripts/check-version-consistency.py
-        language: system
-        files: ^(Cargo\.toml|crates/.*/Cargo\.toml)$
-        pass_filenames: false
-
-      # Check for TODO/FIXME comments in production code
-      - id: check-todos
-        name: Check for TODO/FIXME in production code
-        entry: bash -c 'if grep -r "TODO\|FIXME" crates/ --include="*.rs" | grep -v "// TODO\|// FIXME"; then echo "Found TODO/FIXME comments in production code"; exit 1; fi'
-        language: system
-        files: ^crates/.*\.rs$
-        pass_filenames: false
-
-      # Ensure all public APIs have documentation
-      - id: check-docs
-        name: Check public API documentation
-        entry: bash -c 'cargo doc --workspace --no-deps --document-private-items 2>&1 | grep -q "missing documentation" && (echo "Missing documentation for public APIs"; exit 1) || true'
-        language: system
-        files: ^crates/.*\.rs$
-        pass_filenames: false
-
-      # Check for large files that shouldn\'t be committed
-      - id: check-large-files
-        name: Check for large files
-        entry: ./scripts/check-large-files.sh
+      - id: cargo-test
+        name: Run cargo test
+        entry: cargo test
         language: system
         pass_filenames: false
-
-      # Validate Cargo.toml files (temporarily disabled due to example issues)
-      # - id: validate-cargo-toml
-      #   name: Validate Cargo.toml files
-      #   entry: ./scripts/validate-cargo-toml.sh
-      #   language: system
-      #   files: ^.*Cargo\.toml$
-      #   pass_filenames: false
-
-# Configuration
-default_stages: [pre-commit]
-fail_fast: false
-minimum_pre_commit_version: '3.0.0'
-
-# Exclude patterns
-exclude: |
-  (?x)^(
-    target/.*|
-    node_modules/.*|
-    dist/.*|
-    \.git/.*|
-    coverage/.*|
-    playwright-report/.*|
-    \.next/.*|
-    \.nuxt/.*|
-    \.output/.*|
-    \.vscode/.*|
-    \.idea/.*|
-    \.DS_Store|
-    \.env.*|
-    \.cache/.*|
-    \.parcel-cache/.*|
-    \.turbo/.*|
-    \.vercel/.*|
-    \.netlify/.*|
-    \.github/.*|
-    \.gitlab-ci\.yml|
-    \.pre-commit-config\.yaml|
-    flake\.lock|
-    flake\.nix|
-    rust-toolchain\.toml|
-    deny\.toml|
-    RELEASE_.*\.md|
-    CHANGELOG\.md|
-    LICENSE|
-    README\.md|
-    \.gitignore|
-    \.gitattributes|
-    \.editorconfig|
-    \.prettierrc.*|
-    \.eslintrc.*|
-    tsconfig\.json|
-    package-lock\.json|
-    pnpm-lock\.yaml|
-    yarn\.lock|
-    Cargo\.lock
-  )$
-
-# CI configuration
-ci:
-  autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit.com hooks
-
-    for more information, see https://pre-commit.ci
-  autofix_prs: true
-  autoupdate_branch: ''
-  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
-  autoupdate_schedule: weekly
-  skip: []
-  submodules: false
+        always_run: true
+      - id: cargo-clippy
+        name: Run cargo clippy
+        entry: cargo clippy --all-targets --all-features -- -D warnings
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: cargo-fmt
+        name: Run cargo fmt
+        entry: cargo fmt --all -- --check
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: coverage-check
+        name: Check test coverage
+        entry: cargo tarpaulin --out Html --output-dir coverage --fail-under 95
+        language: system
+        pass_filenames: false
+        always_run: true

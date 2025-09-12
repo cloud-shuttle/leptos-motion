@@ -155,13 +155,10 @@ fn test_drag_constraint_axis_integration() {
         position.1 += velocity.1;
 
         // Apply axis constraint
-        match x_config.axis {
-            Some(DragAxis::X) => {
-                // Y position should remain at initial value (0.0)
-                position.1 = 0.0;
-                velocity.1 = 0.0;
-            }
-            _ => {}
+        if let Some(DragAxis::X) = x_config.axis {
+            // Y position should remain at initial value (0.0)
+            position.1 = 0.0;
+            velocity.1 = 0.0;
         }
 
         // Apply constraints with elastic behavior
@@ -627,18 +624,16 @@ fn test_drag_constraint_edge_cases_integration() {
             }
         }
 
-        if let Some(top) = constraints.top {
-            if position.1 < top {
-                position.1 = top;
-                velocity.1 *= -0.5;
-            }
+        if let Some(top) = constraints.top
+            && position.1 < top {
+            position.1 = top;
+            velocity.1 *= -0.5;
         }
 
-        if let Some(bottom) = constraints.bottom {
-            if position.1 > bottom {
-                position.1 = bottom;
-                velocity.1 *= -0.5;
-            }
+        if let Some(bottom) = constraints.bottom
+            && position.1 > bottom {
+            position.1 = bottom;
+            velocity.1 *= -0.5;
         }
 
         // Apply friction

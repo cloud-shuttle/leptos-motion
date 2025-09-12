@@ -153,11 +153,10 @@ impl PerformanceMonitor {
         gpu_layers: usize,
     ) -> PerformanceReport {
         // Check if we have a cached report that's still valid
-        if let (Some(cached), Some(expiry)) = (&self.cached_report, &self.cache_expiry) {
-            if Instant::now() < *expiry {
+        if let (Some(cached), Some(expiry)) = (&self.cached_report, &self.cache_expiry)
+            && Instant::now() < *expiry {
                 return cached.clone();
             }
-        }
 
         let average_frame_time = if self.frame_times.is_empty() {
             16.67 // Default to 60fps

@@ -278,16 +278,15 @@ impl CSSAnimationManager {
 
     /// Clear all animations
     pub fn clear_all(&mut self) -> Result<(), JsValue> {
-        for (_, state) in &self.active_animations {
-            if let Some(style_element) = &self.style_element {
-                if let Some(element) = style_element
+        for state in self.active_animations.values() {
+            if let Some(style_element) = &self.style_element
+                && let Some(element) = style_element
                     .owner_document()
                     .and_then(|doc| doc.get_element_by_id(&state.element_id))
                 {
                     element.class_list().remove_1(&self.config.base_class)?;
                     element.class_list().remove_1(&state.class_name)?;
                 }
-            }
         }
 
         self.active_animations.clear();

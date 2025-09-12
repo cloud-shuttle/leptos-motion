@@ -579,7 +579,7 @@ fn apply_stagger(
     transitions
 }
 
-fn apply_easing(mut transition: LayoutTransition, _easing: Easing) -> LayoutTransition {
+fn apply_easing(transition: LayoutTransition, _easing: Easing) -> LayoutTransition {
     // Simulate easing application
     transition
 }

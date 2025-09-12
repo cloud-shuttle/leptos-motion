@@ -6,3 +6,4 @@
 # everyone who runs the test benefits from these saved cases.
 cc 3c52463e306c4cc290a9412fbdadd88e6d1c2e04b23c6609b98c65d47889f26d # shrinks to n = -3.699395945691306e-172
 cc 49b0a204b5aeed264df29a13a5bddd5dea2d5282ce82f1352c7d86c6788897ad # shrinks to n = -2.688576087068504e74
+cc b1f84c9398931bcb04fdf574236805ae32d42adf22f9509718f8ac27c52d543c # shrinks to n = -2.4083632264698458e179

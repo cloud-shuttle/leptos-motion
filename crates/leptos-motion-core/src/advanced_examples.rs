@@ -7,11 +7,10 @@
 //! - Real-world Use Case Examples with complete implementations
 
 use crate::{
-    AnimationValue, Easing, StaggerConfig, StaggerFrom, TDDAnimationConfig, TDDAnimationEngine,
-    TDDAnimationHandle, Transition,
+    Easing, StaggerConfig, TDDAnimationEngine,
+    TDDAnimationHandle,
 };
 use std::collections::HashMap;
-use std::time::Duration;
 
 /// Builder for creating complex animation sequences
 pub struct AnimationSequenceBuilder {
@@ -59,6 +58,12 @@ pub struct TimelinePreview {
 #[derive(Debug, Clone)]
 pub struct SequenceHandle {
     pub id: u64,
+}
+
+impl Default for AnimationSequenceBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AnimationSequenceBuilder {
@@ -235,6 +240,12 @@ pub struct CustomizedPattern {
     pub customizations: PatternCustomizations,
 }
 
+impl Default for UIPatternLibrary {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UIPatternLibrary {
     /// Create a new UI pattern library with predefined patterns
     pub fn new() -> Self {
@@ -350,7 +361,7 @@ impl UIPatternLibrary {
 
         self.categories
             .entry(category)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(name);
     }
 }
@@ -433,6 +444,12 @@ pub struct OptimizationReport {
     pub recommendations: Vec<String>,
     pub potential_memory_savings_percent: f64,
     pub potential_performance_improvement_percent: f64,
+}
+
+impl Default for OptimizedTemplateManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl OptimizedTemplateManager {
@@ -555,7 +572,7 @@ impl OptimizedTemplateManager {
 
         self.tier_templates
             .entry(tier)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(name);
     }
 }

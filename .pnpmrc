@@ -1,6 +1,32 @@
 # pnpm configuration for Leptos Motion
+# Performance optimizations
 auto-install-peers=true
 strict-peer-dependencies=false
 shamefully-hoist=false
 prefer-frozen-lockfile=true
 save-exact=true
+
+# Security and reliability
+audit-level=moderate
+fund=false
+update-notifier=false
+
+# Workspace optimizations
+link-workspace-packages=true
+shared-workspace-lockfile=true
+dedupe-peer-dependents=true
+
+# Cache and storage optimizations
+store-dir=~/.pnpm-store
+cache-dir=~/.pnpm-cache
+verify-store-integrity=true
+
+# Network optimizations
+fetch-retries=3
+fetch-retry-factor=2
+fetch-retry-mintimeout=10000
+fetch-retry-maxtimeout=60000
+
+# Development optimizations
+enable-pre-post-scripts=true
+recursive-install=true

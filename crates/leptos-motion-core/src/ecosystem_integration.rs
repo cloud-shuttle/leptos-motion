@@ -8,7 +8,7 @@
 //! - Server-Side Rendering (SSR) support and hydration
 //! - TypeScript Definition Generation
 
-use crate::{AnimationError, AnimationValue, Easing, RepeatConfig, Result, TDDAnimationConfig};
+use crate::{Result, TDDAnimationConfig};
 use std::collections::HashMap;
 
 /// Leptos framework integration providing seamless component integration
@@ -36,6 +36,12 @@ pub struct SSRSupport {
     pub supports_hydration: bool,
     pub supports_server_functions: bool,
     pub animation_config: Vec<String>,
+}
+
+impl Default for LeptosIntegration {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl LeptosIntegration {
@@ -160,6 +166,12 @@ pub struct FrameworkComponent {
 /// Unified API across frameworks
 pub struct UnifiedAPI {
     supported_frameworks: Vec<String>,
+}
+
+impl Default for CrossFrameworkAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl CrossFrameworkAdapter {
@@ -324,6 +336,12 @@ pub struct OptimizationReport {
     bundle_recommendations: Vec<String>,
     performance_recommendations: Vec<String>,
     size_reduction_percent: f64,
+}
+
+impl Default for BuildToolIntegration {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl BuildToolIntegration {
@@ -520,6 +538,12 @@ pub struct CompatibilityReport {
     feature_matrix: HashMap<String, bool>,
 }
 
+impl Default for BrowserCompatibilityMatrix {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BrowserCompatibilityMatrix {
     /// Create new browser compatibility matrix
     pub fn new() -> Self {
@@ -672,6 +696,12 @@ pub struct SSRRenderResult {
     html: String,
     hydration_data: String,
     ready: bool,
+}
+
+impl Default for ServerSideRenderingEngine {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ServerSideRenderingEngine {

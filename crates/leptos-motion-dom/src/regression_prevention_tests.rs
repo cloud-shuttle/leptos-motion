@@ -128,7 +128,7 @@ fn test_transition_functionality_regression() {
 
         view! {
             <MotionDiv
-                _transition=transition
+                transition=transition
             >
                 "Transition Test"
             </MotionDiv>
@@ -238,7 +238,7 @@ fn test_prop_combinations_regression() {
                 style="background: blue".to_string()
                 initial=initial
                 animate=animate
-                _transition=transition
+                transition=transition
                 while_hover=hover_target
                 while_tap=tap_target
                 _layout=true
@@ -341,7 +341,7 @@ fn test_type_safety_regression() {
             <MotionDiv
                 initial=correct_initial.unwrap_or_default()
                 animate=correct_animate.unwrap_or_default()
-                _transition=correct_transition.unwrap_or_default()
+                transition=correct_transition.unwrap_or_default()
                 while_hover=correct_while_hover.unwrap_or_default()
                 while_tap=correct_while_tap.unwrap_or_default()
                 _layout=correct_layout.unwrap_or(false)

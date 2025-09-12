@@ -323,8 +323,8 @@ impl AnimationEngine {
             AnimationError::MemoryError("Failed to acquire timeline lock".to_string())
         })?;
 
-        if timelines.contains_key(&handle.0) {
-            timelines.insert(handle.0, timeline);
+        if let std::collections::hash_map::Entry::Occupied(mut e) = timelines.entry(handle.0) {
+            e.insert(timeline);
             Ok(())
         } else {
             Err(AnimationError::NotFound {

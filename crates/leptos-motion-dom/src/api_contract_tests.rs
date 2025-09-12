@@ -22,7 +22,7 @@ fn test_motion_div_api_contract_signature() {
                 node_ref=NodeRef::new()
                 initial=HashMap::new()
                 animate=HashMap::new()
-                _transition=Transition::default()
+                transition=Transition::default()
                 while_hover=HashMap::new()
                 while_tap=HashMap::new()
                 _layout=true
@@ -151,7 +151,7 @@ fn test_prop_type_consistency_contract() {
             <MotionDiv
                 initial=initial.unwrap_or_default()
                 animate=animate.unwrap_or_default()
-                _transition=transition.unwrap_or_default()
+                transition=transition.unwrap_or_default()
                 while_hover=while_hover.unwrap_or_default()
                 while_tap=while_tap.unwrap_or_default()
                 _layout=layout.unwrap_or(false)
@@ -260,7 +260,7 @@ fn test_api_stability_contract() {
                 node_ref=NodeRef::new()
                 initial=HashMap::new()
                 animate=HashMap::new()
-                _transition=Transition::default()
+                transition=Transition::default()
                 while_hover=HashMap::new()
                 while_tap=HashMap::new()
                 _layout=true

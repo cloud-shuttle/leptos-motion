@@ -250,13 +250,13 @@ pub fn MotionDiv(
                             let momentum_step: MomentumStepCallback = Rc::new(RefCell::new(None));
 
                             let momentum_step_ref = momentum_step.clone();
-                            let set_drag_position_clone = set_drag_position.clone();
-                            let set_drag_velocity_clone = set_drag_velocity.clone();
-                            let set_animating_momentum_clone = set_animating_momentum.clone();
+                            let set_drag_position_clone = set_drag_position;
+                            let set_drag_velocity_clone = set_drag_velocity;
+                            let set_animating_momentum_clone = set_animating_momentum;
                             let drag_config_clone = drag_config.clone();
-                            let drag_position_clone = drag_position.clone();
-                            let drag_velocity_clone = drag_velocity.clone();
-                            let is_animating_momentum_clone = is_animating_momentum.clone();
+                            let drag_position_clone = drag_position;
+                            let drag_velocity_clone = drag_velocity;
+                            let is_animating_momentum_clone = is_animating_momentum;
 
                             *momentum_step.borrow_mut() = Some(Box::new(move || {
                                 // Check if we should continue animating
@@ -343,7 +343,7 @@ pub fn MotionDiv(
                                     let _ = web_sys::window()
                                         .unwrap()
                                         .set_timeout_with_callback_and_timeout_and_arguments_0(
-                                            &Closure::wrap(Box::new(move || {
+                                            Closure::wrap(Box::new(move || {
                                                 // Call the momentum step function recursively
                                                 if let Some(ref mut step) = *momentum_step_ref.borrow_mut() {
                                                     step();
@@ -375,11 +375,11 @@ pub fn MotionDiv(
             on:click=move |_event| {
                 _set_tapped.set(true);
                 // Reset tap state after a short delay
-                let set_tapped_clone = _set_tapped.clone();
+                let set_tapped_clone = _set_tapped;
                 let _ = web_sys::window()
                     .unwrap()
                     .set_timeout_with_callback_and_timeout_and_arguments_0(
-                        &Closure::wrap(Box::new(move || {
+                        Closure::wrap(Box::new(move || {
                             set_tapped_clone.set(false);
                         }) as Box<dyn FnMut()>).as_ref().unchecked_ref(),
                         150 // 150ms tap duration

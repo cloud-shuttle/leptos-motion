@@ -8,3 +8,4 @@ cc e7258b7acc2dc616dfa4437e6e0798c09f0c29bd2d2eeed2b78777e6594f5921 # shrinks to
 cc a200c8d5df1690987bb8b06ebcc7f330d301b6f89e67bb908a06b71264772b5b # shrinks to keys = ["a", "a", "A", "_", "A", "a", "a"], values = [0.0, 5.326572317833589e-251]
 cc 7a8365c4cd57a63dc01cd4cf014970cf1fe3bac26a6f0dae7ff04b56ef14a10b # shrinks to keys = ["F0v1IAEs6_B2p8_z6e_u0DOH_06S", "S_W497GA9V0eB8_3_9ty_", "7_mhjJ4R1k58_woft", "XhSzX7dIve24"], values = [-5.163151659939836e-51]
 cc 0ed334a8330055fdb09fbab5f0a74cf12c49b9dba44c34a55d1b3d4658b0c7e4 # shrinks to keys = ["A", "_", "a", "a", "_", "_"], values = [0.0, 0.0, 0.0, -4.972322763702022e261]
+cc 6401fbb71589210ee8c86e3fde06fcfe4c3175aa6e01cd122f201c07f9c08cb9 # shrinks to keys = ["0", "_", "_"], values = [0.0, 0.0, -4.0061332432886944e297]

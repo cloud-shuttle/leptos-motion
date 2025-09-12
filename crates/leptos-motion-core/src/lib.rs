@@ -156,11 +156,7 @@ pub use performance::*;
 #[cfg(feature = "memory-optimization")]
 pub use memory_optimization::*;
 
-#[cfg(feature = "lazy-loading")]
-pub use lazy_loading::*;
 
-#[cfg(feature = "simplified-engine")]
-pub use simplified_engine::*;
 
 #[cfg(feature = "minimal-serialization")]
 pub use minimal_serialization::*;

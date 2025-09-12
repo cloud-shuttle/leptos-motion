@@ -323,7 +323,7 @@ fn test_css_export() {
     project.add_animation("test-animation");
 
     let exporter = AnimationExporter::new(&project);
-    let result = exporter.export(ExportFormat::CSS);
+    let result = exporter.export();
     assert!(result.is_ok());
 
     let export_result = result.unwrap();
@@ -339,7 +339,7 @@ fn test_waapi_export() {
     project.add_animation("test-animation");
 
     let exporter = AnimationExporter::new(&project);
-    let result = exporter.export(ExportFormat::WAAPI);
+    let result = exporter.export();
     assert!(result.is_ok());
 
     let export_result = result.unwrap();
@@ -356,7 +356,7 @@ fn test_leptos_motion_export() {
     project.add_animation("TestAnimation");
 
     let exporter = AnimationExporter::new(&project);
-    let result = exporter.export(ExportFormat::LeptosMotion);
+    let result = exporter.export();
     assert!(result.is_ok());
 
     let export_result = result.unwrap();
@@ -391,7 +391,7 @@ fn test_webgl_error_handling() {
         if let Some(window) = web_sys::window() {
             if let Some(document) = window.document() {
                 if let Ok(canvas) = document.create_element("canvas") {
-                    if let Ok(canvas) = canvas.into::<web_sys::HtmlCanvasElement>() {
+                    if let Ok(canvas) = canvas.dyn_into::<web_sys::HtmlCanvasElement>() {
                         let _ = canvas.get_context("webgl2");
                     }
                 }
@@ -578,10 +578,10 @@ fn test_export_stress_test() {
     let formats = exporter.supported_formats();
     for format in formats {
         let result = match format {
-            ExportFormat::CSS => exporter.export(ExportFormat::CSS),
-            ExportFormat::WAAPI => exporter.export(ExportFormat::WAAPI),
-            ExportFormat::LeptosMotion => exporter.export(ExportFormat::LeptosMotion),
-            ExportFormat::FramerMotion => exporter.export(ExportFormat::FramerMotion),
+            ExportFormat::CSS => exporter.export(),
+            ExportFormat::WAAPI => exporter.export(),
+            ExportFormat::LeptosMotion => exporter.export(),
+            ExportFormat::FramerMotion => exporter.export(),
             _ => continue, // Skip unimplemented formats
         };
 

@@ -28,6 +28,12 @@ pub struct AnimationLazyLoader {
     module_sizes: Arc<Mutex<HashMap<String, usize>>>,
 }
 
+impl Default for AnimationLazyLoader {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AnimationLazyLoader {
     /// Create a new lazy loader
     pub fn new() -> Self {
@@ -128,7 +134,7 @@ static LAZY_LOADER: OnceLock<AnimationLazyLoader> = OnceLock::new();
 
 /// Get the global lazy loader instance
 pub fn get_lazy_loader() -> &'static AnimationLazyLoader {
-    LAZY_LOADER.get_or_init(|| AnimationLazyLoader::new())
+    LAZY_LOADER.get_or_init(AnimationLazyLoader::new)
 }
 
 /// Lazy loading configuration

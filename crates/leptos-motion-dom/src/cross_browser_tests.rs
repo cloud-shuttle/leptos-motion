@@ -46,47 +46,43 @@ fn test_browser_drag_compatibility() {
         let mut constrained_y = y;
 
         // Apply constraints (browser-agnostic logic)
-        if let Some(left) = constraints.left {
-            if constrained_x < left {
-                if elastic_factor > 0.0 {
-                    let overshoot = left - constrained_x;
-                    constrained_x = left - (overshoot * elastic_factor);
-                } else {
-                    constrained_x = left;
-                }
+        if let Some(left) = constraints.left
+            && constrained_x < left {
+            if elastic_factor > 0.0 {
+                let overshoot = left - constrained_x;
+                constrained_x = left - (overshoot * elastic_factor);
+            } else {
+                constrained_x = left;
             }
         }
 
-        if let Some(right) = constraints.right {
-            if constrained_x > right {
-                if elastic_factor > 0.0 {
-                    let overshoot = constrained_x - right;
-                    constrained_x = right + (overshoot * elastic_factor);
-                } else {
-                    constrained_x = right;
-                }
+        if let Some(right) = constraints.right
+            && constrained_x > right {
+            if elastic_factor > 0.0 {
+                let overshoot = constrained_x - right;
+                constrained_x = right + (overshoot * elastic_factor);
+            } else {
+                constrained_x = right;
             }
         }
 
-        if let Some(top) = constraints.top {
-            if constrained_y < top {
-                if elastic_factor > 0.0 {
-                    let overshoot = top - constrained_y;
-                    constrained_y = top - (overshoot * elastic_factor);
-                } else {
-                    constrained_y = top;
-                }
+        if let Some(top) = constraints.top
+            && constrained_y < top {
+            if elastic_factor > 0.0 {
+                let overshoot = top - constrained_y;
+                constrained_y = top - (overshoot * elastic_factor);
+            } else {
+                constrained_y = top;
             }
         }
 
-        if let Some(bottom) = constraints.bottom {
-            if constrained_y > bottom {
-                if elastic_factor > 0.0 {
-                    let overshoot = constrained_y - bottom;
-                    constrained_y = bottom + (overshoot * elastic_factor);
-                } else {
-                    constrained_y = bottom;
-                }
+        if let Some(bottom) = constraints.bottom
+            && constrained_y > bottom {
+            if elastic_factor > 0.0 {
+                let overshoot = constrained_y - bottom;
+                constrained_y = bottom + (overshoot * elastic_factor);
+            } else {
+                constrained_y = bottom;
             }
         }
 
@@ -171,7 +167,7 @@ fn test_browser_easing_compatibility() {
 
             // Verify eased value is within valid range
             assert!(
-                eased_value >= 0.0 && eased_value <= 1.0,
+                (0.0..=1.0).contains(&eased_value),
                 "Eased value {} out of range for progress {} with easing {:?}",
                 eased_value,
                 progress,
@@ -237,7 +233,7 @@ fn test_browser_transition_compatibility() {
             _ => progress,
         };
 
-        assert!(eased_progress >= 0.0 && eased_progress <= 1.0);
+        assert!((0.0..=1.0).contains(&eased_progress));
     }
 }
 

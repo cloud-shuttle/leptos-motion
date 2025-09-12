@@ -510,7 +510,7 @@ pub fn IntegratedMotionDiv(
             style=style.unwrap_or_default()
             node_ref=node_ref
             animate=reactive_animate(animation_target)
-            _transition=transition.unwrap_or_default()
+            transition=transition.unwrap_or_default()
             on:mouseenter=on_mouse_enter
             on:mouseleave=on_mouse_leave
             on:mousedown=on_mouse_down

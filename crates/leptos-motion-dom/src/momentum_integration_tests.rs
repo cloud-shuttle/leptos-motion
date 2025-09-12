@@ -126,29 +126,25 @@ fn test_momentum_with_elastic_constraints() {
         position.1 += velocity.1;
 
         // Apply elastic constraints
-        if let Some(left) = constraints.left {
-            if position.0 < left {
-                let overshoot = left - position.0;
-                position.0 = left - (overshoot * elastic_factor);
-            }
+        if let Some(left) = constraints.left
+            && position.0 < left {
+            let overshoot = left - position.0;
+            position.0 = left - (overshoot * elastic_factor);
         }
-        if let Some(right) = constraints.right {
-            if position.0 > right {
-                let overshoot = position.0 - right;
-                position.0 = right + (overshoot * elastic_factor);
-            }
+        if let Some(right) = constraints.right
+            && position.0 > right {
+            let overshoot = position.0 - right;
+            position.0 = right + (overshoot * elastic_factor);
         }
-        if let Some(top) = constraints.top {
-            if position.1 < top {
-                let overshoot = top - position.1;
-                position.1 = top - (overshoot * elastic_factor);
-            }
+        if let Some(top) = constraints.top
+            && position.1 < top {
+            let overshoot = top - position.1;
+            position.1 = top - (overshoot * elastic_factor);
         }
-        if let Some(bottom) = constraints.bottom {
-            if position.1 > bottom {
-                let overshoot = position.1 - bottom;
-                position.1 = bottom + (overshoot * elastic_factor);
-            }
+        if let Some(bottom) = constraints.bottom
+            && position.1 > bottom {
+            let overshoot = position.1 - bottom;
+            position.1 = bottom + (overshoot * elastic_factor);
         }
     }
 
@@ -363,29 +359,25 @@ fn test_momentum_animation_with_complex_constraints() {
         position.1 += velocity.1;
 
         // Apply elastic constraints
-        if let Some(left) = constraints.left {
-            if position.0 < left {
-                let overshoot = left - position.0;
-                position.0 = left - (overshoot * elastic_factor);
-            }
+        if let Some(left) = constraints.left
+            && position.0 < left {
+            let overshoot = left - position.0;
+            position.0 = left - (overshoot * elastic_factor);
         }
-        if let Some(right) = constraints.right {
-            if position.0 > right {
-                let overshoot = position.0 - right;
-                position.0 = right + (overshoot * elastic_factor);
-            }
+        if let Some(right) = constraints.right
+            && position.0 > right {
+            let overshoot = position.0 - right;
+            position.0 = right + (overshoot * elastic_factor);
         }
-        if let Some(top) = constraints.top {
-            if position.1 < top {
-                let overshoot = top - position.1;
-                position.1 = top - (overshoot * elastic_factor);
-            }
+        if let Some(top) = constraints.top
+            && position.1 < top {
+            let overshoot = top - position.1;
+            position.1 = top - (overshoot * elastic_factor);
         }
-        if let Some(bottom) = constraints.bottom {
-            if position.1 > bottom {
-                let overshoot = position.1 - bottom;
-                position.1 = bottom + (overshoot * elastic_factor);
-            }
+        if let Some(bottom) = constraints.bottom
+            && position.1 > bottom {
+            let overshoot = position.1 - bottom;
+            position.1 = bottom + (overshoot * elastic_factor);
         }
 
         // Stop if velocity is very low

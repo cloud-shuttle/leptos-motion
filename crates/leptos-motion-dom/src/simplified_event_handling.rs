@@ -18,6 +18,7 @@ pub enum DragAxis {
 
 /// Drag constraints for limiting drag movement
 #[derive(Clone, Debug, PartialEq)]
+#[derive(Default)]
 pub struct DragConstraints {
     /// Left boundary
     pub left: Option<f64>,
@@ -29,16 +30,6 @@ pub struct DragConstraints {
     pub bottom: Option<f64>,
 }
 
-impl Default for DragConstraints {
-    fn default() -> Self {
-        Self {
-            left: None,
-            right: None,
-            top: None,
-            bottom: None,
-        }
-    }
-}
 
 /// Drag configuration
 #[derive(Clone, Debug)]
@@ -110,6 +101,7 @@ pub struct EventHandlers {
 /// a clean, simple interface while hiding the complexity of the
 /// underlying event system.
 #[derive(Clone, Debug)]
+#[derive(Default)]
 pub struct SimplifiedMotionProps {
     /// Initial animation state
     pub initial: Option<AnimationTarget>,
@@ -793,83 +785,6 @@ impl SimplifiedDragConfig {
     }
 }
 
-impl Default for SimplifiedMotionProps {
-    fn default() -> Self {
-        Self {
-            initial: None,
-            animate: None,
-            exit: None,
-            transition: None,
-            variants: None,
-            layout: None,
-            drag: None,
-            while_hover: None,
-            while_tap: None,
-            while_focus: None,
-            while_in_view: None,
-
-            // Accessibility fields
-            aria_label: None,
-            aria_described_by: None,
-            aria_expanded: None,
-            aria_hidden: None,
-            tab_index: None,
-            keyboard_accessible: None,
-            respect_reduced_motion: None,
-            reduced_motion_alternative: None,
-            high_contrast_support: None,
-            high_contrast_alternative: None,
-            screen_reader_announcements: None,
-            announcement_text: None,
-            announcement_priority: None,
-            focus_management: None,
-            focus_trap: None,
-            focus_restore: None,
-            color_contrast_ratio: None,
-            color_contrast_aa_compliant: None,
-            color_contrast_aaa_compliant: None,
-            text_scaling_support: None,
-            min_text_size: None,
-            max_text_size: None,
-            min_touch_target_size: None,
-            touch_target_spacing: None,
-            touch_target_accessible: None,
-            error_announcement: None,
-            error_recovery: None,
-            error_fallback: None,
-            max_animation_duration: None,
-            animation_timing_control: None,
-            animation_pause_support: None,
-            semantic_role: None,
-            semantic_level: None,
-            semantic_landmark: None,
-            rtl_support: None,
-            locale_aware: None,
-            text_direction: None,
-            assistive_technology_support: None,
-            assistive_technology_announcements: None,
-            assistive_technology_control: None,
-            accessibility_testing_enabled: None,
-            accessibility_testing_automated: None,
-            accessibility_testing_manual: None,
-            accessibility_documentation: None,
-            accessibility_guidelines: None,
-            accessibility_compliance_level: None,
-            accessibility_validation: None,
-            accessibility_validation_automated: None,
-            accessibility_validation_manual: None,
-            accessibility_reporting: None,
-            accessibility_reporting_automated: None,
-            accessibility_reporting_manual: None,
-            accessibility_monitoring: None,
-            accessibility_monitoring_automated: None,
-            accessibility_monitoring_manual: None,
-            accessibility_feedback: None,
-            accessibility_feedback_automated: None,
-            accessibility_feedback_manual: None,
-        }
-    }
-}
 
 impl Default for SimplifiedDragConfig {
     fn default() -> Self {

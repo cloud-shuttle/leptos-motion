@@ -242,7 +242,7 @@ fn test_transition_easing() {
 /// Test repeat types
 #[wasm_bindgen_test]
 fn test_repeat_types() {
-    let repeat_types = vec![
+    let repeat_types = [
         RepeatConfig::Never,
         RepeatConfig::Count(1),
         RepeatConfig::Count(5),

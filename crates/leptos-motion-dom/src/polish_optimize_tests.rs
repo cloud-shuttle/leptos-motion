@@ -23,7 +23,7 @@ impl AnimationTargetPool {
 
     /// Get a target from the pool or create a new one
     pub fn get_target(&mut self) -> HashMap<String, AnimationValue> {
-        self.pool.pop().unwrap_or_else(HashMap::new)
+        self.pool.pop().unwrap_or_default()
     }
 
     /// Return a target to the pool for reuse

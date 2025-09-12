@@ -526,7 +526,7 @@ mod tests {
         let result = easing.evaluate(0.5);
         // Spring animations can temporarily exceed bounds due to oscillation
         assert!(
-            result >= -0.5 && result <= 1.5,
+            (-0.5..=1.5).contains(&result),
             "Spring result was: {}",
             result
         );

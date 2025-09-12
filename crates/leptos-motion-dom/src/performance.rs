@@ -10,6 +10,12 @@ pub struct CSSOptimizer {
     layout_triggering_properties: std::collections::HashSet<String>,
 }
 
+impl Default for CSSOptimizer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CSSOptimizer {
     /// Create a new CSS optimizer
     pub fn new() -> Self {

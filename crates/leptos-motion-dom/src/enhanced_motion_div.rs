@@ -71,7 +71,7 @@ pub fn EnhancedMotionDiv(
 
     // Set up animation engine callbacks
     {
-        let set_styles = set_styles.clone();
+        let set_styles = set_styles;
         let transform_manager = transform_manager.clone();
 
         animation_engine.borrow_mut().on_update(move |values| {
@@ -237,11 +237,11 @@ pub fn EnhancedMotionDiv(
             on:click=move |_event| {
                 _set_tapped.set(true);
                 // Reset tap state after a short delay
-                let set_tapped_clone = _set_tapped.clone();
+                let set_tapped_clone = _set_tapped;
                 let _ = web_sys::window()
                     .unwrap()
                     .set_timeout_with_callback_and_timeout_and_arguments_0(
-                        &Closure::wrap(Box::new(move || {
+                        Closure::wrap(Box::new(move || {
                             set_tapped_clone.set(false);
                         }) as Box<dyn FnMut()>).as_ref().unchecked_ref(),
                         150 // 150ms tap duration
@@ -386,7 +386,7 @@ impl StaggerAnimationManager {
             let _ = web_sys::window()
                 .unwrap()
                 .set_timeout_with_callback_and_timeout_and_arguments_0(
-                    &Closure::wrap(Box::new(move || {
+                    Closure::wrap(Box::new(move || {
                         let mut properties = HashMap::new();
                         for (key, value) in target_clone.iter() {
                             if let Some(num_value) = value.as_number() {

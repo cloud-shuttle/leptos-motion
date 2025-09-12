@@ -153,19 +153,19 @@ fn test_gesture_state_management() {
     let mut gesture_state = GestureState::default();
 
     // Test initial state
-    assert_eq!(gesture_state.is_dragging, false);
-    assert_eq!(gesture_state.is_panning, false);
-    assert_eq!(gesture_state.is_pinching, false);
+    assert!(!gesture_state.is_dragging);
+    assert!(!gesture_state.is_panning);
+    assert!(!gesture_state.is_pinching);
 
     // Test state transitions
     gesture_state.is_dragging = true;
-    assert_eq!(gesture_state.is_dragging, true);
+    assert!(gesture_state.is_dragging);
 
     gesture_state.is_panning = true;
-    assert_eq!(gesture_state.is_panning, true);
+    assert!(gesture_state.is_panning);
 
     gesture_state.is_pinching = true;
-    assert_eq!(gesture_state.is_pinching, true);
+    assert!(gesture_state.is_pinching);
 }
 
 /// Test gesture velocity calculation
@@ -520,13 +520,10 @@ fn recognize_gesture(points: &[Point]) -> &'static str {
 
 fn process_gesture_event(event: GestureEvent) -> std::result::Result<(), String> {
     // Simulate processing
-    match event {
-        GestureEvent::DragMove { x, y } => {
-            if x < 0.0 || y < 0.0 {
-                return Err("Invalid coordinates".to_string());
-            }
+    if let GestureEvent::DragMove { x, y } = event {
+        if x < 0.0 || y < 0.0 {
+            return Err("Invalid coordinates".to_string());
         }
-        _ => {}
     }
     Ok(())
 }

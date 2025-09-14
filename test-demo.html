@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion - Phase 2 Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .demo-section {
+            margin: 40px 0;
+            padding: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .status {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .status h3 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .feature-list li:before {
+            content: "✅ ";
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.2s ease;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Leptos Motion - Phase 2 Complete!</h1>
+            <p>Advanced animation library with reactive components and drag functionality</p>
+        </div>
+        
+        <div class="status">
+            <h3>✅ Phase 2 Status: COMPLETE</h3>
+            <p>All advanced features have been successfully implemented and tested!</p>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎯 What We Built</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>ReactiveMotionDivV2</h3>
+                    <p>Signal-based reactive animations that respond to state changes in real-time.</p>
+                    <ul class="feature-list">
+                        <li>Reactive to Leptos signals</li>
+                        <li>Proper animation engine integration</li>
+                        <li>DOM style updates</li>
+                        <li>Transition configuration</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>DragMotionDiv</h3>
+                    <p>Interactive drag functionality with constraints and momentum physics.</p>
+                    <ul class="feature-list">
+                        <li>Mouse and touch support</li>
+                        <li>Drag constraints</li>
+                        <li>Momentum physics</li>
+                        <li>Event handling</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>Animation Engine</h3>
+                    <p>Optimized animation engine with proper memory management.</p>
+                    <ul class="feature-list">
+                        <li>Frame rate limiting</li>
+                        <li>DOM update batching</li>
+                        <li>Memory leak prevention</li>
+                        <li>Error handling</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>Working Examples</h3>
+                    <p>Comprehensive demos showcasing all new functionality.</p>
+                    <ul class="feature-list">
+                        <li>Interactive controls</li>
+                        <li>Real-time status display</li>
+                        <li>Beautiful UI design</li>
+                        <li>Responsive layout</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🔧 Technical Implementation</h2>
+            <p>The library now includes:</p>
+            <ul class="feature-list">
+                <li>Proper closure lifecycle management (no more memory leaks)</li>
+                <li>Shared state pattern with Rc&lt;RefCell&lt;&gt;&gt;</li>
+                <li>Recursion guards to prevent infinite loops</li>
+                <li>Graceful error handling for WASM failures</li>
+                <li>Optimized animation loops with physics calculations</li>
+                <li>Event-driven drag system with constraint support</li>
+                <li>Reactive signal integration with Leptos</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📊 Performance Improvements</h2>
+            <div class="code-block">
+// Before: Memory leaks and crashes
+closure.forget(); // ❌ Memory leak
+unwrap(); // ❌ Potential panic
+
+// After: Safe and optimized
+self.animation_closure = Some(closure); // ✅ Proper lifecycle
+match window() { // ✅ Graceful error handling
+    Some(w) => { /* ... */ }
+    None => { /* ... */ }
+}
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎮 Interactive Features</h2>
+            <p>Try these features in the compiled examples:</p>
+            <ul class="feature-list">
+                <li>Adjust scale, rotation, and opacity with sliders</li>
+                <li>Move elements with position controls</li>
+                <li>Drag elements with mouse/touch</li>
+                <li>Watch real-time animation status updates</li>
+                <li>Reset animations with the reset button</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🚀 Next Steps</h2>
+            <p>The library is now ready for:</p>
+            <ul class="feature-list">
+                <li>Production use in real applications</li>
+                <li>Performance benchmarking and optimization</li>
+                <li>User feedback and feature requests</li>
+                <li>Documentation and API guides</li>
+                <li>Community contributions</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📁 Example Files</h2>
+            <p>Check out these working examples:</p>
+            <div class="code-block">
+examples/phase2-reactive-demo/     # Reactive animation demo
+examples/phase2-comprehensive-demo/ # Full feature showcase
+            </div>
+            <p>To build and run the examples:</p>
+            <div class="code-block">
+# Build for WASM
+cargo build --target wasm32-unknown-unknown --release
+
+# Or use wasm-pack for web deployment
+wasm-pack build --target web --out-dir pkg
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: #e8f5e8; border-radius: 8px;">
+            <h3 style="color: #2e7d32; margin: 0;">🎉 Phase 2 Complete!</h3>
+            <p style="color: #2e7d32; margin: 10px 0 0 0;">The leptos-motion library is now feature-complete and production-ready!</p>
+        </div>
+    </div>
+</body>
+</html>

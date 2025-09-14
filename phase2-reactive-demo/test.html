@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 WASM Module Test</h1>
+        <p>Testing if the WASM module loads and initializes correctly.</p>
+        
+        <div id="status" class="status loading">
+            Loading WASM module...
+        </div>
+        
+        <div id="content">
+            <!-- Content will be populated by WASM -->
+        </div>
+    </div>
+    
+    <script type="module">
+        const statusEl = document.getElementById('status');
+        const contentEl = document.getElementById('content');
+        
+        try {
+            statusEl.textContent = 'Importing WASM module...';
+            statusEl.className = 'status loading';
+            
+            const { default: init, main } = await import('./pkg/phase2_reactive_demo.js');
+            
+            statusEl.textContent = 'Initializing WASM...';
+            await init();
+            
+            statusEl.textContent = 'Calling main function...';
+            main();
+            
+            statusEl.textContent = '✅ WASM module loaded and initialized successfully!';
+            statusEl.className = 'status success';
+            
+        } catch (error) {
+            statusEl.textContent = `❌ Error: ${error.message}`;
+            statusEl.className = 'status error';
+            console.error('WASM Error:', error);
+        }
+    </script>
+</body>
+</html>

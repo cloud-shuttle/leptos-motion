@@ -113,6 +113,10 @@ pub fn ReactiveMotionDiv(
                     format!("cubic-bezier({}, {}, {}, {})", x1, y1, x2, y2)
                 }
                 leptos_motion_core::Easing::Spring(_) => "ease-in-out".to_string(),
+                leptos_motion_core::Easing::CubicBezier(cubic_bezier) => {
+                    format!("cubic-bezier({}, {}, {}, {})", 
+                        cubic_bezier.0, cubic_bezier.1, cubic_bezier.2, cubic_bezier.3)
+                }
             };
             styles.insert("transition-timing-function".to_string(), easing_value);
             styles.insert("transition-property".to_string(), "all".to_string());

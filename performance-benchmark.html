@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion Performance Benchmark</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .benchmark-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .benchmark-card {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .benchmark-card h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        .controls button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.2s ease;
+        }
+        
+        .controls button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .controls button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .animation-area {
+            background: white;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .animated-element {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 8px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .metrics {
+            background: #f0f8ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .metrics h4 {
+            color: #1976d2;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .metric-value {
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            height: 200px;
+            position: relative;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #667eea;
+            transform-origin: left;
+        }
+        
+        .status {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .status.running {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Leptos Motion Performance Benchmark</h1>
+            <p>Comprehensive performance testing for WASM-powered animations</p>
+        </div>
+        
+        <div class="status" id="status">
+            <h3>Ready to Benchmark</h3>
+            <p>Click "Start Benchmark" to begin performance testing</p>
+        </div>
+        
+        <div class="benchmark-grid">
+            <div class="benchmark-card">
+                <h3>🎬 Animation Performance</h3>
+                <div class="controls">
+                    <button onclick="startAnimationBenchmark()">Start Animation Test</button>
+                    <button onclick="stopBenchmark()" id="stopBtn" disabled>Stop Test</button>
+                </div>
+                <div class="animation-area" id="animationArea">
+                    <div class="animated-element" id="animatedElement"></div>
+                </div>
+                <div class="metrics">
+                    <h4>Performance Metrics</h4>
+                    <div class="metric-item">
+                        <span class="metric-label">FPS:</span>
+                        <span class="metric-value" id="fps">--</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Frame Time:</span>
+                        <span class="metric-value" id="frameTime">--</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Animation Count:</span>
+                        <span class="metric-value" id="animationCount">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Memory Usage:</span>
+                        <span class="metric-value" id="memoryUsage">--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benchmark-card">
+                <h3>📊 Real-time Performance Chart</h3>
+                <div class="chart-container">
+                    <canvas id="performanceChart" width="400" height="150"></canvas>
+                </div>
+                <div class="metrics">
+                    <h4>Benchmark Results</h4>
+                    <div class="metric-item">
+                        <span class="metric-label">Average FPS:</span>
+                        <span class="metric-value" id="avgFps">--</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Min FPS:</span>
+                        <span class="metric-value" id="minFps">--</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Max FPS:</span>
+                        <span class="metric-value" id="maxFps">--</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Test Duration:</span>
+                        <span class="metric-value" id="testDuration">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benchmark-card">
+            <h3>🔧 Stress Test</h3>
+            <div class="controls">
+                <button onclick="startStressTest()">Start Stress Test</button>
+                <button onclick="startMemoryTest()">Memory Test</button>
+                <button onclick="startConcurrentTest()">Concurrent Animations</button>
+            </div>
+            <div class="animation-area" id="stressArea">
+                <div id="stressElements"></div>
+            </div>
+            <div class="metrics">
+                <h4>Stress Test Results</h4>
+                <div class="metric-item">
+                    <span class="metric-label">Elements Created:</span>
+                    <span class="metric-value" id="elementsCreated">0</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Active Animations:</span>
+                    <span class="metric-value" id="activeAnimations">0</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Performance Impact:</span>
+                    <span class="metric-value" id="performanceImpact">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Performance monitoring variables
+        let isRunning = false;
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fpsHistory = [];
+        let animationCount = 0;
+        let stressElements = [];
+        let animationId = null;
+        
+        // Performance monitoring
+        function updatePerformanceMetrics() {
+            if (!isRunning) return;
+            
+            const currentTime = performance.now();
+            const deltaTime = currentTime - lastTime;
+            
+            if (deltaTime >= 1000) { // Update every second
+                const fps = Math.round((frameCount * 1000) / deltaTime);
+                fpsHistory.push(fps);
+                
+                // Update UI
+                document.getElementById('fps').textContent = fps;
+                document.getElementById('frameTime').textContent = (deltaTime / frameCount).toFixed(2) + 'ms';
+                document.getElementById('animationCount').textContent = animationCount;
+                document.getElementById('memoryUsage').textContent = getMemoryUsage();
+                
+                // Update chart
+                updateChart();
+                
+                // Reset counters
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            frameCount++;
+            animationId = requestAnimationFrame(updatePerformanceMetrics);
+        }
+        
+        function getMemoryUsage() {
+            if (performance.memory) {
+                const used = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                const total = Math.round(performance.memory.totalJSHeapSize / 1024 / 1024);
+                return `${used}MB / ${total}MB`;
+            }
+            return 'N/A';
+        }
+        
+        function updateChart() {
+            const canvas = document.getElementById('performanceChart');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            if (fpsHistory.length < 2) return;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 10; i++) {
+                const y = (height / 10) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Draw FPS line
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const maxFps = Math.max(...fpsHistory);
+            const minFps = Math.min(...fpsHistory);
+            const range = maxFps - minFps || 1;
+            
+            const recentHistory = fpsHistory.slice(-50); // Last 50 data points
+            
+            recentHistory.forEach((fps, index) => {
+                const x = (width / (recentHistory.length - 1)) * index;
+                const y = height - ((fps - minFps) / range) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Update summary metrics
+            const avgFps = Math.round(fpsHistory.reduce((a, b) => a + b, 0) / fpsHistory.length);
+            document.getElementById('avgFps').textContent = avgFps;
+            document.getElementById('minFps').textContent = Math.min(...fpsHistory);
+            document.getElementById('maxFps').textContent = Math.max(...fpsHistory);
+        }
+        
+        function startAnimationBenchmark() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            frameCount = 0;
+            lastTime = performance.now();
+            fpsHistory = [];
+            animationCount = 0;
+            
+            document.getElementById('status').innerHTML = '<h3>🔄 Running Benchmark</h3><p>Performance test in progress...</p>';
+            document.getElementById('status').className = 'status running';
+            document.getElementById('stopBtn').disabled = false;
+            
+            // Start performance monitoring
+            updatePerformanceMetrics();
+            
+            // Start animation
+            startComplexAnimation();
+        }
+        
+        function startComplexAnimation() {
+            if (!isRunning) return;
+            
+            const element = document.getElementById('animatedElement');
+            const area = document.getElementById('animationArea');
+            const areaRect = area.getBoundingClientRect();
+            
+            // Complex animation sequence
+            const animations = [
+                // Scale animation
+                () => {
+                    element.style.transition = 'transform 0.5s ease-in-out';
+                    element.style.transform = 'translate(-50%, -50%) scale(2)';
+                    setTimeout(() => {
+                        element.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }, 500);
+                },
+                // Rotation animation
+                () => {
+                    element.style.transition = 'transform 0.8s ease-in-out';
+                    element.style.transform = 'translate(-50%, -50%) rotate(360deg)';
+                    setTimeout(() => {
+                        element.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                    }, 800);
+                },
+                // Position animation
+                () => {
+                    element.style.transition = 'transform 1s ease-in-out';
+                    element.style.transform = 'translate(-25%, -25%)';
+                    setTimeout(() => {
+                        element.style.transform = 'translate(-75%, -75%)';
+                        setTimeout(() => {
+                            element.style.transform = 'translate(-50%, -50%)';
+                        }, 500);
+                    }, 500);
+                },
+                // Color animation
+                () => {
+                    element.style.transition = 'background 0.6s ease-in-out';
+                    element.style.background = 'linear-gradient(45deg, #4ecdc4, #ff6b6b)';
+                    setTimeout(() => {
+                        element.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+                    }, 600);
+                }
+            ];
+            
+            function runNextAnimation() {
+                if (!isRunning) return;
+                
+                const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+                randomAnimation();
+                animationCount++;
+                
+                setTimeout(runNextAnimation, 100 + Math.random() * 200);
+            }
+            
+            runNextAnimation();
+        }
+        
+        function stopBenchmark() {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            document.getElementById('status').innerHTML = '<h3>✅ Benchmark Complete</h3><p>Performance test finished. Check results above.</p>';
+            document.getElementById('status').className = 'status';
+            document.getElementById('stopBtn').disabled = true;
+            
+            // Reset animation element
+            const element = document.getElementById('animatedElement');
+            element.style.transition = '';
+            element.style.transform = 'translate(-50%, -50%)';
+            element.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+        }
+        
+        function startStressTest() {
+            const area = document.getElementById('stressArea');
+            const elementsContainer = document.getElementById('stressElements');
+            
+            // Clear existing elements
+            elementsContainer.innerHTML = '';
+            stressElements = [];
+            
+            // Create many animated elements
+            for (let i = 0; i < 50; i++) {
+                const element = document.createElement('div');
+                element.style.cssText = `
+                    width: 20px;
+                    height: 20px;
+                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                    border-radius: 4px;
+                    position: absolute;
+                    left: ${Math.random() * 80}%;
+                    top: ${Math.random() * 80}%;
+                    transition: all 0.3s ease;
+                `;
+                elementsContainer.appendChild(element);
+                stressElements.push(element);
+            }
+            
+            document.getElementById('elementsCreated').textContent = stressElements.length;
+            
+            // Animate all elements
+            function animateStressElements() {
+                stressElements.forEach(element => {
+                    element.style.left = Math.random() * 80 + '%';
+                    element.style.top = Math.random() * 80 + '%';
+                    element.style.transform = `scale(${0.5 + Math.random() * 1.5}) rotate(${Math.random() * 360}deg)`;
+                });
+                
+                setTimeout(animateStressElements, 100);
+            }
+            
+            animateStressElements();
+        }
+        
+        function startMemoryTest() {
+            const testData = [];
+            
+            function createMemoryPressure() {
+                // Create large objects to test memory management
+                for (let i = 0; i < 1000; i++) {
+                    testData.push({
+                        id: i,
+                        data: new Array(1000).fill(Math.random()),
+                        timestamp: Date.now()
+                    });
+                }
+                
+                // Clear some data to test garbage collection
+                if (testData.length > 10000) {
+                    testData.splice(0, 5000);
+                }
+                
+                setTimeout(createMemoryPressure, 100);
+            }
+            
+            createMemoryPressure();
+        }
+        
+        function startConcurrentTest() {
+            const area = document.getElementById('stressArea');
+            const elementsContainer = document.getElementById('stressElements');
+            
+            // Clear existing elements
+            elementsContainer.innerHTML = '';
+            stressElements = [];
+            
+            // Create elements with different animation types
+            const animationTypes = [
+                'translate',
+                'scale',
+                'rotate',
+                'opacity',
+                'color'
+            ];
+            
+            for (let i = 0; i < 20; i++) {
+                const element = document.createElement('div');
+                element.style.cssText = `
+                    width: 30px;
+                    height: 30px;
+                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                    border-radius: 6px;
+                    position: absolute;
+                    left: ${Math.random() * 80}%;
+                    top: ${Math.random() * 80}%;
+                    transition: all 0.2s ease;
+                `;
+                elementsContainer.appendChild(element);
+                stressElements.push({
+                    element: element,
+                    type: animationTypes[i % animationTypes.length]
+                });
+            }
+            
+            document.getElementById('activeAnimations').textContent = stressElements.length;
+            
+            // Run different animation types concurrently
+            function runConcurrentAnimations() {
+                stressElements.forEach(({element, type}) => {
+                    switch (type) {
+                        case 'translate':
+                            element.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`;
+                            break;
+                        case 'scale':
+                            element.style.transform = `scale(${0.5 + Math.random() * 1.5})`;
+                            break;
+                        case 'rotate':
+                            element.style.transform = `rotate(${Math.random() * 360}deg)`;
+                            break;
+                        case 'opacity':
+                            element.style.opacity = Math.random();
+                            break;
+                        case 'color':
+                            element.style.background = `linear-gradient(45deg, hsl(${Math.random() * 360}, 70%, 50%), hsl(${Math.random() * 360}, 70%, 50%))`;
+                            break;
+                    }
+                });
+                
+                setTimeout(runConcurrentAnimations, 50);
+            }
+            
+            runConcurrentAnimations();
+        }
+        
+        // Initialize chart
+        const canvas = document.getElementById('performanceChart');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#f8f9fa';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    </script>
+</body>
+</html>

@@ -18,6 +18,9 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
+use wasm_bindgen::closure::Closure;
+
+#[cfg(target_arch = "wasm32")]
 use web_sys;
 
 /// Type alias for animation update callback
@@ -94,6 +97,11 @@ pub struct AnimationEngine {
     on_update: UpdateCallback,
     /// Whether the engine is running
     is_running: bool,
+    /// Animation closure for proper cleanup
+    #[cfg(target_arch = "wasm32")]
+    animation_closure: Option<Closure<dyn FnMut()>>,
+    /// Guard to prevent infinite recursion
+    recursion_guard: bool,
 }
 
 impl AnimationEngine {
@@ -105,6 +113,9 @@ impl AnimationEngine {
             on_complete: None,
             on_update: None,
             is_running: false,
+            #[cfg(target_arch = "wasm32")]
+            animation_closure: None,
+            recursion_guard: false,
         }
     }
 
@@ -177,36 +188,106 @@ impl AnimationEngine {
 
     /// Start the animation loop
     #[cfg(target_arch = "wasm32")]
-    fn start_animation_loop(&mut self) {
+    pub fn start_animation_loop(&mut self) {
         if self.is_running {
             return;
         }
 
         self.is_running = true;
-        let engine_ref = Rc::new(RefCell::new(self));
-        let engine_clone = engine_ref.clone();
+        
+        // Create a shared state for the animation loop
+        let animations = Rc::new(RefCell::new(self.animations.clone()));
+        let on_complete = self.on_complete.clone();
+        let on_update = self.on_update.clone();
+        let is_running = Rc::new(RefCell::new(true));
+        let recursion_guard = Rc::new(RefCell::new(false));
 
         let closure = Closure::wrap(Box::new(move || {
-            let mut engine = engine_clone.borrow_mut();
-            engine.update_animations();
+            // Check if we should continue running
+            if !*is_running.borrow() {
+                return;
+            }
+
+            // Update animations
+            let mut completed_animations = Vec::new();
+            let mut current_values = HashMap::new();
+
+            // First pass: update animations and collect values
+            for (property, animation) in animations.borrow_mut().iter_mut() {
+                let was_complete = animation.state.is_complete;
+
+                if !was_complete {
+                    // Update the animation
+                    let delta_time = 1.0 / 60.0; // Assume 60fps
+                    animation.current_time += delta_time;
+
+                    if animation.is_spring {
+                        Self::update_spring_animation_static(animation, delta_time);
+                    } else {
+                        Self::update_eased_animation_static(animation);
+                    }
+                }
+
+                current_values.insert(property.clone(), animation.state.current);
+
+                if animation.state.is_complete && !was_complete {
+                    completed_animations.push(property.clone());
+                }
+            }
+
+            // Notify of updates
+            if let Some(ref on_update_callback) = on_update {
+                on_update_callback(&current_values);
+            }
+
+            // Remove completed animations
+            for property in completed_animations {
+                animations.borrow_mut().remove(&property);
+            }
+
+            // Check if all animations are complete
+            if animations.borrow().is_empty() {
+                *is_running.borrow_mut() = false;
+                if let Some(ref on_complete_callback) = on_complete {
+                    on_complete_callback();
+                }
+            } else if *is_running.borrow() && !*recursion_guard.borrow() {
+                // Continue animation loop with recursion guard
+                *recursion_guard.borrow_mut() = true;
+                // The animation loop will continue automatically via requestAnimationFrame
+                *recursion_guard.borrow_mut() = false;
+            }
         }) as Box<dyn FnMut()>);
 
-        let handle = web_sys::window()
-            .unwrap()
-            .request_animation_frame(closure.as_ref().unchecked_ref())
-            .unwrap();
+        let window = match web_sys::window() {
+            Some(w) => w,
+            None => {
+                web_sys::console::error_1(&"Window not available".into());
+                self.is_running = false;
+                return;
+            }
+        };
 
-        closure.forget();
+        let handle = match window.request_animation_frame(closure.as_ref().unchecked_ref()) {
+            Ok(h) => h,
+            Err(_) => {
+                web_sys::console::error_1(&"Failed to request animation frame".into());
+                self.is_running = false;
+                return;
+            }
+        };
 
-        // Store the handle for cleanup
-        if let Ok(mut engine) = engine_ref.try_borrow_mut() {
-            engine.animation_handle = Some(handle);
+        // Store the handle and closure
+        self.animation_handle = Some(handle);
+        #[cfg(target_arch = "wasm32")]
+        {
+            self.animation_closure = Some(closure);
         }
     }
 
     /// Start the animation loop (non-WASM version)
     #[cfg(not(target_arch = "wasm32"))]
-    fn start_animation_loop(&mut self) {
+    pub fn start_animation_loop(&mut self) {
         if self.is_running {
             return;
         }
@@ -220,12 +301,14 @@ impl AnimationEngine {
     #[cfg(target_arch = "wasm32")]
     fn stop_animation_loop(&mut self) {
         if let Some(handle) = self.animation_handle.take() {
-            web_sys::window()
-                .unwrap()
-                .cancel_animation_frame(handle)
-                .unwrap();
+            if let Some(window) = web_sys::window() {
+                if let Err(e) = window.cancel_animation_frame(handle) {
+                    web_sys::console::warn_1(&format!("Failed to cancel animation frame: {:?}", e).into());
+                }
+            }
         }
         self.is_running = false;
+        self.recursion_guard = false;
     }
 
     /// Stop the animation loop (non-WASM version)
@@ -236,7 +319,6 @@ impl AnimationEngine {
     }
 
     /// Update all animations
-    #[allow(dead_code)]
     fn update_animations(&mut self) {
         let mut completed_animations = Vec::new();
         let mut current_values = HashMap::new();
@@ -280,14 +362,15 @@ impl AnimationEngine {
             if let Some(ref on_complete) = self.on_complete {
                 on_complete();
             }
-        } else if self.is_running {
-            // Continue animation loop
+        } else if self.is_running && !self.recursion_guard {
+            // Continue animation loop with recursion guard
+            self.recursion_guard = true;
             self.start_animation_loop();
+            self.recursion_guard = false;
         }
     }
 
     /// Update a single animation
-    #[allow(dead_code)]
     fn update_single_animation(&self, animation: &mut PropertyAnimation) {
         let delta_time = 1.0 / 60.0; // Assume 60fps
         animation.current_time += delta_time;
@@ -300,7 +383,6 @@ impl AnimationEngine {
     }
 
     /// Update a spring animation (static version)
-    #[allow(dead_code)]
     fn update_spring_animation_static(animation: &mut PropertyAnimation, delta_time: f64) {
         // Spring physics implementation
         let spring_config = match &animation.transition.ease {
@@ -330,7 +412,6 @@ impl AnimationEngine {
     }
 
     /// Update an eased animation (static version)
-    #[allow(dead_code)]
     fn update_eased_animation_static(animation: &mut PropertyAnimation) {
         let progress = (animation.current_time / animation.duration).min(1.0);
         let eased_progress = Self::apply_easing_static(progress, &animation.transition.ease);
@@ -345,7 +426,6 @@ impl AnimationEngine {
     }
 
     /// Apply easing function to progress (static version)
-    #[allow(dead_code)]
     fn apply_easing_static(progress: f64, easing: &Easing) -> f64 {
         match easing {
             Easing::Linear => progress,
@@ -390,7 +470,32 @@ impl AnimationEngine {
                 }
             }
             Easing::Bezier(_, _, _, _) => progress, // Simplified bezier - use linear for now
+            Easing::CubicBezier(_) => progress, // Simplified cubic bezier - use linear for now
         }
+    }
+}
+
+impl Drop for AnimationEngine {
+    fn drop(&mut self) {
+        // Cancel any pending animation frame
+        if let Some(handle) = self.animation_handle.take() {
+            #[cfg(target_arch = "wasm32")]
+            {
+                if let Some(window) = web_sys::window() {
+                    let _ = window.cancel_animation_frame(handle);
+                }
+            }
+        }
+        
+        // Clean up closure
+        #[cfg(target_arch = "wasm32")]
+        {
+            self.animation_closure = None;
+        }
+        
+        // Reset state
+        self.is_running = false;
+        self.recursion_guard = false;
     }
 }
 

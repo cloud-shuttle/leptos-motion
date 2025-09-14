@@ -15,6 +15,8 @@ pub mod minimal_motion_div;
 pub mod performance;
 pub mod presence;
 pub mod reactive_motion_div;
+pub mod reactive_motion_div_v2;
+pub mod drag_motion_div;
 // pub mod reactive_motion_div_fixed; // Disabled due to threading issues
 pub mod simplified_event_handling;
 pub mod utils;
@@ -35,7 +37,6 @@ pub mod simple_signal_based_motion_div;
 // New v0.7 features
 pub mod animate_presence;
 pub mod performance_optimizations;
-pub mod spring_physics;
 pub mod timeline;
 pub mod variants;
 
@@ -236,7 +237,6 @@ pub use utils::*;
 // Re-export new v0.7 features
 pub use animate_presence::*;
 pub use performance_optimizations::*;
-pub use spring_physics::*;
 pub use timeline::*;
 pub use variants::*;
 

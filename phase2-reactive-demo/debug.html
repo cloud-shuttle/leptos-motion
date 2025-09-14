@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .controls input {
+            margin: 0 10px;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐛 Animation Debug</h1>
+        <p>Testing if the WASM module is working and animations are being applied.</p>
+        
+        <div class="controls">
+            <label>Scale: <input type="range" id="scale" min="0.5" max="2" step="0.1" value="1"></label>
+            <label>Rotation: <input type="range" id="rotation" min="0" max="360" step="10" value="0"></label>
+        </div>
+        
+        <div class="debug-box" id="animated-box">
+            Test Box
+        </div>
+        
+        <div class="log" id="log">
+            <div>Waiting for WASM to load...</div>
+        </div>
+    </div>
+    
+    <script type="module">
+        const log = document.getElementById('log');
+        const animatedBox = document.getElementById('animated-box');
+        const scaleInput = document.getElementById('scale');
+        const rotationInput = document.getElementById('rotation');
+        
+        function addLog(message) {
+            const div = document.createElement('div');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+        
+        try {
+            addLog('Importing WASM module...');
+            const { default: init, main } = await import('./pkg/phase2_reactive_demo.js');
+            
+            addLog('Initializing WASM...');
+            await init();
+            
+            addLog('Calling main function...');
+            main();
+            
+            addLog('✅ WASM loaded successfully!');
+            
+            // Test if we can manipulate the DOM
+            addLog('Testing DOM manipulation...');
+            animatedBox.style.transform = 'scale(1.5) rotate(45deg)';
+            addLog('Applied test transform');
+            
+            // Add event listeners to test reactivity
+            scaleInput.addEventListener('input', (e) => {
+                const scale = e.target.value;
+                animatedBox.style.transform = `scale(${scale}) rotate(${rotationInput.value}deg)`;
+                addLog(`Scale changed to: ${scale}`);
+            });
+            
+            rotationInput.addEventListener('input', (e) => {
+                const rotation = e.target.value;
+                animatedBox.style.transform = `scale(${scaleInput.value}) rotate(${rotation}deg)`;
+                addLog(`Rotation changed to: ${rotation}deg`);
+            });
+            
+            addLog('Event listeners attached');
+            
+        } catch (error) {
+            addLog(`❌ Error: ${error.message}`);
+            console.error('WASM Error:', error);
+        }
+    </script>
+</body>
+</html>

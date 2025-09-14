@@ -17,3 +17,5 @@ console_error_panic_hook.workspace = true
 
 [lib]
 crate-type = ["cdylib"]
+
+[workspace]

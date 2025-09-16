@@ -6,7 +6,7 @@ use crate::{
     StudioError,
     pooling::AnimationPool,
     project::StudioProject,
-    timeline::{AnimationProperty, AnimationValue, Timeline3D},
+    timeline::{AnimationProperty, AnimationValue, Timeline3D, KeyframeTrack},
     transforms::Transform3D,
 };
 use leptos::attr::global::ClassAttribute;
@@ -254,8 +254,17 @@ impl LivePreview {
     /// Convert animation property to CSS property name
     fn animation_property_to_css(&self, property: &AnimationProperty) -> String {
         match property {
+            AnimationProperty::TranslateX => "transform".to_string(),
+            AnimationProperty::TranslateY => "transform".to_string(),
+            AnimationProperty::TranslateZ => "transform".to_string(),
             AnimationProperty::Translation => "transform".to_string(),
+            AnimationProperty::RotationX => "transform".to_string(),
+            AnimationProperty::RotationY => "transform".to_string(),
+            AnimationProperty::RotationZ => "transform".to_string(),
             AnimationProperty::Rotation => "transform".to_string(),
+            AnimationProperty::ScaleX => "transform".to_string(),
+            AnimationProperty::ScaleY => "transform".to_string(),
+            AnimationProperty::ScaleZ => "transform".to_string(),
             AnimationProperty::Scale => "transform".to_string(),
             AnimationProperty::Opacity => "opacity".to_string(),
             AnimationProperty::Color => "color".to_string(),
@@ -366,7 +375,7 @@ impl PreviewAnimation {
 
         // Update current properties from timeline
         if let Some(timeline) = &self.timeline {
-            let current_time = self.progress * self.duration;
+            let current_time = (self.progress as f64) * (self.duration as f64);
             for property in [
                 AnimationProperty::Translation,
                 AnimationProperty::Rotation,

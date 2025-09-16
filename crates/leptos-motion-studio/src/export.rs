@@ -480,8 +480,17 @@ impl<'a> AnimationExporter<'a> {
         use crate::timeline::AnimationProperty;
 
         match property {
+            AnimationProperty::TranslateX => "transform".to_string(),
+            AnimationProperty::TranslateY => "transform".to_string(),
+            AnimationProperty::TranslateZ => "transform".to_string(),
             AnimationProperty::Translation => "transform".to_string(),
+            AnimationProperty::RotationX => "transform".to_string(),
+            AnimationProperty::RotationY => "transform".to_string(),
+            AnimationProperty::RotationZ => "transform".to_string(),
             AnimationProperty::Rotation => "transform".to_string(),
+            AnimationProperty::ScaleX => "transform".to_string(),
+            AnimationProperty::ScaleY => "transform".to_string(),
+            AnimationProperty::ScaleZ => "transform".to_string(),
             AnimationProperty::Scale => "transform".to_string(),
             AnimationProperty::Opacity => "opacity".to_string(),
             AnimationProperty::Color => "color".to_string(),

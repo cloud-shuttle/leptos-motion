@@ -10,6 +10,7 @@
 use crate::{
     ReactiveMotionDivNew, animation_engine::AnimationEngine,
     signal_based_animation_controller::SignalBasedAnimationController,
+    reactive_animate,
 };
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, Transition};
@@ -91,7 +92,7 @@ fn test_motion_div_reacts_to_signal_changes() {
     let component = view! {
         <ReactiveMotionDivNew
             initial=create_animation_target("opacity", 0.0)
-            animate=animate_target()
+            animate=reactive_animate(animate_target)
         >
             "Test Content"
         </ReactiveMotionDivNew>
@@ -210,7 +211,7 @@ fn test_complex_reactive_animations() {
     let component = view! {
         <ReactiveMotionDivNew
             initial=create_animation_target("opacity", 0.0)
-            animate=complex_animate()
+            animate=reactive_animate(complex_animate)
         >
             "Complex Animation"
         </ReactiveMotionDivNew>
@@ -271,7 +272,7 @@ fn test_animation_triggers_on_signal_change() {
     let component = view! {
         <ReactiveMotionDivNew
             initial=create_animation_target("opacity", 1.0)
-            animate=counter_animate()
+            animate=reactive_animate(counter_animate)
         >
             "Counter Animation"
         </ReactiveMotionDivNew>
@@ -324,13 +325,13 @@ fn test_multiple_motion_divs_independent() {
         <div>
             <ReactiveMotionDivNew
                 initial=create_animation_target("opacity", 0.0)
-                animate=div1_animate()
+                animate=reactive_animate(div1_animate)
             >
                 "Div 1"
             </ReactiveMotionDivNew>
             <ReactiveMotionDivNew
                 initial=create_animation_target("opacity", 1.0)
-                animate=div2_animate()
+                animate=reactive_animate(div2_animate)
             >
                 "Div 2"
             </ReactiveMotionDivNew>

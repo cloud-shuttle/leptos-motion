@@ -5,3 +5,4 @@
 # It is recommended to check this file in to source control so that
 # everyone who runs the test benefits from these saved cases.
 cc 2de50a685ae1e4135cd969ac2527e1bde8429f09b4f66c94c25f71484835b5a4 # shrinks to keys = [], values = []
+cc 2300de08b6be17f6fbbfc46680df498fe77ab634ae759a0bcc6650dd6476fe78 # shrinks to unicode_keys = ["", ""], values = [-9.938440859027437e34, 0.0]

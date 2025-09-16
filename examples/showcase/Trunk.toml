@@ -2,9 +2,8 @@
 target = "index.html"
 dist = "dist"
 
+[serve]
+addresses = ["127.0.0.1:8080"]
+
 [watch]
 watch = ["src", "src/style.css"]
-
-[serve]
-address = "127.0.0.1"
-port = 8080

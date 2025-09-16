@@ -632,3 +632,6 @@ mod tests {
         assert_eq!(transform.scale_y, 100.0 / 150.0); // 100 / 150
     }
 }
+
+// Type aliases for compatibility with contract tests
+pub type FlipAnimation = FLIPAnimation;

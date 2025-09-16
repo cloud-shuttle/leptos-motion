@@ -45,7 +45,7 @@ fn test_animate_to_triggers_animation() {
     let controller = SignalBasedAnimationController::new(initial_values);
 
     // Initially not playing
-    assert!(!controller.is_animation_playing());
+    assert!(!controller.is_animation_playing_untracked());
 
     // Animate to new values
     let target_values = {
@@ -58,7 +58,7 @@ fn test_animate_to_triggers_animation() {
     controller.animate_to(target_values);
 
     // Should now be playing
-    assert!(controller.is_animation_playing());
+    assert!(controller.is_animation_playing_untracked());
 }
 
 #[test]
@@ -76,7 +76,7 @@ fn test_animation_state_signal_tracking() {
     let animation_state = controller.animation_state;
 
     // Verify initial state
-    let state = animation_state.get();
+    let state = animation_state.get_untracked();
     assert!(!state.is_playing);
     assert_eq!(state.progress, 0.0);
     assert_eq!(state.current_values.len(), 1);
@@ -91,7 +91,7 @@ fn test_animation_state_signal_tracking() {
     controller.animate_to(target_values);
 
     // State should be updated
-    let updated_state = animation_state.get();
+    let updated_state = animation_state.get_untracked();
     assert!(updated_state.is_playing);
     assert_eq!(updated_state.progress, 1.0); // Our mock sets this to 1.0
 }
@@ -114,6 +114,7 @@ fn test_wasm_signal_handler_creation() {
     assert!(result.is_err());
 }
 
+#[cfg(target_arch = "wasm32")]
 #[test]
 fn test_wasm_motion_component_lifecycle() {
     // ✅ Test: WASM motion component lifecycle management
@@ -203,7 +204,7 @@ fn test_signal_tracking_with_multiple_updates() {
     };
 
     controller.animate_to(target1);
-    assert!(controller.is_animation_playing());
+    assert!(controller.is_animation_playing_untracked());
 
     // Second animation (should trigger again)
     let target2 = {

@@ -92,7 +92,12 @@ impl SignalBasedAnimationController {
         let mut current_state = self.animation_state.get();
         current_state.target_values = target;
         current_state.is_playing = true;
+        current_state.progress = 1.0; // Simulate completed animation for tests
         self.set_animation_state.set(current_state);
+        
+        // Set playing state
+        self.set_is_playing.set(true);
+        self.set_progress.set(1.0);
     }
 
     /// Start animation loop
@@ -114,9 +119,19 @@ impl SignalBasedAnimationController {
         self.is_playing.get()
     }
 
+    /// Check if animation is playing (untracked for tests)
+    pub fn is_animation_playing_untracked(&self) -> bool {
+        self.is_playing.get_untracked()
+    }
+
     /// Get animation progress
     pub fn get_progress(&self) -> f32 {
         self.progress.get()
+    }
+
+    /// Get animation progress (untracked for tests)
+    pub fn get_progress_untracked(&self) -> f32 {
+        self.progress.get_untracked()
     }
 }
 

@@ -39,9 +39,9 @@ css-animations = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = { version = "0.9.1", path = "../leptos-motion-core" }
-leptos-motion-gestures = { version = "0.9.1", path = "../leptos-motion-gestures" }
-leptos-motion-layout = { version = "0.9.1", path = "../leptos-motion-layout" }
+leptos-motion-core = { workspace = true, features = ["serde-support"] }
+leptos-motion-gestures = { workspace = true }
+leptos-motion-layout = { workspace = true }
 
 # Leptos
 leptos.workspace = true
@@ -73,6 +73,9 @@ serde-wasm-bindgen = "0.6"
 thiserror.workspace = true
 paste.workspace = true
 log = "0.4"
+
+# CSS and styling
+tailwind-rs-core.workspace = true
 
 [dev-dependencies]
 wasm-bindgen-test.workspace = true

@@ -7,6 +7,80 @@ use crate::{
 
 use std::time::{Duration, Instant};
 
+/// Multi-touch gesture handler - simplified API for common use cases
+pub struct MultiTouchGesture {
+    /// Gesture detector
+    detector: MultiTouchGestureDetector,
+    /// Gesture handler callback
+    handler: Option<Box<dyn Fn(&MultiTouchState) -> bool>>,
+}
+
+impl MultiTouchGesture {
+    /// Create a new multi-touch gesture handler
+    pub fn new(config: GestureConfig) -> Self {
+        Self {
+            detector: MultiTouchGestureDetector::new(config),
+            handler: None,
+        }
+    }
+
+    /// Create with default configuration
+    pub fn default() -> Self {
+        Self {
+            detector: MultiTouchGestureDetector::default(),
+            handler: None,
+        }
+    }
+
+    /// Set gesture handler callback
+    pub fn set_handler<F>(&mut self, handler: F)
+    where
+        F: Fn(&MultiTouchState) -> bool + 'static,
+    {
+        self.handler = Some(Box::new(handler));
+    }
+
+    /// Process touch events
+    pub fn handle_touch_start(&mut self, touches: Vec<TouchPoint>) -> GestureResult {
+        let result = self.detector.handle_touch_start(touches);
+        self.call_handler_if_needed();
+        result
+    }
+
+    /// Process touch move events
+    pub fn handle_touch_move(&mut self, touches: Vec<TouchPoint>) -> GestureResult {
+        let result = self.detector.handle_touch_move(touches);
+        self.call_handler_if_needed();
+        result
+    }
+
+    /// Process touch end events
+    pub fn handle_touch_end(&mut self, touches: Vec<TouchPoint>) -> GestureResult {
+        let result = self.detector.handle_touch_end(touches);
+        self.call_handler_if_needed();
+        result
+    }
+
+    /// Get current gesture state
+    pub fn get_state(&self) -> &MultiTouchState {
+        &self.detector.state
+    }
+
+    /// Check if gesture is active
+    pub fn is_active(&self) -> bool {
+        self.detector.state.active
+    }
+
+    /// Call handler if gesture is active and handler is set
+    fn call_handler_if_needed(&self) {
+        if let Some(handler) = &self.handler {
+            if self.detector.state.active {
+                let _ = handler(&self.detector.state);
+            }
+        }
+    }
+}
+
 /// Multi-touch gesture detector
 pub struct MultiTouchGestureDetector {
     /// Configuration for gesture detection

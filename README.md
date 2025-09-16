@@ -11,6 +11,24 @@ A high-performance animation library for Rust web applications using the Leptos 
 - **Flexible**: Support for complex transforms, drag interactions, and custom animations
 - **Modern**: Built for the modern web with CSS transforms and opacity
 
+## 📁 Project Structure
+
+This repository is organized for clarity and maintainability:
+
+- **`crates/`** - Core library crates (leptos-motion-core, leptos-motion-dom, etc.)
+- **`demos/`** - Organized demonstration applications
+  - `demos/basic/` - Simple demos for getting started
+  - `demos/advanced/` - Complex demos showcasing advanced features
+  - `demos/showcase/` - Comprehensive feature demonstrations
+  - `demos/legacy/` - Legacy demos for reference
+- **`examples/`** - Simple code examples and templates
+- **`tests/`** - Organized test suites (unit, integration, e2e)
+- **`docs/`** - Comprehensive documentation
+  - `docs/analysis/` - Technical analysis and comparisons
+  - `docs/roadmaps/` - Development roadmaps and plans
+  - `docs/releases/` - Release notes and summaries
+  - `docs/status/` - Project status and issue tracking
+
 ## 📦 Installation
 
 Add to your `Cargo.toml`:
@@ -26,7 +44,7 @@ wasm-bindgen = "0.2"
 
 ```rust
 use leptos::prelude::*;
-use leptos_motion_dom::reactive_motion_div_v2::ReactiveMotionDivV2;
+use leptos_motion_dom::reactive_motion_div::ReactiveMotionDiv;
 use leptos_motion_dom::*;
 use std::collections::HashMap;
 
@@ -38,13 +56,13 @@ fn App() -> impl IntoView {
     // Update animation signal when scale changes
     Effect::new(move |_| {
         let mut animations = HashMap::new();
-        animations.insert("transform".to_string(), AnimationValue::String(format!("scale({})", scale.get())));
+        animations.insert("scale".to_string(), AnimationValue::Number(scale.get()));
         set_animate_signal.set(animations);
     });
 
     let initial_values = {
         let mut initial = HashMap::new();
-        initial.insert("transform".to_string(), AnimationValue::String("scale(1)".to_string()));
+        initial.insert("scale".to_string(), AnimationValue::Number(1.0));
         initial
     };
 
@@ -59,7 +77,7 @@ fn App() -> impl IntoView {
     view! {
         <div>
             <h1>"Leptos Motion Demo"</h1>
-            <ReactiveMotionDivV2
+            <ReactiveMotionDiv
                 initial=initial_values
                 animate=animate_signal
                 transition=transition
@@ -72,7 +90,7 @@ fn App() -> impl IntoView {
                 >
                     "Click me!"
                 </div>
-            </ReactiveMotionDivV2>
+            </ReactiveMotionDiv>
         </div>
     }
 }
@@ -84,18 +102,18 @@ fn main() {
 
 ## 🎯 Core Components
 
-### ReactiveMotionDivV2
+### ReactiveMotionDiv
 
 The main animation component that provides reactive animations based on Leptos signals.
 
 ```rust
-<ReactiveMotionDivV2
+<ReactiveMotionDiv
     initial=initial_values
     animate=animate_signal
     transition=transition
 >
     <div>"Your content here"</div>
-</ReactiveMotionDivV2>
+</ReactiveMotionDiv>
 ```
 
 ### DragMotionDiv
@@ -186,7 +204,7 @@ fn BasicAnimation() -> impl IntoView {
     });
     
     view! {
-        <ReactiveMotionDivV2
+        <ReactiveMotionDiv
             initial=HashMap::new()
             animate=animate_signal
             transition=Transition::default()
@@ -194,9 +212,27 @@ fn BasicAnimation() -> impl IntoView {
             on:mouseleave=move |_| set_hovered.set(false)
         >
             <div>"Hover me!"</div>
-        </ReactiveMotionDivV2>
+        </ReactiveMotionDiv>
     }
 }
+```
+
+## 🎬 Running Demos
+
+Try out the interactive demos to see leptos-motion in action:
+
+```bash
+# Basic reactive animation demo
+cd demos/basic/reactive-demo
+trunk serve --open
+
+# Comprehensive showcase
+cd demos/showcase/comprehensive-demo
+trunk serve --open
+
+# WebGL 3D animations
+cd demos/advanced/webgl-demo
+trunk serve --open
 ```
 
 ### Drag and Drop
@@ -249,13 +285,13 @@ fn StaggeredList() -> impl IntoView {
     };
     
     view! {
-                    <ReactiveMotionDivV2
+                    <ReactiveMotionDiv
                         initial=HashMap::new()
                         animate=HashMap::new()
                         transition=transition
                     >
                         <div>{item}</div>
-                    </ReactiveMotionDivV2>
+                    </ReactiveMotionDiv>
                 }
             }).collect::<Vec<_>>()}
         </div>

@@ -2,8 +2,10 @@
 //!
 //! These tests ensure our CSS class-based animation system works correctly
 //! and provides the simplicity that makes leptos-animate appealing.
+//! Now enhanced with tailwind-rs-core v0.4.0 integration.
 
 use std::collections::HashMap;
+use tailwind_rs_core::*;
 
 /// CSS class animation configuration
 #[derive(Debug, Clone)]
@@ -420,6 +422,97 @@ fn test_tailwind_integration() {
         manager.get_element_class("element1"),
         Some("transition-fade-in".to_string())
     );
+}
+
+/// Test tailwind-rs-core v0.4.0 integration
+#[test]
+fn test_tailwind_rs_core_integration() {
+    // Create type-safe Tailwind classes using tailwind-rs-core
+    let classes = ClassBuilder::new()
+        .padding(SpacingValue::Integer(4))
+        .background_color(Color::new(ColorPalette::Blue, ColorShade::Shade500))
+        .text_color(Color::new(ColorPalette::White, ColorShade::Shade500))
+        .border_radius(BorderRadius::Medium)
+        .transition_duration(300)
+        .transition_easing("ease-in-out")
+        .build();
+
+    // Convert to CSS classes
+    let css_classes = classes.to_string();
+    
+    // Verify the generated classes
+    assert!(css_classes.contains("p-4"));
+    assert!(css_classes.contains("bg-blue-500"));
+    assert!(css_classes.contains("text-white"));
+    assert!(css_classes.contains("rounded-md"));
+    assert!(css_classes.contains("duration-300"));
+    assert!(css_classes.contains("ease-in-out"));
+
+    // Test animation-specific classes
+    let animation_classes = ClassBuilder::new()
+        .transition_duration(500)
+        .transition_easing("ease-out")
+        .transform_scale(1.1)
+        .opacity(0.8)
+        .build();
+
+    let animation_css = animation_classes.to_string();
+    assert!(animation_css.contains("duration-500"));
+    assert!(animation_css.contains("ease-out"));
+    assert!(animation_css.contains("scale-110"));
+    assert!(animation_css.contains("opacity-80"));
+}
+
+/// Test responsive design with tailwind-rs-core
+#[test]
+fn test_responsive_animation_classes() {
+    // Create responsive animation classes
+    let responsive_classes = ResponsiveBuilder::new()
+        .mobile(ClassBuilder::new()
+            .padding(SpacingValue::Integer(2))
+            .transition_duration(200)
+            .build())
+        .tablet(ClassBuilder::new()
+            .padding(SpacingValue::Integer(4))
+            .transition_duration(300)
+            .build())
+        .desktop(ClassBuilder::new()
+            .padding(SpacingValue::Integer(6))
+            .transition_duration(400)
+            .build())
+        .build();
+
+    let responsive_css = responsive_classes.to_string();
+    
+    // Verify responsive classes are generated
+    assert!(responsive_css.contains("p-2"));
+    assert!(responsive_css.contains("md:p-4"));
+    assert!(responsive_css.contains("lg:p-6"));
+    assert!(responsive_css.contains("duration-200"));
+    assert!(responsive_css.contains("md:duration-300"));
+    assert!(responsive_css.contains("lg:duration-400"));
+}
+
+/// Test gradient animations with tailwind-rs-core
+#[test]
+fn test_gradient_animation_classes() {
+    // Create gradient animation classes
+    let gradient_classes = ClassBuilder::new()
+        .background_gradient(Gradient::new()
+            .direction(GradientDirection::ToRight)
+            .add_stop(GradientStop::new(Color::new(ColorPalette::Blue, ColorShade::Shade500), 0.0))
+            .add_stop(GradientStop::new(Color::new(ColorPalette::Purple, ColorShade::Shade500), 1.0))
+            .build())
+        .transition_duration(1000)
+        .build();
+
+    let gradient_css = gradient_classes.to_string();
+    
+    // Verify gradient classes are generated
+    assert!(gradient_css.contains("bg-gradient-to-r"));
+    assert!(gradient_css.contains("from-blue-500"));
+    assert!(gradient_css.contains("to-purple-500"));
+    assert!(gradient_css.contains("duration-1000"));
 }
 
 /// Test performance with many animations

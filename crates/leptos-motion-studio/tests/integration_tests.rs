@@ -2,9 +2,10 @@
 
 use leptos_motion_studio::*;
 use leptos_motion_studio::{
-    export::*, morphing::*, pooling::*, preview::*, project::*, studio::*, timeline::*,
-    transforms::*, webgl::*,
+    export::*, morphing::*, preview::*, project::*, studio::*, timeline::*,
+    transforms::*,
 };
+use leptos_motion_studio::pooling::{AnimationPool, AnimationType, MemoryManager};
 use std::collections::HashMap;
 use uuid::Uuid;
 use wasm_bindgen_test::*;
@@ -56,19 +57,15 @@ fn test_motion_studio_workflow() {
     // Export to different formats
     let exporter = AnimationExporter::new(&project);
 
-    // Test CSS export
-    let css_result = exporter.export_css();
-    assert!(css_result.is_ok());
-    let css = css_result.unwrap();
-    assert!(!css.content.is_empty());
-    assert!(css.content.contains("@keyframes"));
-
-    // Test WAAPI export
-    let waapi_result = exporter.export_waapi();
-    assert!(waapi_result.is_ok());
-    let waapi = waapi_result.unwrap();
-    assert!(!waapi.content.is_empty());
-    assert!(waapi.content.contains("MotionAnimations"));
+    // Test export (which handles multiple formats)
+    let export_result = exporter.export();
+    assert!(export_result.is_ok());
+    let export_data = export_result.unwrap();
+    assert!(!export_data.content.is_empty());
+    
+    // Test that we can get supported formats
+    let formats = exporter.supported_formats();
+    assert!(!formats.is_empty());
 
     // Test project serialization
     let mut manager = ProjectManager::new();

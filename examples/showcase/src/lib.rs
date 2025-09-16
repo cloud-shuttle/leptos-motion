@@ -117,7 +117,7 @@ pub fn App() -> impl IntoView {
                     <div class={move || if layout_mode.get() { "grid-layout" } else { "list-layout" }}>
                         <MotionDiv
                             class="layout-item".to_string()
-                            layout=true
+                            _layout=true
                             transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseInOut,
@@ -129,7 +129,7 @@ pub fn App() -> impl IntoView {
 
                         <MotionDiv
                             class="layout-item".to_string()
-                            layout=true
+                            _layout=true
                             transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseInOut,
@@ -141,7 +141,7 @@ pub fn App() -> impl IntoView {
 
                         <MotionDiv
                             class="layout-item".to_string()
-                            layout=true
+                            _layout=true
                             transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseInOut,
@@ -153,7 +153,7 @@ pub fn App() -> impl IntoView {
 
                         <MotionDiv
                             class="layout-item".to_string()
-                            layout=true
+                            _layout=true
                             transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseInOut,

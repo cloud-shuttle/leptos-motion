@@ -932,7 +932,7 @@ mod tests {
         assert!(animation.get_property("unknown").is_none());
 
         if let Some(AnimationValue::Number(opacity)) = animation.get_property("opacity") {
-            assert!((opacity - 0.5).abs() < f32::EPSILON);
+            assert!((opacity - 0.5).abs() < f64::EPSILON);
         } else {
             panic!("Expected Number value for opacity");
         }

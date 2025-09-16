@@ -9,3 +9,8 @@ cc a200c8d5df1690987bb8b06ebcc7f330d301b6f89e67bb908a06b71264772b5b # shrinks to
 cc 7a8365c4cd57a63dc01cd4cf014970cf1fe3bac26a6f0dae7ff04b56ef14a10b # shrinks to keys = ["F0v1IAEs6_B2p8_z6e_u0DOH_06S", "S_W497GA9V0eB8_3_9ty_", "7_mhjJ4R1k58_woft", "XhSzX7dIve24"], values = [-5.163151659939836e-51]
 cc 0ed334a8330055fdb09fbab5f0a74cf12c49b9dba44c34a55d1b3d4658b0c7e4 # shrinks to keys = ["A", "_", "a", "a", "_", "_"], values = [0.0, 0.0, 0.0, -4.972322763702022e261]
 cc 6401fbb71589210ee8c86e3fde06fcfe4c3175aa6e01cd122f201c07f9c08cb9 # shrinks to keys = ["0", "_", "_"], values = [0.0, 0.0, -4.0061332432886944e297]
+cc 4e41ad403a6b407d0526a6eb9566626e64d181fe9c89ffbd9329c990f3ca8bc6 # shrinks to keys = ["fGXrGU6Ax1phaCp"], values = [-3.423677091356792e86, -1.260121502116468e-308, -1.0881501876653018e-290]
+cc b5e3ef70337ccafec5bba40e37c21e6e7707f6540e5a7064d12eaed35b1ac81f # shrinks to keys = ["Ch_d__Bj_Y_4i", "g__b_L4OC6____J34Mbt__H0InT7", "D0_mO5Ttnk_8msE0_qCJWBX_Fc"], values = [0.0]
+cc 9fed25babcc662a84a18254e9f9f4e7128c2e40795c80a0977c50da19f27475f # shrinks to keys = [], values = [2.102214310670629e-308]
+cc b105df986ef6ee79bc1d5fbdceb0e4937b3add463b5614104afb2777b6da0388 # shrinks to keys = ["7prR9_0k_14I_hf___Mip_Flf22v2Py"], values = [0.0, 9.175260090632292e209]
+cc f2d52fcc8e9acb400daea5ff634fcc63ccbbee7c691363b3d2e909eed3a2e16a # shrinks to keys = ["a", "0", "a", "_", "0", "A", "A", "a", "_", "A", "_", "_", "A", "A", "A", "a", "_", "A", "A", "0", "0", "a", "_", "_", "_", "a", "A", "0", "a", "A", "a", "A", "a", "_", "0", "0", "_", "a", "0", "_", "0", "_"], values = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -2.0776006802888208e43]

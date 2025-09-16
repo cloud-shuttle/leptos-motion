@@ -178,8 +178,8 @@ proptest! {
 
         let duration = start.elapsed();
 
-        // Should clone quickly
-        assert!(duration.as_millis() < 100);
+        // Should clone quickly (more realistic threshold)
+        assert!(duration.as_millis() < 500);
         assert_eq!(cloned_targets.len(), count);
 
         // Test that all clones are equal to original

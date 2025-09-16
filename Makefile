@@ -1,258 +1,134 @@
-# Leptos Motion - Development Makefile
-# Usage: make <target>
+# Leptos Motion Makefile
+# Provides convenient commands for development, testing, and contract validation
 
-.PHONY: help install build test clean dev format lint check-all release install-browsers
+.PHONY: help build test contract-tests clean format lint check-all
 
 # Default target
 help:
-	@echo "🚀 Leptos Motion Development Commands"
+	@echo "Leptos Motion - Available Commands:"
 	@echo ""
-	@echo "📦 Setup & Installation:"
-	@echo "  install          Install all dependencies (Rust + Node.js)"
-	@echo "  install-browsers Install Playwright browsers"
+	@echo "Development:"
+	@echo "  build          - Build all crates"
+	@echo "  test           - Run all tests"
+	@echo "  contract-tests - Run contract tests"
+	@echo "  clean          - Clean build artifacts"
 	@echo ""
-	@echo "🔨 Build & Development:"
-	@echo "  build            Build all Rust crates and examples"
-	@echo "  dev              Start development server"
-	@echo "  watch            Watch for changes and rebuild"
+	@echo "Code Quality:"
+	@echo "  format         - Format all code"
+	@echo "  lint           - Run clippy lints"
+	@echo "  check-all      - Run all checks (format, lint, test, contract-tests)"
 	@echo ""
-	@echo "🧪 Testing:"
-	@echo "  test             Run all tests (Rust + E2E)"
-	@echo "  test-rust        Run Rust tests only"
-	@echo "  test-e2e         Run Playwright E2E tests"
-	@echo "  test-e2e-ui      Run E2E tests with UI"
-	@echo "  test-e2e-debug   Run E2E tests in debug mode"
+	@echo "Contract Testing:"
+	@echo "  contract-api   - Run API contract tests"
+	@echo "  contract-perf  - Run performance contract tests"
+	@echo "  contract-mem   - Run memory contract tests"
+	@echo "  contract-error - Run error handling contract tests"
+	@echo "  contract-cross - Run cross-crate contract tests"
 	@echo ""
-	@echo "🔍 Quality & Linting:"
-	@echo "  format           Format Rust code"
-	@echo "  lint             Run clippy and other linters"
-	@echo "  pre-commit       Run pre-commit hooks"
-	@echo "  pre-commit-install Install pre-commit hooks"
-	@echo "  pre-commit-update Update pre-commit hooks"
-	@echo "  check-all        Run all quality checks"
+	@echo "Demos:"
+	@echo "  demo-basic     - Run basic reactive demo"
+	@echo "  demo-showcase  - Run comprehensive showcase demo"
+	@echo "  demo-webgl     - Run WebGL demo"
 	@echo ""
-	@echo "🧹 Maintenance:"
-	@echo "  clean            Clean all build artifacts"
-	@echo "  clean-deps       Clean dependencies"
-	@echo ""
-	@echo "📚 Documentation:"
-	@echo "  docs             Build documentation"
-	@echo "  docs-serve       Serve documentation locally"
-	@echo ""
-	@echo "🚀 Release:"
-	@echo "  release          Prepare release build"
-	@echo "  publish          Publish to crates.io"
 
-# Installation
-install: install-rust install-node
+# Build all crates
+build:
+	cargo build --workspace
 
-install-rust:
-	@echo "🔧 Installing Rust dependencies..."
-	rustup target add wasm32-unknown-unknown
-	cargo install trunk
-	cargo install cargo-watch
-	cargo install cargo-edit
-	cargo install cargo-audit
-	cargo install cargo-tarpaulin
-
-install-node:
-	@echo "📦 Installing Node.js dependencies..."
-	pnpm install
-
-install-browsers:
-	@echo "🌐 Installing Playwright browsers..."
-	pnpm install:browsers
-
-# Build targets
-build: build-rust build-examples
-
-build-rust:
-	@echo "🔨 Building Rust crates..."
-	cargo build --release
-
-build-examples:
-	@echo "🎨 Building examples..."
-	cd examples/showcase && trunk build
-
-# Development
-dev:
-	@echo "🚀 Starting development server..."
-	cd examples/showcase && trunk serve --open
-
-watch:
-	@echo "👀 Watching for changes..."
-	cargo watch -x check -x test -x run
-
-# Testing
-test: test-rust test-e2e
-
-test-rust:
-	@echo "🧪 Running Rust tests..."
+# Run all tests
+test:
 	cargo test --workspace
 
-test-e2e:
-	@echo "🌐 Running E2E tests..."
-	pnpm test:e2e
+# Run contract tests
+contract-tests:
+	cargo test --package leptos-motion-contracts --lib contract_tests
 
-test-e2e-ui:
-	@echo "🖥️  Running E2E tests with UI..."
-	pnpm test:e2e:ui
+# Clean build artifacts
+clean:
+	cargo clean
 
-test-e2e-debug:
-	@echo "🐛 Running E2E tests in debug mode..."
-	pnpm test:e2e:debug
-
-# Quality checks
+# Format all code
 format:
-	@echo "✨ Formatting Rust code..."
-	cargo fmt
+	cargo fmt --all
 
+# Run clippy lints
 lint:
-	@echo "🔍 Running linters..."
 	cargo clippy --workspace -- -D warnings
-	cargo audit
 
-pre-commit:
-	@echo "🔍 Running pre-commit hooks..."
-	./scripts/run-pre-commit.sh
+# Run all checks
+check-all: format lint test contract-tests
+	@echo "✅ All checks passed!"
 
-pre-commit-install:
-	@echo "🔧 Installing pre-commit hooks..."
-	pre-commit install
-	pre-commit install --hook-type commit-msg
+# Contract test targets
+contract-api:
+	cargo test --package leptos-motion-contracts --lib api_contracts
 
-pre-commit-update:
-	@echo "🔄 Updating pre-commit hooks..."
-	pre-commit autoupdate
+contract-perf:
+	cargo test --package leptos-motion-contracts --lib performance_contracts
 
-check-all: format lint test pre-commit
-	@echo "✅ All quality checks passed!"
+contract-mem:
+	cargo test --package leptos-motion-contracts --lib memory_contracts
+
+contract-error:
+	cargo test --package leptos-motion-contracts --lib error_contracts
+
+contract-cross:
+	cargo test --package leptos-motion-contracts --lib cross_crate_contracts
+
+# Demo targets
+demo-basic:
+	cd demos/basic/reactive-demo && trunk serve --open
+
+demo-showcase:
+	cd demos/showcase/comprehensive-demo && trunk serve --open
+
+demo-webgl:
+	cd demos/advanced/webgl-demo && trunk serve --open
+
+# CI/CD targets
+ci-test: format lint test contract-tests
+	@echo "✅ CI tests passed!"
+
+ci-contract: contract-tests
+	@echo "✅ Contract tests passed!"
+
+# Development targets
+dev-setup:
+	@echo "Setting up development environment..."
+	rustup component add rustfmt clippy
+	@echo "✅ Development environment ready!"
+
+# Contract test report generation
+contract-report:
+	cargo test --package leptos-motion-contracts --lib contract_tests -- --nocapture > contract_test_report.txt
+	@echo "Contract test report generated: contract_test_report.txt"
+
+# Performance benchmarks
+bench:
+	cargo bench --workspace
 
 # Documentation
 docs:
-	@echo "📚 Building documentation..."
-	cargo doc --workspace --no-deps
+	cargo doc --workspace --open
 
-docs-serve:
-	@echo "🌐 Serving documentation..."
-	cargo doc --workspace --no-deps --open
+# Release preparation
+release-check: check-all bench
+	@echo "✅ Ready for release!"
 
-# Cleaning
-clean:
-	@echo "🧹 Cleaning build artifacts..."
-	cargo clean
-	rm -rf target/
-	rm -rf dist/
-	rm -rf examples/*/dist/
-	rm -rf examples/*/target/
+# Contract test validation
+validate-contracts:
+	@echo "Validating all contracts..."
+	@make contract-api
+	@make contract-perf
+	@make contract-mem
+	@make contract-error
+	@make contract-cross
+	@echo "✅ All contracts validated!"
 
-clean-deps:
-	@echo "🧹 Cleaning dependencies..."
-	rm -rf node_modules/
-	rm -rf .pnpm-store/
-	rm -rf target/
+# Quick development cycle
+dev: format lint test
+	@echo "✅ Development cycle complete!"
 
-# Release
-release: clean build check-all
-	@echo "🚀 Preparing release build..."
-	cargo build --release
-	@echo "✅ Release build ready!"
-
-publish:
-	@echo "📦 Publishing to crates.io..."
-	cargo publish --workspace
-
-# Nix development environment
-nix-shell:
-	@echo "🐧 Entering Nix development environment..."
-	nix develop
-
-nix-build:
-	@echo "🔨 Building with Nix..."
-	nix build
-
-nix-check:
-	@echo "✅ Running Nix checks..."
-	nix flake check
-
-# Performance testing
-bench:
-	@echo "⚡ Running benchmarks..."
-	cargo bench
-
-profile:
-	@echo "📊 Running performance profiling..."
-	cargo build --release
-	cd examples/showcase && trunk build --release
-
-# Docker (optional)
-docker-build:
-	@echo "🐳 Building Docker image..."
-	docker build -t leptos-motion .
-
-docker-run:
-	@echo "🐳 Running Docker container..."
-	docker run -p 3000:3000 leptos-motion
-
-# CI/CD helpers
-ci-setup:
-	@echo "🔧 Setting up CI environment..."
-	rustup target add wasm32-unknown-unknown
-	cargo install trunk
-	pnpm install
-	pnpm install:browsers
-
-ci-test:
-	@echo "🧪 Running CI tests..."
-	cargo test --workspace
-	cargo clippy --workspace -- -D warnings
-	cargo fmt --check
-	pnpm test:e2e
-
-# Development utilities
-update-deps:
-	@echo "🔄 Updating dependencies..."
-	cargo update
-	pnpm update
-
-check-updates:
-	@echo "🔍 Checking for updates..."
-	cargo outdated
-	pnpm outdated
-
-# Quick development commands
-quick-test:
-	@echo "⚡ Quick test run..."
-	cargo test --lib
-
-quick-build:
-	@echo "⚡ Quick build..."
-	cargo check
-
-quick-dev:
-	@echo "⚡ Quick dev server..."
-	cd examples/showcase && trunk serve
-
-# Helpers for common tasks
-fix:
-	@echo "🔧 Fixing common issues..."
-	cargo fix --allow-dirty
-	cargo fmt
-
-setup-dev:
-	@echo "🚀 Setting up development environment..."
-	make install
-	make install-browsers
-	make build
-	@echo "✅ Development environment ready!"
-
-# Show project status
-status:
-	@echo "📊 Project Status:"
-	@echo "  Rust version: $(shell rustc --version)"
-	@echo "  Cargo version: $(shell cargo --version)"
-	@echo "  Node version: $(shell node --version)"
-	@echo "  pnpm version: $(shell pnpm --version)"
-	@echo "  Trunk version: $(shell trunk --version)"
-	@echo "  Git status: $(shell git status --porcelain | wc -l) changes"
-	@echo "  Build status: $(shell if [ -d "target/release" ]; then echo "✅ Built"; else echo "❌ Not built"; fi)"
+# Full validation (for CI)
+validate-all: format lint test contract-tests bench
+	@echo "✅ Full validation complete!"

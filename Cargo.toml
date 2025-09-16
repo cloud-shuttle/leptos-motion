@@ -7,14 +7,20 @@ members = [
     "crates/leptos-motion-scroll",
     "crates/leptos-motion",
     "crates/leptos-motion-macros",
+    "crates/leptos-motion-studio",
     "crates/leptos-motion-webgl",
-    "examples/phase2-reactive-demo",
-    "examples/phase2-comprehensive-demo",
+    "demos/basic/reactive-demo",
+    "demos/showcase/comprehensive-demo",
+    "examples/showcase",
+    "tests/contracts",
+    "tests/accessibility",
+    "tests/wasm_specific",
+    "tests/timing",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.9.1"
+version = "1.0.0"
 authors = ["CloudShuttle Team <team@cloud-shuttle.io>"]
 license = "MIT OR Apache-2.0"
 edition = "2024"  # Latest edition as of September 2025
@@ -35,14 +41,14 @@ leptos_meta = "0.8.5"
 leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
-leptos-motion-core = { version = "0.9.1", path = "crates/leptos-motion-core" }
-leptos-motion-dom = { version = "0.9.1", path = "crates/leptos-motion-dom" }
-leptos-motion-gestures = { version = "0.9.1", path = "crates/leptos-motion-gestures" }
-leptos-motion-layout = { version = "0.9.1", path = "crates/leptos-motion-layout" }
-leptos-motion-scroll = { version = "0.9.1", path = "crates/leptos-motion-scroll" }
-leptos-motion-macros = { version = "0.9.1", path = "crates/leptos-motion-macros" }
-leptos-motion-studio = { version = "0.9.1", path = "crates/leptos-motion-studio" }
-leptos-motion-webgl = { version = "0.9.1", path = "crates/leptos-motion-webgl" }
+leptos-motion-core = { path = "crates/leptos-motion-core" }
+leptos-motion-dom = { path = "crates/leptos-motion-dom" }
+leptos-motion-gestures = { path = "crates/leptos-motion-gestures" }
+leptos-motion-layout = { path = "crates/leptos-motion-layout" }
+leptos-motion-scroll = { path = "crates/leptos-motion-scroll" }
+leptos-motion-macros = { path = "crates/leptos-motion-macros" }
+leptos-motion-studio = { path = "crates/leptos-motion-studio" }
+leptos-motion-webgl = { path = "crates/leptos-motion-webgl" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }
@@ -84,6 +90,10 @@ thiserror = "1.0"
 anyhow = "1.0"
 once_cell = "1.19"
 paste = "1.0"
+
+# CSS and styling
+tailwind-rs-core = "0.4.0"
+
 
 # Math and interpolation
 num-traits = "0.2"

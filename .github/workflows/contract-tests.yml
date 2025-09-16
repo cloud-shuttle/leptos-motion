@@ -1,0 +1,174 @@
+name: Contract Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run contract tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  contract-tests:
+    name: Contract Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        rust-version: [stable, beta, nightly]
+        target: [x86_64-unknown-linux-gnu, wasm32-unknown-unknown]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust-version }}
+        target: ${{ matrix.target }}
+        override: true
+        components: rustfmt, clippy
+        
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Cache cargo index
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Cache cargo build
+      uses: actions/cache@v3
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Install wasm-pack (for WASM targets)
+      if: matrix.target == 'wasm32-unknown-unknown'
+      run: |
+        curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        
+    - name: Run contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib contract_tests
+        
+    - name: Run API contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib api_contracts
+        
+    - name: Run performance contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib performance_contracts
+        
+    - name: Run memory contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib memory_contracts
+        
+    - name: Run error handling contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib error_contracts
+        
+    - name: Run cross-crate contract tests
+      run: |
+        cargo test --package leptos-motion-contracts --lib cross_crate_contracts
+        
+    - name: Generate contract test report
+      run: |
+        cargo test --package leptos-motion-contracts --lib contract_tests -- --nocapture > contract_test_report.txt
+        
+    - name: Upload contract test report
+      uses: actions/upload-artifact@v3
+      with:
+        name: contract-test-report-${{ matrix.rust-version }}-${{ matrix.target }}
+        path: contract_test_report.txt
+        
+    - name: Check contract test results
+      run: |
+        if grep -q "Contract tests failed" contract_test_report.txt; then
+          echo "❌ Contract tests failed!"
+          cat contract_test_report.txt
+          exit 1
+        else
+          echo "✅ All contract tests passed!"
+        fi
+
+  contract-test-summary:
+    name: Contract Test Summary
+    runs-on: ubuntu-latest
+    needs: contract-tests
+    if: always()
+    
+    steps:
+    - name: Download all contract test reports
+      uses: actions/download-artifact@v3
+      
+    - name: Generate summary report
+      run: |
+        echo "# Contract Test Summary" > contract_test_summary.md
+        echo "" >> contract_test_summary.md
+        echo "## Test Results" >> contract_test_summary.md
+        echo "" >> contract_test_summary.md
+        
+        for report in contract-test-report-*/*.txt; do
+          if [ -f "$report" ]; then
+            echo "### $(basename $(dirname $report))" >> contract_test_summary.md
+            echo "" >> contract_test_summary.md
+            echo '```' >> contract_test_summary.md
+            cat "$report" >> contract_test_summary.md
+            echo '```' >> contract_test_summary.md
+            echo "" >> contract_test_summary.md
+          fi
+        done
+        
+    - name: Upload summary report
+      uses: actions/upload-artifact@v3
+      with:
+        name: contract-test-summary
+        path: contract_test_summary.md
+        
+    - name: Comment on PR (if applicable)
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync('contract_test_summary.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## Contract Test Results\n\n${summary}`
+          });
+
+  performance-benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[benchmark]')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: x86_64-unknown-linux-gnu
+        override: true
+        
+    - name: Run performance benchmarks
+      run: |
+        cargo bench --package leptos-motion-contracts
+        
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-benchmarks
+        path: target/criterion/

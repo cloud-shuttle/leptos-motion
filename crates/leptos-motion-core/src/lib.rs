@@ -394,3 +394,12 @@ mod simplified_engine_tests {
 // Include compatibility tests
 #[cfg(test)]
 mod compatibility_tests;
+
+#[cfg(test)]
+mod simple_core_tests;
+
+#[cfg(test)]
+mod edge_case_tests;
+
+#[cfg(test)]
+mod performance_regression_tests;

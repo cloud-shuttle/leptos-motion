@@ -15,7 +15,6 @@ pub mod minimal_motion_div;
 pub mod performance;
 pub mod presence;
 pub mod reactive_motion_div;
-pub mod reactive_motion_div_v2;
 pub mod drag_motion_div;
 // pub mod reactive_motion_div_fixed; // Disabled due to threading issues
 pub mod simplified_event_handling;
@@ -65,7 +64,6 @@ mod api_contract_tests;
 mod regression_prevention_tests;
 
 #[cfg(test)]
-mod integration_tests;
 
 #[cfg(test)]
 mod animation_engine_tests;
@@ -211,6 +209,15 @@ mod minimal_motion_div_tests;
 #[cfg(test)]
 mod tdd_performance_tests;
 
+#[cfg(test)]
+mod simple_dom_tests;
+
+#[cfg(test)]
+mod integration_tests;
+
+#[cfg(test)]
+mod performance_regression_tests;
+
 pub mod minimal_motion_div_docs;
 
 pub mod animation_3d_implementation;
@@ -270,4 +277,15 @@ pub use leptos_motion_core::{
 #[cfg(test)]
 mod simplified_event_handling_tests {
     include!("simplified_event_handling_tests.rs");
+}
+
+/// Helper function to create reactive animation targets from closures
+/// 
+/// This function converts a closure that returns `HashMap<String, AnimationValue>`
+/// into the expected `Box<dyn Fn() -> AnimationTarget>` type for the ReactiveMotionDiv component.
+pub fn reactive_animate<F>(closure: F) -> Box<dyn Fn() -> AnimationTarget>
+where
+    F: Fn() -> std::collections::HashMap<String, AnimationValue> + 'static,
+{
+    Box::new(move || AnimationTarget::from(closure()))
 }

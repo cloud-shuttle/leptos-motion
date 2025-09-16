@@ -16,7 +16,6 @@ use std::rc::Rc;
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
-
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::closure::Closure;
 
@@ -143,12 +142,13 @@ impl AnimationEngine {
         target: f64,
         transition: Transition,
     ) {
+        
         let animation = PropertyAnimation::new(initial, target, transition);
         self.animations.insert(property, animation);
 
-        if !self.is_running {
-            self.start_animation_loop();
-        }
+        // Always restart the animation loop when new animations are added
+        self.stop_animation_loop();
+        self.start_animation_loop();
     }
 
     /// Start animations for multiple properties
@@ -200,63 +200,21 @@ impl AnimationEngine {
         let on_complete = self.on_complete.clone();
         let on_update = self.on_update.clone();
         let is_running = Rc::new(RefCell::new(true));
-        let recursion_guard = Rc::new(RefCell::new(false));
+        let _recursion_guard = Rc::new(RefCell::new(false));
 
+        // Create a recursive animation loop
+        let animations_clone = animations.clone();
+        let is_running_clone = is_running.clone();
+        let on_update_clone = on_update.clone();
+        let on_complete_clone = on_complete.clone();
+        
         let closure = Closure::wrap(Box::new(move || {
-            // Check if we should continue running
-            if !*is_running.borrow() {
-                return;
-            }
-
-            // Update animations
-            let mut completed_animations = Vec::new();
-            let mut current_values = HashMap::new();
-
-            // First pass: update animations and collect values
-            for (property, animation) in animations.borrow_mut().iter_mut() {
-                let was_complete = animation.state.is_complete;
-
-                if !was_complete {
-                    // Update the animation
-                    let delta_time = 1.0 / 60.0; // Assume 60fps
-                    animation.current_time += delta_time;
-
-                    if animation.is_spring {
-                        Self::update_spring_animation_static(animation, delta_time);
-                    } else {
-                        Self::update_eased_animation_static(animation);
-                    }
-                }
-
-                current_values.insert(property.clone(), animation.state.current);
-
-                if animation.state.is_complete && !was_complete {
-                    completed_animations.push(property.clone());
-                }
-            }
-
-            // Notify of updates
-            if let Some(ref on_update_callback) = on_update {
-                on_update_callback(&current_values);
-            }
-
-            // Remove completed animations
-            for property in completed_animations {
-                animations.borrow_mut().remove(&property);
-            }
-
-            // Check if all animations are complete
-            if animations.borrow().is_empty() {
-                *is_running.borrow_mut() = false;
-                if let Some(ref on_complete_callback) = on_complete {
-                    on_complete_callback();
-                }
-            } else if *is_running.borrow() && !*recursion_guard.borrow() {
-                // Continue animation loop with recursion guard
-                *recursion_guard.borrow_mut() = true;
-                // The animation loop will continue automatically via requestAnimationFrame
-                *recursion_guard.borrow_mut() = false;
-            }
+            Self::animation_frame_callback(
+                animations_clone.clone(),
+                is_running_clone.clone(),
+                on_update_clone.clone(),
+                on_complete_clone.clone()
+            );
         }) as Box<dyn FnMut()>);
 
         let window = match web_sys::window() {
@@ -318,18 +276,31 @@ impl AnimationEngine {
         self.is_running = false;
     }
 
-    /// Update all animations
-    fn update_animations(&mut self) {
+    /// Animation frame callback helper
+    #[cfg(target_arch = "wasm32")]
+    fn animation_frame_callback(
+        animations: Rc<RefCell<HashMap<String, PropertyAnimation>>>,
+        is_running: Rc<RefCell<bool>>,
+        on_update: Option<Rc<dyn Fn(&HashMap<String, f64>)>>,
+        on_complete: Option<Rc<dyn Fn()>>,
+    ) {
+        // Check if we should continue running
+        if !*is_running.borrow() {
+            return;
+        }
+
+        
+        // Update animations
         let mut completed_animations = Vec::new();
         let mut current_values = HashMap::new();
 
         // First pass: update animations and collect values
-        for (property, animation) in &mut self.animations {
+        for (property, animation) in animations.borrow_mut().iter_mut() {
             let was_complete = animation.state.is_complete;
 
             if !was_complete {
-                // Update the animation
-                let delta_time = 1.0 / 60.0; // Assume 60fps
+                // Use fixed frame-based timing for smoother animations
+                let delta_time = 1.0 / 60.0; // Fixed 60fps timing
                 animation.current_time += delta_time;
 
                 if animation.is_spring {
@@ -346,40 +317,61 @@ impl AnimationEngine {
             }
         }
 
-        // Notify of updates
-        if let Some(ref on_update) = self.on_update {
-            on_update(&current_values);
+        // Notify of updates (throttle to max 60fps)
+        if let Some(ref on_update_callback) = on_update {
+            on_update_callback(&current_values);
         }
 
         // Remove completed animations
         for property in completed_animations {
-            self.animations.remove(&property);
+            animations.borrow_mut().remove(&property);
         }
 
         // Check if all animations are complete
-        if self.animations.is_empty() {
-            self.stop_animation_loop();
-            if let Some(ref on_complete) = self.on_complete {
-                on_complete();
+        if animations.borrow().is_empty() {
+            *is_running.borrow_mut() = false;
+            if let Some(ref on_complete_callback) = on_complete {
+                on_complete_callback();
             }
-        } else if self.is_running && !self.recursion_guard {
-            // Continue animation loop with recursion guard
-            self.recursion_guard = true;
-            self.start_animation_loop();
-            self.recursion_guard = false;
+        } else if *is_running.borrow() {
+            // Continue animation loop by scheduling next frame
+            if let Some(window) = web_sys::window() {
+                let next_closure = Closure::wrap(Box::new({
+                    let animations = animations.clone();
+                    let is_running = is_running.clone();
+                    let on_update = on_update.clone();
+                    let on_complete = on_complete.clone();
+                    
+                    move || {
+                        Self::animation_frame_callback(
+                            animations.clone(),
+                            is_running.clone(),
+                            on_update.clone(),
+                            on_complete.clone()
+                        );
+                    }
+                }) as Box<dyn FnMut()>);
+                
+                let _ = window.request_animation_frame(next_closure.as_ref().unchecked_ref());
+                next_closure.forget(); // Prevent memory leak
+            }
         }
     }
 
-    /// Update a single animation
-    fn update_single_animation(&self, animation: &mut PropertyAnimation) {
-        let delta_time = 1.0 / 60.0; // Assume 60fps
-        animation.current_time += delta_time;
+    /// Update all animations (legacy method - now handled by animation_frame_callback)
+    #[allow(dead_code)]
+    fn update_animations(&mut self) {
+        // This method is kept for compatibility but the actual animation
+        // updates are handled by animation_frame_callback for better performance
+        // and proper WASM integration
+    }
 
-        if animation.is_spring {
-            Self::update_spring_animation_static(animation, delta_time);
-        } else {
-            Self::update_eased_animation_static(animation);
-        }
+    /// Update a single animation (legacy method - now handled by animation_frame_callback)
+    #[allow(dead_code)]
+    fn update_single_animation(&self, animation: &mut PropertyAnimation) {
+        // This method is kept for compatibility but the actual animation
+        // updates are handled by animation_frame_callback for better performance
+        // and proper WASM integration
     }
 
     /// Update a spring animation (static version)

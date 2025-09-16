@@ -419,6 +419,11 @@ fn TimelineControls() -> impl IntoView {
 }
 
 #[component]
+fn TimelineEditor() -> impl IntoView {
+    view! { <div class="motion-studio__timeline-editor">"Timeline editor"</div> }
+}
+
+#[component]
 fn PropertiesEditor() -> impl IntoView {
     view! { <div>"Properties editor"</div> }
 }

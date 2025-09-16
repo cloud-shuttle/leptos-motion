@@ -1,13 +1,15 @@
-//! Reactive MotionDiv Component - FIXED VERSION
+//! Reactive MotionDiv Component - WORKING VERSION
 //!
-//! This module provides a clean, minimal ReactiveMotionDiv component that
-//! doesn't interfere with browser right-click functionality.
+//! This module provides a working ReactiveMotionDiv component that properly
+//! integrates with the animation engine.
 
 use leptos::prelude::*;
-use leptos_motion_core::{AnimationTarget, Transition};
+use leptos_motion_core::{AnimationTarget, Transition, AnimationValue, Easing, RepeatConfig};
+use crate::animation_engine::AnimationEngine;
 use std::collections::HashMap;
+use std::rc::Rc;
 
-/// Reactive MotionDiv component - FIXED to not block right-click
+/// Reactive MotionDiv component - WORKING with animation engine
 #[component]
 pub fn ReactiveMotionDiv(
     /// CSS class name
@@ -24,7 +26,7 @@ pub fn ReactiveMotionDiv(
     initial: Option<AnimationTarget>,
     /// Target animation state (reactive)
     #[prop(optional)]
-    animate: Option<AnimationTarget>,
+    animate: Option<Box<dyn Fn() -> AnimationTarget>>,
     /// Function-based target animation state
     #[prop(optional)]
     animate_fn: Option<Box<dyn Fn() -> AnimationTarget>>,
@@ -49,107 +51,251 @@ pub fn ReactiveMotionDiv(
     /// Children elements
     children: Children,
 ) -> impl IntoView {
-    // ✅ FIXED: Use a single, simple signal for styles
-    let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
-
     // Create node reference if not provided
     let node_ref = node_ref.unwrap_or_else(|| NodeRef::new());
 
-    // ✅ FIXED: Build styles in a single, non-reactive computation
-    let initial_styles = {
+    // Create animation engine
+    let animation_engine = Rc::new(std::cell::RefCell::new(AnimationEngine::new()));
+    
+    // Create reactive styles signal
+    let (current_styles, set_styles) = signal(HashMap::<String, String>::new());
+    
+    // Set up animation engine callbacks
+    let set_styles_clone = set_styles;
+    let on_update = Rc::new(move |values: &HashMap<String, f64>| {
         let mut styles = HashMap::new();
-
-        // Apply initial styles
-        if let Some(initial_target) = initial {
-            for (key, value) in initial_target {
-                styles.insert(key, value.to_string_value());
+        let mut transform_parts = Vec::new();
+        
+        for (key, value) in values {
+            // Convert numeric values to appropriate CSS properties
+            match key.as_str() {
+                "opacity" => {
+                    styles.insert("opacity".to_string(), format!("{}", value));
+                }
+                "scale" => {
+                    transform_parts.push(format!("scale({})", value));
+                }
+                "x" => {
+                    transform_parts.push(format!("translateX({}px)", value));
+                }
+                "y" => {
+                    transform_parts.push(format!("translateY({}px)", value));
+                }
+                "rotation" => {
+                    transform_parts.push(format!("rotate({}deg)", value));
+                }
+                _ => {
+                    styles.insert(key.clone(), format!("{}", value));
+                }
             }
         }
-
-        // Apply animate styles
-        if let Some(animate_target) = animate {
+        
+        // Combine all transform properties into a single transform
+        if !transform_parts.is_empty() {
+            let transform_string = transform_parts.join(" ");
+            styles.insert("transform".to_string(), transform_string);
+        }
+        
+        // Remove CSS transition to avoid conflicts with animation engine
+        // The animation engine handles the smooth transitions
+        
+        set_styles_clone.set(styles);
+    });
+    
+    // Use the animation engine for smooth animations
+    animation_engine.borrow_mut().on_update(move |values| {
+        on_update(values);
+    });
+    
+    // Apply initial styles and store initial values for animation
+    let mut initial_values = HashMap::new();
+    if let Some(initial_target) = initial {
+        let mut styles = HashMap::new();
+        for (key, value) in initial_target.iter() {
+            match value {
+                AnimationValue::Number(num) => {
+                    initial_values.insert(key.clone(), *num);
+                    styles.insert(key.clone(), format!("{}", num));
+                }
+                AnimationValue::Pixels(num) => {
+                    initial_values.insert(key.clone(), *num);
+                    styles.insert(key.clone(), format!("{}px", num));
+                }
+                AnimationValue::Percentage(num) => {
+                    initial_values.insert(key.clone(), *num);
+                    styles.insert(key.clone(), format!("{}%", num));
+                }
+                AnimationValue::Degrees(num) => {
+                    initial_values.insert(key.clone(), *num);
+                    styles.insert(key.clone(), format!("{}deg", num));
+                }
+                AnimationValue::Radians(num) => {
+                    initial_values.insert(key.clone(), *num);
+                    styles.insert(key.clone(), format!("{}rad", num));
+                }
+                _ => {
+                    styles.insert(key.clone(), value.to_string_value());
+                }
+            }
+        }
+        set_styles.set(styles);
+    }
+    
+    // Store transition config for later use
+    let _transition_config = transition.clone();
+    let transition_config_clone = transition.clone();
+    let animation_engine_clone = animation_engine.clone();
+    let initial_values_clone = initial_values.clone();
+    
+    // Set up reactive animation
+    Effect::new(move |_| {
+        if let Some(animate_fn) = &animate {
+            let animate_target = animate_fn();
+            let mut animations = HashMap::new();
             for (key, value) in animate_target.iter() {
-                styles.insert(key.clone(), value.to_string_value());
+                match value {
+                    AnimationValue::Number(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Pixels(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Percentage(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Degrees(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Radians(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::String(_) => {
+                        // For string values, we'll need to parse them
+                        // For now, skip complex string animations
+                    }
+                    AnimationValue::Color(_) => {
+                        // For color values, we'll need to parse them
+                        // For now, skip complex color animations
+                    }
+                    AnimationValue::Transform(_) => {
+                        // For transform values, we'll need to parse them
+                        // For now, skip complex transform animations
+                    }
+                    AnimationValue::Complex(_) => {
+                        // For complex values, we'll need to parse them
+                        // For now, skip complex animations
+                    }
+                }
+            }
+            
+            if !animations.is_empty() {
+                // Use the animation engine for smooth animations
+                let default_transition = Transition {
+                    duration: Some(0.3),
+                    delay: None,
+                    ease: Easing::EaseOut,
+                    repeat: RepeatConfig::Never,
+                    stagger: None,
+                };
+                
+                for (property, value) in animations {
+                    let transition = transition_config_clone.clone().unwrap_or(default_transition.clone());
+                    let initial_value = initial_values_clone.get(&property).copied().unwrap_or(0.0);
+                    animation_engine_clone.borrow_mut().animate_property(
+                        property,
+                        initial_value,
+                        value,
+                        transition,
+                    );
+                }
             }
         }
-
+        
         // Apply function-based animate styles
-        if let Some(animate_function) = animate_fn {
+        if let Some(animate_function) = &animate_fn {
             let animate_values = animate_function();
+            let mut animations = HashMap::new();
             for (key, value) in animate_values.iter() {
-                styles.insert(key.clone(), value.to_string_value());
+                match value {
+                    AnimationValue::Number(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Pixels(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Percentage(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Degrees(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::Radians(num) => {
+                        animations.insert(key.clone(), *num);
+                    }
+                    AnimationValue::String(_) => {
+                        // Skip complex string animations for now
+                    }
+                    AnimationValue::Color(_) => {
+                        // Skip complex color animations for now
+                    }
+                    AnimationValue::Transform(_) => {
+                        // Skip complex transform animations for now
+                    }
+                    AnimationValue::Complex(_) => {
+                        // Skip complex animations for now
+                    }
+                }
+            }
+            
+            if !animations.is_empty() {
+                let default_transition = Transition {
+                    duration: Some(0.3),
+                    ease: Easing::EaseInOut,
+                    delay: Some(0.0),
+                    repeat: RepeatConfig::Never,
+                    stagger: None,
+                };
+                
+                for (property, value) in animations {
+                    let transition = transition_config_clone.clone().unwrap_or(default_transition.clone());
+                    let initial_value = initial_values_clone.get(&property).copied().unwrap_or(0.0);
+                    animation_engine.borrow_mut().animate_property(
+                        property,
+                        initial_value, // Use stored initial value
+                        value,
+                        transition,
+                    );
+                }
             }
         }
-
-        // Apply transition configuration
-        if let Some(transition_config) = transition {
-            if let Some(duration) = transition_config.duration {
-                styles.insert("transition-duration".to_string(), format!("{}s", duration));
-            }
-            if let Some(delay) = transition_config.delay {
-                styles.insert("transition-delay".to_string(), format!("{}s", delay));
-            }
-
-            let easing_value = match transition_config.ease {
-                leptos_motion_core::Easing::Linear => "linear".to_string(),
-                leptos_motion_core::Easing::EaseIn => "ease-in".to_string(),
-                leptos_motion_core::Easing::EaseOut => "ease-out".to_string(),
-                leptos_motion_core::Easing::EaseInOut => "ease-in-out".to_string(),
-                leptos_motion_core::Easing::CircIn => "cubic-bezier(0.55, 0, 1, 0.45)".to_string(),
-                leptos_motion_core::Easing::CircOut => "cubic-bezier(0, 0.55, 0.45, 1)".to_string(),
-                leptos_motion_core::Easing::CircInOut => {
-                    "cubic-bezier(0.85, 0, 0.15, 1)".to_string()
-                }
-                leptos_motion_core::Easing::BackIn => {
-                    "cubic-bezier(0.36, 0, 0.66, -0.56)".to_string()
-                }
-                leptos_motion_core::Easing::BackOut => {
-                    "cubic-bezier(0.34, 1.56, 0.64, 1)".to_string()
-                }
-                leptos_motion_core::Easing::BackInOut => {
-                    "cubic-bezier(0.68, -0.6, 0.32, 1.6)".to_string()
-                }
-                leptos_motion_core::Easing::Bezier(x1, y1, x2, y2) => {
-                    format!("cubic-bezier({}, {}, {}, {})", x1, y1, x2, y2)
-                }
-                leptos_motion_core::Easing::Spring(_) => "ease-in-out".to_string(),
-                leptos_motion_core::Easing::CubicBezier(cubic_bezier) => {
-                    format!("cubic-bezier({}, {}, {}, {})", 
-                        cubic_bezier.0, cubic_bezier.1, cubic_bezier.2, cubic_bezier.3)
-                }
-            };
-            styles.insert("transition-timing-function".to_string(), easing_value);
-            styles.insert("transition-property".to_string(), "all".to_string());
-        }
-
-        styles
-    };
-
-    // Set the initial styles
-    set_styles.set(initial_styles);
-
-    // ✅ FIXED: Convert styles to CSS string - simple and non-reactive
-    let style_string = {
+    });
+    
+    // Build final style string as a reactive signal
+    let final_style_signal = move || {
+        let mut style_parts = Vec::new();
         let styles = current_styles.get();
-        let mut style_parts = styles
-            .iter()
-            .map(|(key, value)| format!("{}: {}", key, value))
-            .collect::<Vec<_>>();
-
-        // Add the style prop if provided
-        if let Some(style_prop) = &style {
-            style_parts.push(style_prop.clone());
+        
+        
+        for (key, value) in styles.iter() {
+            style_parts.push(format!("{}: {}", key, value));
+        }
+        
+        // Add custom styles
+        if let Some(custom_style) = &style {
+            style_parts.push(custom_style.clone());
         }
 
-        style_parts.join("; ")
+        let final_style_string = style_parts.join("; ");
+        
+        
+        final_style_string
     };
 
-    // ✅ FIXED: Simple view without any event handlers or complex effects
     view! {
         <div
             node_ref=node_ref
             class=class
-            style=style_string
+            style=final_style_signal
         >
             {children()}
         </div>

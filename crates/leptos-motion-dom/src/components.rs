@@ -60,7 +60,7 @@ pub fn MotionDiv(
     node_ref: Option<NodeRef<leptos::html::Div>>,
     /// Key for React-like re-rendering
     #[prop(optional)]
-    key: Option<String>,
+    _key: Option<String>,
     /// Initial animation state
     #[prop(optional)]
     initial: Option<AnimationTarget>,
@@ -69,7 +69,7 @@ pub fn MotionDiv(
     animate: Option<AnimationTarget>,
     /// Transition configuration
     #[prop(optional)]
-    transition: Option<Transition>,
+    _transition: Option<Transition>,
     /// Hover animation state
     #[prop(optional)]
     while_hover: Option<AnimationTarget>,
@@ -400,7 +400,7 @@ pub fn MotionSpan(
     class: Option<String>,
     /// Key for React-like re-rendering
     #[prop(optional)]
-    key: Option<String>,
+    _key: Option<String>,
     /// Initial animation state
     #[prop(optional)]
     initial: Option<AnimationTarget>,
@@ -409,7 +409,7 @@ pub fn MotionSpan(
     animate: Option<AnimationTarget>,
     /// Transition configuration
     #[prop(optional)]
-    transition: Option<Transition>,
+    _transition: Option<Transition>,
     /// Hover animation state
     #[prop(optional)]
     _while_hover: Option<AnimationTarget>,

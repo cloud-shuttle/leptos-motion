@@ -1,438 +1,257 @@
-//! Integration Tests
+//! Integration Tests for Component Interactions
 //!
-//! This module contains integration tests that verify the MotionDiv component
-//! works correctly in real-world scenarios and integrates properly with Leptos.
+//! These tests verify that different components work together correctly
+//! and that the animation system integrates properly with Leptos components.
 
-use crate::*;
-use leptos::prelude::*;
 use leptos_motion_core::*;
+use crate::signal_based_animation_controller::SignalBasedAnimationController;
 use std::collections::HashMap;
-use wasm_bindgen::prelude::*;
 
-/// Test that verifies MotionDiv integrates with Leptos reactive system
-#[test]
-fn test_leptos_reactive_integration() {
-    // This test ensures MotionDiv works properly with Leptos signals and effects
+#[cfg(test)]
+mod component_integration_tests {
+    use super::*;
 
-    let _reactive_component = || {
-        let (is_visible, set_visible) = signal(true);
-        let (scale, set_scale) = signal(1.0);
+    #[test]
+    fn test_animation_target_with_motion_props_integration() {
+        // Test that AnimationTarget can work with motion components
+        let mut target = AnimationTarget::new();
+        target.insert("opacity".to_string(), AnimationValue::Number(0.5));
+        target.insert("transform".to_string(), AnimationValue::String("translateX(100px)".to_string()));
 
-        let initial = {
-            let mut target = HashMap::new();
-            target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-            target.insert("scale".to_string(), AnimationValue::Number(0.5));
-            target
-        };
-
-        let animate = move || {
-            let mut target = HashMap::new();
-            if is_visible.get() {
-                target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                target.insert("scale".to_string(), AnimationValue::Number(scale.get()));
-            } else {
-                target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-                target.insert("scale".to_string(), AnimationValue::Number(0.5));
-            }
-            target
-        };
-
-        view! {
-            <div>
-                <button on:click=move |_| set_visible.set(!is_visible.get())>
-                    "Toggle Visibility"
-                </button>
-                <button on:click=move |_| set_scale.set(scale.get() + 0.1)>
-                    "Increase Scale"
-                </button>
-                <MotionDiv
-                    initial=initial
-                    animate=animate()
-                >
-                    "Reactive Animation"
-                </MotionDiv>
-            </div>
+        // Verify the target contains expected values
+        assert_eq!(target.len(), 2);
+        assert!(target.contains_key("opacity"));
+        assert!(target.contains_key("transform"));
+        
+        // Test that we can retrieve values
+        if let Some(AnimationValue::Number(opacity)) = target.get("opacity") {
+            assert_eq!(*opacity, 0.5);
         }
-    };
-
-    assert!(true);
-}
-
-/// Test that verifies MotionDiv integrates with Leptos event system
-#[test]
-fn test_leptos_event_integration() {
-    // This test ensures MotionDiv event handlers work with Leptos event system
-
-    let _event_component = || {
-        let (click_count, set_click_count) = signal(0);
-        let (hover_count, set_hover_count) = signal(0);
-
-        let tap_target = {
-            let mut target = HashMap::new();
-            target.insert("scale".to_string(), AnimationValue::Number(0.9));
-            target
-        };
-
-        let hover_target = {
-            let mut target = HashMap::new();
-            target.insert("scale".to_string(), AnimationValue::Number(1.1));
-            target
-        };
-
-        view! {
-            <div>
-                <p>"Clicks: " {click_count}</p>
-                <p>"Hovers: " {hover_count}</p>
-                <MotionDiv
-                    while_tap=tap_target
-                    while_hover=hover_target
-                    on:click=move |_| set_click_count.set(click_count.get() + 1)
-                    on:mouseenter=move |_| set_hover_count.set(hover_count.get() + 1)
-                >
-                    "Interactive Element"
-                </MotionDiv>
-            </div>
-        }
-    };
-
-    assert!(true);
-}
-
-/// Test that verifies MotionDiv integrates with Leptos component system
-#[test]
-fn test_leptos_component_integration() {
-    // This test ensures MotionDiv works as a proper Leptos component
-
-    #[component]
-    fn TestParent() -> impl IntoView {
-        let (animation_state, set_animation_state) = signal(0);
-
-        let get_animation_target = move || {
-            let mut target = HashMap::new();
-            match animation_state.get() {
-                0 => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(0px)".to_string()),
-                    );
-                }
-                1 => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(0.8));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(100px)".to_string()),
-                    );
-                }
-                2 => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(0.6));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(200px)".to_string()),
-                    );
-                }
-                _ => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(0px)".to_string()),
-                    );
-                }
-            }
-            target
-        };
-
-        view! {
-            <div>
-                <button on:click=move |_| set_animation_state.set((animation_state.get() + 1) % 3)>
-                    "Next Animation"
-                </button>
-                <MotionDiv animate=get_animation_target()>
-                    "Animated Child Component"
-                </MotionDiv>
-            </div>
+        
+        if let Some(AnimationValue::String(transform)) = target.get("transform") {
+            assert_eq!(transform, "translateX(100px)");
         }
     }
 
-    let _parent_component = || {
-        view! { <TestParent /> }
-    };
-
-    assert!(true);
-}
-
-/// Test that verifies MotionDiv integrates with Leptos styling system
-#[test]
-fn test_leptos_styling_integration() {
-    // This test ensures MotionDiv works with Leptos styling and CSS
-
-    let _styling_component = || {
-        let (theme, set_theme) = signal("light");
-
-        let get_theme_styles = move || {
-            match theme.get().as_ref() {
-                "light" => "background: white; color: black; border: 1px solid #ccc;",
-                "dark" => "background: black; color: white; border: 1px solid #666;",
-                _ => "background: gray; color: white; border: 1px solid #999;",
-            }
-            .to_string()
+    #[test]
+    fn test_transition_with_animation_target_integration() {
+        // Test that transitions work with animation targets
+        let transition = Transition {
+            duration: Some(0.5),
+            delay: Some(0.1),
+            ease: Easing::EaseInOut,
+            repeat: RepeatConfig::Count(2),
+            stagger: None,
         };
+        
+        // Test that transition can be created and has expected properties
+        assert_eq!(transition.duration, Some(0.5));
+        assert_eq!(transition.delay, Some(0.1));
+        assert_eq!(transition.ease, Easing::EaseInOut);
+        assert_eq!(transition.repeat, RepeatConfig::Count(2));
+    }
 
-        let get_theme_animation = move || {
-            let mut target = HashMap::new();
-            match theme.get().as_ref() {
-                "light" => {
-                    target.insert(
-                        "background-color".to_string(),
-                        AnimationValue::String("white".to_string()),
-                    );
-                    target.insert(
-                        "color".to_string(),
-                        AnimationValue::String("black".to_string()),
-                    );
-                }
-                "dark" => {
-                    target.insert(
-                        "background-color".to_string(),
-                        AnimationValue::String("black".to_string()),
-                    );
-                    target.insert(
-                        "color".to_string(),
-                        AnimationValue::String("white".to_string()),
-                    );
-                }
-                _ => {
-                    target.insert(
-                        "background-color".to_string(),
-                        AnimationValue::String("gray".to_string()),
-                    );
-                    target.insert(
-                        "color".to_string(),
-                        AnimationValue::String("white".to_string()),
-                    );
-                }
-            }
-            target
-        };
+    #[test]
+    fn test_animation_controller_integration() {
+        // Test that animation controller integrates with motion components
+        let initial_values = HashMap::new();
+        let controller = SignalBasedAnimationController::new(initial_values);
+        
+        // Test initial state
+        assert!(!controller.is_animation_playing_untracked());
+        assert_eq!(controller.get_progress_untracked(), 0.0);
+        
+        // Test animation target creation
+        let mut target = AnimationTarget::new();
+        target.insert("opacity".to_string(), AnimationValue::Number(1.0));
+        target.insert("x".to_string(), AnimationValue::Pixels(100.0));
+        
+        // Test that controller can handle the target
+        controller.animate_to(target);
+        
+        // Verify animation state changed
+        assert!(controller.is_animation_playing_untracked());
+    }
 
-        view! {
-            <div>
-                <button on:click=move |_| {
-                    let new_theme = match theme.get().as_ref() {
-                        "light" => "dark",
-                        "dark" => "light",
-                        _ => "light"
-                    };
-                    set_theme.set(new_theme);
-                }>
-                    "Toggle Theme"
-                </button>
-                <MotionDiv
-                    style=get_theme_styles()
-                    animate=get_theme_animation()
-                >
-                    "Themed Animation"
-                </MotionDiv>
-            </div>
-        }
-    };
-
-    assert!(true);
-}
-
-/// Test that verifies MotionDiv integrates with complex Leptos patterns
-#[test]
-fn test_complex_leptos_patterns_integration() {
-    // This test ensures MotionDiv works with complex Leptos patterns like lists and conditionals
-
-    let _complex_component = || {
-        let (items, set_items) = signal(vec![
-            "Item 1".to_string(),
-            "Item 2".to_string(),
-            "Item 3".to_string(),
-        ]);
-        let (selected_item, set_selected_item) = signal(0);
-
-        let get_item_animation = move |index: usize| {
-            let mut target = HashMap::new();
-            if selected_item.get() == index {
-                target.insert("scale".to_string(), AnimationValue::Number(1.1));
-                target.insert(
-                    "background-color".to_string(),
-                    AnimationValue::String("blue".to_string()),
-                );
-                target.insert(
-                    "color".to_string(),
-                    AnimationValue::String("white".to_string()),
-                );
+    #[test]
+    fn test_motion_values_integration() {
+        // Test that motion values integrate with animation system
+        let mut values = HashMap::new();
+        values.insert("opacity".to_string(), "0.5".to_string());
+        values.insert("transform".to_string(), "translateX(50px) rotate(45deg)".to_string());
+        
+        // Test conversion to animation values
+        let mut animation_target = AnimationTarget::new();
+        for (key, value) in values {
+            // Simple conversion logic for testing
+            if let Ok(num) = value.parse::<f64>() {
+                animation_target.insert(key, AnimationValue::Number(num));
             } else {
-                target.insert("scale".to_string(), AnimationValue::Number(1.0));
-                target.insert(
-                    "background-color".to_string(),
-                    AnimationValue::String("transparent".to_string()),
-                );
-                target.insert(
-                    "color".to_string(),
-                    AnimationValue::String("black".to_string()),
-                );
+                animation_target.insert(key, AnimationValue::String(value));
             }
-            target
-        };
-
-        view! {
-            <div>
-                <button on:click=move |_| {
-                    let mut new_items = items.get();
-                    new_items.push(format!("Item {}", new_items.len() + 1));
-                    set_items.set(new_items);
-                }>
-                    "Add Item"
-                </button>
-                <div>
-                    {move || items.get().into_iter().enumerate().map(|(index, item)| {
-                        view! {
-                            <MotionDiv
-                                animate=get_item_animation(index)
-                                on:click=move |_| set_selected_item.set(index)
-                            >
-                                {item}
-                            </MotionDiv>
-                        }
-                    }).collect::<Vec<_>>()}
-                </div>
-            </div>
         }
-    };
+        
+        // Verify the conversion worked
+        assert_eq!(animation_target.len(), 2);
+        assert!(animation_target.contains_key("opacity"));
+        assert!(animation_target.contains_key("transform"));
+    }
 
-    assert!(true);
-}
+    #[test]
+    fn test_gesture_and_animation_integration() {
+        // Test animation target for gesture-triggered animations
+        let mut gesture_target = AnimationTarget::new();
+        gesture_target.insert("scale".to_string(), AnimationValue::Number(1.1));
+        gesture_target.insert("rotate".to_string(), AnimationValue::Degrees(5.0));
+        
+        // Verify gesture animation target
+        assert_eq!(gesture_target.len(), 2);
+        assert!(gesture_target.contains_key("scale"));
+        assert!(gesture_target.contains_key("rotate"));
+    }
 
-/// Test that verifies MotionDiv integrates with Leptos routing (if available)
-#[test]
-fn test_leptos_routing_integration() {
-    // This test ensures MotionDiv works with page transitions and routing
+    #[test]
+    fn test_layout_and_motion_integration() {
+        // Test layout animation target
+        let mut layout_target = AnimationTarget::new();
+        layout_target.insert("width".to_string(), AnimationValue::Pixels(200.0));
+        layout_target.insert("height".to_string(), AnimationValue::Pixels(150.0));
+        
+        // Verify layout animation target
+        assert_eq!(layout_target.len(), 2);
+        assert!(layout_target.contains_key("width"));
+        assert!(layout_target.contains_key("height"));
+    }
 
-    let _routing_component = || {
-        let (current_page, set_current_page) = signal("home");
+    #[test]
+    fn test_component_lifecycle_integration() {
+        // Test that components handle lifecycle events correctly
+        let mut lifecycle_events = Vec::new();
+        
+        // Simulate component lifecycle
+        lifecycle_events.push("mount");
+        lifecycle_events.push("animate_in");
+        lifecycle_events.push("animate_out");
+        lifecycle_events.push("unmount");
+        
+        // Test that lifecycle events are tracked
+        assert_eq!(lifecycle_events.len(), 4);
+        assert_eq!(lifecycle_events[0], "mount");
+        assert_eq!(lifecycle_events[1], "animate_in");
+        assert_eq!(lifecycle_events[2], "animate_out");
+        assert_eq!(lifecycle_events[3], "unmount");
+    }
 
-        let get_page_animation = move || {
-            let mut target = HashMap::new();
-            match current_page.get().as_ref() {
-                "home" => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(0px)".to_string()),
-                    );
-                }
-                "about" => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(0.9));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(-100px)".to_string()),
-                    );
-                }
-                "contact" => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(0.8));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(-200px)".to_string()),
-                    );
-                }
-                _ => {
-                    target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                    target.insert(
-                        "transform".to_string(),
-                        AnimationValue::String("translateX(0px)".to_string()),
-                    );
-                }
-            }
-            target
+    #[test]
+    fn test_multi_component_coordination() {
+        // Test that multiple components can coordinate animations
+        let mut component1_target = AnimationTarget::new();
+        component1_target.insert("opacity".to_string(), AnimationValue::Number(0.0));
+        
+        let mut component2_target = AnimationTarget::new();
+        component2_target.insert("opacity".to_string(), AnimationValue::Number(1.0));
+        
+        // Test staggered animation coordination
+        let stagger_config = StaggerConfig {
+            delay: 0.1,
+            from: StaggerFrom::First,
         };
+        
+        // Verify components can have different targets
+        assert_ne!(component1_target, component2_target);
+        assert!(stagger_config.delay > 0.0);
+        assert_eq!(stagger_config.from, StaggerFrom::First);
+    }
 
-        let get_page_content = move || match current_page.get().as_ref() {
-            "home" => "Welcome to the Home Page",
-            "about" => "Learn more about us",
-            "contact" => "Get in touch with us",
-            _ => "Page not found",
-        };
-
-        view! {
-            <div>
-                <nav>
-                    <button on:click=move |_| set_current_page.set("home")> "Home" </button>
-                    <button on:click=move |_| set_current_page.set("about")> "About" </button>
-                    <button on:click=move |_| set_current_page.set("contact")> "Contact" </button>
-                </nav>
-                <MotionDiv
-                    animate=get_page_animation()
-                >
-                    {get_page_content()}
-                </MotionDiv>
-            </div>
+    #[test]
+    fn test_animation_value_types_integration() {
+        // Test that different animation value types work together
+        let mut mixed_target = AnimationTarget::new();
+        mixed_target.insert("opacity".to_string(), AnimationValue::Number(0.8));
+        mixed_target.insert("x".to_string(), AnimationValue::Pixels(100.0));
+        mixed_target.insert("rotate".to_string(), AnimationValue::Degrees(45.0));
+        mixed_target.insert("scale".to_string(), AnimationValue::Number(1.2));
+        mixed_target.insert("color".to_string(), AnimationValue::String("#ff0000".to_string()));
+        
+        // Verify all value types are stored correctly
+        assert_eq!(mixed_target.len(), 5);
+        assert!(mixed_target.contains_key("opacity"));
+        assert!(mixed_target.contains_key("x"));
+        assert!(mixed_target.contains_key("rotate"));
+        assert!(mixed_target.contains_key("scale"));
+        assert!(mixed_target.contains_key("color"));
+        
+        // Test value retrieval
+        if let Some(AnimationValue::Number(opacity)) = mixed_target.get("opacity") {
+            assert_eq!(*opacity, 0.8);
         }
-    };
-
-    assert!(true);
-}
-
-/// Test that verifies MotionDiv integrates with Leptos state management
-#[test]
-fn test_leptos_state_management_integration() {
-    // This test ensures MotionDiv works with complex state management patterns
-
-    let _state_component = || {
-        let (counter, set_counter) = signal(0);
-        let (is_animating, set_animating) = signal(false);
-
-        let get_counter_animation = move || {
-            let mut target = HashMap::new();
-            if is_animating.get() {
-                target.insert("scale".to_string(), AnimationValue::Number(1.2));
-                target.insert(
-                    "background-color".to_string(),
-                    AnimationValue::String("green".to_string()),
-                );
-            } else {
-                target.insert("scale".to_string(), AnimationValue::Number(1.0));
-                target.insert(
-                    "background-color".to_string(),
-                    AnimationValue::String("blue".to_string()),
-                );
-            }
-            target
-        };
-
-        let increment_counter = move |_| {
-            set_animating.set(true);
-            set_counter.set(counter.get() + 1);
-            // Simulate animation completion
-            let set_animating_clone = set_animating.clone();
-            let _ = web_sys::window()
-                .unwrap()
-                .set_timeout_with_callback_and_timeout_and_arguments_0(
-                    &Closure::wrap(Box::new(move || {
-                        set_animating_clone.set(false);
-                    }) as Box<dyn FnMut()>)
-                    .as_ref()
-                    .unchecked_ref(),
-                    500,
-                )
-                .unwrap();
-        };
-
-        view! {
-            <div>
-                <p>"Counter: " {counter}</p>
-                <MotionDiv
-                    animate=get_counter_animation()
-                    on:click=increment_counter
-                >
-                    "Click to Increment"
-                </MotionDiv>
-            </div>
+        
+        if let Some(AnimationValue::Pixels(x)) = mixed_target.get("x") {
+            assert_eq!(*x, 100.0);
         }
-    };
+        
+        if let Some(AnimationValue::Degrees(rotate)) = mixed_target.get("rotate") {
+            assert_eq!(*rotate, 45.0);
+        }
+    }
 
-    assert!(true);
+    #[test]
+    fn test_easing_functions_integration() {
+        // Test that easing functions integrate with animation system
+        let easings = vec![
+            Easing::Linear,
+            Easing::EaseIn,
+            Easing::EaseOut,
+            Easing::EaseInOut,
+            Easing::CircIn,
+            Easing::CircOut,
+            Easing::CircInOut,
+            Easing::BackIn,
+            Easing::BackOut,
+            Easing::BackInOut,
+        ];
+        
+        // Test that all easing functions can be used
+        for easing in easings {
+            let transition = Transition {
+                duration: Some(0.3),
+                delay: None,
+                ease: easing,
+                repeat: RepeatConfig::Count(0),
+                stagger: None,
+            };
+            
+            // Verify transition was created successfully
+            assert_eq!(transition.duration, Some(0.3));
+            assert_eq!(transition.delay, None);
+            assert_eq!(transition.repeat, RepeatConfig::Count(0));
+        }
+    }
+
+    #[test]
+    fn test_repeat_configurations_integration() {
+        // Test that repeat configurations integrate with animation system
+        let repeat_configs = vec![
+            RepeatConfig::Count(0),
+            RepeatConfig::Count(1),
+            RepeatConfig::Count(3),
+            RepeatConfig::Infinite,
+        ];
+        
+        // Test that all repeat configurations can be used
+        for repeat in repeat_configs {
+            let transition = Transition {
+                duration: Some(0.5),
+                delay: Some(0.1),
+                ease: Easing::EaseOut,
+                repeat,
+                stagger: None,
+            };
+            
+            // Verify transition was created successfully
+            assert_eq!(transition.duration, Some(0.5));
+            assert_eq!(transition.delay, Some(0.1));
+            assert_eq!(transition.ease, Easing::EaseOut);
+        }
+    }
 }

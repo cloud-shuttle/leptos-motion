@@ -181,7 +181,7 @@ mod tests {
     fn test_version() {
         // VERSION and DESCRIPTION are compile-time constants
         // This test just verifies the constants are defined and have content
-        assert!(VERSION.contains("0.8") || DESCRIPTION.contains("motion"));
+        assert!(VERSION.contains("1.0") || DESCRIPTION.contains("motion"));
     }
 
     #[test]

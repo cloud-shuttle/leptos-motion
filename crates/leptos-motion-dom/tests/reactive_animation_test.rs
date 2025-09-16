@@ -42,12 +42,14 @@ fn test_reactive_animation_with_closure_fails() {
     // Mount the component with the old closure-based API
     let app = view! {
         <div>
-            <ReactiveMotionDiv animate=Some(reactive_animate(animate_closure)) />
+            <ReactiveMotionDiv animate=reactive_animate(animate_closure)>
+                "Animated Content"
+            </ReactiveMotionDiv>
             <button on:click=move |_| set_is_active.update(|v| *v = !*v)>"Toggle"</button>
         </div>
     };
 
-    mount_to_body(app);
+    mount_to_body(move || app);
 
     // Initial state should be inactive (blue, translateX(0px))
     let motion_div = document().get_element_by_id("motion-div").unwrap();

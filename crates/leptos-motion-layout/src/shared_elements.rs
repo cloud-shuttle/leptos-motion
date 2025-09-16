@@ -70,6 +70,78 @@ impl Default for ZIndexStrategy {
     }
 }
 
+/// Shared element - represents an element that can participate in shared transitions
+#[derive(Debug, Clone)]
+pub struct SharedElement {
+    /// Unique element ID
+    pub id: String,
+    /// DOM element
+    pub element: Element,
+    /// Element configuration
+    pub config: SharedElementConfig,
+    /// Whether element is currently transitioning
+    pub is_transitioning: bool,
+    /// Current z-index
+    pub z_index: i32,
+}
+
+impl SharedElement {
+    /// Create a new shared element
+    pub fn new(id: String, element: Element, config: SharedElementConfig) -> Self {
+        Self {
+            id,
+            element,
+            config,
+            is_transitioning: false,
+            z_index: 0,
+        }
+    }
+
+    /// Start a transition to another element
+    pub fn start_transition_to(&mut self, target: &SharedElement) -> Result<SharedElementTransition, String> {
+        if self.is_transitioning {
+            return Err("Element is already transitioning".to_string());
+        }
+
+        self.is_transitioning = true;
+        
+        let transition = SharedElementTransition {
+            id: format!("{}-to-{}", self.id, target.id),
+            source_element: self.element.clone(),
+            target_element: target.element.clone(),
+            config: self.config.clone(),
+            progress: 0.0,
+            active: true,
+            start_time: web_sys::js_sys::Date::now(),
+        };
+
+        Ok(transition)
+    }
+
+    /// Complete the current transition
+    pub fn complete_transition(&mut self) {
+        self.is_transitioning = false;
+    }
+
+    /// Get element bounds
+    pub fn get_bounds(&self) -> Result<web_sys::DomRect, String> {
+        Ok(self.element.get_bounding_client_rect())
+    }
+
+    /// Set element z-index
+    pub fn set_z_index(&mut self, z_index: i32) -> Result<(), String> {
+        if let Some(html_element) = self.element.dyn_ref::<web_sys::HtmlElement>() {
+            let style = html_element.style();
+            style.set_property("z-index", &z_index.to_string())
+                .map_err(|_| "Failed to set z-index".to_string())?;
+            self.z_index = z_index;
+            Ok(())
+        } else {
+            Err("Element is not an HtmlElement".to_string())
+        }
+    }
+}
+
 /// Shared element transition
 #[derive(Debug)]
 pub struct SharedElementTransition {

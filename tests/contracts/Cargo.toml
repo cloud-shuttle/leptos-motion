@@ -1,0 +1,35 @@
+[package]
+name = "leptos-motion-contracts"
+version = "0.1.0"
+edition = "2021"
+description = "Contract testing framework for leptos-motion"
+
+[dependencies]
+# Leptos Motion crates
+leptos-motion-core = { path = "../../crates/leptos-motion-core" }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom" }
+leptos-motion-gestures = { path = "../../crates/leptos-motion-gestures" }
+leptos-motion-layout = { path = "../../crates/leptos-motion-layout" }
+# leptos-motion-studio = { path = "../../crates/leptos-motion-studio" }  # Temporarily disabled due to compilation errors
+# leptos-motion-webgl = { path = "../../crates/leptos-motion-webgl" }    # Temporarily disabled due to compilation errors
+
+# Testing dependencies
+proptest = "1.4"
+quickcheck = "1.0"
+arbitrary = "1.4"
+test-case = "3.1"
+rstest = "0.19"
+pretty_assertions = "1.4"
+
+# Utilities
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+anyhow = "1.0"
+
+# CSS and styling
+tailwind-rs-core = "0.4.0"
+
+[lib]
+name = "leptos_motion_contracts"
+path = "lib.rs"

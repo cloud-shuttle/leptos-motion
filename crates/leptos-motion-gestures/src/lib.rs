@@ -9,6 +9,9 @@ pub mod multi_touch;
 pub mod simplified_gesture_api;
 pub mod tap;
 
+// Re-export multi-touch types
+pub use multi_touch::MultiTouchGesture;
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -258,6 +261,11 @@ mod simplified_gesture_tests {
 mod gesture_system_tdd_tests;
 #[cfg(test)]
 mod gesture_tests;
+#[cfg(test)]
+mod simple_gesture_tests;
+
+#[cfg(test)]
+mod performance_regression_tests;
 
 // Include the gesture animation TDD tests
 // #[cfg(test)]

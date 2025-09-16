@@ -12,9 +12,9 @@ pub mod shared_elements;
 pub mod simplified_layout_api;
 
 // Re-export main types
-pub use flip::{EasingFunction, FLIPAnimation, FLIPAnimator, FLIPState, TransformValues};
+pub use flip::{EasingFunction, FLIPAnimation, FLIPAnimator, FLIPState, TransformValues, FlipAnimation};
 pub use layout_tracker::{LayoutChange, LayoutChangeType, LayoutTracker, PerformanceImpact};
-pub use shared_elements::{SharedElementConfig, SharedElementManager, ZIndexStrategy};
+pub use shared_elements::{SharedElement, SharedElementConfig, SharedElementManager, ZIndexStrategy};
 
 // Re-export simplified layout API (new public API)
 pub use simplified_layout_api::{
@@ -254,6 +254,12 @@ mod simplified_layout_tests {
 
 #[cfg(test)]
 mod flip_tests;
+
+#[cfg(test)]
+mod simple_layout_tests;
+
+#[cfg(test)]
+mod performance_regression_tests;
 
 // Include the FLIP TDD tests
 // #[cfg(test)]

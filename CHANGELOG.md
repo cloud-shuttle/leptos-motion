@@ -5,6 +5,92 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-16
+
+### 🎉 Major Update - Comprehensive Showcase & Memory Safety
+
+This release introduces a comprehensive showcase with 9 professional motion examples, significant memory safety improvements, and enhanced WASM compatibility.
+
+### ✨ Added
+
+#### Comprehensive Showcase
+- **9 Professional Examples**: Complete showcase demonstrating Leptos Motion capabilities
+  - React Components - Interactive component showcase
+  - Apple Watch Demo - Apple Watch home screen simulation
+  - Source Unlock - Locked/unlocked state with source code reveal
+  - Motion Gallery - Different animation types and effects
+  - Interactive Demo - Game-like demo with clickable items
+  - CSS Generation - Spring animations with CSS transitions
+  - Path Drawing - SVG path drawing with staggered effects
+  - Conic Gradient - Mouse-tracking conic gradient animation
+  - Drag Transform - Drag interaction with dynamic gradients and SVG paths
+
+#### Memory Safety Improvements
+- **Animation Engine Fixes**: Resolved `RefCell` borrowing conflicts
+- **Error Handling**: Replaced panics with proper error handling
+- **Memory Safety Tests**: Comprehensive unit tests for memory safety
+- **Bounds Checking**: Enhanced memory bounds checking throughout
+
+#### WASM Enhancements
+- **WASM Demo Solution**: Complete guide for WebAssembly demos
+- **Proper MIME Types**: Fixed WASM file serving with correct MIME types
+- **Server Scripts**: Node.js and Python servers for WASM demos
+- **Loading Fixes**: Resolved WASM module initialization issues
+
+#### New Examples & Demos
+- **Puzzle Game Demo**: Interactive drag-and-drop puzzle game
+- **Advanced Gestures**: Comprehensive gesture interaction examples
+- **Layout Animations**: Advanced layout animation demonstrations
+- **Interactive Showcase**: Multiple interactive component examples
+
+### 🔧 Fixed
+
+#### Memory Safety
+- Fixed `RefCell` borrowing conflicts in animation engine
+- Resolved memory leaks in concurrent animation scenarios
+- Improved error handling to prevent panics
+- Enhanced memory bounds checking
+
+#### WASM Compatibility
+- Fixed WASM file loading and serving issues
+- Resolved module initialization problems
+- Fixed MIME type handling for WASM files
+- Improved cross-browser WASM compatibility
+
+#### Performance
+- Optimized animation calculations
+- Improved memory allocation patterns
+- Enhanced concurrent animation handling
+- Better performance monitoring
+
+### 📚 Documentation
+
+#### New Documentation
+- **WASM Demo Solution**: Complete setup guide for WebAssembly demos
+- **Memory Safety Analysis**: Comprehensive analysis of memory safety improvements
+- **Performance Results**: Live performance benchmarks and results
+- **Technical Analysis**: Detailed technical analysis and remediation plans
+
+#### Updated Documentation
+- Enhanced API documentation
+- Improved getting started guide
+- Updated examples documentation
+- Better migration guides
+
+### 🧪 Testing
+
+#### New Tests
+- Memory safety unit tests
+- WASM compatibility tests
+- Performance regression tests
+- Comprehensive example tests
+
+#### Test Improvements
+- Enhanced test coverage
+- Better error handling tests
+- Improved performance benchmarks
+- More robust integration tests
+
 ## [1.0.0] - 2025-01-15
 
 ### 🎉 Major Release - Feature Complete Implementation

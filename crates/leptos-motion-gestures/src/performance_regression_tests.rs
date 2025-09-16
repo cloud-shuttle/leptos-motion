@@ -7,7 +7,8 @@
 //! if performance degrades beyond acceptable thresholds.
 
 use super::*;
-use std::time::{Duration, Instant};
+use std::time::Instant;
+use std::collections::HashMap;
 
 #[cfg(test)]
 mod gesture_performance_regression_tests {
@@ -28,7 +29,7 @@ mod gesture_performance_regression_tests {
                 sensitivity: 0.5 + (i as f64) * 0.0001,
                 min_distance: 5.0 + (i as f64) * 0.001,
                 max_touches: 2 + (i % 5),
-                timeout_ms: 500 + (i % 1000),
+                timeout_ms: 500 + (i % 1000) as u64,
             };
         }
 
@@ -59,7 +60,7 @@ mod gesture_performance_regression_tests {
 
         for i in 0..iterations {
             let _touch = TouchPoint {
-                id: i as u32,
+                id: i as u64,
                 x: (i as f64) * 0.1,
                 y: (i as f64) * 0.1,
                 pressure: 0.5 + (i as f64) * 0.0001,
@@ -114,7 +115,6 @@ mod gesture_performance_regression_tests {
                 GestureEvent::TouchStart { touches: touches.clone() },
                 GestureEvent::TouchMove { touches: touches.clone() },
                 GestureEvent::TouchEnd { touches: touches.clone() },
-                GestureEvent::TouchCancel { touches: touches.clone() },
             ];
         }
 
@@ -144,28 +144,30 @@ mod gesture_performance_regression_tests {
         let start_time = Instant::now();
 
         for i in 0..iterations {
+            let mut touches_map = HashMap::new();
+            touches_map.insert(1, TouchPoint {
+                id: 1,
+                x: (i as f64) * 0.1,
+                y: (i as f64) * 0.1,
+                pressure: 0.5,
+                timestamp: i as u64,
+            });
+            touches_map.insert(2, TouchPoint {
+                id: 2,
+                x: (i as f64) * 0.1 + 10.0,
+                y: (i as f64) * 0.1 + 10.0,
+                pressure: 0.5,
+                timestamp: i as u64,
+            });
+
             let mut state = MultiTouchState {
-                touches: vec![
-                    TouchPoint {
-                        id: 1,
-                        x: (i as f64) * 0.1,
-                        y: (i as f64) * 0.1,
-                        pressure: 0.5,
-                        timestamp: i as u64,
-                    },
-                    TouchPoint {
-                        id: 2,
-                        x: (i as f64) * 0.1 + 10.0,
-                        y: (i as f64) * 0.1 + 10.0,
-                        pressure: 0.5,
-                        timestamp: i as u64,
-                    },
-                ],
-                gesture_type: MultiTouchGestureType::Pinch,
+                touches: touches_map,
+                center: ((i as f64) * 0.1, (i as f64) * 0.1),
+                average_distance: 0.0,
                 scale: 1.0 + (i as f64) * 0.001,
                 rotation: (i as f64) * 0.01,
-                center_x: (i as f64) * 0.1,
-                center_y: (i as f64) * 0.1,
+                active: true,
+                gesture_type: MultiTouchGestureType::Pinch,
             };
 
             // Test state operations
@@ -173,8 +175,8 @@ mod gesture_performance_regression_tests {
             let _gesture_type = state.gesture_type;
             let _scale = state.scale;
             let _rotation = state.rotation;
-            let _center_x = state.center_x;
-            let _center_y = state.center_y;
+            let _center_x = state.center.0;
+            let _center_y = state.center.1;
 
             // Test state updates
             state.scale = 1.0 + (i as f64) * 0.002;
@@ -208,20 +210,25 @@ mod gesture_performance_regression_tests {
 
         for i in 0..iterations {
             let _results = vec![
-                GestureResult::Success {
+                GestureResult {
+                    recognized: true,
                     gesture_type: MultiTouchGestureType::Pinch,
+                    data: None,
                     confidence: 0.8 + (i as f64) * 0.0001,
-                    data: None,
                 },
-                GestureResult::Partial {
+                GestureResult {
+                    recognized: true,
                     gesture_type: MultiTouchGestureType::Rotation,
-                    confidence: 0.5 + (i as f64) * 0.0001,
                     data: None,
+                    confidence: 0.5 + (i as f64) * 0.0001,
                 },
-                GestureResult::Failed {
-                    reason: format!("test_reason_{}", i),
+                GestureResult {
+                    recognized: false,
+                    gesture_type: MultiTouchGestureType::None,
+                    data: None,
+                    confidence: 0.0,
                 },
-                GestureResult::InsufficientData,
+                GestureResult::default(),
             ];
         }
 
@@ -278,7 +285,7 @@ mod gesture_performance_regression_tests {
             } else if distance < 10.0 {
                 MultiTouchGestureType::Rotation
             } else {
-                MultiTouchGestureType::Pan
+                MultiTouchGestureType::MultiSwipe
             };
 
             // Simulate confidence calculation
@@ -286,19 +293,26 @@ mod gesture_performance_regression_tests {
 
             // Simulate result creation
             let _result = if confidence > 0.7 {
-                GestureResult::Success {
+                GestureResult {
+                    recognized: true,
                     gesture_type,
-                    confidence,
                     data: None,
+                    confidence,
                 }
             } else if confidence > 0.3 {
-                GestureResult::Partial {
+                GestureResult {
+                    recognized: true,
                     gesture_type,
-                    confidence,
                     data: None,
+                    confidence,
                 }
             } else {
-                GestureResult::InsufficientData
+                GestureResult {
+                    recognized: false,
+                    gesture_type: MultiTouchGestureType::None,
+                    data: None,
+                    confidence: 0.0,
+                }
             };
         }
 
@@ -384,7 +398,7 @@ mod gesture_performance_regression_tests {
                 .sensitivity(0.5 + (i as f64) * 0.0001)
                 .min_distance(5.0 + (i as f64) * 0.001)
                 .max_touches(2 + (i % 5))
-                .timeout(500 + (i % 1000));
+                .timeout((500 + (i % 1000)) as u64);
         }
 
         let duration = start_time.elapsed();
@@ -425,14 +439,14 @@ mod gesture_performance_regression_tests {
                 sensitivity: 0.5 + (i as f64) * 0.0001,
                 min_distance: 5.0 + (i as f64) * 0.001,
                 max_touches: 2 + (i % 5),
-                timeout_ms: 500 + (i % 1000),
+                timeout_ms: (500 + (i % 1000)) as u64,
             };
             configs.push(config);
 
             // Add touch points
             for j in 0..2 {
                 let touch = TouchPoint {
-                    id: (i * 2 + j) as u32,
+                    id: (i * 2 + j) as u64,
                     x: (i as f64) * 0.1 + (j as f64) * 10.0,
                     y: (i as f64) * 0.1 + (j as f64) * 10.0,
                     pressure: 0.5,

@@ -1,0 +1,18 @@
+[package]
+name = "puzzle-game-demo"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+leptos = { version = "0.8.6", features = ["csr"] }
+leptos-motion = { path = "../../crates/leptos-motion" }
+wasm-bindgen = "0.2"
+web-sys = "0.3"
+console_error_panic_hook = "0.1"
+console_log = "1.0"
+log = "0.4"
+rand = "0.8"
+getrandom = { version = "0.2", features = ["js"] }

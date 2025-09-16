@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Comprehensive Demo Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the comprehensive demo
-    await page.goto('http://localhost:8085/index.html');
+    await page.goto('http://localhost:8085');
 
     // Wait for the page to load
     await page.waitForLoadState('networkidle');

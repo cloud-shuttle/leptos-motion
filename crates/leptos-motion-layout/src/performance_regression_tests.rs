@@ -7,7 +7,7 @@
 //! if performance degrades beyond acceptable thresholds.
 
 use super::*;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 #[cfg(test)]
 mod layout_performance_regression_tests {
@@ -88,30 +88,27 @@ mod layout_performance_regression_tests {
 
         for i in 0..iterations {
             let _flip_state = FLIPState {
-                first: LayoutInfo::new(
+                first: web_sys::DomRect::new_with_x_and_y_and_width_and_height(
                     (i as f64) * 0.1,
                     (i as f64) * 0.1,
                     100.0,
                     200.0,
-                ),
-                last: LayoutInfo::new(
+                ).unwrap(),
+                last: web_sys::DomRect::new_with_x_and_y_and_width_and_height(
                     (i as f64) * 0.1 + 50.0,
                     (i as f64) * 0.1 + 50.0,
                     100.0,
                     200.0,
-                ),
+                ).unwrap(),
                 inverted: TransformValues {
-                    x: (i as f64) * 0.1,
-                    y: (i as f64) * 0.1,
+                    translate_x: (i as f64) * 0.1,
+                    translate_y: (i as f64) * 0.1,
                     scale_x: 1.0,
                     scale_y: 1.0,
+                    rotation: 0.0,
                 },
-                play: TransformValues {
-                    x: 0.0,
-                    y: 0.0,
-                    scale_x: 1.0,
-                    scale_y: 1.0,
-                },
+                progress: 0.0,
+                active: false,
             };
         }
 
@@ -142,21 +139,22 @@ mod layout_performance_regression_tests {
 
         for i in 0..iterations {
             let mut transform = TransformValues {
-                x: (i as f64) * 0.1,
-                y: (i as f64) * 0.1,
+                translate_x: (i as f64) * 0.1,
+                translate_y: (i as f64) * 0.1,
                 scale_x: 1.0 + (i as f64) * 0.001,
                 scale_y: 1.0 + (i as f64) * 0.001,
+                rotation: 0.0,
             };
 
             // Test various operations
-            let _x = transform.x;
-            let _y = transform.y;
+            let _x = transform.translate_x;
+            let _y = transform.translate_y;
             let _scale_x = transform.scale_x;
             let _scale_y = transform.scale_y;
 
             // Test updates
-            transform.x = (i as f64) * 0.2;
-            transform.y = (i as f64) * 0.2;
+            transform.translate_x = (i as f64) * 0.2;
+            transform.translate_y = (i as f64) * 0.2;
             transform.scale_x = 1.0 + (i as f64) * 0.002;
             transform.scale_y = 1.0 + (i as f64) * 0.002;
         }
@@ -190,8 +188,8 @@ mod layout_performance_regression_tests {
             let _config = SharedElementConfig {
                 duration: 0.3 + (i as f64) * 0.0001,
                 easing: EasingFunction::EaseOut,
-                z_index_strategy: ZIndexStrategy::Fixed { base: 1000, increment: 1 },
-                shared_id: format!("shared_{}", i),
+                maintain_aspect_ratio: i % 2 == 0,
+                hardware_accelerated: i % 3 == 0,
             };
         }
 
@@ -223,8 +221,8 @@ mod layout_performance_regression_tests {
         for i in 0..iterations {
             let strategies = vec![
                 ZIndexStrategy::Fixed { base: 1000, increment: 1 },
-                ZIndexStrategy::Dynamic { base: 1000, increment: 10 },
-                ZIndexStrategy::Auto,
+                ZIndexStrategy::Dynamic { base: 1000, max: 2000 },
+                ZIndexStrategy::Elevate,
             ];
 
             let strategy = &strategies[i % strategies.len()];
@@ -232,13 +230,23 @@ mod layout_performance_regression_tests {
             // Test strategy operations
             match strategy {
                 ZIndexStrategy::Fixed { base, increment } => {
-                    let _z_index = base + (i as u32) * increment;
+                    let _z_index = *base + (i as i32) * *increment;
                 }
-                ZIndexStrategy::Dynamic { base, increment } => {
-                    let _z_index = base + (i as u32) * increment;
+                ZIndexStrategy::Dynamic { base, max } => {
+                    let _z_index = *base + (i as i32) % (*max - *base);
                 }
-                ZIndexStrategy::Auto => {
-                    let _z_index = 1000 + i as u32;
+                ZIndexStrategy::Elevate => {
+                    let _z_index = 1000 + i as i32;
+                }
+                ZIndexStrategy::CustomProperty { property } => {
+                    let _z_index = 1000 + i as i32;
+                    let _prop = property;
+                }
+                ZIndexStrategy::Custom(value) => {
+                    let _z_index = *value + i as i32;
+                }
+                ZIndexStrategy::Maintain => {
+                    let _z_index = 1000 + i as i32;
                 }
             }
         }
@@ -273,6 +281,8 @@ mod layout_performance_regression_tests {
                 duration: 0.3 + (i as f64) * 0.0001,
                 easing: SimplifiedEasing::EaseOut,
                 hardware_accelerated: i % 2 == 0,
+                enable_flip: i % 3 == 0,
+                enable_shared_elements: i % 4 == 0,
             };
         }
 
@@ -324,6 +334,15 @@ mod layout_performance_regression_tests {
                         1.0 - 2.0 * (1.0 - progress) * (1.0 - progress)
                     }
                 }
+                SimplifiedEasing::EaseInCubic => progress * progress * progress,
+                SimplifiedEasing::EaseOutCubic => 1.0 - (1.0 - progress).powi(3),
+                SimplifiedEasing::EaseInOutCubic => {
+                    if progress < 0.5 {
+                        4.0 * progress * progress * progress
+                    } else {
+                        1.0 - 4.0 * (1.0 - progress).powi(3)
+                    }
+                }
             };
         }
 
@@ -353,22 +372,19 @@ mod layout_performance_regression_tests {
         let start_time = Instant::now();
 
         for i in 0..iterations {
-            let statuses = vec![
-                SimplifiedAnimationStatus::Idle,
-                SimplifiedAnimationStatus::Running,
-                SimplifiedAnimationStatus::Paused,
-                SimplifiedAnimationStatus::Completed,
-                SimplifiedAnimationStatus::Cancelled,
-            ];
-
-            let status = &statuses[i % statuses.len()];
+            let _status = SimplifiedAnimationStatus {
+                is_animating: i % 2 == 0,
+                is_paused: i % 3 == 0,
+                progress: (i as f64) / iterations as f64,
+                start_time: Some(Instant::now()),
+                duration: 0.3 + (i as f64) * 0.0001,
+            };
 
             // Test status operations
-            let _is_idle = matches!(status, SimplifiedAnimationStatus::Idle);
-            let _is_running = matches!(status, SimplifiedAnimationStatus::Running);
-            let _is_paused = matches!(status, SimplifiedAnimationStatus::Paused);
-            let _is_completed = matches!(status, SimplifiedAnimationStatus::Completed);
-            let _is_cancelled = matches!(status, SimplifiedAnimationStatus::Cancelled);
+            let _is_animating = _status.is_animating;
+            let _is_paused = _status.is_paused;
+            let _progress = _status.progress;
+            let _duration = _status.duration;
         }
 
         let duration = start_time.elapsed();
@@ -398,22 +414,24 @@ mod layout_performance_regression_tests {
 
         for i in 0..iterations {
             let mut metrics = SimplifiedPerformanceMetrics {
-                frame_count: i as u32,
-                average_frame_time: 16.67 + (i as f64) * 0.001,
-                fps: 60.0 - (i as f64) * 0.001,
+                total_animations: i,
+                average_duration: 0.3 + (i as f64) * 0.0001,
+                frame_rate: 60.0 - (i as f64) * 0.001,
                 memory_usage: i * 1024,
+                cpu_usage: 10.0 + (i as f64) * 0.001,
             };
 
             // Test metrics operations
-            let _frame_count = metrics.frame_count;
-            let _average_frame_time = metrics.average_frame_time;
-            let _fps = metrics.fps;
+            let _total_animations = metrics.total_animations;
+            let _average_duration = metrics.average_duration;
+            let _frame_rate = metrics.frame_rate;
             let _memory_usage = metrics.memory_usage;
+            let _cpu_usage = metrics.cpu_usage;
 
             // Test metrics updates
-            metrics.frame_count += 1;
-            metrics.average_frame_time = 16.67 + ((i + 1) as f64) * 0.001;
-            metrics.fps = 60.0 - ((i + 1) as f64) * 0.001;
+            metrics.total_animations += 1;
+            metrics.average_duration = 0.3 + ((i + 1) as f64) * 0.0001;
+            metrics.frame_rate = 60.0 - ((i + 1) as f64) * 0.001;
             metrics.memory_usage = (i + 1) * 1024;
         }
 
@@ -478,26 +496,30 @@ mod layout_performance_regression_tests {
 
             // Create inverted transform
             let inverted = TransformValues {
-                x: -delta_x,
-                y: -delta_y,
+                translate_x: -delta_x,
+                translate_y: -delta_y,
                 scale_x: 1.0 / scale_x,
                 scale_y: 1.0 / scale_y,
-            };
-
-            // Create play transform
-            let play = TransformValues {
-                x: 0.0,
-                y: 0.0,
-                scale_x: 1.0,
-                scale_y: 1.0,
+                rotation: 0.0,
             };
 
             // Simulate FLIP state creation
             let _flip_state = FLIPState {
-                first: first_layout,
-                last: last_layout,
+                first: web_sys::DomRect::new_with_x_and_y_and_width_and_height(
+                    first_layout.x,
+                    first_layout.y,
+                    first_layout.width,
+                    first_layout.height,
+                ).unwrap(),
+                last: web_sys::DomRect::new_with_x_and_y_and_width_and_height(
+                    last_layout.x,
+                    last_layout.y,
+                    last_layout.width,
+                    last_layout.height,
+                ).unwrap(),
                 inverted,
-                play,
+                progress: 0.0,
+                active: false,
             };
         }
 

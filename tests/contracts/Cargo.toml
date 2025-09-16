@@ -28,7 +28,7 @@ thiserror = "1.0"
 anyhow = "1.0"
 
 # CSS and styling
-tailwind-rs-core = "0.4.0"
+tailwind-rs-core = "0.6.0"
 
 [lib]
 name = "leptos_motion_contracts"

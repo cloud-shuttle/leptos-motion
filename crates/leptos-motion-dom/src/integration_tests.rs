@@ -11,7 +11,7 @@ use std::collections::HashMap;
 mod component_integration_tests {
     use super::*;
 
-    #[test]
+#[test]
     fn test_animation_target_with_motion_props_integration() {
         // Test that AnimationTarget can work with motion components
         let mut target = AnimationTarget::new();
@@ -33,7 +33,7 @@ mod component_integration_tests {
         }
     }
 
-    #[test]
+#[test]
     fn test_transition_with_animation_target_integration() {
         // Test that transitions work with animation targets
         let transition = Transition {
@@ -51,7 +51,7 @@ mod component_integration_tests {
         assert_eq!(transition.repeat, RepeatConfig::Count(2));
     }
 
-    #[test]
+#[test]
     fn test_animation_controller_integration() {
         // Test that animation controller integrates with motion components
         let initial_values = HashMap::new();
@@ -63,7 +63,7 @@ mod component_integration_tests {
         
         // Test animation target creation
         let mut target = AnimationTarget::new();
-        target.insert("opacity".to_string(), AnimationValue::Number(1.0));
+                    target.insert("opacity".to_string(), AnimationValue::Number(1.0));
         target.insert("x".to_string(), AnimationValue::Pixels(100.0));
         
         // Test that controller can handle the target
@@ -110,7 +110,7 @@ mod component_integration_tests {
         assert!(gesture_target.contains_key("rotate"));
     }
 
-    #[test]
+#[test]
     fn test_layout_and_motion_integration() {
         // Test layout animation target
         let mut layout_target = AnimationTarget::new();
@@ -142,7 +142,7 @@ mod component_integration_tests {
         assert_eq!(lifecycle_events[3], "unmount");
     }
 
-    #[test]
+#[test]
     fn test_multi_component_coordination() {
         // Test that multiple components can coordinate animations
         let mut component1_target = AnimationTarget::new();
@@ -228,7 +228,7 @@ mod component_integration_tests {
         }
     }
 
-    #[test]
+#[test]
     fn test_repeat_configurations_integration() {
         // Test that repeat configurations integrate with animation system
         let repeat_configs = vec![

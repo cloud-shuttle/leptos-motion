@@ -1,6 +1,5 @@
 use leptos::prelude::*;
-use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion::*;
 use std::collections::HashMap;
 
 /// Simplified Motion Showcase Demo
@@ -13,17 +12,24 @@ pub fn SimplifiedShowcase() -> impl IntoView {
     let (is_animated, set_is_animated) = signal(false);
 
     // Simple animation
-    let animation = Memo::new(move |_| {
-        let mut target = HashMap::new();
+    let initial = move || {
+        let mut initial = HashMap::new();
+        initial.insert("rotate".to_string(), AnimationValue::Degrees(0.0));
+        initial.insert("scale".to_string(), AnimationValue::Number(1.0));
+        initial
+    };
+
+    let animate = move || {
+        let mut animate = HashMap::new();
         if is_animated.get() {
-            target.insert("rotateZ".to_string(), AnimationValue::Number(360.0));
-            target.insert("scale".to_string(), AnimationValue::Number(1.2));
+            animate.insert("rotate".to_string(), AnimationValue::Degrees(360.0));
+            animate.insert("scale".to_string(), AnimationValue::Number(1.2));
         } else {
-            target.insert("rotateZ".to_string(), AnimationValue::Number(0.0));
-            target.insert("scale".to_string(), AnimationValue::Number(1.0));
+            animate.insert("rotate".to_string(), AnimationValue::Degrees(0.0));
+            animate.insert("scale".to_string(), AnimationValue::Number(1.0));
         }
-        target
-    });
+        animate
+    };
 
     let transition_config = Transition {
         duration: Some(0.5),
@@ -47,13 +53,14 @@ pub fn SimplifiedShowcase() -> impl IntoView {
                 "Toggle Animation"
             </button>
 
-            <ReactiveMotionDiv
-                animate_fn=Box::new(move || animation.get())
+            <MotionDiv
+                initial=(move || initial())()
+                animate=(move || animate())()
                 transition=transition_config
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >
                 "Animate!"
-            </ReactiveMotionDiv>
+            </MotionDiv>
 
             <p style="color: #90EE90; margin-top: 2rem;">
                 "If you can see this and right-click works, basic animations are working!"

@@ -1,0 +1,12 @@
+[build]
+target = "index.html"
+dist = "dist"
+public_url = "/"
+cargo = { args = ["--manifest-path", "Cargo.toml"] }
+
+[serve]
+address = "127.0.0.1"
+port = 8081
+
+[watch]
+watch = ["src"]

@@ -2,7 +2,7 @@
 //!
 //! These tests ensure our CSS class-based animation system works correctly
 //! and provides the simplicity that makes leptos-animate appealing.
-//! Now enhanced with tailwind-rs-core v0.4.0 integration.
+//! Now enhanced with tailwind-rs-core v0.6.0 integration.
 
 use std::collections::HashMap;
 use tailwind_rs_core::*;

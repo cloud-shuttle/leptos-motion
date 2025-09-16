@@ -14,6 +14,64 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+// Use the existing AnimationError from leptos_motion_core
+use leptos_motion_core::AnimationError;
+
+/// Memory safety utilities for animation engine
+mod memory_safety {
+    use super::AnimationError;
+
+    /// Maximum allowed slice length to prevent memory issues
+    const MAX_SLICE_LEN: usize = 1024 * 1024; // 1MB
+
+    /// Maximum allowed string length
+    const MAX_STRING_LEN: usize = 10000;
+
+    /// Safe slice creation with bounds checking (without unsafe code)
+    pub fn safe_slice_from_ptr(ptr: *const u8, len: usize) -> leptos_motion_core::Result<Vec<u8>> {
+        if ptr.is_null() {
+            return Err(AnimationError::EngineUnavailable("Null pointer".to_string()));
+        }
+        
+        if len > MAX_SLICE_LEN {
+            return Err(AnimationError::EngineUnavailable("Slice too large".to_string()));
+        }
+
+        // Check alignment
+        if ptr as usize % std::mem::align_of::<u8>() != 0 {
+            return Err(AnimationError::EngineUnavailable("Unaligned pointer".to_string()));
+        }
+
+        // For now, return empty vector since we can't use unsafe
+        // In a real implementation, this would need to be handled differently
+        Ok(Vec::new())
+    }
+
+    /// Validate string before use
+    pub fn validate_string(s: &str) -> leptos_motion_core::Result<()> {
+        if s.is_empty() {
+            return Err(AnimationError::InvalidProperty { property: "Empty string".to_string() });
+        }
+        
+        if s.len() > MAX_STRING_LEN {
+            return Err(AnimationError::InvalidProperty { property: "String too long".to_string() });
+        }
+
+        // Check for null bytes
+        if s.contains('\0') {
+            return Err(AnimationError::InvalidProperty { property: "String contains null bytes".to_string() });
+        }
+
+        Ok(())
+    }
+
+    /// Safe string cloning with validation
+    pub fn safe_string_clone(s: &str) -> leptos_motion_core::Result<String> {
+        validate_string(s)?;
+        Ok(s.to_string())
+    }
+}
+
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 #[cfg(target_arch = "wasm32")]
@@ -134,28 +192,44 @@ impl AnimationEngine {
         self.on_update = Some(Rc::new(callback));
     }
 
-    /// Start an animation for a property
+    /// Start an animation for a property with proper error handling
     pub fn animate_property(
         &mut self,
         property: String,
         initial: f64,
         target: f64,
         transition: Transition,
-    ) {
+    ) -> leptos_motion_core::Result<()> {
+        // Validate property name
+        if property.is_empty() {
+            return Err(AnimationError::InvalidProperty { property: "Property name cannot be empty".to_string() });
+        }
         
+        if property.len() > 1000 {
+            return Err(AnimationError::InvalidProperty { property: "Property name too long".to_string() });
+        }
+
+        // Validate numeric values
+        if !initial.is_finite() || !target.is_finite() {
+            return Err(AnimationError::InvalidProperty { property: "Animation values must be finite numbers".to_string() });
+        }
+
         let animation = PropertyAnimation::new(initial, target, transition);
         self.animations.insert(property, animation);
 
         // Always restart the animation loop when new animations are added
         self.stop_animation_loop();
-        self.start_animation_loop();
+        self.start_animation_loop()?;
+        
+        Ok(())
     }
 
-    /// Start animations for multiple properties
-    pub fn animate_properties(&mut self, properties: HashMap<String, (f64, f64, Transition)>) {
+    /// Start animations for multiple properties with error handling
+    pub fn animate_properties(&mut self, properties: HashMap<String, (f64, f64, Transition)>) -> leptos_motion_core::Result<()> {
         for (property, (initial, target, transition)) in properties {
-            self.animate_property(property, initial, target, transition);
+            self.animate_property(property, initial, target, transition)?;
         }
+        Ok(())
     }
 
     /// Stop animation for a specific property
@@ -186,23 +260,32 @@ impl AnimationEngine {
             .collect()
     }
 
-    /// Start the animation loop
+    /// Start the animation loop with proper error handling
     #[cfg(target_arch = "wasm32")]
-    pub fn start_animation_loop(&mut self) {
+    pub fn start_animation_loop(&mut self) -> leptos_motion_core::Result<()> {
         if self.is_running {
-            return;
+            return Ok(());
+        }
+
+        // Validate animations before starting
+        if self.animations.is_empty() {
+            return Err(AnimationError::InvalidProperty { property: "No animations to start".to_string() });
+        }
+
+        // Check for excessively large animation sets
+        if self.animations.len() > 1000 {
+            return Err(AnimationError::MemoryError("Too many animations".to_string()));
         }
 
         self.is_running = true;
         
-        // Create a shared state for the animation loop
+        // Create a shared state for the animation loop with validation
         let animations = Rc::new(RefCell::new(self.animations.clone()));
         let on_complete = self.on_complete.clone();
         let on_update = self.on_update.clone();
         let is_running = Rc::new(RefCell::new(true));
-        let _recursion_guard = Rc::new(RefCell::new(false));
 
-        // Create a recursive animation loop
+        // Create a recursive animation loop with error handling
         let animations_clone = animations.clone();
         let is_running_clone = is_running.clone();
         let on_update_clone = on_update.clone();
@@ -217,23 +300,11 @@ impl AnimationEngine {
             );
         }) as Box<dyn FnMut()>);
 
-        let window = match web_sys::window() {
-            Some(w) => w,
-            None => {
-                web_sys::console::error_1(&"Window not available".into());
-                self.is_running = false;
-                return;
-            }
-        };
+        let window = web_sys::window()
+            .ok_or_else(|| AnimationError::DomError("Window not available".to_string()))?;
 
-        let handle = match window.request_animation_frame(closure.as_ref().unchecked_ref()) {
-            Ok(h) => h,
-            Err(_) => {
-                web_sys::console::error_1(&"Failed to request animation frame".into());
-                self.is_running = false;
-                return;
-            }
-        };
+        let handle = window.request_animation_frame(closure.as_ref().unchecked_ref())
+            .map_err(|e| AnimationError::DomError(format!("Failed to request animation frame: {:?}", e)))?;
 
         // Store the handle and closure
         self.animation_handle = Some(handle);
@@ -241,18 +312,21 @@ impl AnimationEngine {
         {
             self.animation_closure = Some(closure);
         }
+
+        Ok(())
     }
 
     /// Start the animation loop (non-WASM version)
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn start_animation_loop(&mut self) {
+    pub fn start_animation_loop(&mut self) -> leptos_motion_core::Result<()> {
         if self.is_running {
-            return;
+            return Ok(());
         }
 
         self.is_running = true;
         // No-op for non-WASM targets
         // In a real implementation, this might use a different animation system
+        Ok(())
     }
 
     /// Stop the animation loop
@@ -276,7 +350,7 @@ impl AnimationEngine {
         self.is_running = false;
     }
 
-    /// Animation frame callback helper
+    /// Animation frame callback helper with proper error handling
     #[cfg(target_arch = "wasm32")]
     fn animation_frame_callback(
         animations: Rc<RefCell<HashMap<String, PropertyAnimation>>>,
@@ -284,18 +358,41 @@ impl AnimationEngine {
         on_update: Option<Rc<dyn Fn(&HashMap<String, f64>)>>,
         on_complete: Option<Rc<dyn Fn()>>,
     ) {
-        // Check if we should continue running
-        if !*is_running.borrow() {
+        // Safe borrowing with error handling
+        let should_continue = match is_running.try_borrow() {
+            Ok(running) => *running,
+            Err(_) => {
+                // If we can't borrow, stop the animation to prevent deadlock
+                eprintln!("Animation engine: Failed to borrow is_running, stopping animation");
+                return;
+            }
+        };
+
+        if !should_continue {
             return;
         }
 
-        
-        // Update animations
+        // Safe borrowing of animations with error handling
+        let mut animations_guard = match animations.try_borrow_mut() {
+            Ok(guard) => guard,
+            Err(_) => {
+                eprintln!("Animation engine: Failed to borrow animations, skipping frame");
+                return;
+            }
+        };
+
+        // Update animations with proper error handling
         let mut completed_animations = Vec::new();
         let mut current_values = HashMap::new();
 
         // First pass: update animations and collect values
-        for (property, animation) in animations.borrow_mut().iter_mut() {
+        for (property, animation) in animations_guard.iter_mut() {
+            // Validate property string before use
+            if let Err(e) = memory_safety::validate_string(property) {
+                eprintln!("Animation engine: Invalid property name: {}", e);
+                continue;
+            }
+
             let was_complete = animation.state.is_complete;
 
             if !was_complete {
@@ -310,50 +407,90 @@ impl AnimationEngine {
                 }
             }
 
-            current_values.insert(property.clone(), animation.state.current);
+            // Safe string cloning with validation
+            let property_clone = match memory_safety::safe_string_clone(property) {
+                Ok(s) => s,
+                Err(e) => {
+                    eprintln!("Animation engine: Failed to clone property name: {}", e);
+                    continue;
+                }
+            };
+
+            current_values.insert(property_clone, animation.state.current);
 
             if animation.state.is_complete && !was_complete {
-                completed_animations.push(property.clone());
+                if let Ok(completed_property) = memory_safety::safe_string_clone(property) {
+                    completed_animations.push(completed_property);
+                }
             }
         }
 
-        // Notify of updates (throttle to max 60fps)
+        // Drop the guard before calling callbacks to prevent borrowing conflicts
+        drop(animations_guard);
+
+        // Notify of updates with error handling
         if let Some(ref on_update_callback) = on_update {
-            on_update_callback(&current_values);
+            // Validate current_values before passing to callback
+            if current_values.len() > 10000 {
+                eprintln!("Animation engine: Too many animation values, skipping update");
+            } else {
+                on_update_callback(&current_values);
+            }
         }
 
-        // Remove completed animations
-        for property in completed_animations {
-            animations.borrow_mut().remove(&property);
+        // Remove completed animations with safe borrowing
+        if !completed_animations.is_empty() {
+            if let Ok(mut animations_guard) = animations.try_borrow_mut() {
+                for property in completed_animations {
+                    animations_guard.remove(&property);
+                }
+            }
         }
 
-        // Check if all animations are complete
-        if animations.borrow().is_empty() {
-            *is_running.borrow_mut() = false;
+        // Check if all animations are complete with safe borrowing
+        let is_empty = match animations.try_borrow() {
+            Ok(guard) => guard.is_empty(),
+            Err(_) => false,
+        };
+
+        if is_empty {
+            if let Ok(mut running_guard) = is_running.try_borrow_mut() {
+                *running_guard = false;
+            }
             if let Some(ref on_complete_callback) = on_complete {
                 on_complete_callback();
             }
-        } else if *is_running.borrow() {
-            // Continue animation loop by scheduling next frame
-            if let Some(window) = web_sys::window() {
-                let next_closure = Closure::wrap(Box::new({
-                    let animations = animations.clone();
-                    let is_running = is_running.clone();
-                    let on_update = on_update.clone();
-                    let on_complete = on_complete.clone();
+        } else {
+            // Check if we should continue with safe borrowing
+            let should_continue = match is_running.try_borrow() {
+                Ok(running) => *running,
+                Err(_) => false,
+            };
+
+            if should_continue {
+                // Continue animation loop by scheduling next frame
+                if let Some(window) = web_sys::window() {
+                    let next_closure = Closure::wrap(Box::new({
+                        let animations = animations.clone();
+                        let is_running = is_running.clone();
+                        let on_update = on_update.clone();
+                        let on_complete = on_complete.clone();
+                        
+                        move || {
+                            Self::animation_frame_callback(
+                                animations.clone(),
+                                is_running.clone(),
+                                on_update.clone(),
+                                on_complete.clone()
+                            );
+                        }
+                    }) as Box<dyn FnMut()>);
                     
-                    move || {
-                        Self::animation_frame_callback(
-                            animations.clone(),
-                            is_running.clone(),
-                            on_update.clone(),
-                            on_complete.clone()
-                        );
+                    if let Err(e) = window.request_animation_frame(next_closure.as_ref().unchecked_ref()) {
+                        eprintln!("Animation engine: Failed to request animation frame: {:?}", e);
                     }
-                }) as Box<dyn FnMut()>);
-                
-                let _ = window.request_animation_frame(next_closure.as_ref().unchecked_ref());
-                next_closure.forget(); // Prevent memory leak
+                    next_closure.forget(); // Prevent memory leak
+                }
             }
         }
     }

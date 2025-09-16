@@ -18,6 +18,9 @@ pub mod reactive_motion_div;
 pub mod drag_motion_div;
 // pub mod reactive_motion_div_fixed; // Disabled due to threading issues
 pub mod simplified_event_handling;
+
+#[cfg(test)]
+mod memory_safety_test;
 pub mod utils;
 
 // Phase 2: Animation Engine Integration

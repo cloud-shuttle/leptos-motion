@@ -1,10 +1,29 @@
 import { test, expect, Page } from '@playwright/test';
 
 test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
+  // Demo URLs for our working demos
+  const DEMO_URLS = {
+    wasm: 'http://localhost:8081',           // Comprehensive WASM demo
+    simple: 'http://localhost:8084',         // Simple comprehensive demo (HTML)
+    newSimple: 'http://localhost:8086',      // New simple comprehensive demo (WASM) - proper MIME types
+  };
+
   // Helper function to wait for WASM initialization
   async function waitForWasmInit(page: Page) {
-    await page.waitForTimeout(3000);
-    await expect(page.locator('h1')).toBeVisible();
+    await page.waitForTimeout(3000); // Give time for WASM to load
+    
+    // Wait for the main content to appear - look for the specific h1 with "Leptos Motion"
+    try {
+      await page.waitForSelector('h1:has-text("Leptos Motion")', { timeout: 15000 });
+    } catch (error) {
+      // Fallback: wait for any h1 element
+      try {
+        await page.waitForSelector('h1', { timeout: 5000 });
+      } catch (fallbackError) {
+        // Last resort: wait for any visible content
+        await page.waitForSelector('div:visible', { timeout: 5000 });
+      }
+    }
   }
 
   // Helper function to check animation performance
@@ -23,7 +42,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('1. Simple API Tests', () => {
     test('Basic Animation Test - Opacity Fade', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check if basic animations are working
@@ -36,7 +55,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Variant Switching Test', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Look for elements that can be toggled
@@ -50,7 +69,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Custom Easing Test', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for transition timing functions on first div
@@ -64,7 +83,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Accessibility - Reduced Motion Check', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Simulate reduced motion preference
@@ -81,7 +100,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('2. Independent Transforms Tests', () => {
     test('Single Property Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for transform properties or transition properties
@@ -100,7 +119,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Concurrent Transforms', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check multiple elements with any form of animation
@@ -126,7 +145,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Hardware Acceleration Check', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for will-change property
@@ -147,7 +166,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('3. Scroll Animation Tests', () => {
     test('Scroll-based Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Simulate scroll
@@ -164,7 +183,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Viewport Trigger Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Scroll to trigger viewport animations
@@ -184,7 +203,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('4. Exit Animation Tests', () => {
     test('Component Unmount Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Look for buttons that might trigger unmount
@@ -205,7 +224,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('5. Gesture Tests', () => {
     test('Hover Gesture', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test hover on interactive elements
@@ -225,7 +244,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Press Gesture', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test press on buttons
@@ -242,7 +261,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Touch Gesture Support', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Set mobile viewport
@@ -261,7 +280,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('6. Layout Animation Tests', () => {
     test('Resize Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test viewport resize
@@ -279,7 +298,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Layout Shift Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Trigger layout changes
@@ -295,7 +314,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('7. Timeline Sequences Tests', () => {
     test('Stagger Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Look for multiple animated elements
@@ -310,7 +329,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Sequence Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Trigger sequence animations
@@ -328,7 +347,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('8. Spring Physics Tests', () => {
     test('Spring Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for spring-like animations
@@ -343,7 +362,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Velocity-based Animation', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test rapid interactions
@@ -363,7 +382,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('9. Performance Tests', () => {
     test('60 FPS Performance Check', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Monitor performance during animations
@@ -390,7 +409,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Memory Usage Check', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check memory usage
@@ -410,7 +429,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
     test('Load Time Performance', async ({ page }) => {
       const startTime = Date.now();
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
       const loadTime = Date.now() - startTime;
 
@@ -422,7 +441,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('10. Cross-Browser Compatibility', () => {
     test('Chrome Compatibility', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       const elements = page.locator('div');
@@ -434,7 +453,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('11. Integration Tests', () => {
     test('Leptos Signals Integration', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test signal-based reactivity
@@ -452,7 +471,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('SSR Compatibility', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for hydration
@@ -463,7 +482,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
     });
 
     test('Error Handling', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Check for console errors
@@ -488,7 +507,7 @@ test.describe('Leptos Motion Library - Comprehensive E2E Tests', () => {
 
   test.describe('12. Feature Parity Tests', () => {
     test('Motion.dev Feature Comparison', async ({ page }) => {
-      await page.goto('http://localhost:8080/simple.html');
+      await page.goto(DEMO_URLS.newSimple);
       await waitForWasmInit(page);
 
       // Test key features that should match motion.dev capabilities

@@ -1,0 +1,26 @@
+[package]
+name = "motion-showcase-working"
+version.workspace = true
+edition.workspace = true
+description = "Comprehensive showcase of Leptos Motion features"
+license = "MIT"
+
+[dependencies]
+leptos-motion = { path = "../../crates/leptos-motion", features = ["csr", "minimal"], default-features = false }
+leptos = { workspace = true, features = ["csr"] }
+leptos_meta = { workspace = true }
+leptos_router = { workspace = true }
+log.workspace = true
+
+# CSS and styling
+tailwind-rs-core.workspace = true
+tailwind-rs-wasm = "0.5.0"
+
+web-sys.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+console_log.workspace = true
+console_error_panic_hook.workspace = true
+
+[lib]
+crate-type = ["cdylib"]

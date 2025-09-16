@@ -54,13 +54,13 @@ leptos_router = "0.8.6"
 
 # Leptos Motion dependencies
 leptos-motion-core = { version = "1.1.0" }
-leptos-motion-dom = { path = "crates/leptos-motion-dom" }
+leptos-motion-dom = { version = "1.1.0" }
 leptos-motion-gestures = { version = "1.1.0" }
 leptos-motion-layout = { version = "1.1.0" }
 leptos-motion-scroll = { version = "1.1.0" }
 leptos-motion-macros = { version = "1.1.0" }
 leptos-motion-studio = { path = "crates/leptos-motion-studio" }
-leptos-motion-webgl = { path = "crates/leptos-motion-webgl" }
+leptos-motion-webgl = { version = "1.1.0" }
 
 # WASM-specific dependencies
 getrandom = { version = "0.3", features = ["wasm_js"] }

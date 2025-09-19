@@ -46,6 +46,7 @@ pub mod geometry;
 pub mod lighting;
 pub mod material;
 pub mod model_loader;
+pub mod particles;
 pub mod physics;
 pub mod post_processing;
 pub mod renderer;

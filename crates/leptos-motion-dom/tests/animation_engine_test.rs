@@ -1,18 +1,18 @@
 //! Test animation engine functionality
 
-use leptos_motion_dom::animation_engine::AnimationEngine;
+use leptos_motion_dom::animation_engine::DomAnimationEngine;
 use leptos_motion_core::{Transition, Easing, RepeatConfig};
 use std::collections::HashMap;
 
 #[test]
 fn test_animation_engine_creation() {
-    let engine = AnimationEngine::new();
+    let engine = DomAnimationEngine::new();
     assert!(engine.get_all_values().is_empty());
 }
 
 #[test]
 fn test_animate_property() {
-    let mut engine = AnimationEngine::new();
+    let mut engine = DomAnimationEngine::new();
     
     let transition = Transition {
         duration: Some(1.0),
@@ -36,7 +36,7 @@ fn test_animate_property() {
 
 #[test]
 fn test_animate_multiple_properties() {
-    let mut engine = AnimationEngine::new();
+    let mut engine = DomAnimationEngine::new();
     
     let transition = Transition {
         duration: Some(1.0),
@@ -60,7 +60,7 @@ fn test_animate_multiple_properties() {
 
 #[test]
 fn test_stop_property() {
-    let mut engine = AnimationEngine::new();
+    let mut engine = DomAnimationEngine::new();
     
     let transition = Transition {
         duration: Some(1.0),
@@ -84,7 +84,7 @@ fn test_stop_property() {
 
 #[test]
 fn test_stop_all() {
-    let mut engine = AnimationEngine::new();
+    let mut engine = DomAnimationEngine::new();
     
     let transition = Transition {
         duration: Some(1.0),

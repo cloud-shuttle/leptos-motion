@@ -274,23 +274,26 @@ impl WebGLRenderer {
         let projection_matrix = camera.get_projection_matrix();
         
         // Render each object in the scene
-        for object in &scene.objects {
+        for object in &scene.root.children {
             if !object.visible {
                 continue;
             }
             
-            // Bind geometry
-            if let Some(geometry) = &object.geometry {
-                self.bind_geometry(geometry)?;
-            }
+            // TODO: Add geometry and material support to Object3D
+            // For now, skip geometry and material binding
+            // if let Some(geometry) = &object.geometry {
+            //     self.bind_geometry(geometry)?;
+            // }
+            // 
+            // if let Some(material) = &object.material {
+            //     self.bind_material(material)?;
+            // }
             
-            // Bind material
-            if let Some(material) = &object.material {
-                self.bind_material(material)?;
-            }
-            
-            // Set up shader uniforms
-            self.set_uniforms(&view_matrix, &projection_matrix, &object.transform)?;
+            // Set up shader uniforms using object's matrix
+            let transform = crate::transforms::Transform3D::with_position(
+                object.position[0], object.position[1], object.position[2]
+            );
+            self.set_uniforms(&view_matrix, &projection_matrix, &transform)?;
             
             // Draw the object
             self.draw_object(object)?;

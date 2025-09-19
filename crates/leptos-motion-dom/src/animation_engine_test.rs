@@ -3,7 +3,7 @@
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::animation_engine::AnimationEngine;
+    use crate::animation_engine::DomAnimationEngine;
     use leptos_motion_core::{Transition, Easing};
     use std::collections::HashMap;
     use std::rc::Rc;
@@ -11,13 +11,13 @@ mod tests {
 
     #[test]
     fn test_animation_engine_creation() {
-        let engine = AnimationEngine::new();
+        let engine = DomAnimationEngine::new();
         assert_eq!(engine.get_all_values().len(), 0);
     }
 
     #[test]
     fn test_animation_engine_basic_animation() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Set up a callback to track updates
         let updates = Rc::new(RefCell::new(Vec::new()));
@@ -44,7 +44,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_multiple_properties() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         let transition = Transition {
             duration: Some(0.1),
@@ -67,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_stop_property() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         let transition = Transition {
             duration: Some(0.1),
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_stop_all() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         let transition = Transition {
             duration: Some(0.1),

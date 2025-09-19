@@ -4,12 +4,12 @@
 
 #[cfg(test)]
 mod tests {
-    use super::super::animation_engine::AnimationEngine;
+    use super::super::animation_engine::DomAnimationEngine;
     use leptos_motion_core::{Transition, Easing};
 
     #[test]
     fn test_animation_engine_creation() {
-        let engine = AnimationEngine::new();
+        let engine = DomDomAnimationEngine::new();
         // Test that we can get values (should be empty initially)
         let values = engine.get_all_values();
         assert!(values.is_empty());
@@ -17,7 +17,7 @@ mod tests {
 
     #[test]
     fn test_animate_property_validation() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Test empty property name
         let result = engine.animate_property("".to_string(), 0.0, 100.0, Transition::default());
@@ -30,7 +30,7 @@ mod tests {
 
     #[test]
     fn test_animate_property_finite_values() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Test infinite values
         let result = engine.animate_property("opacity".to_string(), f64::INFINITY, 1.0, Transition::default());
@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_animate_property_long_name() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Test very long property name
         let long_name = "a".repeat(2000);
@@ -57,7 +57,7 @@ mod tests {
 
     #[test]
     fn test_animate_properties_validation() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         let mut properties = std::collections::HashMap::new();
         properties.insert("opacity".to_string(), (0.0, 1.0, Transition::default()));
@@ -69,7 +69,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_memory_safety() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Test multiple animations
         for i in 0..100 {
@@ -85,7 +85,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_stop_and_start() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Start an animation
         let result = engine.animate_property("opacity".to_string(), 0.0, 1.0, Transition::default());
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_animation_engine_get_current_values() {
-        let mut engine = AnimationEngine::new();
+        let mut engine = DomAnimationEngine::new();
         
         // Start an animation
         let result = engine.animate_property("opacity".to_string(), 0.0, 1.0, Transition::default());

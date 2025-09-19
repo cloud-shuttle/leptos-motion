@@ -54,6 +54,7 @@ pub mod scene;
 pub mod shader;
 pub mod shadow_mapping;
 pub mod texture;
+pub mod transforms;
 pub mod utils;
 
 #[cfg(test)]

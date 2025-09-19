@@ -279,3 +279,6 @@ impl Default for Scene {
         Self::new()
     }
 }
+
+/// Type alias for SceneObject (for compatibility with renderer)
+pub type SceneObject = Object3D;

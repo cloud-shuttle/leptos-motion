@@ -180,6 +180,77 @@ impl ShaderManager {
     pub fn get_program(&mut self, name: &str) -> Option<&mut ShaderProgram> {
         self.programs.get_mut(name)
     }
+    
+    /// Get current active program
+    pub fn get_current_program(&mut self) -> Option<&mut ShaderProgram> {
+        // For now, return the first program as current
+        // In a real implementation, this would track the currently bound program
+        self.programs.values_mut().next()
+    }
+    
+    /// Set lighting uniforms for the current program
+    pub fn set_lighting_uniforms(&mut self, context: &WebGl2RenderingContext, lighting_manager: &crate::lighting::LightingManager) -> Result<()> {
+        if let Some(program) = self.get_current_program() {
+            // Set ambient light uniforms
+            let ambient_count = lighting_manager.ambient_lights.len() as i32;
+            if let Some(location) = program.get_uniform_location(context, "uAmbientLightCount") {
+                context.uniform1i(Some(location), ambient_count);
+            }
+            
+            // Set directional light uniforms
+            let directional_count = lighting_manager.directional_lights.len() as i32;
+            if let Some(location) = program.get_uniform_location(context, "uDirectionalLightCount") {
+                context.uniform1i(Some(location), directional_count);
+            }
+            
+            // Set point light uniforms
+            let point_count = lighting_manager.point_lights.len() as i32;
+            if let Some(location) = program.get_uniform_location(context, "uPointLightCount") {
+                context.uniform1i(Some(location), point_count);
+            }
+            
+            // Set spot light uniforms
+            let spot_count = lighting_manager.spot_lights.len() as i32;
+            if let Some(location) = program.get_uniform_location(context, "uSpotLightCount") {
+                context.uniform1i(Some(location), spot_count);
+            }
+            
+            // Set individual light data
+            for (i, (_, ambient_light)) in lighting_manager.ambient_lights.iter().enumerate() {
+                let uniform_name = format!("uAmbientLights[{}].color", i);
+                if let Some(location) = program.get_uniform_location(context, &uniform_name) {
+                    let color = ambient_light.light.color.as_rgb_array();
+                    unsafe {
+                        let array = js_sys::Float32Array::view(&color);
+                        context.uniform3fv_with_f32_array(Some(location), &array);
+                    }
+                }
+            }
+            
+            for (i, (_, directional_light)) in lighting_manager.directional_lights.iter().enumerate() {
+                let color_uniform = format!("uDirectionalLights[{}].color", i);
+                let direction_uniform = format!("uDirectionalLights[{}].direction", i);
+                
+                if let Some(location) = program.get_uniform_location(context, &color_uniform) {
+                    let color = directional_light.light.color.as_rgb_array();
+                    unsafe {
+                        let array = js_sys::Float32Array::view(&color);
+                        context.uniform3fv_with_f32_array(Some(location), &array);
+                    }
+                }
+                
+                if let Some(location) = program.get_uniform_location(context, &direction_uniform) {
+                    let direction = directional_light.direction;
+                    unsafe {
+                        let array = js_sys::Float32Array::view(&direction);
+                        context.uniform3fv_with_f32_array(Some(location), &array);
+                    }
+                }
+            }
+        }
+        
+        Ok(())
+    }
 
     /// Create default shader programs
     pub fn create_default_programs(&mut self) -> Result<()> {

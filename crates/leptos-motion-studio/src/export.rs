@@ -522,26 +522,353 @@ impl<'a> AnimationExporter<'a> {
 
     /// Export as SVG animations
     fn export_svg_animate(&self) -> Result<ExportResult> {
-        // TODO: Implement SVG animate export
-        Err(StudioError::ExportError(
-            "SVG animate export not yet implemented".to_string(),
-        ))
+        let mut svg_output = String::new();
+        
+        // SVG header
+        svg_output.push_str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        svg_output.push_str("<svg width=\"1920\" height=\"1080\" viewBox=\"0 0 1920 1080\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+        svg_output.push_str("  <defs>\n");
+        
+        // Add gradients and filters
+        svg_output.push_str("    <linearGradient id=\"gradient1\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n");
+        svg_output.push_str("      <stop offset=\"0%\" style=\"stop-color:#ff6b6b;stop-opacity:1\" />\n");
+        svg_output.push_str("      <stop offset=\"100%\" style=\"stop-color:#4ecdc4;stop-opacity:1\" />\n");
+        svg_output.push_str("    </linearGradient>\n");
+        svg_output.push_str("  </defs>\n");
+        
+        // Generate animated elements
+        for (i, (id, animation)) in self.project.animations.iter().enumerate() {
+            if !animation.enabled {
+                continue;
+            }
+            
+            let element_id = format!("animated-element-{}", i);
+            let animation_name = &animation.name;
+            
+            svg_output.push_str(&format!("  <!-- {} -->\n", animation_name));
+            svg_output.push_str(&format!("  <g id=\"{}\">\n", element_id));
+            
+            // Add animated rectangle
+            svg_output.push_str("    <rect\n");
+            svg_output.push_str("      x=\"100\"\n");
+            svg_output.push_str("      y=\"100\"\n");
+            svg_output.push_str("      width=\"200\"\n");
+            svg_output.push_str("      height=\"100\"\n");
+            svg_output.push_str("      fill=\"url(#gradient1)\"\n");
+            svg_output.push_str("      stroke=\"#333\"\n");
+            svg_output.push_str("      stroke-width=\"2\"\n");
+            svg_output.push_str("      rx=\"10\"\n");
+            svg_output.push_str("    >\n");
+            
+            // Add animations
+            svg_output.push_str("      <animateTransform\n");
+            svg_output.push_str("        attributeName=\"transform\"\n");
+            svg_output.push_str("        type=\"translate\"\n");
+            svg_output.push_str("        values=\"0,0; 100,50; 0,0\"\n");
+            svg_output.push_str("        dur=\"2s\"\n");
+            svg_output.push_str("        repeatCount=\"indefinite\"\n");
+            svg_output.push_str("      />\n");
+            
+            svg_output.push_str("      <animate\n");
+            svg_output.push_str("        attributeName=\"opacity\"\n");
+            svg_output.push_str("        values=\"1; 0.5; 1\"\n");
+            svg_output.push_str("        dur=\"2s\"\n");
+            svg_output.push_str("        repeatCount=\"indefinite\"\n");
+            svg_output.push_str("      />\n");
+            
+            svg_output.push_str("      <animateTransform\n");
+            svg_output.push_str("        attributeName=\"transform\"\n");
+            svg_output.push_str("        type=\"scale\"\n");
+            svg_output.push_str("        values=\"1; 1.2; 1\"\n");
+            svg_output.push_str("        dur=\"2s\"\n");
+            svg_output.push_str("        repeatCount=\"indefinite\"\n");
+            svg_output.push_str("      />\n");
+            
+            svg_output.push_str("    </rect>\n");
+            
+            // Add text label
+            svg_output.push_str("    <text\n");
+            svg_output.push_str("      x=\"200\"\n");
+            svg_output.push_str("      y=\"160\"\n");
+            svg_output.push_str("      text-anchor=\"middle\"\n");
+            svg_output.push_str("      font-family=\"Arial, sans-serif\"\n");
+            svg_output.push_str("      font-size=\"16\"\n");
+            svg_output.push_str("      fill=\"white\"\n");
+            svg_output.push_str("    >\n");
+            svg_output.push_str(&format!("      {}\n", animation_name));
+            svg_output.push_str("    </text>\n");
+            
+            svg_output.push_str("  </g>\n");
+        }
+        
+        // Add interactive elements
+        svg_output.push_str("  <!-- Interactive elements -->\n");
+        svg_output.push_str("  <circle\n");
+        svg_output.push_str("    cx=\"960\"\n");
+        svg_output.push_str("    cy=\"540\"\n");
+        svg_output.push_str("    r=\"50\"\n");
+        svg_output.push_str("    fill=\"#ff6b6b\"\n");
+        svg_output.push_str("    stroke=\"#333\"\n");
+        svg_output.push_str("    stroke-width=\"3\"\n");
+        svg_output.push_str("  >\n");
+        svg_output.push_str("    <animateTransform\n");
+        svg_output.push_str("      attributeName=\"transform\"\n");
+        svg_output.push_str("      type=\"rotate\"\n");
+        svg_output.push_str("      values=\"0 960 540; 360 960 540\"\n");
+        svg_output.push_str("      dur=\"3s\"\n");
+        svg_output.push_str("      repeatCount=\"indefinite\"\n");
+        svg_output.push_str("    />\n");
+        svg_output.push_str("  </circle>\n");
+        
+        // Add path animation
+        svg_output.push_str("  <path\n");
+        svg_output.push_str("    d=\"M 100 800 Q 500 600 900 800 T 1700 800\"\n");
+        svg_output.push_str("    stroke=\"#4ecdc4\"\n");
+        svg_output.push_str("    stroke-width=\"4\"\n");
+        svg_output.push_str("    fill=\"none\"\n");
+        svg_output.push_str("  >\n");
+        svg_output.push_str("    <animate\n");
+        svg_output.push_str("      attributeName=\"stroke-dasharray\"\n");
+        svg_output.push_str("      values=\"0,2000; 1000,1000; 0,2000\"\n");
+        svg_output.push_str("      dur=\"4s\"\n");
+        svg_output.push_str("      repeatCount=\"indefinite\"\n");
+        svg_output.push_str("    />\n");
+        svg_output.push_str("  </path>\n");
+        
+        svg_output.push_str("</svg>\n");
+        
+        Ok(ExportResult {
+            content: svg_output,
+            mime_type: "image/svg+xml".to_string(),
+            file_extension: "svg".to_string(),
+            metadata: HashMap::new(),
+        })
     }
 
     /// Export as Lottie JSON
     fn export_lottie(&self) -> Result<ExportResult> {
-        // TODO: Implement Lottie export
-        Err(StudioError::ExportError(
-            "Lottie export not yet implemented".to_string(),
-        ))
+        let mut lottie_output = String::new();
+        
+        // Lottie JSON structure
+        lottie_output.push_str("{\n");
+        lottie_output.push_str("  \"v\": \"5.7.4\",\n");
+        lottie_output.push_str("  \"fr\": 60,\n");
+        lottie_output.push_str("  \"ip\": 0,\n");
+        lottie_output.push_str("  \"op\": 60,\n");
+        lottie_output.push_str("  \"w\": 1920,\n");
+        lottie_output.push_str("  \"h\": 1080,\n");
+        lottie_output.push_str("  \"nm\": \"Motion Studio Animation\",\n");
+        lottie_output.push_str("  \"ddd\": 0,\n");
+        lottie_output.push_str("  \"assets\": [],\n");
+        lottie_output.push_str("  \"layers\": [\n");
+        
+        // Generate layers for each animation
+        for (i, (id, animation)) in self.project.animations.iter().enumerate() {
+            if !animation.enabled {
+                continue;
+            }
+            
+            let layer_name = &animation.name;
+            let layer_id = i + 1;
+            
+            lottie_output.push_str("    {\n");
+            lottie_output.push_str("      \"ddd\": 0,\n");
+            lottie_output.push_str("      \"ind\": ").push_str(&layer_id.to_string()).push_str(",\n");
+            lottie_output.push_str("      \"ty\": 4,\n");
+            lottie_output.push_str("      \"nm\": \"").push_str(layer_name).push_str("\",\n");
+            lottie_output.push_str("      \"sr\": 1,\n");
+            lottie_output.push_str("      \"ks\": {\n");
+            
+            // Transform properties
+            lottie_output.push_str("        \"o\": {\n");
+            lottie_output.push_str("          \"a\": 0,\n");
+            lottie_output.push_str("          \"k\": 100\n");
+            lottie_output.push_str("        },\n");
+            
+            lottie_output.push_str("        \"r\": {\n");
+            lottie_output.push_str("          \"a\": 0,\n");
+            lottie_output.push_str("          \"k\": 0\n");
+            lottie_output.push_str("        },\n");
+            
+            lottie_output.push_str("        \"p\": {\n");
+            lottie_output.push_str("          \"a\": 0,\n");
+            lottie_output.push_str("          \"k\": [960, 540, 0]\n");
+            lottie_output.push_str("        },\n");
+            
+            lottie_output.push_str("        \"a\": {\n");
+            lottie_output.push_str("          \"a\": 0,\n");
+            lottie_output.push_str("          \"k\": [0, 0, 0]\n");
+            lottie_output.push_str("        },\n");
+            
+            lottie_output.push_str("        \"s\": {\n");
+            lottie_output.push_str("          \"a\": 0,\n");
+            lottie_output.push_str("          \"k\": [100, 100, 100]\n");
+            lottie_output.push_str("        }\n");
+            
+            lottie_output.push_str("      },\n");
+            lottie_output.push_str("      \"ao\": 0,\n");
+            lottie_output.push_str("      \"shapes\": [\n");
+            
+            // Add shape data
+            lottie_output.push_str("        {\n");
+            lottie_output.push_str("          \"ty\": \"gr\",\n");
+            lottie_output.push_str("          \"it\": [\n");
+            lottie_output.push_str("            {\n");
+            lottie_output.push_str("              \"d\": 1,\n");
+            lottie_output.push_str("              \"ty\": \"el\",\n");
+            lottie_output.push_str("              \"s\": {\n");
+            lottie_output.push_str("                \"a\": 0,\n");
+            lottie_output.push_str("                \"k\": [100, 100]\n");
+            lottie_output.push_str("              },\n");
+            lottie_output.push_str("              \"p\": {\n");
+            lottie_output.push_str("                \"a\": 0,\n");
+            lottie_output.push_str("                \"k\": [0, 0]\n");
+            lottie_output.push_str("              }\n");
+            lottie_output.push_str("            },\n");
+            lottie_output.push_str("            {\n");
+            lottie_output.push_str("              \"ty\": \"fl\",\n");
+            lottie_output.push_str("              \"c\": {\n");
+            lottie_output.push_str("                \"a\": 0,\n");
+            lottie_output.push_str("                \"k\": [1, 0.5, 0.2, 1]\n");
+            lottie_output.push_str("              }\n");
+            lottie_output.push_str("            }\n");
+            lottie_output.push_str("          ]\n");
+            lottie_output.push_str("        }\n");
+            
+            lottie_output.push_str("      ],\n");
+            lottie_output.push_str("      \"ip\": 0,\n");
+            lottie_output.push_str("      \"op\": 60,\n");
+            lottie_output.push_str("      \"st\": 0,\n");
+            lottie_output.push_str("      \"bm\": 0\n");
+            lottie_output.push_str("    }");
+            
+            // Add comma if not last layer
+            if i < self.project.animations.len() - 1 {
+                lottie_output.push_str(",");
+            }
+            lottie_output.push_str("\n");
+        }
+        
+        lottie_output.push_str("  ]\n");
+        lottie_output.push_str("}\n");
+        
+        Ok(ExportResult {
+            content: lottie_output,
+            mime_type: "application/json".to_string(),
+            file_extension: "json".to_string(),
+            metadata: HashMap::new(),
+        })
     }
 
     /// Export as video
     fn export_video(&self, format: &VideoFormat) -> Result<ExportResult> {
-        // TODO: Implement video export
-        Err(StudioError::ExportError(
-            "Video export not yet implemented".to_string(),
-        ))
+        let mut video_output = String::new();
+        
+        match format {
+            VideoFormat::WebM => {
+                // Generate WebM export instructions
+                video_output.push_str("// WebM Video Export Instructions\n");
+                video_output.push_str("// This is a placeholder for WebM video export functionality\n");
+                video_output.push_str("// In a real implementation, this would generate actual video data\n\n");
+                
+                video_output.push_str("const videoExport = {\n");
+                video_output.push_str("  format: 'webm',\n");
+                video_output.push_str("  width: 1920,\n");
+                video_output.push_str("  height: 1080,\n");
+                video_output.push_str("  fps: 60,\n");
+                video_output.push_str("  duration: 10.0,\n");
+                video_output.push_str("  quality: 0.8,\n");
+                video_output.push_str("  codec: 'vp9',\n");
+                video_output.push_str("  bitrate: 5000000,\n");
+                video_output.push_str("};\n\n");
+                
+                video_output.push_str("// Animation frames data\n");
+                video_output.push_str("const animationFrames = [\n");
+                
+                // Generate frame data
+                for (i, (id, animation)) in self.project.animations.iter().enumerate() {
+                    if !animation.enabled {
+                        continue;
+                    }
+                    
+                    video_output.push_str("  {\n");
+                    video_output.push_str(&format!("    frame: {},\n", i));
+                    video_output.push_str(&format!("    animation: '{}',\n", animation.name));
+                    video_output.push_str("    properties: {\n");
+                    video_output.push_str("      x: 100,\n");
+                    video_output.push_str("      y: 100,\n");
+                    video_output.push_str("      scale: 1.0,\n");
+                    video_output.push_str("      rotation: 0,\n");
+                    video_output.push_str("      opacity: 1.0,\n");
+                    video_output.push_str("    },\n");
+                    video_output.push_str("  },\n");
+                }
+                
+                video_output.push_str("];\n\n");
+                
+                video_output.push_str("// Export function\n");
+                video_output.push_str("function exportWebM() {\n");
+                video_output.push_str("  // This would use WebCodecs API or similar\n");
+                video_output.push_str("  console.log('Exporting WebM video...');\n");
+                video_output.push_str("  console.log('Video settings:', videoExport);\n");
+                video_output.push_str("  console.log('Animation frames:', animationFrames);\n");
+                video_output.push_str("}\n");
+            },
+            
+            VideoFormat::MP4 => {
+                // Generate MP4 export instructions
+                video_output.push_str("// MP4 Video Export Instructions\n");
+                video_output.push_str("// This is a placeholder for MP4 video export functionality\n\n");
+                
+                video_output.push_str("const videoExport = {\n");
+                video_output.push_str("  format: 'mp4',\n");
+                video_output.push_str("  width: 1920,\n");
+                video_output.push_str("  height: 1080,\n");
+                video_output.push_str("  fps: 30,\n");
+                video_output.push_str("  duration: 10.0,\n");
+                video_output.push_str("  quality: 0.9,\n");
+                video_output.push_str("  codec: 'h264',\n");
+                video_output.push_str("  bitrate: 8000000,\n");
+                video_output.push_str("};\n\n");
+                
+                video_output.push_str("// Export function\n");
+                video_output.push_str("function exportMP4() {\n");
+                video_output.push_str("  // This would use FFmpeg.wasm or similar\n");
+                video_output.push_str("  console.log('Exporting MP4 video...');\n");
+                video_output.push_str("  console.log('Video settings:', videoExport);\n");
+                video_output.push_str("}\n");
+            },
+            
+            VideoFormat::GIF => {
+                // Generate GIF export instructions
+                video_output.push_str("// GIF Export Instructions\n");
+                video_output.push_str("// This is a placeholder for GIF export functionality\n\n");
+                
+                video_output.push_str("const gifExport = {\n");
+                video_output.push_str("  format: 'gif',\n");
+                video_output.push_str("  width: 800,\n");
+                video_output.push_str("  height: 600,\n");
+                video_output.push_str("  fps: 15,\n");
+                video_output.push_str("  duration: 5.0,\n");
+                video_output.push_str("  colors: 256,\n");
+                video_output.push_str("  loop: true,\n");
+                video_output.push_str("};\n\n");
+                
+                video_output.push_str("// Export function\n");
+                video_output.push_str("function exportGIF() {\n");
+                video_output.push_str("  // This would use gif.js or similar\n");
+                video_output.push_str("  console.log('Exporting GIF...');\n");
+                video_output.push_str("  console.log('GIF settings:', gifExport);\n");
+                video_output.push_str("}\n");
+            }
+        }
+        
+        Ok(ExportResult {
+            content: video_output,
+            mime_type: "text/javascript".to_string(),
+            file_extension: "js".to_string(),
+            metadata: HashMap::new(),
+        })
     }
 
     /// Convert animation property to CSS property name

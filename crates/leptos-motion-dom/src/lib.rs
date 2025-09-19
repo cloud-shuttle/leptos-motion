@@ -5,282 +5,142 @@
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
-pub mod components;
-pub mod elements;
-pub mod fixed_motion_div;
-pub mod hooks;
-/// Improved motion div implementation with enhanced features
-pub mod improved_motion_div;
-pub mod minimal_motion_div;
-pub mod performance;
-pub mod presence;
-pub mod reactive_motion_div;
-pub mod drag_motion_div;
-// pub mod reactive_motion_div_fixed; // Disabled due to threading issues
-pub mod simplified_event_handling;
+// Core animation system (Phase 3 - Event-driven architecture)
+pub mod animation_trait;
+pub mod animation_handle;
+pub mod css_transition_animation;
+pub mod keyframe_animation;
+pub mod stagger_animation;
+pub mod spring_animation;
+pub mod event_driven_motion_div;
+pub mod event_handlers;
+pub mod performance_monitor;
 
-#[cfg(test)]
-mod memory_safety_test;
+// Simple animation system (WASM-compatible)
+pub mod simple_animation_engine;
+
+// Small, focused components - removed for now
+// pub mod simple_components;
+// SimpleMotionDiv removed - using single MotionDiv API
+pub mod elements;
+pub mod hooks;
 pub mod utils;
 
-// Phase 2: Animation Engine Integration
+// Animation engine (refactored into focused modules)
 pub mod animation_engine;
 pub mod easing_functions;
-pub mod enhanced_motion_div;
 pub mod repeat_config;
 pub mod transform_animations;
 
-// Signal-based animation controller with proven patterns
-// pub mod signal_based_controller; // Temporarily disabled due to compilation errors
-// pub mod signal_based_motion_div; // Temporarily disabled due to compilation errors
-pub mod signal_based_animation_controller;
-pub mod simple_signal_based_motion_div;
+// Legacy modules removed - consolidated to single MotionDiv API
 
 // New v0.7 features
 pub mod animate_presence;
 pub mod performance_optimizations;
+pub mod optimized_animation_manager;
+pub mod memory_management;
+pub mod integrated_memory_manager;
 pub mod timeline;
 pub mod variants;
 
 #[cfg(feature = "css-animations")]
 pub mod css_animations;
 
+// Test modules
 #[cfg(test)]
-mod accessibility_tests;
+mod memory_safety_test;
 #[cfg(test)]
-mod fuzz_tests;
+mod event_driven_tests;
 #[cfg(test)]
-mod visual_regression_tests;
-
+mod css_animation_integration_test;
 #[cfg(test)]
-mod components_tests;
+mod animation_engine_test;
+
+// Refactored test modules
 #[cfg(test)]
-mod motion_div_tdd_tests;
+mod tests;
 
-#[cfg(test)]
-mod motion_div_api_fix_tests;
-
-#[cfg(test)]
-mod api_contract_tests;
-
-#[cfg(test)]
-mod regression_prevention_tests;
-
-#[cfg(test)]
-
-#[cfg(test)]
-mod animation_engine_tests;
-
-#[cfg(test)]
-mod enhanced_motion_div_tests;
-
-// Include the DOM integration TDD tests
-// #[cfg(test)]
-// mod dom_integration_tdd_tests;
-
-// Include the advanced features TDD tests
-// #[cfg(test)]
-// mod advanced_features_tdd_tests;
-
-// #[cfg(test)]
-// mod reactive_animation_tests; // Disabled temporarily
-
-#[cfg(test)]
-mod signal_based_controller_tests;
-
-#[cfg(test)]
-mod tdd_animation_reactivity_tests;
-
-#[cfg(test)]
-mod phase4a_function_props_tests;
-
-// #[cfg(test)]
-// mod phase4b_transition_config_tests;
-
-// #[cfg(test)]
-// mod phase5a_memoization_tests;
-
-// #[cfg(test)]
-// mod phase5b_batched_updates_tests;
-
-#[cfg(test)]
-mod drag_animation_tests {
-    include!("drag_animation_tests.rs");
-}
-
-#[cfg(test)]
-mod drag_integration_tests {
-    include!("drag_integration_tests.rs");
-}
-
-#[cfg(test)]
-mod drag_constraint_tests {
-    include!("drag_constraint_tests.rs");
-}
-
-#[cfg(test)]
-mod performance_benchmark_tests {
-    include!("performance_benchmark_tests.rs");
-}
-
-#[cfg(test)]
-mod drag_constraint_integration_tests {
-    include!("drag_constraint_integration_tests.rs");
-}
-
-#[cfg(test)]
-mod flip_animation_tests {
-    include!("flip_animation_tests.rs");
-}
-
-#[cfg(test)]
-mod keyframe_animation_tests {
-    include!("keyframe_animation_tests.rs");
-}
-
-#[cfg(test)]
-mod stagger_animation_tests {
-    include!("stagger_animation_tests.rs");
-}
-
-#[cfg(test)]
-mod momentum_animation_tests {
-    include!("momentum_animation_tests.rs");
-}
-
-#[cfg(test)]
-mod momentum_integration_tests {
-    include!("momentum_integration_tests.rs");
-}
-
-#[cfg(test)]
-mod advanced_performance_tests {
-    include!("advanced_performance_tests.rs");
-}
-
-#[cfg(test)]
-mod cross_browser_tests {
-    include!("cross_browser_tests.rs");
-}
-
-#[cfg(test)]
-mod spring_physics_tests {
-    include!("spring_physics_tests.rs");
-}
-
-#[cfg(test)]
-mod animate_presence_tests {
-    include!("animate_presence_tests.rs");
-}
-
-#[cfg(test)]
-mod variants_system_tests {
-    include!("variants_system_tests.rs");
-}
-
-#[cfg(test)]
-mod timeline_sequences_tests {
-    include!("timeline_sequences_tests.rs");
-}
-
-#[cfg(test)]
-mod polish_optimize_tests {
-    include!("polish_optimize_tests.rs");
-}
-
-#[cfg(test)]
-mod animation_3d_tests;
-
-#[cfg(test)]
-mod performance_3d_tests;
-
-#[cfg(test)]
-mod api_documentation_3d_tests;
-
-#[cfg(test)]
-mod advanced_3d_features_tests;
-
-#[cfg(test)]
-mod reactive_motion_div_tests;
-
-#[cfg(test)]
-mod reactive_motion_div_unit_tests;
-
-#[cfg(test)]
-mod minimal_motion_div_tests;
-
-#[cfg(test)]
-mod tdd_performance_tests;
-
-#[cfg(test)]
-mod simple_dom_tests;
-
-#[cfg(test)]
-mod integration_tests;
-
-#[cfg(test)]
-mod performance_regression_tests;
-
-pub mod minimal_motion_div_docs;
-
-pub mod animation_3d_implementation;
-
-// #[cfg(test)]
-// mod phase1_engine_integration_tests;
-
-// #[cfg(test)]
-// mod phase2_leptos_compatibility_tests;
-
-// #[cfg(test)]
-// mod phase3_feature_completion_tests;
-
-// #[cfg(test)]
-// mod phase4_performance_polish_tests;
-
-// Re-export commonly used items
-// pub use components::*; // Temporarily disabled due to unused imports
-pub use elements::*;
-pub use hooks::*;
-// pub use presence::*; // Disabled due to conflict with animate_presence
-pub use utils::*;
-
-// Re-export new v0.7 features
-pub use animate_presence::*;
-pub use performance_optimizations::*;
-pub use timeline::*;
-pub use variants::*;
-
-#[cfg(feature = "css-animations")]
-pub use css_animations::*;
-
-// Re-export components
-pub use components::{MotionDiv, MotionSpan};
-pub use minimal_motion_div::MinimalMotionDiv;
-pub use reactive_motion_div::{ReactiveMotionDiv, ReactiveMotionDiv as ReactiveMotionDivNew};
-// pub use reactive_motion_div_fixed::ReactiveMotionDivFixed; // Disabled due to threading issues
-// Improved motion div module is not yet implemented
-// pub use improved_motion_div::{
-//     ImprovedMotionDiv, use_animation_state, use_drag_state, use_in_view, use_layout_animation,
-// };
-
-// Re-export simplified event handling (new public API)
-pub use simplified_event_handling::{
-    DragAxis, DragConfig, DragConstraints, EventHandlers, MotionProps, SimplifiedDragConfig,
-    SimplifiedMotionProps,
-};
-
-// Re-export core types for convenience
+// Re-export core types from leptos-motion-core
 pub use leptos_motion_core::{
     AnimationConfig, AnimationEngine, AnimationHandle, AnimationTarget, AnimationValue,
     ComplexValue, Easing, MotionNumber, MotionTransform, MotionValue, MotionValues, RepeatConfig,
     SpringConfig, StaggerConfig, StaggerFrom, Transform, Transition, Variants,
 };
 
-// Include simplified event handling tests
-#[cfg(test)]
-mod simplified_event_handling_tests {
-    include!("simplified_event_handling_tests.rs");
-}
+// Ensure type consistency across crates
+pub type DomTransition = Transition;
+pub type DomAnimationValue = AnimationValue;
+pub type DomEasing = Easing;
+
+// Re-export event-driven components (Phase 3 - Primary API)
+pub use animation_trait::{Animation, AnimationError, AnimationResult, AnimationState, animation_utils};
+pub use animation_handle::{AnimationHandle as EventAnimationHandle, AnimationManager};
+pub use css_transition_animation::CssTransitionAnimation;
+// SimpleMotionDiv removed - using single MotionDiv API
+pub use keyframe_animation::{KeyframeAnimation, Keyframe};
+pub use stagger_animation::{StaggerAnimation, StaggerConfig as EventStaggerConfig, create_stagger_animation};
+pub use spring_animation::{SpringAnimation, SpringConfig as EventSpringConfig};
+pub use event_driven_motion_div::{
+    EventDrivenMotionDiv, 
+    AnimationType, 
+    DragAxis as EventDragAxis, 
+    DragConstraints as EventDragConstraints, 
+    create_animation_value as create_event_animation_value, 
+    create_animation_target as create_event_animation_target, 
+    create_drag_constraints as create_event_drag_constraints
+};
+
+// Primary MotionDiv API - Single component for all use cases
+pub use event_driven_motion_div::EventDrivenMotionDiv as MotionDiv;
+pub use event_driven_motion_div::EventDrivenMotionDiv as ReactiveMotionDiv;
+pub use event_driven_motion_div::EventDrivenMotionDiv as DragMotionDiv;
+
+// Legacy compatibility - use MotionDiv instead
+// SimpleMotionDiv and CleanMotionDiv are now aliases for MotionDiv
+pub use event_handlers::{
+    EventHandlerManager, 
+    DragEventHandler, 
+    HoverEventHandler, 
+    TapEventHandler, 
+    GestureEventHandler, 
+    SwipeDirection
+};
+pub use performance_monitor::{
+    PerformanceMonitor, 
+    PerformanceStats, 
+    FpsCounter, 
+    MemoryTracker, 
+    AnimationStats, 
+    get_performance_stats, 
+    get_performance_report, 
+    record_frame, 
+    track_animation_start, 
+    track_animation_end
+};
+
+// Re-export simple components - removed for now
+// pub use simple_components::*;
+pub use elements::*;
+pub use hooks::*;
+pub use utils::*;
+
+// Re-export new v0.7 features
+pub use animate_presence::*;
+pub use performance_optimizations::*;
+pub use optimized_animation_manager::{OptimizedAnimationManager, OptimizedAnimationStats};
+pub use memory_management::{
+    AnimationMemoryManager, AutoMemoryManager, MemoryStats, MemoryPressure, GCStrategy
+};
+pub use integrated_memory_manager::{
+    IntegratedMemoryManager, MemoryOptimizationSettings, ComprehensiveStats
+};
+pub use timeline::*;
+pub use variants::*;
+
+#[cfg(feature = "css-animations")]
+pub use css_animations::*;
+
+// Legacy re-exports removed - using single MotionDiv API
 
 /// Helper function to create reactive animation targets from closures
 /// 

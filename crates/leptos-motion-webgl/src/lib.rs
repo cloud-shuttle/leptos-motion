@@ -76,7 +76,7 @@ mod texture_tests;
 pub use camera::{Camera, OrthographicCamera, PerspectiveCamera};
 pub use error::{Result, WebGLError};
 pub use geometry::Geometry;
-pub use lighting::{AmbientLight, Color, DirectionalLight, LightManager, PointLight, SpotLight};
+pub use lighting::{AmbientLight, Color, DirectionalLight, LightingManager, PointLight, SpotLight};
 pub use material::{BasicMaterial, LambertMaterial, Material, PhongMaterial, StandardMaterial};
 pub use model_loader::{BoundingBox, Mesh, Model, ModelFormat, ModelLoadOptions, ModelLoader};
 pub use physics::{

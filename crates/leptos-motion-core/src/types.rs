@@ -9,6 +9,23 @@ use std::collections::HashMap;
 #[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct AnimationHandle(pub u64);
 
+impl AnimationHandle {
+    /// Create a new animation handle with the given ID
+    pub fn new(id: u64) -> Self {
+        Self(id)
+    }
+    
+    /// Get the next animation handle
+    pub fn next(self) -> Self {
+        Self(self.0 + 1)
+    }
+    
+    /// Get the handle ID
+    pub fn id(self) -> u64 {
+        self.0
+    }
+}
+
 /// Animation value types that can be animated
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]

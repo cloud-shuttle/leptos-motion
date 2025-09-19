@@ -4,7 +4,7 @@ use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
-use web_sys::{WebGl2RenderingContext, WebGlProgram, WebGlShader};
+use web_sys::{WebGl2RenderingContext, WebGlProgram, WebGlShader, WebGlUniformLocation};
 
 /// Shader type
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -27,8 +27,8 @@ impl ShaderType {
 pub struct ShaderProgram {
     /// WebGL program
     program: WebGlProgram,
-    /// Uniform locations cache (simplified for now)
-    uniform_locations: HashMap<String, Option<()>>,
+    /// Uniform locations cache
+    uniform_locations: HashMap<String, Option<WebGlUniformLocation>>,
     /// Attribute locations cache
     attribute_locations: HashMap<String, u32>,
 }
@@ -51,14 +51,12 @@ impl ShaderProgram {
     /// Get uniform location
     pub fn get_uniform_location(
         &mut self,
-        _context: &WebGl2RenderingContext,
+        context: &WebGl2RenderingContext,
         name: &str,
-    ) -> Option<&()> {
+    ) -> Option<&WebGlUniformLocation> {
         if !self.uniform_locations.contains_key(name) {
-            // TODO: Fix WebGL API call when web-sys is updated
-            // let location = context.get_uniform_location(&self.program, name);
-            // self.uniform_locations.insert(name.to_string(), location);
-            self.uniform_locations.insert(name.to_string(), None);
+            let location = context.get_uniform_location(&self.program, name);
+            self.uniform_locations.insert(name.to_string(), location);
         }
 
         self.uniform_locations

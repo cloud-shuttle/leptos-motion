@@ -28,6 +28,10 @@ pub enum WebGLError {
     #[error("Invalid WebGL operation: {0}")]
     InvalidOperation(String),
 
+    /// Invalid state error
+    #[error("Invalid state: {0}")]
+    InvalidState(String),
+
     /// Buffer operation failed
     #[error("Buffer operation failed: {0}")]
     BufferError(String),
@@ -104,6 +108,11 @@ impl WebGLError {
     /// Create an invalid operation error
     pub fn invalid_operation(msg: &str) -> Self {
         Self::InvalidOperation(msg.to_string())
+    }
+
+    /// Create an invalid state error
+    pub fn invalid_state(msg: &str) -> Self {
+        Self::InvalidState(msg.to_string())
     }
 
     /// Create a buffer error

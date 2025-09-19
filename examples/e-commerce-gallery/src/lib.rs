@@ -1,6 +1,4 @@
 use leptos::prelude::*;
-use leptos_motion::*;
-use std::collections::HashMap;
 
 #[component]
 fn App() -> impl IntoView {
@@ -39,18 +37,9 @@ fn ProductGallery() -> impl IntoView {
     view! {
         <div class="product-gallery">
             <div class="main-image-container">
-                <MotionDiv
-                    class="main-image".to_string()
-                    animate={
-                        let mut target = HashMap::new();
-                        target.insert("scale".to_string(), AnimationValue::Number(if is_zoomed.get() { 1.5 } else { 1.0 }));
-                        target
-                    }
-                    transition=Transition {
-                        duration: Some(0.3),
-                        ease: Easing::EaseInOut,
-                        ..Default::default()
-                    }
+                <div
+                    class="main-image"
+                    style=move || format!("transform: scale({}); transition: transform 0.3s ease-in-out;", if is_zoomed.get() { 1.5 } else { 1.0 })
                 >
                     <img
                         src=images[current_image.get()]
@@ -89,23 +78,17 @@ fn ProductGallery() -> impl IntoView {
                 {images_clone.into_iter().enumerate().map(|(i, src)| {
                     let is_active = move || current_image.get() == i;
                     view! {
-                        <MotionDiv
-                            class="thumbnail".to_string()
+                        <div
+                            class="thumbnail"
                             class:active=is_active
                             on:click=move |_| set_current_image.set(i)
-                            while_hover={
-                                let mut target = HashMap::new();
-                                target.insert("scale".to_string(), AnimationValue::Number(1.1));
-                                target
-                            }
-                            transition=Transition {
-                                duration: Some(0.2),
-                                ease: Easing::EaseOut,
-                                ..Default::default()
+                            style="transition: transform 0.2s ease-out;"
+                            on:mouseenter=move |_| {
+                                // Add hover effect via CSS
                             }
                         >
                             <img src=src alt=format!("Thumbnail {}", i + 1) />
-                        </MotionDiv>
+                        </div>
                     }
                 }).collect::<Vec<_>>()}
             </div>
@@ -163,36 +146,17 @@ fn ProductDetails() -> impl IntoView {
                 </div>
             </div>
 
-            <MotionDiv
-                class="add-to-cart-btn".to_string()
+            <div
+                class="add-to-cart-btn"
                 class:added=is_added_to_cart
                 on:click=add_to_cart
-                while_hover={
-                    let mut target = HashMap::new();
-                    target.insert("scale".to_string(), AnimationValue::Number(1.05));
-                    target.insert("boxShadow".to_string(), AnimationValue::String("0 8px 25px rgba(102, 126, 234, 0.4)".to_string()));
-                    target
-                }
-                while_tap={
-                    let mut target = HashMap::new();
-                    target.insert("scale".to_string(), AnimationValue::Number(0.95));
-                    target
-                }
-                animate={
-                    let mut target = HashMap::new();
-                    target.insert("backgroundColor".to_string(), AnimationValue::String(
-                        if is_added_to_cart.get() { "#4CAF50".to_string() } else { "#667eea".to_string() }
-                    ));
-                    target
-                }
-                transition=Transition {
-                    duration: Some(0.3),
-                    ease: Easing::EaseInOut,
-                    ..Default::default()
-                }
+                style=move || format!(
+                    "background-color: {}; transition: all 0.3s ease-in-out;",
+                    if is_added_to_cart.get() { "#4CAF50" } else { "#667eea" }
+                )
             >
                 {move || if is_added_to_cart.get() { "✓ Added to Cart!" } else { "Add to Cart" }}
-            </MotionDiv>
+            </div>
 
             <div class="features">
                 <h3>"Features"</h3>

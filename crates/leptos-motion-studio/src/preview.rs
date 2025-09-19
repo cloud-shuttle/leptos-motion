@@ -4,7 +4,7 @@ use crate::{
     // webgl::WebGLRenderer, // Temporarily disabled
     Result,
     StudioError,
-    pooling::AnimationPool,
+    pooling::{AnimationPool, PoolConfig},
     project::StudioProject,
     timeline::{AnimationProperty, AnimationValue, Timeline3D, KeyframeTrack},
     transforms::Transform3D,
@@ -54,7 +54,7 @@ impl LivePreview {
             project: None,
             active_animations: HashMap::new(),
             settings: PreviewSettings::default(),
-            animation_pool: AnimationPool::new(100),
+            animation_pool: AnimationPool::new(PoolConfig::default()).expect("Failed to create animation pool"),
             metrics: PreviewMetrics::default(),
             animation_frame_id: None,
             last_frame_time: 0.0,

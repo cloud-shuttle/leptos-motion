@@ -457,7 +457,7 @@ fn test_spot_light_shadow() {
 /// Test light manager creation
 #[wasm_bindgen_test]
 fn test_light_manager_creation() {
-    let manager = LightManager::new();
+    let manager = LightingManager::new();
 
     assert_eq!(manager.get_total_light_count(), 0);
     assert_eq!(manager.get_enabled_light_count(), 0);
@@ -472,28 +472,32 @@ fn test_light_manager_creation() {
 /// Test light manager operations
 #[wasm_bindgen_test]
 fn test_light_manager_operations() {
-    let mut manager = LightManager::new();
+    let mut manager = LightingManager::new();
 
     // Test adding lights
+    let ambient1 = AmbientLight::new("ambient1", Color::white(), 0.3);
     manager
-        .add_ambient_light("ambient1", Color::white(), 0.3)
+        .add_ambient_light(ambient1)
         .unwrap();
+    let sun = DirectionalLight::new("sun", Color::white(), 1.0, [0.0, -1.0, 0.0]);
     manager
-        .add_directional_light("sun", Color::white(), 1.0, [0.0, -1.0, 0.0])
+        .add_directional_light(sun)
         .unwrap();
+    let bulb = PointLight::new("bulb", Color::white(), 1.0, [0.0, 5.0, 0.0]);
     manager
-        .add_point_light("bulb", Color::white(), 1.0, [0.0, 5.0, 0.0])
+        .add_point_light(bulb)
         .unwrap();
+    let flashlight = SpotLight::new(
+        "flashlight",
+        Color::white(),
+        1.0,
+        [0.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        0.5,
+        1.0,
+    );
     manager
-        .add_spot_light(
-            "flashlight",
-            Color::white(),
-            1.0,
-            [0.0, 0.0, 0.0],
-            [0.0, -1.0, 0.0],
-            0.5,
-            1.0,
-        )
+        .add_spot_light(flashlight)
         .unwrap();
 
     assert_eq!(manager.get_total_light_count(), 4);
@@ -521,16 +525,18 @@ fn test_light_manager_operations() {
 /// Test light manager maximum limits
 #[wasm_bindgen_test]
 fn test_light_manager_limits() {
-    let mut manager = LightManager::new();
+    let mut manager = LightingManager::new();
 
     // Test maximum ambient lights
     for i in 0..8 {
-        let result = manager.add_ambient_light(&format!("ambient{}", i), Color::white(), 0.1);
+        let ambient_light = AmbientLight::new(&format!("ambient{}", i), Color::white(), 0.1);
+        let result = manager.add_ambient_light(ambient_light);
         assert!(result.is_ok());
     }
 
     // Adding one more should fail
-    let result = manager.add_ambient_light("ambient9", Color::white(), 0.1);
+    let ambient_light = AmbientLight::new("ambient9", Color::white(), 0.1);
+    let result = manager.add_ambient_light(ambient_light);
     assert!(result.is_err());
 
     // Test setting custom limits
@@ -545,13 +551,15 @@ fn test_light_manager_limits() {
 /// Test light enabling/disabling
 #[wasm_bindgen_test]
 fn test_light_enabling_disabling() {
-    let mut manager = LightManager::new();
+    let mut manager = LightingManager::new();
 
+    let ambient1 = AmbientLight::new("ambient1", Color::white(), 0.3);
     manager
-        .add_ambient_light("ambient1", Color::white(), 0.3)
+        .add_ambient_light(ambient1)
         .unwrap();
+    let sun = DirectionalLight::new("sun", Color::white(), 1.0, [0.0, -1.0, 0.0]);
     manager
-        .add_directional_light("sun", Color::white(), 1.0, [0.0, -1.0, 0.0])
+        .add_directional_light(sun)
         .unwrap();
 
     assert_eq!(manager.get_enabled_light_count(), 2);
@@ -574,10 +582,11 @@ fn test_light_enabling_disabling() {
 /// Test light intensity modification
 #[wasm_bindgen_test]
 fn test_light_intensity_modification() {
-    let mut manager = LightManager::new();
+    let mut manager = LightingManager::new();
 
+    let bulb = PointLight::new("bulb", Color::white(), 1.0, [0.0, 0.0, 0.0]);
     manager
-        .add_point_light("bulb", Color::white(), 1.0, [0.0, 0.0, 0.0])
+        .add_point_light(bulb)
         .unwrap();
 
     // Test getting and modifying intensity
@@ -596,18 +605,19 @@ fn test_light_intensity_modification() {
 /// Test light color modification
 #[wasm_bindgen_test]
 fn test_light_color_modification() {
-    let mut manager = LightManager::new();
+    let mut manager = LightingManager::new();
 
+    let flashlight = SpotLight::new(
+        "flashlight",
+        Color::white(),
+        1.0,
+        [0.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        0.5,
+        1.0,
+    );
     manager
-        .add_spot_light(
-            "flashlight",
-            Color::white(),
-            1.0,
-            [0.0, 0.0, 0.0],
-            [0.0, -1.0, 0.0],
-            0.5,
-            1.0,
-        )
+        .add_spot_light(flashlight)
         .unwrap();
 
     // Test getting and modifying color

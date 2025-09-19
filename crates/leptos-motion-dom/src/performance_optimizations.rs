@@ -1,293 +1,432 @@
 //! Performance Optimizations
 //!
-//! Advanced performance optimization systems for memory management and edge case handling
+//! This module provides performance optimizations for the animation system,
+//! including object pooling, batching, and efficient update strategies.
 
-use leptos::prelude::*;
-use leptos::reactive::signal::signal;
-use leptos_motion_core::AnimationValue;
-use std::collections::HashMap;
-use std::time::{Duration, Instant};
+use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use std::collections::{HashMap, VecDeque};
+use std::rc::Rc;
+use std::cell::RefCell;
+// Removed std::time imports - using WASM-compatible time functions
+use wasm_bindgen::prelude::*;
+use web_sys::window;
 
-/// Memory pool for animation targets to reduce allocations
-#[derive(Debug, Clone)]
-pub struct AnimationTargetPool {
-    pool: Vec<HashMap<String, AnimationValue>>,
-    max_size: usize,
-}
-
-impl AnimationTargetPool {
-    /// Create a new animation target pool
-    pub fn new(max_size: usize) -> Self {
-        Self {
-            pool: Vec::with_capacity(max_size),
-            max_size,
-        }
-    }
-
-    /// Get a target from the pool or create a new one
-    pub fn get_target(&mut self) -> HashMap<String, AnimationValue> {
-        self.pool.pop().unwrap_or_default()
-    }
-
-    /// Return a target to the pool for reuse
-    pub fn return_target(&mut self, mut target: HashMap<String, AnimationValue>) {
-        if self.pool.len() < self.max_size {
-            target.clear();
-            self.pool.push(target);
-        }
-    }
-
-    /// Get current pool size
-    pub fn pool_size(&self) -> usize {
-        self.pool.len()
-    }
-
-    /// Clear the pool
-    pub fn clear(&mut self) {
-        self.pool.clear();
-    }
-
-    /// Get pool capacity
-    pub fn capacity(&self) -> usize {
-        self.max_size
-    }
-}
-
-/// Performance monitor for tracking animation metrics
-#[derive(Debug, Clone)]
-pub struct PerformanceMonitor {
-    frame_count: u64,
-    last_frame_time: Instant,
-    frame_times: Vec<Duration>,
-    max_frame_time: Duration,
-    min_frame_time: Duration,
-    total_time: Duration,
-}
-
-impl Default for PerformanceMonitor {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl PerformanceMonitor {
-    /// Create a new performance monitor
-    pub fn new() -> Self {
-        Self {
-            frame_count: 0,
-            last_frame_time: Instant::now(),
-            frame_times: Vec::new(),
-            max_frame_time: Duration::ZERO,
-            min_frame_time: Duration::from_secs(1),
-            total_time: Duration::ZERO,
-        }
-    }
-
-    /// Record a frame
-    pub fn record_frame(&mut self) {
-        let now = Instant::now();
-        let frame_time = now.duration_since(self.last_frame_time);
-
-        self.frame_count += 1;
-        self.frame_times.push(frame_time);
-        self.max_frame_time = self.max_frame_time.max(frame_time);
-        self.min_frame_time = self.min_frame_time.min(frame_time);
-        self.total_time += frame_time;
-        self.last_frame_time = now;
-
-        // Keep only last 100 frame times for rolling average
-        if self.frame_times.len() > 100 {
-            self.frame_times.remove(0);
-        }
-    }
-
-    /// Get average frame time
-    pub fn average_frame_time(&self) -> Duration {
-        if self.frame_times.is_empty() {
-            Duration::ZERO
-        } else {
-            Duration::from_nanos(
-                self.frame_times
-                    .iter()
-                    .map(|d| d.as_nanos() as u64)
-                    .sum::<u64>()
-                    / self.frame_times.len() as u64,
-            )
-        }
-    }
-
-    /// Get FPS
-    pub fn fps(&self) -> f64 {
-        let avg_frame_time = self.average_frame_time();
-        if avg_frame_time.as_nanos() > 0 {
-            1_000_000_000.0 / avg_frame_time.as_nanos() as f64
+/// Get current time in milliseconds (WASM-compatible)
+fn now() -> f64 {
+    if let Some(window) = window() {
+        if let Some(performance) = window.performance() {
+            performance.now()
         } else {
             0.0
         }
+    } else {
+        0.0
     }
+}
 
-    /// Get performance stats
-    pub fn get_stats(&self) -> PerformanceStats {
-        PerformanceStats {
-            frame_count: self.frame_count,
-            average_frame_time: self.average_frame_time(),
-            max_frame_time: self.max_frame_time,
-            min_frame_time: self.min_frame_time,
-            fps: self.fps(),
-            total_time: self.total_time,
+/// Object pool for reusing animation objects
+pub struct AnimationPool<T> {
+    available: VecDeque<T>,
+    in_use: HashMap<String, T>,
+    max_size: usize,
+}
+
+impl<T: Clone> AnimationPool<T> {
+    /// Create a new object pool
+    pub fn new(max_size: usize) -> Self {
+        Self {
+            available: VecDeque::new(),
+            in_use: HashMap::new(),
+            max_size,
         }
     }
-
-    /// Reset the monitor
-    pub fn reset(&mut self) {
-        self.frame_count = 0;
-        self.last_frame_time = Instant::now();
-        self.frame_times.clear();
-        self.max_frame_time = Duration::ZERO;
-        self.min_frame_time = Duration::from_secs(1);
-        self.total_time = Duration::ZERO;
+    
+    /// Get an object from the pool
+    pub fn get(&mut self, id: String) -> Option<T> {
+        if let Some(obj) = self.available.pop_front() {
+            self.in_use.insert(id.clone(), obj.clone());
+            Some(obj)
+        } else {
+            None
+        }
+    }
+    
+    /// Return an object to the pool
+    pub fn return_object(&mut self, id: String, _obj: T) {
+        if let Some(returned_obj) = self.in_use.remove(&id) {
+            if self.available.len() < self.max_size {
+                self.available.push_back(returned_obj);
+            }
+        }
+    }
+    
+    /// Get pool statistics
+    pub fn get_stats(&self) -> (usize, usize) {
+        (self.available.len(), self.in_use.len())
     }
 }
 
-/// Performance statistics
-#[derive(Debug, Clone)]
-pub struct PerformanceStats {
-    /// Total number of animation frames processed
-    pub frame_count: u64,
-    /// Average time per frame
-    pub average_frame_time: Duration,
-    /// Maximum frame processing time recorded
-    pub max_frame_time: Duration,
-    /// Minimum frame processing time recorded
-    pub min_frame_time: Duration,
-    /// Frames per second calculation
-    pub fps: f64,
-    /// Total animation runtime
-    pub total_time: Duration,
+/// Batched animation updates for better performance
+pub struct BatchedAnimationManager {
+    /// Animation batches by priority
+    high_priority: Vec<Rc<RefCell<Box<dyn Animation>>>>,
+    normal_priority: Vec<Rc<RefCell<Box<dyn Animation>>>>,
+    low_priority: Vec<Rc<RefCell<Box<dyn Animation>>>>,
+    /// Update frequency control
+    last_update: f64,
+    update_interval: f64, // in milliseconds
+    /// Performance monitoring
+    frame_count: usize,
+    last_fps_check: f64,
 }
 
-/// Optimized animation value cache
+impl BatchedAnimationManager {
+    /// Create a new batched animation manager
+    pub fn new() -> Self {
+        Self {
+            high_priority: Vec::new(),
+            normal_priority: Vec::new(),
+            low_priority: Vec::new(),
+            last_update: now(),
+            update_interval: 16.0, // ~60fps (16ms)
+            frame_count: 0,
+            last_fps_check: now(),
+        }
+    }
+    
+    /// Add animation with priority
+    pub fn add_animation(&mut self, animation: Rc<RefCell<Box<dyn Animation>>>, priority: AnimationPriority) {
+        match priority {
+            AnimationPriority::High => self.high_priority.push(animation),
+            AnimationPriority::Normal => self.normal_priority.push(animation),
+            AnimationPriority::Low => self.low_priority.push(animation),
+        }
+    }
+    
+    /// Update animations in batches
+    pub fn update_batched(&mut self, delta_time: f64) -> AnimationResult<()> {
+        let current_time = now();
+        
+        // Skip update if not enough time has passed
+        if current_time - self.last_update < self.update_interval {
+            return Ok(());
+        }
+        
+        self.last_update = current_time;
+        self.frame_count += 1;
+        
+        // Update high priority animations first (always)
+        Self::update_batch_static(&mut self.high_priority, delta_time)?;
+        
+        // Update normal priority animations
+        Self::update_batch_static(&mut self.normal_priority, delta_time)?;
+        
+        // Update low priority animations only if we have time
+        if self.should_update_low_priority() {
+            Self::update_batch_static(&mut self.low_priority, delta_time)?;
+        }
+        
+        // Check FPS and adjust update frequency
+        self.adjust_update_frequency();
+        
+        Ok(())
+    }
+    
+    /// Update a batch of animations (static method to avoid borrowing issues)
+    fn update_batch_static(batch: &mut Vec<Rc<RefCell<Box<dyn Animation>>>>, delta_time: f64) -> AnimationResult<()> {
+        let mut completed_indices = Vec::new();
+        
+        for (index, animation_rc) in batch.iter().enumerate() {
+            if let Ok(mut animation) = animation_rc.try_borrow_mut() {
+                if let Err(e) = animation.update(delta_time) {
+                    eprintln!("Animation update error: {:?}", e);
+                }
+                
+                if animation.is_complete() {
+                    completed_indices.push(index);
+                }
+            }
+        }
+        
+        // Remove completed animations (in reverse order to maintain indices)
+        for &index in completed_indices.iter().rev() {
+            batch.remove(index);
+        }
+        
+        Ok(())
+    }
+    
+    /// Check if we should update low priority animations
+    fn should_update_low_priority(&self) -> bool {
+        // Update low priority animations every other frame
+        self.frame_count % 2 == 0
+    }
+    
+    /// Adjust update frequency based on performance
+    fn adjust_update_frequency(&mut self) {
+        let current_time = now();
+        if current_time - self.last_fps_check >= 1000.0 { // 1 second in milliseconds
+            let fps = self.frame_count as f64;
+            
+            if fps < 50.0 {
+                // Reduce update frequency if FPS is low
+                self.update_interval = 20.0; // 50fps (20ms)
+            } else if fps > 58.0 {
+                // Increase update frequency if FPS is high
+                self.update_interval = 16.0; // 60fps (16ms)
+            }
+            
+            self.frame_count = 0;
+            self.last_fps_check = current_time;
+        }
+    }
+    
+    /// Get performance statistics
+    pub fn get_stats(&self) -> BatchedAnimationStats {
+        BatchedAnimationStats {
+            high_priority_count: self.high_priority.len(),
+            normal_priority_count: self.normal_priority.len(),
+            low_priority_count: self.low_priority.len(),
+            total_animations: self.high_priority.len() + self.normal_priority.len() + self.low_priority.len(),
+            update_interval_ms: self.update_interval as u64,
+        }
+    }
+}
+
+/// Animation priority levels
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AnimationPriority {
+    /// High priority - always updated
+    High,
+    /// Normal priority - updated every frame
+    Normal,
+    /// Low priority - updated every other frame
+    Low,
+}
+
+/// Statistics for batched animation manager
 #[derive(Debug, Clone)]
+pub struct BatchedAnimationStats {
+    pub high_priority_count: usize,
+    pub normal_priority_count: usize,
+    pub low_priority_count: usize,
+    pub total_animations: usize,
+    pub update_interval_ms: u64,
+}
+
+/// Animation value cache for avoiding redundant calculations
 pub struct AnimationValueCache {
-    cache: HashMap<String, AnimationValue>,
+    cache: HashMap<String, CachedValue>,
     max_size: usize,
-    access_count: HashMap<String, u64>,
+    hit_count: usize,
+    miss_count: usize,
+}
+
+#[derive(Debug, Clone)]
+struct CachedValue {
+    value: f64,
+    timestamp: f64,
+    ttl: f64, // in milliseconds
 }
 
 impl AnimationValueCache {
     /// Create a new animation value cache
     pub fn new(max_size: usize) -> Self {
         Self {
-            cache: HashMap::with_capacity(max_size),
+            cache: HashMap::new(),
             max_size,
-            access_count: HashMap::new(),
+            hit_count: 0,
+            miss_count: 0,
         }
     }
-
-    /// Get a value from cache
-    pub fn get(&mut self, key: &str) -> Option<&AnimationValue> {
-        if let Some(value) = self.cache.get(key) {
-            *self.access_count.entry(key.to_string()).or_insert(0) += 1;
-            Some(value)
-        } else {
-            None
+    
+    /// Get cached value
+    pub fn get(&mut self, key: &str) -> Option<f64> {
+        if let Some(cached) = self.cache.get(key) {
+            let current_time = now();
+            if current_time - cached.timestamp < cached.ttl {
+                self.hit_count += 1;
+                return Some(cached.value);
+            } else {
+                // Expired, remove from cache
+                self.cache.remove(key);
+            }
         }
+        
+        self.miss_count += 1;
+        None
     }
-
-    /// Insert a value into cache
-    pub fn insert(&mut self, key: String, value: AnimationValue) {
+    
+    /// Set cached value
+    pub fn set(&mut self, key: String, value: f64, ttl_ms: f64) {
+        // Remove oldest entries if cache is full
         if self.cache.len() >= self.max_size {
-            self.evict_least_used();
+            let oldest_key = self.cache.keys().next().cloned();
+            if let Some(key) = oldest_key {
+                self.cache.remove(&key);
+            }
         }
-        self.cache.insert(key.clone(), value);
-        self.access_count.insert(key, 1);
+        
+        self.cache.insert(key, CachedValue {
+            value,
+            timestamp: now(),
+            ttl: ttl_ms,
+        });
     }
-
-    /// Evict least used item
-    fn evict_least_used(&mut self) {
-        if let Some((key, _)) = self
-            .access_count
-            .iter()
-            .min_by_key(|(_, count)| *count)
-            .map(|(k, _)| (k.clone(), *self.access_count.get(k).unwrap()))
-        {
-            self.cache.remove(&key);
-            self.access_count.remove(&key);
+    
+    /// Get cache statistics
+    pub fn get_stats(&self) -> CacheStats {
+        let total_requests = self.hit_count + self.miss_count;
+        let hit_rate = if total_requests > 0 {
+            self.hit_count as f64 / total_requests as f64
+        } else {
+            0.0
+        };
+        
+        CacheStats {
+            size: self.cache.len(),
+            max_size: self.max_size,
+            hit_count: self.hit_count,
+            miss_count: self.miss_count,
+            hit_rate,
         }
     }
-
-    /// Get cache size
-    pub fn size(&self) -> usize {
-        self.cache.len()
-    }
-
+    
     /// Clear cache
     pub fn clear(&mut self) {
         self.cache.clear();
-        self.access_count.clear();
-    }
-
-    /// Get cache capacity
-    pub fn capacity(&self) -> usize {
-        self.max_size
+        self.hit_count = 0;
+        self.miss_count = 0;
     }
 }
 
-/// Edge case handler for animation values
+/// Cache statistics
 #[derive(Debug, Clone)]
+pub struct CacheStats {
+    pub size: usize,
+    pub max_size: usize,
+    pub hit_count: usize,
+    pub miss_count: usize,
+    pub hit_rate: f64,
+}
+
+/// Performance-optimized animation target pool
+pub struct AnimationTargetPool {
+    targets: VecDeque<AnimationTarget>,
+    max_size: usize,
+}
+
+#[derive(Debug, Clone)]
+pub struct AnimationTarget {
+    pub property: String,
+    pub from_value: f64,
+    pub to_value: f64,
+    pub current_value: f64,
+    pub duration: f64,
+    pub start_time: f64,
+    pub easing: String,
+}
+
+impl AnimationTargetPool {
+    /// Create a new animation target pool
+    pub fn new(max_size: usize) -> Self {
+        Self {
+            targets: VecDeque::new(),
+            max_size,
+        }
+    }
+    
+    /// Get a target from the pool
+    pub fn get_target(&mut self) -> Option<AnimationTarget> {
+        self.targets.pop_front()
+    }
+    
+    /// Return a target to the pool
+    pub fn return_target(&mut self, mut target: AnimationTarget) {
+        // Reset the target
+        target.current_value = target.from_value;
+        target.start_time = 0.0;
+        
+        if self.targets.len() < self.max_size {
+            self.targets.push_back(target);
+        }
+    }
+    
+    /// Create a new target (if pool is empty)
+    pub fn create_target(
+        &mut self,
+        property: String,
+        from_value: f64,
+        to_value: f64,
+        duration: f64,
+        easing: String,
+    ) -> AnimationTarget {
+        AnimationTarget {
+            property,
+            from_value,
+            to_value,
+            current_value: from_value,
+            duration,
+            start_time: 0.0,
+            easing,
+        }
+    }
+    
+    /// Get pool statistics
+    pub fn get_stats(&self) -> (usize, usize) {
+        (self.targets.len(), self.max_size)
+    }
+}
+
+/// Edge case handler for performance optimization
 pub struct EdgeCaseHandler {
-    max_value: f64,
-    min_value: f64,
-    epsilon: f64,
+    max_animations_per_frame: usize,
+    max_memory_usage: usize,
+    current_memory_usage: usize,
 }
 
 impl EdgeCaseHandler {
     /// Create a new edge case handler
     pub fn new() -> Self {
         Self {
-            max_value: 1e6,
-            min_value: -1e6,
-            epsilon: 1e-10,
+            max_animations_per_frame: 100,
+            max_memory_usage: 50_000_000, // 50MB
+            current_memory_usage: 0,
         }
     }
-
-    /// Clamp a value to safe range
-    pub fn clamp_value(&self, value: f64) -> f64 {
-        value.clamp(self.min_value, self.max_value)
+    
+    /// Check if we can add more animations
+    pub fn can_add_animation(&self, current_count: usize) -> bool {
+        current_count < self.max_animations_per_frame
     }
-
-    /// Check if two values are approximately equal
-    pub fn approximately_equal(&self, a: f64, b: f64) -> bool {
-        (a - b).abs() < self.epsilon
+    
+    /// Check if memory usage is acceptable
+    pub fn is_memory_usage_acceptable(&self) -> bool {
+        self.current_memory_usage < self.max_memory_usage
     }
-
-    /// Handle division by zero
-    pub fn safe_divide(&self, numerator: f64, denominator: f64) -> f64 {
-        if self.approximately_equal(denominator, 0.0) {
-            0.0
-        } else {
-            numerator / denominator
+    
+    /// Update memory usage estimate
+    pub fn update_memory_usage(&mut self, estimated_usage: usize) {
+        self.current_memory_usage = estimated_usage;
+    }
+    
+    /// Get performance recommendations
+    pub fn get_recommendations(&self, stats: &BatchedAnimationStats) -> Vec<String> {
+        let mut recommendations = Vec::new();
+        
+        if stats.total_animations > 50 {
+            recommendations.push("Consider reducing the number of simultaneous animations".to_string());
         }
-    }
-
-    /// Handle infinity and NaN
-    pub fn sanitize_value(&self, value: f64) -> f64 {
-        if value.is_infinite() || value.is_nan() {
-            0.0
-        } else {
-            self.clamp_value(value)
+        
+        if stats.update_interval_ms > 20 {
+            recommendations.push("Animation update frequency is low, consider optimizing".to_string());
         }
-    }
-
-    /// Set epsilon for approximate equality
-    pub fn set_epsilon(&mut self, epsilon: f64) {
-        self.epsilon = epsilon;
-    }
-
-    /// Set value range
-    pub fn set_range(&mut self, min: f64, max: f64) {
-        self.min_value = min;
-        self.max_value = max;
+        
+        if !self.is_memory_usage_acceptable() {
+            recommendations.push("Memory usage is high, consider implementing cleanup".to_string());
+        }
+        
+        recommendations
     }
 }
 
@@ -297,170 +436,91 @@ impl Default for EdgeCaseHandler {
     }
 }
 
-/// Performance optimization manager
-#[derive(Debug, Clone)]
-pub struct PerformanceManager {
-    target_pool: AnimationTargetPool,
-    value_cache: AnimationValueCache,
-    monitor: PerformanceMonitor,
-    edge_handler: EdgeCaseHandler,
-}
-
-impl PerformanceManager {
-    /// Create a new performance manager
-    pub fn new() -> Self {
-        Self {
-            target_pool: AnimationTargetPool::new(100),
-            value_cache: AnimationValueCache::new(50),
-            monitor: PerformanceMonitor::new(),
-            edge_handler: EdgeCaseHandler::new(),
-        }
-    }
-
-    /// Get animation target pool
-    pub fn target_pool(&mut self) -> &mut AnimationTargetPool {
-        &mut self.target_pool
-    }
-
-    /// Get animation value cache
-    pub fn value_cache(&mut self) -> &mut AnimationValueCache {
-        &mut self.value_cache
-    }
-
-    /// Get performance monitor
-    pub fn monitor(&mut self) -> &mut PerformanceMonitor {
-        &mut self.monitor
-    }
-
-    /// Get edge case handler
-    pub fn edge_handler(&self) -> &EdgeCaseHandler {
-        &self.edge_handler
-    }
-
-    /// Record a frame
-    pub fn record_frame(&mut self) {
-        self.monitor.record_frame();
-    }
-
-    /// Get performance stats
-    pub fn get_stats(&self) -> PerformanceStats {
-        self.monitor.get_stats()
-    }
-
-    /// Reset all performance tracking
-    pub fn reset(&mut self) {
-        self.monitor.reset();
-        self.target_pool.clear();
-        self.value_cache.clear();
-    }
-
-    /// Optimize animation value
-    pub fn optimize_value(&self, value: f64) -> f64 {
-        self.edge_handler.sanitize_value(value)
-    }
-
-    /// Check if values are approximately equal
-    pub fn values_approximately_equal(&self, a: f64, b: f64) -> bool {
-        self.edge_handler.approximately_equal(a, b)
-    }
-}
-
-impl Default for PerformanceManager {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-/// Hook for using performance optimizations in Leptos components
-pub fn use_performance_optimizations()
--> (ReadSignal<PerformanceStats>, WriteSignal<PerformanceStats>) {
-    let (stats, set_stats) = signal(PerformanceStats {
-        frame_count: 0,
-        average_frame_time: Duration::ZERO,
-        max_frame_time: Duration::ZERO,
-        min_frame_time: Duration::ZERO,
-        fps: 0.0,
-        total_time: Duration::ZERO,
-    });
-
-    (stats, set_stats)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Duration;
 
+    #[test]
+    fn test_animation_pool() {
+        let mut pool = AnimationPool::<String>::new(5);
+        
+        // Test getting from empty pool
+        assert!(pool.get("test1".to_string()).is_none());
+        
+        // Test returning to pool (this won't add to available since it wasn't in_use)
+        pool.return_object("test1".to_string(), "value1".to_string());
+        assert_eq!(pool.get_stats(), (0, 0));
+        
+        // Test getting from pool (still empty)
+        let value = pool.get("test1".to_string());
+        assert!(value.is_none());
+        assert_eq!(pool.get_stats(), (0, 0));
+    }
+    
+    #[test]
+    fn test_animation_value_cache() {
+        let mut cache = AnimationValueCache::new(10);
+        
+        // Test cache miss
+        assert!(cache.get("key1").is_none());
+        assert_eq!(cache.get_stats().miss_count, 1);
+        
+        // Test cache hit
+        cache.set("key1".to_string(), 42.0, Duration::from_secs(1));
+        assert_eq!(cache.get("key1"), Some(42.0));
+        assert_eq!(cache.get_stats().hit_count, 1);
+        
+        // Test cache expiration
+        cache.set("key2".to_string(), 24.0, Duration::from_nanos(1));
+        std::thread::sleep(Duration::from_millis(1));
+        assert!(cache.get("key2").is_none());
+    }
+    
     #[test]
     fn test_animation_target_pool() {
         let mut pool = AnimationTargetPool::new(5);
-
-        assert_eq!(pool.pool_size(), 0);
-
-        let mut target = pool.get_target();
-        target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-
+        
+        // Test getting from empty pool
+        assert!(pool.get_target().is_none());
+        
+        // Test creating and returning target
+        let target = pool.create_target(
+            "opacity".to_string(),
+            0.0,
+            1.0,
+            0.5,
+            "ease-in-out".to_string(),
+        );
+        
         pool.return_target(target);
-        assert_eq!(pool.pool_size(), 1);
-
-        let target = pool.get_target();
-        assert!(target.is_empty());
+        assert_eq!(pool.get_stats(), (1, 5));
+        
+        // Test getting from pool
+        let retrieved = pool.get_target();
+        assert!(retrieved.is_some());
+        assert_eq!(pool.get_stats(), (0, 5));
     }
-
-    #[test]
-    fn test_performance_monitor() {
-        let mut monitor = PerformanceMonitor::new();
-
-        assert_eq!(monitor.frame_count, 0);
-
-        monitor.record_frame();
-        assert_eq!(monitor.frame_count, 1);
-
-        let stats = monitor.get_stats();
-        assert!(stats.fps > 0.0);
-    }
-
-    #[test]
-    fn test_animation_value_cache() {
-        let mut cache = AnimationValueCache::new(3);
-
-        assert_eq!(cache.size(), 0);
-
-        cache.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        assert_eq!(cache.size(), 1);
-
-        assert!(cache.get("opacity").is_some());
-        assert!(cache.get("nonexistent").is_none());
-    }
-
+    
     #[test]
     fn test_edge_case_handler() {
         let handler = EdgeCaseHandler::new();
-
-        assert_eq!(handler.clamp_value(1e7), handler.max_value);
-        assert_eq!(handler.clamp_value(-1e7), handler.min_value);
-        assert_eq!(handler.clamp_value(0.5), 0.5);
-
-        assert!(handler.approximately_equal(0.1 + 0.2, 0.3));
-        assert!(!handler.approximately_equal(0.1, 0.2));
-
-        assert_eq!(handler.safe_divide(10.0, 2.0), 5.0);
-        assert_eq!(handler.safe_divide(10.0, 0.0), 0.0);
-
-        assert_eq!(handler.sanitize_value(f64::INFINITY), 0.0);
-        assert_eq!(handler.sanitize_value(f64::NAN), 0.0);
-    }
-
-    #[test]
-    fn test_performance_manager() {
-        let mut manager = PerformanceManager::new();
-
-        manager.record_frame();
-        let stats = manager.get_stats();
-        assert_eq!(stats.frame_count, 1);
-
-        let optimized_value = manager.optimize_value(1e7);
-        assert_eq!(optimized_value, manager.edge_handler().max_value);
-
-        assert!(manager.values_approximately_equal(0.1 + 0.2, 0.3));
+        
+        assert!(handler.can_add_animation(50));
+        assert!(!handler.can_add_animation(150));
+        
+        assert!(handler.is_memory_usage_acceptable());
+        
+        let stats = BatchedAnimationStats {
+            high_priority_count: 10,
+            normal_priority_count: 20,
+            low_priority_count: 30,
+            total_animations: 60,
+            update_interval_ms: 25,
+        };
+        
+        let recommendations = handler.get_recommendations(&stats);
+        assert!(!recommendations.is_empty());
+        assert!(recommendations.iter().any(|r| r.contains("reducing")));
     }
 }

@@ -20,14 +20,14 @@ fn test_motion_div_api_contract_signature() {
                 class="test".to_string()
                 style="color: red".to_string()
                 node_ref=NodeRef::new()
-                initial=HashMap::new()
-                animate=HashMap::new()
-                _transition=Transition::default()
-                while_hover=HashMap::new()
-                while_tap=HashMap::new()
+                initial=Some(HashMap::new())
+                animate=Some(HashMap::new())
+                _transition=Some(Transition::default())
+                while_hover=Some(HashMap::new())
+                while_tap=Some(HashMap::new())
                 _layout=true
-                drag=DragConfig::default()
-                _drag_constraints=DragConstraints::default()
+                drag=Some(DragConfig::default())
+                _drag_constraints=Some(DragConstraints::default())
             >
                 "Test Content"
             </MotionDiv>
@@ -149,14 +149,14 @@ fn test_prop_type_consistency_contract() {
     let _component = || {
         view! {
             <MotionDiv
-                initial=initial.unwrap_or_default()
-                animate=animate.unwrap_or_default()
-                _transition=transition.unwrap_or_default()
-                while_hover=while_hover.unwrap_or_default()
-                while_tap=while_tap.unwrap_or_default()
+                initial=initial
+                animate=animate
+                _transition=transition
+                while_hover=while_hover
+                while_tap=while_tap
                 _layout=layout.unwrap_or(false)
-                drag=drag.unwrap_or_default()
-                _drag_constraints=drag_constraints.unwrap_or_default()
+                drag=drag
+                _drag_constraints=drag_constraints
             >
                 "Type Test Content"
             </MotionDiv>

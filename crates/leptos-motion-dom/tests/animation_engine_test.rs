@@ -22,7 +22,7 @@ fn test_animate_property() {
         stagger: None,
     };
     
-    engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
+    let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
     
     // Check if animation was created
     assert!(engine.get_property_value("scale").is_some());
@@ -50,7 +50,7 @@ fn test_animate_multiple_properties() {
     properties.insert("opacity".to_string(), (1.0, 0.5, transition.clone()));
     properties.insert("x".to_string(), (0.0, 100.0, transition.clone()));
     
-    engine.animate_properties(properties);
+    let _ = engine.animate_properties(properties);
     
     let all_values = engine.get_all_values();
     assert_eq!(all_values.len(), 2);
@@ -70,8 +70,8 @@ fn test_stop_property() {
         stagger: None,
     };
     
-    engine.animate_property("scale".to_string(), 1.0, 2.0, transition.clone());
-    engine.animate_property("opacity".to_string(), 1.0, 0.5, transition);
+    let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition.clone());
+    let _ = engine.animate_property("opacity".to_string(), 1.0, 0.5, transition);
     
     // Stop one property
     engine.stop_property("scale");
@@ -94,8 +94,8 @@ fn test_stop_all() {
         stagger: None,
     };
     
-    engine.animate_property("scale".to_string(), 1.0, 2.0, transition.clone());
-    engine.animate_property("opacity".to_string(), 1.0, 0.5, transition);
+    let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition.clone());
+    let _ = engine.animate_property("opacity".to_string(), 1.0, 0.5, transition);
     
     // Stop all animations
     engine.stop_all();

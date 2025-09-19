@@ -1,6 +1,4 @@
 use leptos::prelude::*;
-use leptos_motion::*;
-use std::collections::HashMap;
 use rand::prelude::SliceRandom;
 
 /// Layout Animation Examples
@@ -95,40 +93,14 @@ pub fn LayoutAnimationsDemo() -> impl IntoView {
                             children=move |item| {
                                 let item_clone = item.clone();
                                 view! {
-                                    <MotionDiv
+                                    <div
                                         class=(move || {
                                             if layout_mode.get() == "grid" {
-                                "bg-gradient-to-r from-cyan-500 to-blue-500 p-6 rounded-xl text-white font-semibold shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200".to_string()
+                                "bg-gradient-to-r from-cyan-500 to-blue-500 p-6 rounded-xl text-white font-semibold shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 ease-out".to_string()
                             } else {
-                                "bg-gradient-to-r from-cyan-500 to-blue-500 p-4 rounded-lg text-white font-semibold shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 flex items-center justify-between".to_string()
+                                "bg-gradient-to-r from-cyan-500 to-blue-500 p-4 rounded-lg text-white font-semibold shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 ease-out flex items-center justify-between".to_string()
                             }
                                         })()
-                                        initial={
-                                            let mut target = HashMap::new();
-                                            target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-                                            target.insert("scale".to_string(), AnimationValue::Number(0.8));
-                                            target.insert("y".to_string(), AnimationValue::Pixels(20.0));
-                                            target
-                                        }
-                                        animate={
-                                            let mut target = HashMap::new();
-                                            target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-                                            target.insert("scale".to_string(), AnimationValue::Number(1.0));
-                                            target.insert("y".to_string(), AnimationValue::Pixels(0.0));
-                                            target
-                                        }
-                                        _layout=true
-                                        while_hover={
-                                            let mut target = HashMap::new();
-                                            target.insert("scale".to_string(), AnimationValue::Number(1.05));
-                                            target.insert("y".to_string(), AnimationValue::Pixels(-5.0));
-                                            target
-                                        }
-                                        transition=Transition {
-                                            duration: Some(0.3),
-                                            ease: Easing::EaseOut,
-                                            ..Default::default()
-                                        }
                                     >
                                         <span>{item_clone}</span>
                                         {if layout_mode.get() == "list" {

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path Morphing Carousel Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        #app {
+            min-height: 100vh;
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="loading">
+            <div class="spinner"></div>
+            Loading Path Morphing Demo...
+        </div>
+    </div>
+    
+    <script type="module">
+        import init, { path_morphing_demo } from './pkg/path_morphing_demo.js';
+        
+        async function run() {
+            try {
+                console.log('🚀 Initializing Path Morphing Demo...');
+                await init();
+                console.log('✅ WASM initialized successfully');
+                
+                // Clear the loading content
+                document.getElementById('app').innerHTML = '';
+                
+                console.log('🎨 Starting Path Morphing Demo...');
+                path_morphing_demo();
+                console.log('✅ Path Morphing Demo mounted successfully');
+            } catch (error) {
+                console.error('❌ Error initializing Path Morphing Demo:', error);
+                document.getElementById('app').innerHTML = `
+                    <div style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background: #1a1a1a;
+                        color: #ff6b6b;
+                        font-family: system-ui, sans-serif;
+                        text-align: center;
+                        padding: 2rem;
+                    ">
+                        <div>
+                            <h1>❌ Error Loading Demo</h1>
+                            <p>Failed to initialize Path Morphing Demo</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        run();
+    </script>
+</body>
+</html>

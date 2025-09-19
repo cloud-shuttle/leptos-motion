@@ -11,23 +11,22 @@ members = [
     "crates/leptos-motion-webgl",
     "demos/basic/reactive-demo",
     "demos/showcase/comprehensive-demo",
-    "examples/showcase",
     "examples/e-commerce-gallery",
-    "examples/ultra-minimal",
-           "examples/wasm-performance-demo",
-           "examples/simple-wasm-demo",
-           "examples/advanced-gestures",
-           "examples/layout-animations",
-           "examples/interactive-showcase",
-           "examples/motion-showcase",
-           "examples/motion-showcase-working",
+    "examples/wasm-performance-demo",
+    "examples/advanced-gestures",
+    "examples/layout-animations",
     "examples/comprehensive-showcase",
-        "examples/simple-comprehensive-demo",
-        "examples/puzzle-game-demo",
+    "examples/puzzle-game-demo",
+    "examples/sidebar-menu-demo",
+    "examples/scroll-progress-demo",
+    "examples/path-morphing-demo",
+    "examples/phase2-minimal-demo",
+    "examples/simple-animation-demo",
     "tests/contracts",
     "tests/accessibility",
     "tests/wasm_specific",
     "tests/timing",
+    "tests",
 ]
 resolver = "2"
 
@@ -47,6 +46,9 @@ description = "A comprehensive animation library for Leptos with Motion-inspired
 [workspace.dependencies]
 # Core Leptos dependencies (Testing with published leptos to verify fixes)
 leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
+
+# Test dependencies
+reqwest = { version = "0.12", features = ["json"] }
 leptos_macro = "0.8.6"  # Published version
 reactive_graph = "0.2.6"  # Published version
 leptos_meta = "0.8.5"
@@ -113,7 +115,7 @@ approx = "0.5"
 
 # Async and futures (Latest stable versions)
 futures = "0.3"
-tokio = { version = "1.0", features = ["time"] }
+tokio = { version = "1.0", features = ["full"] }
 
 # Logging and debugging
 log = "0.4"

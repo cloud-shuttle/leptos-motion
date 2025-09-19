@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leptos Motion - Sidebar Menu Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: system-ui, sans-serif;
+        }
+        
+        .open {
+            clip-path: circle(1000px at 40px 40px) !important;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Leptos Motion - Advanced Sidebar Demo</h1>
+    
+    <script type="module">
+        import init, { sidebar_menu_demo } from './pkg/sidebar_menu_demo.js';
+        
+        async function run() {
+            await init();
+            sidebar_menu_demo();
+        }
+        
+        run();
+    </script>
+</body>
+</html>

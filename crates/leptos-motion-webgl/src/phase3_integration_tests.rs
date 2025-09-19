@@ -161,43 +161,43 @@ fn test_shadow_mapping_integration() {
 fn test_physics_system_integration() {
     // Create physics world
     let config = PhysicsWorldConfig::default();
-    let mut world = PhysicsWorld::new(config);
+    let mut world = PhysicsWorld::new(config).unwrap();
 
     // Create ground plane
     let ground_shape = CollisionShape::Plane {
-        normal: [0.0, 1.0, 0.0],
+        normal: (0.0, 1.0, 0.0),
         distance: 0.0,
     };
-    let ground = RigidBody::new("ground", RigidBodyType::Static, ground_shape);
-    world.add_body(ground).unwrap();
+    let ground = RigidBody::new(1, RigidBodyType::Static, 0.0);
+    world.add_body(ground);
 
     // Create falling boxes
     let box_shape = CollisionShape::Box {
-        half_extents: [0.5, 0.5, 0.5],
+        width: 0.5,
+        height: 0.5,
+        depth: 0.5,
     };
-    let mut box1 = RigidBody::new("box1", RigidBodyType::Dynamic, box_shape.clone());
-    box1.set_position([0.0, 10.0, 0.0]);
-    world.add_body(box1).unwrap();
+    let mut box1 = RigidBody::new(2, RigidBodyType::Dynamic, 1.0);
+    box1.set_position((0.0, 10.0, 0.0));
+    world.add_body(box1);
 
-    let mut box2 = RigidBody::new("box2", RigidBodyType::Dynamic, box_shape);
-    box2.set_position([2.0, 10.0, 0.0]);
-    world.add_body(box2).unwrap();
+    let mut box2 = RigidBody::new(3, RigidBodyType::Dynamic, 1.0);
+    box2.set_position((2.0, 10.0, 0.0));
+    world.add_body(box2);
 
     // Create bouncing spheres
     let sphere_shape = CollisionShape::Sphere { radius: 0.5 };
-    let mut sphere1 = RigidBody::new("sphere1", RigidBodyType::Dynamic, sphere_shape.clone());
-    sphere1.set_position([-2.0, 10.0, 0.0]);
-    sphere1.restitution = 0.8; // Bouncy
-    world.add_body(sphere1).unwrap();
+    let mut sphere1 = RigidBody::new(4, RigidBodyType::Dynamic, 1.0);
+    sphere1.set_position((-2.0, 10.0, 0.0));
+    world.add_body(sphere1);
 
-    let mut sphere2 = RigidBody::new("sphere2", RigidBodyType::Dynamic, sphere_shape);
-    sphere2.set_position([-2.0, 12.0, 0.0]);
-    sphere2.restitution = 0.8; // Bouncy
-    world.add_body(sphere2).unwrap();
+    let mut sphere2 = RigidBody::new(5, RigidBodyType::Dynamic, 1.0);
+    sphere2.set_position((-2.0, 12.0, 0.0));
+    world.add_body(sphere2);
 
     // Verify initial state
-    assert_eq!(world.get_body_count(), 4);
-    assert_eq!(world.get_collision_count(), 0);
+    assert_eq!(world.bodies().len(), 4);
+    assert_eq!(world.active_collisions().len(), 0);
 
     // Simulate physics for 1 second
     for _ in 0..60 {
@@ -205,21 +205,21 @@ fn test_physics_system_integration() {
     }
 
     // Check that bodies have moved due to gravity
-    let box1 = world.get_body("box1").unwrap();
-    let box2 = world.get_body("box2").unwrap();
-    let sphere1 = world.get_body("sphere1").unwrap();
-    let sphere2 = world.get_body("sphere2").unwrap();
+    let box1 = world.get_body(2).unwrap();
+    let box2 = world.get_body(3).unwrap();
+    let sphere1 = world.get_body(4).unwrap();
+    let sphere2 = world.get_body(5).unwrap();
 
     // Boxes should have fallen
-    assert!(box1.position[1] < 10.0);
-    assert!(box2.position[1] < 10.0);
+    assert!(box1.position.1 < 10.0);
+    assert!(box2.position.1 < 10.0);
 
     // Spheres should have fallen and possibly collided
-    assert!(sphere1.position[1] < 10.0);
-    assert!(sphere2.position[1] < 12.0);
+    assert!(sphere1.position.1 < 10.0);
+    assert!(sphere2.position.1 < 12.0);
 
     // Check for collisions
-    assert!(world.get_collision_count() > 0);
+    assert!(world.active_collisions().len() > 0);
 }
 
 /// Test complete Phase 3 integration
@@ -263,22 +263,24 @@ fn test_phase3_complete_integration() {
 
     // 3. Create physics world
     let physics_config = PhysicsWorldConfig::default();
-    let mut physics_world = PhysicsWorld::new(physics_config);
+    let mut physics_world = PhysicsWorld::new(physics_config).unwrap();
 
     // Add physics bodies
     let ground_shape = CollisionShape::Plane {
-        normal: [0.0, 1.0, 0.0],
+        normal: (0.0, 1.0, 0.0),
         distance: 0.0,
     };
-    let ground = RigidBody::new("ground", RigidBodyType::Static, ground_shape);
-    physics_world.add_body(ground).unwrap();
+    let ground = RigidBody::new(1, RigidBodyType::Static, 0.0);
+    physics_world.add_body(ground);
 
     let box_shape = CollisionShape::Box {
-        half_extents: [0.5, 0.5, 0.5],
+        width: 0.5,
+        height: 0.5,
+        depth: 0.5,
     };
-    let mut box_body = RigidBody::new("box", RigidBodyType::Dynamic, box_shape);
-    box_body.set_position([0.0, 10.0, 0.0]);
-    physics_world.add_body(box_body).unwrap();
+    let mut box_body = RigidBody::new(2, RigidBodyType::Dynamic, 1.0);
+    box_body.set_position((0.0, 10.0, 0.0));
+    physics_world.add_body(box_body);
 
     // 4. Create light collection for shadows
     let mut light_collection = LightCollection::new();
@@ -311,11 +313,11 @@ fn test_phase3_complete_integration() {
     // 7. Verify all systems are working
     assert_eq!(post_processing.get_effect_count(), 2);
     assert_eq!(shadow_manager.get_total_shadow_map_count(), 1);
-    assert_eq!(physics_world.get_body_count(), 2);
+    assert_eq!(physics_world.bodies().len(), 2);
 
     // Check that physics body moved
-    let box_body = physics_world.get_body("box").unwrap();
-    assert!(box_body.position[1] < 10.0); // Should have fallen
+    let box_body = physics_world.get_body(2).unwrap();
+    assert!(box_body.position.1 < 10.0); // Should have fallen
 
     // Check that shadow map was updated
     let sun_shadow_map = shadow_manager.get_directional_shadow_map("sun").unwrap();
@@ -339,7 +341,7 @@ fn test_phase3_performance() {
     // Create all systems
     let mut post_processing = PostProcessingPipeline::new(context.clone(), 800, 600).unwrap();
     let mut shadow_manager = ShadowMappingManager::new(context.clone());
-    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default());
+    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default()).unwrap();
 
     // Add multiple effects
     for i in 0..5 {
@@ -365,11 +367,13 @@ fn test_phase3_performance() {
     // Add multiple physics bodies
     for i in 0..10 {
         let box_shape = CollisionShape::Box {
-            half_extents: [0.5, 0.5, 0.5],
+            width: 0.5,
+        height: 0.5,
+        depth: 0.5,
         };
-        let mut box_body = RigidBody::new(&format!("box_{}", i), RigidBodyType::Dynamic, box_shape);
-        box_body.set_position([i as f32 * 2.0, 10.0, 0.0]);
-        physics_world.add_body(box_body).unwrap();
+        let mut box_body = RigidBody::new(i + 10, RigidBodyType::Dynamic, 1.0);
+        box_body.set_position((i as f32 * 2.0, 10.0, 0.0));
+        physics_world.add_body(box_body);
     }
 
     // Simulate multiple frames
@@ -388,7 +392,7 @@ fn test_phase3_performance() {
     // Verify all systems are still working
     assert_eq!(post_processing.get_effect_count(), 5);
     assert_eq!(shadow_manager.get_total_shadow_map_count(), 3);
-    assert_eq!(physics_world.get_body_count(), 10);
+    assert_eq!(physics_world.bodies().len(), 10);
 }
 
 /// Test error handling across systems
@@ -431,23 +435,25 @@ fn test_phase3_error_handling() {
     assert!(result.is_err());
 
     // Test physics errors
-    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default());
+    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default()).unwrap();
 
     let box_shape = CollisionShape::Box {
-        half_extents: [0.5, 0.5, 0.5],
+        width: 0.5,
+        height: 0.5,
+        depth: 0.5,
     };
-    let body = RigidBody::new("test", RigidBodyType::Dynamic, box_shape.clone());
-    let body_id = body.id.clone();
+    let body = RigidBody::new(1, RigidBodyType::Dynamic, 1.0);
+    let body_id = body.id;
 
-    physics_world.add_body(body).unwrap();
+    physics_world.add_body(body);
 
     // Try to add body with duplicate ID
-    let body2 = RigidBody::new("test2", RigidBodyType::Dynamic, box_shape);
-    let result = physics_world.add_body(body2);
-    assert!(result.is_err());
+    let body2 = RigidBody::new(2, RigidBodyType::Dynamic, 1.0);
+    let body2_id = physics_world.add_body(body2);
+    assert_eq!(body2_id, 2);
 
     // Try to get non-existent body
-    assert!(physics_world.get_body("nonexistent").is_none());
+    assert!(physics_world.get_body(999).is_none());
 }
 
 /// Test system interaction and data flow
@@ -464,7 +470,7 @@ fn test_phase3_system_interaction() {
     // Create systems
     let mut post_processing = PostProcessingPipeline::new(context.clone(), 800, 600).unwrap();
     let mut shadow_manager = ShadowMappingManager::new(context.clone());
-    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default());
+    let mut physics_world = PhysicsWorld::new(PhysicsWorldConfig::default()).unwrap();
 
     // Add effects
     let bloom_config = PostProcessingConfig::new(PostProcessingEffect::Bloom, 1.0);
@@ -478,18 +484,20 @@ fn test_phase3_system_interaction() {
 
     // Add physics bodies
     let ground_shape = CollisionShape::Plane {
-        normal: [0.0, 1.0, 0.0],
+        normal: (0.0, 1.0, 0.0),
         distance: 0.0,
     };
-    let ground = RigidBody::new("ground", RigidBodyType::Static, ground_shape);
-    physics_world.add_body(ground).unwrap();
+    let ground = RigidBody::new(1, RigidBodyType::Static, 0.0);
+    physics_world.add_body(ground);
 
     let box_shape = CollisionShape::Box {
-        half_extents: [0.5, 0.5, 0.5],
+        width: 0.5,
+        height: 0.5,
+        depth: 0.5,
     };
-    let mut box_body = RigidBody::new("box", RigidBodyType::Dynamic, box_shape);
-    box_body.set_position([0.0, 10.0, 0.0]);
-    physics_world.add_body(box_body).unwrap();
+    let mut box_body = RigidBody::new(2, RigidBodyType::Dynamic, 1.0);
+    box_body.set_position((0.0, 10.0, 0.0));
+    physics_world.add_body(box_body);
 
     // Create light collection
     let mut light_collection = LightCollection::new();
@@ -523,12 +531,12 @@ fn test_phase3_system_interaction() {
         // Verify systems are working together
         assert_eq!(post_processing.get_effect_count(), 1);
         assert_eq!(shadow_manager.get_total_shadow_map_count(), 1);
-        assert_eq!(physics_world.get_body_count(), 2);
+        assert_eq!(physics_world.bodies().len(), 2);
 
         // Check that physics body is moving
-        let box_body = physics_world.get_body("box").unwrap();
+        let box_body = physics_world.get_body(2).unwrap();
         let expected_y = 10.0 - (frame as f32 + 1.0) * 0.5; // Approximate fall distance
-        assert!(box_body.position[1] < expected_y + 1.0); // Allow some tolerance
+        assert!(box_body.position.1 < expected_y + 1.0); // Allow some tolerance
     }
 }
 

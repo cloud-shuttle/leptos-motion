@@ -210,7 +210,7 @@ pub fn test_dom_gestures_contracts() -> Vec<ContractTestResult> {
     
     // Test that gesture components can work with DOM components
     let (_, duration) = utils::measure_execution_time(|| {
-        use leptos_motion_dom::reactive_motion_div::ReactiveMotionDiv;
+        use leptos_motion_dom::ReactiveMotionDiv;
         use leptos_motion_gestures::drag::DragGesture;
         
         // Verify types are compatible

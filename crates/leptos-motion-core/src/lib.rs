@@ -385,6 +385,12 @@ pub enum AnimationError {
     InvalidValue(String),
 }
 
+impl From<wasm_bindgen::JsValue> for AnimationError {
+    fn from(_: wasm_bindgen::JsValue) -> Self {
+        AnimationError::InvalidValue("JavaScript error occurred".to_string())
+    }
+}
+
 // Include simplified engine tests
 #[cfg(test)]
 mod simplified_engine_tests {

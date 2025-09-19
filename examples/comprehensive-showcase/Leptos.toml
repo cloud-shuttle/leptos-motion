@@ -1,0 +1,33 @@
+[package.metadata.leptos]
+# The name used by wasm-pack for the JS/WASM bundle. Defaults to the package name.
+output-name = "comprehensive_showcase"
+# The site root directory is where cargo-leptos generate will place the generated
+# HTML file. If this is a relative path, it will be relative to the project root.
+site-root = "dist"
+# The site-root directory is completely removed and recreated on each build.
+# This is where cargo-leptos generate will put all the static files generated
+# from the Rust code.
+# The source CSS file. If this is a relative path, it will be relative to the project root.
+site-pkg-dir = "dist/pkg"
+# The source CSS file. If this is a relative path, it will be relative to the project root.
+style-file = "dist/style.css"
+# The source HTML file. If this is a relative path, it will be relative to the project root.
+index-file = "dist/index.html"
+# Additional files to be copied to the site-root directory.
+# The expected format is an array of objects with "source" and "target" fields.
+# If target is omitted, it will be the same as source.
+# If source is a relative path, it will be relative to the project root.
+# If target is a relative path, it will be relative to the site-root directory.
+additional-dir = ["dist"]
+
+[package.metadata.leptos.reload]
+# The browser port for the reload server. Defaults to 3001.
+browser-port = 3001
+# The port for the reload server. Defaults to 3002.
+port = 3002
+
+[package.metadata.leptos.serve]
+# The port for the development server. Defaults to 3000.
+port = 3000
+# The address for the development server. Defaults to 127.0.0.1.
+address = "127.0.0.1"

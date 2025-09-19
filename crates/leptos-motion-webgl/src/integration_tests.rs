@@ -52,34 +52,38 @@ fn test_phase2_integration() {
     assert_eq!(texture.get_size(), (2, 2));
 
     // 2. Test lighting system
-    let mut light_manager = LightManager::new();
+    let mut light_manager = LightingManager::new();
 
     // Add ambient light
+    let ambient_light = AmbientLight::new("ambient", Color::white(), 0.3);
     light_manager
-        .add_ambient_light("ambient", Color::white(), 0.3)
+        .add_ambient_light(ambient_light)
         .unwrap();
 
     // Add directional light (sun)
+    let directional_light = DirectionalLight::new("sun", Color::white(), 1.0, [0.0, -1.0, 0.0]);
     light_manager
-        .add_directional_light("sun", Color::white(), 1.0, [0.0, -1.0, 0.0])
+        .add_directional_light(directional_light)
         .unwrap();
 
     // Add point light
+    let point_light = PointLight::new("bulb", Color::white(), 1.0, [0.0, 5.0, 0.0]);
     light_manager
-        .add_point_light("bulb", Color::white(), 1.0, [0.0, 5.0, 0.0])
+        .add_point_light(point_light)
         .unwrap();
 
     // Add spot light
+    let spot_light = SpotLight::new(
+        "flashlight",
+        Color::white(),
+        1.0,
+        [0.0, 0.0, 0.0],
+        [0.0, -1.0, 0.0],
+        0.5,
+        1.0,
+    );
     light_manager
-        .add_spot_light(
-            "flashlight",
-            Color::white(),
-            1.0,
-            [0.0, 0.0, 0.0],
-            [0.0, -1.0, 0.0],
-            0.5,
-            1.0,
-        )
+        .add_spot_light(spot_light)
         .unwrap();
 
     assert_eq!(light_manager.get_total_light_count(), 4);
@@ -220,27 +224,20 @@ fn test_texture_lighting_integration() {
     assert_eq!(texture_manager.get_texture_count(), 2);
 
     // Create lighting system
-    let mut light_manager = LightManager::new();
+    let mut light_manager = LightingManager::new();
 
     // Test different light types with different colors
+    let warm_ambient = AmbientLight::new("warm_ambient", Color::from_rgb(255, 200, 150), 0.2);
     light_manager
-        .add_ambient_light("warm_ambient", Color::from_rgb(255, 200, 150), 0.2)
+        .add_ambient_light(warm_ambient)
         .unwrap();
+    let cool_sun = DirectionalLight::new("cool_sun", Color::from_rgb(150, 200, 255), 0.8, [0.0, -1.0, 0.0]);
     light_manager
-        .add_directional_light(
-            "cool_sun",
-            Color::from_rgb(150, 200, 255),
-            0.8,
-            [0.0, -1.0, 0.0],
-        )
+        .add_directional_light(cool_sun)
         .unwrap();
+    let warm_bulb = PointLight::new("warm_bulb", Color::from_rgb(255, 200, 100), 1.0, [2.0, 3.0, 1.0]);
     light_manager
-        .add_point_light(
-            "warm_bulb",
-            Color::from_rgb(255, 200, 100),
-            1.0,
-            [2.0, 3.0, 1.0],
-        )
+        .add_point_light(warm_bulb)
         .unwrap();
 
     // Test light intensity modifications
@@ -454,12 +451,13 @@ fn test_memory_management_integration() {
     assert_eq!(texture_manager.get_texture_count(), 0);
 
     // Test light manager memory management
-    let mut light_manager = LightManager::new();
+    let mut light_manager = LightingManager::new();
 
     // Add multiple lights
     for i in 0..10 {
+        let ambient_light = AmbientLight::new(&format!("ambient_{}", i), Color::white(), 0.1);
         light_manager
-            .add_ambient_light(&format!("ambient_{}", i), Color::white(), 0.1)
+            .add_ambient_light(ambient_light)
             .unwrap();
     }
 

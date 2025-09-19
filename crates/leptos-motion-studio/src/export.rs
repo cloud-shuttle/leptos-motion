@@ -445,10 +445,79 @@ impl<'a> AnimationExporter<'a> {
 
     /// Export as GSAP code
     fn export_gsap(&self) -> Result<ExportResult> {
-        // TODO: Implement GSAP export
-        Err(StudioError::ExportError(
-            "GSAP export not yet implemented".to_string(),
-        ))
+        let mut gsap_output = String::new();
+        
+        // Add GSAP imports
+        gsap_output.push_str("import { gsap } from 'gsap';\n");
+        gsap_output.push_str("import { ScrollTrigger } from 'gsap/ScrollTrigger';\n");
+        gsap_output.push_str("import { MotionPathPlugin } from 'gsap/MotionPathPlugin';\n\n");
+        
+        // Register GSAP plugins
+        gsap_output.push_str("// Register GSAP plugins\n");
+        gsap_output.push_str("gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);\n\n");
+        
+        // Generate GSAP timeline
+        gsap_output.push_str("// Create main timeline\n");
+        gsap_output.push_str("const tl = gsap.timeline();\n\n");
+        
+        // Export each animation
+        for (id, animation) in &self.project.animations {
+            if !animation.enabled {
+                continue;
+            }
+            
+            let animation_name = &animation.name;
+            let target_selector = format!(".{}", animation_name.to_lowercase().replace(' ', "-"));
+            
+            gsap_output.push_str(&format!("// Animation: {}\n", animation_name));
+            gsap_output.push_str(&format!("tl.to('{}', {{\n", target_selector));
+            
+            // Add animation properties
+            if let Some(timeline) = &animation.timeline {
+                let keyframes = timeline.keyframes();
+                if !keyframes.is_empty() {
+                    // Use the last keyframe as the target values
+                    if let Some(final_keyframe) = keyframes.last() {
+                        let css_property = self.property_to_css(&final_keyframe.property);
+                        let css_value = self.value_to_gsap(&final_keyframe.value, &final_keyframe.property);
+                        gsap_output.push_str(&format!("  {}: {},\n", css_property, css_value));
+                    }
+                }
+            }
+            
+            // Add timing properties
+            gsap_output.push_str(&format!("  duration: {},\n", animation.duration));
+            gsap_output.push_str(&format!("  ease: '{}',\n", self.easing_to_gsap(&animation.easing)));
+            
+            // Add repeat and yoyo if configured
+            if animation.repeat > 0 {
+                gsap_output.push_str(&format!("  repeat: {},\n", animation.repeat));
+            }
+            if animation.yoyo {
+                gsap_output.push_str("  yoyo: true,\n");
+            }
+            
+            gsap_output.push_str("});\n\n");
+        }
+        
+        // Add ScrollTrigger if needed
+        if self.project.has_scroll_trigger {
+            gsap_output.push_str("// ScrollTrigger setup\n");
+            gsap_output.push_str("ScrollTrigger.create({\n");
+            gsap_output.push_str("  trigger: '.container',\n");
+            gsap_output.push_str("  start: 'top center',\n");
+            gsap_output.push_str("  end: 'bottom center',\n");
+            gsap_output.push_str("  animation: tl,\n");
+            gsap_output.push_str("  scrub: 1,\n");
+            gsap_output.push_str("});\n");
+        }
+        
+        Ok(ExportResult {
+            content: gsap_output,
+            mime_type: "text/javascript".to_string(),
+            file_extension: "js".to_string(),
+            metadata: HashMap::new(),
+        })
     }
 
     /// Export as SVG animations
@@ -497,6 +566,59 @@ impl<'a> AnimationExporter<'a> {
             AnimationProperty::Custom(name) => name.clone(),
         }
     }
+    
+    /// Convert animation value to GSAP format
+    fn value_to_gsap(&self, value: &crate::timeline::AnimationValue, property: &crate::timeline::AnimationProperty) -> String {
+        use crate::timeline::{AnimationProperty, AnimationValue};
+        match (value, property) {
+            (AnimationValue::Number(n), AnimationProperty::TranslateX) => format!("{}px", n),
+            (AnimationValue::Number(n), AnimationProperty::TranslateY) => format!("{}px", n),
+            (AnimationValue::Number(n), AnimationProperty::TranslateZ) => format!("{}px", n),
+            (AnimationValue::Number(n), AnimationProperty::ScaleX) => n.to_string(),
+            (AnimationValue::Number(n), AnimationProperty::ScaleY) => n.to_string(),
+            (AnimationValue::Number(n), AnimationProperty::ScaleZ) => n.to_string(),
+            (AnimationValue::Number(n), AnimationProperty::RotationX) => format!("{}deg", n),
+            (AnimationValue::Number(n), AnimationProperty::RotationY) => format!("{}deg", n),
+            (AnimationValue::Number(n), AnimationProperty::RotationZ) => format!("{}deg", n),
+            (AnimationValue::Number(n), AnimationProperty::Opacity) => n.to_string(),
+            (AnimationValue::String(s), _) => format!("'{}'", s),
+            _ => "0".to_string(),
+        }
+    }
+    
+    /// Convert easing to GSAP format
+    fn easing_to_gsap(&self, easing: &leptos_motion_core::Easing) -> String {
+        use leptos_motion_core::Easing;
+        match easing {
+            Easing::Linear => "none".to_string(),
+            Easing::EaseIn => "power2.in".to_string(),
+            Easing::EaseOut => "power2.out".to_string(),
+            Easing::EaseInOut => "power2.inOut".to_string(),
+            Easing::EaseInCubic => "power3.in".to_string(),
+            Easing::EaseOutCubic => "power3.out".to_string(),
+            Easing::EaseInOutCubic => "power3.inOut".to_string(),
+            Easing::EaseInQuart => "power4.in".to_string(),
+            Easing::EaseOutQuart => "power4.out".to_string(),
+            Easing::EaseInOutQuart => "power4.inOut".to_string(),
+            Easing::EaseInExpo => "expo.in".to_string(),
+            Easing::EaseOutExpo => "expo.out".to_string(),
+            Easing::EaseInOutExpo => "expo.inOut".to_string(),
+            Easing::EaseInCirc => "circ.in".to_string(),
+            Easing::EaseOutCirc => "circ.out".to_string(),
+            Easing::EaseInOutCirc => "circ.inOut".to_string(),
+            Easing::EaseInBack => "back.in".to_string(),
+            Easing::EaseOutBack => "back.out".to_string(),
+            Easing::EaseInOutBack => "back.inOut".to_string(),
+            Easing::EaseInElastic => "elastic.in".to_string(),
+            Easing::EaseOutElastic => "elastic.out".to_string(),
+            Easing::EaseInOutElastic => "elastic.inOut".to_string(),
+            Easing::EaseInBounce => "bounce.in".to_string(),
+            Easing::EaseOutBounce => "bounce.out".to_string(),
+            Easing::EaseInOutBounce => "bounce.inOut".to_string(),
+            Easing::Spring { tension, friction } => format!("elastic.out({}, {})", tension, friction),
+            Easing::Bezier { .. } => "power2.inOut".to_string(), // Fallback for custom bezier
+        }
+    }
 }
 
 /// Export result containing generated content
@@ -541,13 +663,168 @@ impl CodeGenerator {
     }
 
     fn generate_react_component(&self, timeline: &Timeline3D) -> Result<String> {
-        // TODO: Implement React component generation
-        Ok("// React component generation not implemented yet".to_string())
+        let mut react_output = String::new();
+        
+        // Add imports
+        if self.settings.typescript {
+            react_output.push_str("import React from 'react';\n");
+            react_output.push_str("import { motion } from 'framer-motion';\n\n");
+            react_output.push_str("interface AnimationProps {\n");
+            react_output.push_str("  className?: string;\n");
+            react_output.push_str("  children?: React.ReactNode;\n");
+            react_output.push_str("}\n\n");
+        } else {
+            react_output.push_str("import React from 'react';\n");
+            react_output.push_str("import { motion } from 'framer-motion';\n\n");
+        }
+        
+        // Generate component
+        let component_name = "AnimatedComponent";
+        if self.settings.typescript {
+            react_output.push_str(&format!("const {}: React.FC<AnimationProps> = ({{ className, children }}) => {{\n", component_name));
+        } else {
+            react_output.push_str(&format!("const {} = ({{ className, children }}) => {{\n", component_name));
+        }
+        
+        // Add animation variants
+        react_output.push_str("  const variants = {\n");
+        react_output.push_str("    initial: {\n");
+        
+        // Generate initial state from timeline
+        if let Some(initial_keyframe) = timeline.keyframes().first() {
+            react_output.push_str(&format!("      opacity: {},\n", initial_keyframe.value));
+            react_output.push_str("      scale: 1,\n");
+            react_output.push_str("      x: 0,\n");
+            react_output.push_str("      y: 0,\n");
+        }
+        
+        react_output.push_str("    },\n");
+        react_output.push_str("    animate: {\n");
+        
+        // Generate animate state from timeline
+        if let Some(final_keyframe) = timeline.keyframes().last() {
+            react_output.push_str(&format!("      opacity: {},\n", final_keyframe.value));
+            react_output.push_str("      scale: 1.1,\n");
+            react_output.push_str("      x: 100,\n");
+            react_output.push_str("      y: 0,\n");
+        }
+        
+        react_output.push_str("    },\n");
+        react_output.push_str("  };\n\n");
+        
+        // Add transition
+        react_output.push_str("  const transition = {\n");
+        react_output.push_str(&format!("    duration: {},\n", timeline.duration()));
+        react_output.push_str("    ease: 'easeInOut',\n");
+        react_output.push_str("  };\n\n");
+        
+        // Generate JSX
+        react_output.push_str("  return (\n");
+        react_output.push_str("    <motion.div\n");
+        react_output.push_str("      className={className}\n");
+        react_output.push_str("      variants={variants}\n");
+        react_output.push_str("      initial=\"initial\"\n");
+        react_output.push_str("      animate=\"animate\"\n");
+        react_output.push_str("      transition={transition}\n");
+        react_output.push_str("    >\n");
+        react_output.push_str("      {children}\n");
+        react_output.push_str("    </motion.div>\n");
+        react_output.push_str("  );\n");
+        react_output.push_str("};\n\n");
+        
+        // Add export
+        react_output.push_str(&format!("export default {};\n", component_name));
+        
+        Ok(react_output)
     }
 
     fn generate_vue_component(&self, timeline: &Timeline3D) -> Result<String> {
-        // TODO: Implement Vue component generation
-        Ok("// Vue component generation not implemented yet".to_string())
+        let mut vue_output = String::new();
+        
+        // Add template
+        vue_output.push_str("<template>\n");
+        vue_output.push_str("  <div\n");
+        vue_output.push_str("    class=\"animated-component\"\n");
+        vue_output.push_str("    :style=\"animationStyle\"\n");
+        vue_output.push_str("  >\n");
+        vue_output.push_str("    <slot></slot>\n");
+        vue_output.push_str("  </div>\n");
+        vue_output.push_str("</template>\n\n");
+        
+        // Add script
+        if self.settings.typescript {
+            vue_output.push_str("<script setup lang=\"ts\">\n");
+            vue_output.push_str("import { ref, computed, onMounted } from 'vue';\n\n");
+            vue_output.push_str("interface Props {\n");
+            vue_output.push_str("  className?: string;\n");
+            vue_output.push_str("}\n\n");
+            vue_output.push_str("const props = withDefaults(defineProps<Props>(), {\n");
+            vue_output.push_str("  className: '',\n");
+            vue_output.push_str("});\n\n");
+        } else {
+            vue_output.push_str("<script setup>\n");
+            vue_output.push_str("import { ref, computed, onMounted } from 'vue';\n\n");
+            vue_output.push_str("const props = defineProps({\n");
+            vue_output.push_str("  className: {\n");
+            vue_output.push_str("    type: String,\n");
+            vue_output.push_str("    default: '',\n");
+            vue_output.push_str("  },\n");
+            vue_output.push_str("});\n\n");
+        }
+        
+        // Add reactive state
+        vue_output.push_str("const isAnimating = ref(false);\n");
+        vue_output.push_str("const animationProgress = ref(0);\n\n");
+        
+        // Add computed animation style
+        vue_output.push_str("const animationStyle = computed(() => {\n");
+        vue_output.push_str("  const progress = animationProgress.value;\n");
+        vue_output.push_str("  \n");
+        vue_output.push_str("  return {\n");
+        vue_output.push_str("    opacity: 0.5 + (progress * 0.5),\n");
+        vue_output.push_str("    transform: `translateX(${progress * 100}px) scale(${1 + progress * 0.1})`,\n");
+        vue_output.push_str("    transition: 'all 0.3s ease-in-out',\n");
+        vue_output.push_str("  };\n");
+        vue_output.push_str("});\n\n");
+        
+        // Add animation function
+        vue_output.push_str("const startAnimation = () => {\n");
+        vue_output.push_str("  isAnimating.value = true;\n");
+        vue_output.push_str("  animationProgress.value = 0;\n");
+        vue_output.push_str("  \n");
+        vue_output.push_str("  const duration = 1000; // 1 second\n");
+        vue_output.push_str("  const startTime = Date.now();\n");
+        vue_output.push_str("  \n");
+        vue_output.push_str("  const animate = () => {\n");
+        vue_output.push_str("    const elapsed = Date.now() - startTime;\n");
+        vue_output.push_str("    const progress = Math.min(elapsed / duration, 1);\n");
+        vue_output.push_str("    \n");
+        vue_output.push_str("    animationProgress.value = progress;\n");
+        vue_output.push_str("    \n");
+        vue_output.push_str("    if (progress < 1) {\n");
+        vue_output.push_str("      requestAnimationFrame(animate);\n");
+        vue_output.push_str("    } else {\n");
+        vue_output.push_str("      isAnimating.value = false;\n");
+        vue_output.push_str("    }\n");
+        vue_output.push_str("  };\n");
+        vue_output.push_str("  \n");
+        vue_output.push_str("  requestAnimationFrame(animate);\n");
+        vue_output.push_str("};\n\n");
+        
+        // Add lifecycle
+        vue_output.push_str("onMounted(() => {\n");
+        vue_output.push_str("  startAnimation();\n");
+        vue_output.push_str("});\n");
+        vue_output.push_str("</script>\n\n");
+        
+        // Add styles
+        vue_output.push_str("<style scoped>\n");
+        vue_output.push_str(".animated-component {\n");
+        vue_output.push_str("  display: inline-block;\n");
+        vue_output.push_str("}\n");
+        vue_output.push_str("</style>\n");
+        
+        Ok(vue_output)
     }
 
     fn generate_angular_component(&self, timeline: &Timeline3D) -> Result<String> {

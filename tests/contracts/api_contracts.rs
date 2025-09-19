@@ -269,7 +269,7 @@ fn test_reactive_motion_div_contract() -> Vec<ContractTestResult> {
     let (_, duration) = utils::measure_execution_time(|| {
         // This would normally be in a Leptos component context
         // For contract testing, we just verify the type exists and is importable
-        use leptos_motion_dom::reactive_motion_div::ReactiveMotionDiv;
+        use leptos_motion_dom::ReactiveMotionDiv;
         // Type exists and is importable - contract satisfied
     });
     
@@ -291,7 +291,7 @@ fn test_drag_motion_div_contract() -> Vec<ContractTestResult> {
     
     // Test that DragMotionDiv can be constructed
     let (_, duration) = utils::measure_execution_time(|| {
-        use leptos_motion_dom::drag_motion_div::DragMotionDiv;
+        use leptos_motion_dom::DragMotionDiv;
         // Type exists and is importable - contract satisfied
     });
     

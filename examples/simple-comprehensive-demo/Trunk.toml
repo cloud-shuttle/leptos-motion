@@ -1,8 +1,0 @@
-[build]
-target = "simple-comprehensive-demo"
-dist = "dist"
-public_url = "/"
-
-[serve]
-port = 8084
-open = true

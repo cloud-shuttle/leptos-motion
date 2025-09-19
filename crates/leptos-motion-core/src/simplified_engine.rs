@@ -166,13 +166,13 @@ impl SimplifiedAnimationEngine {
 
         // Create animation config for the engine
         let config = engine::AnimationConfig {
-            #[cfg(feature = "web-sys")]
             element: element.clone(),
-            from: HashMap::new(), // Start from current state
-            to: target.clone(),
+            values: target.clone(), // Use target as values
             transition: transition.clone(),
-            on_complete_id: None,
-            on_update_id: None,
+            hardware_accelerated: false,
+            priority: engine::AnimationPriority::Normal,
+            on_complete: None,
+            on_progress: None,
         };
 
         // Start animation

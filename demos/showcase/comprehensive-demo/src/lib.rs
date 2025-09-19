@@ -30,7 +30,7 @@ mod ultra_simple_demo;
 mod working_tdd_demo;
 // mod simple_comprehensive_demo; // Commented out
 // mod simplified_comprehensive_demo; // Commented out
-// mod feature_showcase_demo;
+mod feature_showcase_demo;
 // mod reactive_style_test;
 // mod simple_animation_test;
 // mod test_fix;
@@ -39,9 +39,9 @@ mod working_tdd_demo;
 // mod fixed_demo;
 // mod simple_working_demo;
 // mod signal_based_demo;
-use simplified_showcase::SimplifiedShowcase;
+// use simplified_showcase::SimplifiedShowcase;
 // use simple_working_demo::SimpleWorkingDemo;
-// use feature_showcase_demo::FeatureShowcaseDemo;
+use feature_showcase_demo::FeatureShowcaseDemo;
 // use reactive_style_test::ReactiveStyleTest;
 // use simple_animation_test::SimpleAnimationTest;
 // use test_fix::TestFix;
@@ -64,7 +64,7 @@ pub fn main() {
         mount_to_body(|| {
             web_sys::console::log_1(&"🎨 Leptos Motion: Creating MotionShowcaseDemo view".into());
             web_sys::console::log_1(&"🎨 Leptos Motion: About to render MotionShowcaseDemo".into());
-            let demo = view! { <SimplifiedShowcase/> };
+            let demo = view! { <FeatureShowcaseDemo/> };
             web_sys::console::log_1(
                 &"🎨 Leptos Motion: MotionShowcaseDemo created successfully".into(),
             );

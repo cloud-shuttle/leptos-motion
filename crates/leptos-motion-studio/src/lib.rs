@@ -64,6 +64,18 @@ pub enum StudioError {
     /// GPU memory error
     #[error("GPU memory error: {0}")]
     GPUMemoryError(String),
+
+    /// Invalid input error
+    #[error("Invalid input: {0}")]
+    InvalidInput(String),
+
+    /// Not found error
+    #[error("Not found: {0}")]
+    NotFound(String),
+
+    /// Invalid state error
+    #[error("Invalid state: {0}")]
+    InvalidState(String),
 }
 
 #[cfg(test)]

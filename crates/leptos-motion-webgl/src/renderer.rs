@@ -261,9 +261,142 @@ impl WebGLRenderer {
     }
 
     /// Render a scene
-    fn render_scene(&mut self, _scene: &Scene, _camera: &dyn Camera) -> Result<()> {
-        // TODO: Implement scene rendering
-        // This will be implemented when we have the scene graph system
+    fn render_scene(&mut self, scene: &Scene, camera: &dyn Camera) -> Result<()> {
+        let context = &self.context;
+        
+        // Set viewport
+        let canvas_width = self.canvas.width() as i32;
+        let canvas_height = self.canvas.height() as i32;
+        context.viewport(0, 0, canvas_width, canvas_height);
+        
+        // Get camera matrices
+        let view_matrix = camera.get_view_matrix();
+        let projection_matrix = camera.get_projection_matrix();
+        
+        // Render each object in the scene
+        for object in &scene.objects {
+            if !object.visible {
+                continue;
+            }
+            
+            // Bind geometry
+            if let Some(geometry) = &object.geometry {
+                self.bind_geometry(geometry)?;
+            }
+            
+            // Bind material
+            if let Some(material) = &object.material {
+                self.bind_material(material)?;
+            }
+            
+            // Set up shader uniforms
+            self.set_uniforms(&view_matrix, &projection_matrix, &object.transform)?;
+            
+            // Draw the object
+            self.draw_object(object)?;
+        }
+        
+        Ok(())
+    }
+    
+    /// Bind geometry for rendering
+    fn bind_geometry(&self, geometry: &crate::geometry::Geometry) -> Result<()> {
+        let context = &self.context;
+        
+        // Bind vertex array object if available
+        if let Some(vao) = &geometry.vao {
+            context.bind_vertex_array(Some(vao));
+        } else {
+            // Fallback: bind individual buffers
+            if let Some(vertex_buffer) = geometry.buffers.get("position") {
+                context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(vertex_buffer));
+                context.enable_vertex_attrib_array(0);
+                context.vertex_attrib_pointer_with_i32(0, 3, WebGl2RenderingContext::FLOAT, false, 0, 0);
+            }
+            
+            if let Some(normal_buffer) = geometry.buffers.get("normal") {
+                context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(normal_buffer));
+                context.enable_vertex_attrib_array(1);
+                context.vertex_attrib_pointer_with_i32(1, 3, WebGl2RenderingContext::FLOAT, false, 0, 0);
+            }
+            
+            if let Some(texcoord_buffer) = geometry.buffers.get("texcoord") {
+                context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(texcoord_buffer));
+                context.enable_vertex_attrib_array(2);
+                context.vertex_attrib_pointer_with_i32(2, 2, WebGl2RenderingContext::FLOAT, false, 0, 0);
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Bind material for rendering
+    fn bind_material(&self, _material: &crate::material::Material) -> Result<()> {
+        // TODO: Implement material binding
+        // This will include texture binding, shader program selection, etc.
+        Ok(())
+    }
+    
+    /// Set shader uniforms
+    fn set_uniforms(&self, view_matrix: &[f32; 16], projection_matrix: &[f32; 16], transform: &crate::transforms::Transform3D) -> Result<()> {
+        let context = &self.context;
+        let mut shader_manager = self.shader_manager.borrow_mut();
+        
+        // Get the current shader program
+        if let Some(program) = shader_manager.get_current_program() {
+            // Set view matrix
+            if let Some(location) = shader_manager.get_uniform_location(context, "uViewMatrix") {
+                unsafe {
+                    let array = js_sys::Float32Array::view(view_matrix);
+                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
+                }
+            }
+            
+            // Set projection matrix
+            if let Some(location) = shader_manager.get_uniform_location(context, "uProjectionMatrix") {
+                unsafe {
+                    let array = js_sys::Float32Array::view(projection_matrix);
+                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
+                }
+            }
+            
+            // Set model matrix
+            let model_matrix = transform.get_matrix();
+            if let Some(location) = shader_manager.get_uniform_location(context, "uModelMatrix") {
+                unsafe {
+                    let array = js_sys::Float32Array::view(&model_matrix);
+                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
+                }
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Draw an object
+    fn draw_object(&self, object: &crate::scene::SceneObject) -> Result<()> {
+        let context = &self.context;
+        
+        if let Some(geometry) = &object.geometry {
+            if let Some(index_buffer) = geometry.buffers.get("indices") {
+                // Draw with indices
+                context.bind_buffer(WebGl2RenderingContext::ELEMENT_ARRAY_BUFFER, Some(index_buffer));
+                context.draw_elements_with_i32(
+                    WebGl2RenderingContext::TRIANGLES,
+                    geometry.index_count as i32,
+                    WebGl2RenderingContext::UNSIGNED_INT,
+                    0,
+                );
+            } else {
+                // Draw without indices
+                context.draw_arrays(
+                    WebGl2RenderingContext::TRIANGLES,
+                    0,
+                    geometry.vertex_count as i32,
+                );
+            }
+        }
+        
         Ok(())
     }
 

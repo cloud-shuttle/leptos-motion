@@ -828,13 +828,196 @@ impl CodeGenerator {
     }
 
     fn generate_angular_component(&self, timeline: &Timeline3D) -> Result<String> {
-        // TODO: Implement Angular component generation
-        Ok("// Angular component generation not implemented yet".to_string())
+        let mut angular_output = String::new();
+        
+        // Add imports
+        if self.settings.typescript {
+            angular_output.push_str("import { Component, Input, OnInit, ElementRef, Renderer2 } from '@angular/core';\n");
+            angular_output.push_str("import { trigger, state, style, transition, animate } from '@angular/animations';\n\n");
+        } else {
+            angular_output.push_str("import { Component, Input, OnInit, ElementRef, Renderer2 } from '@angular/core';\n");
+            angular_output.push_str("import { trigger, state, style, transition, animate } from '@angular/animations';\n\n");
+        }
+        
+        // Generate component decorator
+        angular_output.push_str("@Component({\n");
+        angular_output.push_str("  selector: 'app-animated-component',\n");
+        angular_output.push_str("  template: `\n");
+        angular_output.push_str("    <div \n");
+        angular_output.push_str("      class=\"animated-component\"\n");
+        angular_output.push_str("      [@animationState]=\"currentState\"\n");
+        angular_output.push_str("      [ngClass]=\"className\"\n");
+        angular_output.push_str("    >\n");
+        angular_output.push_str("      <ng-content></ng-content>\n");
+        angular_output.push_str("    </div>\n");
+        angular_output.push_str("  `,\n");
+        angular_output.push_str("  styles: [`\n");
+        angular_output.push_str("    .animated-component {\n");
+        angular_output.push_str("      display: inline-block;\n");
+        angular_output.push_str("      will-change: transform, opacity;\n");
+        angular_output.push_str("    }\n");
+        angular_output.push_str("  `],\n");
+        angular_output.push_str("  animations: [\n");
+        angular_output.push_str("    trigger('animationState', [\n");
+        angular_output.push_str("      state('initial', style({\n");
+        angular_output.push_str("        opacity: 0.5,\n");
+        angular_output.push_str("        transform: 'translateX(0px) scale(1)'\n");
+        angular_output.push_str("      })),\n");
+        angular_output.push_str("      state('animate', style({\n");
+        angular_output.push_str("        opacity: 1,\n");
+        angular_output.push_str("        transform: 'translateX(100px) scale(1.1)'\n");
+        angular_output.push_str("      })),\n");
+        angular_output.push_str("      transition('initial => animate', animate('1000ms ease-in-out')),\n");
+        angular_output.push_str("      transition('animate => initial', animate('1000ms ease-in-out'))\n");
+        angular_output.push_str("    ])\n");
+        angular_output.push_str("  ]\n");
+        angular_output.push_str("})\n");
+        
+        // Generate component class
+        if self.settings.typescript {
+            angular_output.push_str("export class AnimatedComponent implements OnInit {\n");
+            angular_output.push_str("  @Input() className: string = '';\n");
+            angular_output.push_str("  \n");
+            angular_output.push_str("  currentState: string = 'initial';\n");
+            angular_output.push_str("  \n");
+            angular_output.push_str("  constructor(\n");
+            angular_output.push_str("    private elementRef: ElementRef,\n");
+            angular_output.push_str("    private renderer: Renderer2\n");
+            angular_output.push_str("  ) {}\n");
+        } else {
+            angular_output.push_str("export class AnimatedComponent implements OnInit {\n");
+            angular_output.push_str("  @Input() className = '';\n");
+            angular_output.push_str("  \n");
+            angular_output.push_str("  currentState = 'initial';\n");
+            angular_output.push_str("  \n");
+            angular_output.push_str("  constructor(\n");
+            angular_output.push_str("    private elementRef: ElementRef,\n");
+            angular_output.push_str("    private renderer: Renderer2\n");
+            angular_output.push_str("  ) {}\n");
+        }
+        
+        // Add lifecycle methods
+        angular_output.push_str("  \n");
+        angular_output.push_str("  ngOnInit(): void {\n");
+        angular_output.push_str("    // Start animation after component initialization\n");
+        angular_output.push_str("    setTimeout(() => {\n");
+        angular_output.push_str("      this.startAnimation();\n");
+        angular_output.push_str("    }, 100);\n");
+        angular_output.push_str("  }\n");
+        angular_output.push_str("  \n");
+        angular_output.push_str("  startAnimation(): void {\n");
+        angular_output.push_str("    this.currentState = 'animate';\n");
+        angular_output.push_str("    \n");
+        angular_output.push_str("    // Optional: Add custom animation logic here\n");
+        angular_output.push_str("    // You can use the Renderer2 for more complex animations\n");
+        angular_output.push_str("  }\n");
+        angular_output.push_str("  \n");
+        angular_output.push_str("  resetAnimation(): void {\n");
+        angular_output.push_str("    this.currentState = 'initial';\n");
+        angular_output.push_str("  }\n");
+        angular_output.push_str("}\n");
+        
+        Ok(angular_output)
     }
 
     fn generate_svelte_component(&self, timeline: &Timeline3D) -> Result<String> {
-        // TODO: Implement Svelte component generation
-        Ok("// Svelte component generation not implemented yet".to_string())
+        let mut svelte_output = String::new();
+        
+        // Add script section
+        if self.settings.typescript {
+            svelte_output.push_str("<script lang=\"ts\">\n");
+            svelte_output.push_str("  import { onMount } from 'svelte';\n");
+            svelte_output.push_str("  import { cubicOut } from 'svelte/easing';\n");
+            svelte_output.push_str("  import { fly, scale } from 'svelte/transition';\n\n");
+            svelte_output.push_str("  export let className: string = '';\n");
+            svelte_output.push_str("  export let duration: number = 1000;\n");
+            svelte_output.push_str("  export let delay: number = 0;\n\n");
+            svelte_output.push_str("  let isVisible: boolean = false;\n");
+            svelte_output.push_str("  let animationKey: number = 0;\n\n");
+        } else {
+            svelte_output.push_str("<script>\n");
+            svelte_output.push_str("  import { onMount } from 'svelte';\n");
+            svelte_output.push_str("  import { cubicOut } from 'svelte/easing';\n");
+            svelte_output.push_str("  import { fly, scale } from 'svelte/transition';\n\n");
+            svelte_output.push_str("  export let className = '';\n");
+            svelte_output.push_str("  export let duration = 1000;\n");
+            svelte_output.push_str("  export let delay = 0;\n\n");
+            svelte_output.push_str("  let isVisible = false;\n");
+            svelte_output.push_str("  let animationKey = 0;\n\n");
+        }
+        
+        // Add animation functions
+        svelte_output.push_str("  const startAnimation = () => {\n");
+        svelte_output.push_str("    isVisible = true;\n");
+        svelte_output.push_str("    animationKey += 1;\n");
+        svelte_output.push_str("  };\n\n");
+        svelte_output.push_str("  const resetAnimation = () => {\n");
+        svelte_output.push_str("    isVisible = false;\n");
+        svelte_output.push_str("    animationKey += 1;\n");
+        svelte_output.push_str("  };\n\n");
+        svelte_output.push_str("  onMount(() => {\n");
+        svelte_output.push_str("    // Start animation after component mounts\n");
+        svelte_output.push_str("    setTimeout(() => {\n");
+        svelte_output.push_str("      startAnimation();\n");
+        svelte_output.push_str("    }, delay);\n");
+        svelte_output.push_str("  });\n");
+        svelte_output.push_str("</script>\n\n");
+        
+        // Add template
+        svelte_output.push_str("<div \n");
+        svelte_output.push_str("  class=\"animated-component {className}\"\n");
+        svelte_output.push_str("  class:visible={isVisible}\n");
+        svelte_output.push_str("  in:fly={{ x: -100, duration, easing: cubicOut }}\n");
+        svelte_output.push_str("  out:fly={{ x: 100, duration, easing: cubicOut }}\n");
+        svelte_output.push_str("  key={animationKey}\n");
+        svelte_output.push_str(">\n");
+        svelte_output.push_str("  <div \n");
+        svelte_output.push_str("    class=\"inner-content\"\n");
+        svelte_output.push_str("    in:scale={{ duration: duration * 0.8, easing: cubicOut }}\n");
+        svelte_output.push_str("    out:scale={{ duration: duration * 0.8, easing: cubicOut }}\n");
+        svelte_output.push_str("  >\n");
+        svelte_output.push_str("    <slot></slot>\n");
+        svelte_output.push_str("  </div>\n");
+        svelte_output.push_str("</div>\n\n");
+        
+        // Add styles
+        svelte_output.push_str("<style>\n");
+        svelte_output.push_str("  .animated-component {\n");
+        svelte_output.push_str("    display: inline-block;\n");
+        svelte_output.push_str("    will-change: transform, opacity;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  .inner-content {\n");
+        svelte_output.push_str("    display: inline-block;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  .visible {\n");
+        svelte_output.push_str("    opacity: 1;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  /* Custom animation classes */\n");
+        svelte_output.push_str("  .animated-component.fade-in {\n");
+        svelte_output.push_str("    opacity: 0;\n");
+        svelte_output.push_str("    transition: opacity 0.3s ease-in-out;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  .animated-component.fade-in.visible {\n");
+        svelte_output.push_str("    opacity: 1;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  .animated-component.slide-up {\n");
+        svelte_output.push_str("    transform: translateY(20px);\n");
+        svelte_output.push_str("    opacity: 0;\n");
+        svelte_output.push_str("    transition: transform 0.3s ease-out, opacity 0.3s ease-out;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("  \n");
+        svelte_output.push_str("  .animated-component.slide-up.visible {\n");
+        svelte_output.push_str("    transform: translateY(0);\n");
+        svelte_output.push_str("    opacity: 1;\n");
+        svelte_output.push_str("  }\n");
+        svelte_output.push_str("</style>\n");
+        
+        Ok(svelte_output)
     }
 
     fn generate_leptos_component(&self, timeline: &Timeline3D) -> Result<String> {

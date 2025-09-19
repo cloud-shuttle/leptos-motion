@@ -1,6 +1,6 @@
 //! Animation Handle
 //!
-//! This module provides the AnimationHandle struct for controlling animations.
+//! This module provides the DomAnimationHandle struct for controlling animations.
 //! It acts as a safe wrapper around animation IDs and provides methods for
 //! controlling animation lifecycle.
 
@@ -9,9 +9,9 @@ use std::rc::{Rc, Weak};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
-/// Handle for controlling animations
+/// Handle for controlling DOM animations
 #[derive(Debug, Clone)]
-pub struct AnimationHandle {
+pub struct DomAnimationHandle {
     /// Unique animation ID
     pub id: String,
     /// Weak reference to animation manager
@@ -36,7 +36,7 @@ impl AnimationManager {
     }
     
     /// Register a new animation
-    pub fn register(&mut self, mut animation: Box<dyn Animation>) -> AnimationResult<AnimationHandle> {
+    pub fn register(&mut self, mut animation: Box<dyn Animation>) -> AnimationResult<DomAnimationHandle> {
         let id = animation.id().to_string();
         
         // Check if animation already exists
@@ -52,7 +52,7 @@ impl AnimationManager {
         self.animations.insert(id.clone(), animation_rc);
         
         // Create handle
-        let handle = AnimationHandle {
+        let handle = DomAnimationHandle {
             id,
             manager: Weak::new(), // Will be set by the caller
         };
@@ -61,7 +61,7 @@ impl AnimationManager {
     }
     
     /// Unregister an animation
-    pub fn unregister(&mut self, handle: AnimationHandle) -> AnimationResult<()> {
+    pub fn unregister(&mut self, handle: DomAnimationHandle) -> AnimationResult<()> {
         if let Some(animation_rc) = self.animations.remove(&handle.id) {
             // Stop the animation
             if let Ok(mut animation) = animation_rc.try_borrow_mut() {
@@ -158,7 +158,7 @@ impl Default for AnimationManager {
     }
 }
 
-impl AnimationHandle {
+impl DomAnimationHandle {
     /// Create a new animation handle
     pub fn new(id: String, manager: Weak<RefCell<AnimationManager>>) -> Self {
         Self { id, manager }
@@ -235,7 +235,7 @@ impl AnimationHandle {
     }
 }
 
-impl Drop for AnimationHandle {
+impl Drop for DomAnimationHandle {
     fn drop(&mut self) {
         // Automatically stop animation when handle is dropped
         if let Some(manager) = self.manager.upgrade() {
@@ -349,8 +349,8 @@ mod tests {
     
     #[test]
     fn test_animation_handle() {
-        // Test that we can create an AnimationHandle without RefCell issues
-        let handle = AnimationHandle::new("test_handle".to_string(), Weak::new());
+        // Test that we can create an DomAnimationHandle without RefCell issues
+        let handle = DomAnimationHandle::new("test_handle".to_string(), Weak::new());
         
         // Test that the handle has the correct ID
         assert_eq!(handle.id(), "test_handle");

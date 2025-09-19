@@ -74,7 +74,7 @@ pub type DomEasing = Easing;
 
 // Re-export event-driven components (Phase 3 - Primary API)
 pub use animation_trait::{Animation, AnimationError, AnimationResult, AnimationState, animation_utils};
-pub use animation_handle::{AnimationHandle as EventAnimationHandle, AnimationManager};
+pub use animation_handle::{DomAnimationHandle as EventAnimationHandle, AnimationManager};
 pub use css_transition_animation::CssTransitionAnimation;
 // SimpleMotionDiv removed - using single MotionDiv API
 pub use keyframe_animation::{KeyframeAnimation, Keyframe};

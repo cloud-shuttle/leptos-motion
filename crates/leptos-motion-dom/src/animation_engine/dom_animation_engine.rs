@@ -1,8 +1,8 @@
 //! DOM-specific AnimationEngine implementation
 
 use std::collections::HashMap;
-use leptos_motion_core::{AnimationEngine, AnimationValue, Result, Transition, PlaybackState, AnimationConfig};
-use leptos_motion_core::AnimationHandle as CoreAnimationHandle;
+use leptos_motion_core::engine::AnimationEngine;
+use leptos_motion_core::{AnimationHandle, AnimationValue, Result, Transition, PlaybackState, AnimationConfig};
 use crate::animation_trait::{Animation, AnimationError, AnimationResult};
 
 /// DOM-specific implementation of AnimationEngine
@@ -10,7 +10,7 @@ pub struct DomAnimationEngine {
     /// Active animations
     animations: HashMap<String, AnimationValue>,
     /// Animation handles
-    handles: HashMap<CoreAnimationHandle, String>,
+    handles: HashMap<AnimationHandle, String>,
     /// Next handle ID
     next_handle_id: u64,
 }
@@ -84,8 +84,8 @@ impl AnimationEngine for DomAnimationEngine {
         true // DOM is always available in browser context
     }
 
-    fn animate(&mut self, _animation: &AnimationConfig) -> Result<CoreAnimationHandle> {
-        let handle = CoreAnimationHandle::new(self.next_handle_id);
+    fn animate(&mut self, _animation: &AnimationConfig) -> Result<AnimationHandle> {
+        let handle = leptos_motion_core::AnimationHandle::new(self.next_handle_id);
         self.next_handle_id += 1;
         self.handles.insert(handle, "dom_animation".to_string());
         Ok(handle)
@@ -113,9 +113,9 @@ impl AnimationEngine for DomAnimationEngine {
 
     fn get_state(&self, handle: AnimationHandle) -> Result<PlaybackState> {
         if self.handles.contains_key(&handle) {
-            Ok(PlaybackState::Running)
+            Ok(leptos_motion_core::PlaybackState::Running)
         } else {
-            Ok(PlaybackState::Idle)
+            Ok(leptos_motion_core::PlaybackState::Idle)
         }
     }
 

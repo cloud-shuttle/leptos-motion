@@ -39,7 +39,7 @@ css-animations = []
 
 [dependencies]
 # Core motion
-leptos-motion-core = { workspace = true, features = ["serde-support"] }
+leptos-motion-core = { path = "../leptos-motion-core", features = ["basic-animation", "serde-support", "web-sys"] }
 leptos-motion-gestures = { workspace = true }
 leptos-motion-layout = { workspace = true }
 

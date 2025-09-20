@@ -3,7 +3,7 @@
 use crate::Variants;
 use crate::animation::Keyframes;
 use crate::{
-    AnimationBuilder, AnimationConfig, AnimationValue, Easing, RepeatConfig, SpringConfig,
+    AnimationBuilder, AnimationBuilderConfig, AnimationValue, Easing, RepeatConfig, SpringConfig,
     StaggerConfig, StaggerFrom, Transition,
 };
 
@@ -14,7 +14,7 @@ impl AnimationPresets {
     // ===== ENTRANCE ANIMATIONS =====
 
     /// Fade in animation
-    pub fn fade_in() -> AnimationConfig {
+    pub fn fade_in() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!("opacity" => AnimationValue::Number(0.0)))
             .animate(animate!("opacity" => AnimationValue::Number(1.0)))
@@ -27,7 +27,7 @@ impl AnimationPresets {
     }
 
     /// Slide up animation
-    pub fn slide_up(distance: f64) -> AnimationConfig {
+    pub fn slide_up(distance: f64) -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -46,7 +46,7 @@ impl AnimationPresets {
     }
 
     /// Scale in animation
-    pub fn scale_in() -> AnimationConfig {
+    pub fn scale_in() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -65,7 +65,7 @@ impl AnimationPresets {
     }
 
     /// Pop in animation
-    pub fn pop_in() -> AnimationConfig {
+    pub fn pop_in() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -89,7 +89,7 @@ impl AnimationPresets {
     }
 
     /// Rotate in animation
-    pub fn rotate_in() -> AnimationConfig {
+    pub fn rotate_in() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -108,7 +108,7 @@ impl AnimationPresets {
     }
 
     /// Flip in animation
-    pub fn flip_in() -> AnimationConfig {
+    pub fn flip_in() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -129,7 +129,7 @@ impl AnimationPresets {
     // ===== EXIT ANIMATIONS =====
 
     /// Fade out animation
-    pub fn fade_out() -> AnimationConfig {
+    pub fn fade_out() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .exit(animate!("opacity" => AnimationValue::Number(0.0)))
             .transition(Transition {
@@ -141,7 +141,7 @@ impl AnimationPresets {
     }
 
     /// Scale out animation
-    pub fn scale_out() -> AnimationConfig {
+    pub fn scale_out() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .exit(animate!(
                 "opacity" => AnimationValue::Number(0.0),
@@ -269,7 +269,7 @@ impl AnimationPresets {
     // ===== LOADING ANIMATIONS =====
 
     /// Spin animation
-    pub fn spin() -> AnimationConfig {
+    pub fn spin() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .animate(animate!("rotate" => AnimationValue::Degrees(360.0)))
             .transition(Transition {
@@ -284,7 +284,7 @@ impl AnimationPresets {
     // ===== PAGE TRANSITIONS =====
 
     /// Page fade transition
-    pub fn page_fade() -> AnimationConfig {
+    pub fn page_fade() -> AnimationBuilderConfig {
         AnimationBuilder::new()
             .initial(animate!("opacity" => AnimationValue::Number(0.0)))
             .animate(animate!("opacity" => AnimationValue::Number(1.0)))

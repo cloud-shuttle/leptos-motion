@@ -115,12 +115,16 @@ pub use animation::presets::springs;
 
 // Re-export core types
 #[cfg(feature = "approx")]
-pub use animation::{AnimationBuilder, AnimationConfig, Variants};
+pub use animation::{AnimationBuilder, AnimationConfig as AnimationBuilderConfig, Variants};
 #[cfg(feature = "approx")]
 pub use easing::EasingFn;
 #[cfg(feature = "web-sys")]
 pub use engine::WaapiEngine;
-pub use engine::{AnimationEngine, OptimizedHybridEngine, PlaybackState, RafEngine};
+// Engine types - basic-animation feature
+#[cfg(feature = "basic-animation")]
+pub use engine::{AnimationEngine, PlaybackState, AnimationConfig};
+#[cfg(feature = "basic-animation")]
+pub use engine::{OptimizedHybridEngine, RafEngine};
 #[cfg(feature = "approx")]
 pub use interpolation::Interpolate;
 #[cfg(feature = "approx")]

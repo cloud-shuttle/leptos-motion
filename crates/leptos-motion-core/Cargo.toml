@@ -13,9 +13,10 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["core-animations", "raf", "waapi", "leptos-integration", "conditional-web-sys", "minimal-serialization", "num-traits", "approx"]
+default = ["basic-animation", "core-animations", "raf", "waapi", "leptos-integration", "conditional-web-sys", "minimal-serialization", "num-traits", "approx"]
 
 # Core animation features
+basic-animation = []  # Core animation types (AnimationHandle, PlaybackState, AnimationConfig)
 core-animations = []  # Basic animation types and transitions
 raf = []  # RequestAnimationFrame engine
 waapi = ["web-sys/Animation", "web-sys/KeyframeEffect"]  # Web Animations API engine

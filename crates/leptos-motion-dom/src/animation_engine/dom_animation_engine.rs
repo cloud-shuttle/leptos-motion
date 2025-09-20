@@ -2,7 +2,8 @@
 
 use std::collections::HashMap;
 use leptos_motion_core::engine::AnimationEngine;
-use leptos_motion_core::{AnimationHandle, AnimationValue, Result, Transition, PlaybackState, AnimationConfig};
+use leptos_motion_core::{AnimationHandle, AnimationValue, Result, Transition, AnimationConfig};
+use leptos_motion_core::engine::PlaybackState;
 use crate::animation_trait::{Animation, AnimationError, AnimationResult};
 
 /// DOM-specific implementation of AnimationEngine
@@ -85,7 +86,7 @@ impl AnimationEngine for DomAnimationEngine {
     }
 
     fn animate(&mut self, _animation: &AnimationConfig) -> Result<AnimationHandle> {
-        let handle = leptos_motion_core::AnimationHandle::new(self.next_handle_id);
+        let handle = AnimationHandle::new(self.next_handle_id);
         self.next_handle_id += 1;
         self.handles.insert(handle, "dom_animation".to_string());
         Ok(handle)
@@ -113,9 +114,9 @@ impl AnimationEngine for DomAnimationEngine {
 
     fn get_state(&self, handle: AnimationHandle) -> Result<PlaybackState> {
         if self.handles.contains_key(&handle) {
-            Ok(leptos_motion_core::PlaybackState::Running)
+            Ok(PlaybackState::Running)
         } else {
-            Ok(leptos_motion_core::PlaybackState::Idle)
+            Ok(PlaybackState::Idle)
         }
     }
 

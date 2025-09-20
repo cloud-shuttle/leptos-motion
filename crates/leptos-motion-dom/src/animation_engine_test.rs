@@ -4,7 +4,7 @@
 mod tests {
     use super::*;
     use crate::animation_engine::DomAnimationEngine;
-    use leptos_motion_core::{Transition, Easing};
+    use leptos_motion_core::{Transition, Easing, AnimationValue};
     use std::collections::HashMap;
     use std::rc::Rc;
     use std::cell::RefCell;
@@ -39,7 +39,7 @@ mod tests {
         
         // Check that we have the animation
         assert_eq!(engine.get_all_values().len(), 1);
-        assert_eq!(engine.get_property_value("x"), Some(0.0));
+        assert_eq!(engine.get_property_value("x"), Some(&AnimationValue::Number(100.0)));
     }
 
     #[test]
@@ -61,8 +61,8 @@ mod tests {
         
         // Check that we have both animations
         assert_eq!(engine.get_all_values().len(), 2);
-        assert_eq!(engine.get_property_value("x"), Some(0.0));
-        assert_eq!(engine.get_property_value("y"), Some(0.0));
+        assert_eq!(engine.get_property_value("x"), Some(&AnimationValue::Number(100.0)));
+        assert_eq!(engine.get_property_value("y"), Some(&AnimationValue::Number(200.0)));
     }
 
     #[test]

@@ -467,12 +467,12 @@ mod tests {
         assert_eq!(cache.get_stats().miss_count, 1);
         
         // Test cache hit
-        cache.set("key1".to_string(), 42.0, Duration::from_secs(1));
+        cache.set("key1".to_string(), 42.0, 1000.0); // 1 second in ms
         assert_eq!(cache.get("key1"), Some(42.0));
         assert_eq!(cache.get_stats().hit_count, 1);
         
         // Test cache expiration
-        cache.set("key2".to_string(), 24.0, Duration::from_nanos(1));
+        cache.set("key2".to_string(), 24.0, 0.001); // 1 nanosecond in ms
         std::thread::sleep(Duration::from_millis(1));
         assert!(cache.get("key2").is_none());
     }

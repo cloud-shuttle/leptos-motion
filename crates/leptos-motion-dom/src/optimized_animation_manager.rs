@@ -489,7 +489,7 @@ mod tests {
         assert!(manager.get_cached_value("key1").is_none());
         
         // Test cache set and hit
-        manager.set_cached_value("key1".to_string(), 42.0, Duration::from_secs(1));
+        manager.set_cached_value("key1".to_string(), 42.0, 1000.0); // 1 second in ms
         assert_eq!(manager.get_cached_value("key1"), Some(42.0));
     }
 

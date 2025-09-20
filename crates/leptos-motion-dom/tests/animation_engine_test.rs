@@ -1,7 +1,7 @@
 //! Test animation engine functionality
 
 use leptos_motion_dom::animation_engine::DomAnimationEngine;
-use leptos_motion_core::{Transition, Easing, RepeatConfig};
+use leptos_motion_core::{Transition, Easing, RepeatConfig, AnimationValue};
 use std::collections::HashMap;
 
 #[test]
@@ -26,12 +26,12 @@ fn test_animate_property() {
     
     // Check if animation was created
     assert!(engine.get_property_value("scale").is_some());
-    assert_eq!(engine.get_property_value("scale").unwrap(), 1.0);
+    assert_eq!(engine.get_property_value("scale").unwrap(), &AnimationValue::Number(2.0));
     
     // Check all values
     let all_values = engine.get_all_values();
     assert_eq!(all_values.len(), 1);
-    assert_eq!(all_values.get("scale").unwrap(), &1.0);
+    assert_eq!(all_values.get("scale").unwrap(), &AnimationValue::Number(2.0));
 }
 
 #[test]
@@ -47,15 +47,15 @@ fn test_animate_multiple_properties() {
     };
     
     let mut properties = HashMap::new();
-    properties.insert("opacity".to_string(), (1.0, 0.5, transition.clone()));
-    properties.insert("x".to_string(), (0.0, 100.0, transition.clone()));
+    properties.insert("opacity".to_string(), AnimationValue::Number(1.0));
+    properties.insert("x".to_string(), AnimationValue::Number(100.0));
     
     let _ = engine.animate_properties(properties);
     
     let all_values = engine.get_all_values();
     assert_eq!(all_values.len(), 2);
-    assert_eq!(all_values.get("opacity").unwrap(), &1.0);
-    assert_eq!(all_values.get("x").unwrap(), &0.0);
+    assert_eq!(all_values.get("opacity").unwrap(), &AnimationValue::Number(1.0));
+    assert_eq!(all_values.get("x").unwrap(), &AnimationValue::Number(100.0));
 }
 
 #[test]

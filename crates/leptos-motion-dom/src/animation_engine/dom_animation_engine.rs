@@ -37,6 +37,14 @@ impl DomAnimationEngine {
             return Err(AnimationError::InvalidConfig("Property name cannot be empty".to_string()));
         }
 
+        if property.len() > 1000 {
+            return Err(AnimationError::InvalidConfig("Property name too long".to_string()));
+        }
+
+        if !from.is_finite() || !to.is_finite() {
+            return Err(AnimationError::InvalidConfig("Animation values must be finite".to_string()));
+        }
+
         let value = AnimationValue::Number(to);
         self.animations.insert(property, value);
         Ok(())
@@ -71,6 +79,36 @@ impl DomAnimationEngine {
     /// Check if has active animations
     pub fn has_active_animations(&self) -> bool {
         !self.animations.is_empty()
+    }
+
+    /// Animate multiple properties
+    pub fn animate_properties(&mut self, properties: HashMap<String, AnimationValue>) -> AnimationResult<()> {
+        for (property, value) in properties {
+            if property.is_empty() {
+                return Err(AnimationError::InvalidConfig("Property name cannot be empty".to_string()));
+            }
+            self.animations.insert(property, value);
+        }
+        Ok(())
+    }
+
+    /// Stop a specific property animation
+    pub fn stop_property(&mut self, property: &str) -> Option<AnimationValue> {
+        self.animations.remove(property)
+    }
+
+    /// Stop all animations
+    pub fn stop_all(&mut self) {
+        self.animations.clear();
+        self.handles.clear();
+    }
+
+    /// Set update callback (placeholder for now)
+    pub fn on_update<F>(&mut self, _callback: F) 
+    where 
+        F: Fn(&HashMap<String, AnimationValue>) + 'static 
+    {
+        // TODO: Implement callback system
     }
 }
 

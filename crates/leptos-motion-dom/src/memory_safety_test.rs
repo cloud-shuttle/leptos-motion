@@ -5,11 +5,11 @@
 #[cfg(test)]
 mod tests {
     use super::super::animation_engine::DomAnimationEngine;
-    use leptos_motion_core::{Transition, Easing};
+    use leptos_motion_core::{Transition, Easing, AnimationValue};
 
     #[test]
     fn test_animation_engine_creation() {
-        let engine = DomDomAnimationEngine::new();
+        let engine = DomAnimationEngine::new();
         // Test that we can get values (should be empty initially)
         let values = engine.get_all_values();
         assert!(values.is_empty());
@@ -60,8 +60,8 @@ mod tests {
         let mut engine = DomAnimationEngine::new();
         
         let mut properties = std::collections::HashMap::new();
-        properties.insert("opacity".to_string(), (0.0, 1.0, Transition::default()));
-        properties.insert("".to_string(), (0.0, 1.0, Transition::default())); // Invalid
+        properties.insert("opacity".to_string(), AnimationValue::Number(1.0));
+        properties.insert("".to_string(), AnimationValue::Number(1.0)); // Invalid
         
         let result = engine.animate_properties(properties);
         assert!(result.is_err()); // Should fail due to empty property name
@@ -114,6 +114,6 @@ mod tests {
         // Get current values
         let values = engine.get_all_values();
         assert!(values.contains_key("opacity"));
-        assert_eq!(values["opacity"], 0.0); // Should be initial value
+        assert_eq!(values["opacity"], AnimationValue::Number(1.0)); // Should be target value
     }
 }

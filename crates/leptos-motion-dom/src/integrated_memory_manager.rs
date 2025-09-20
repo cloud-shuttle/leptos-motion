@@ -445,7 +445,7 @@ mod tests {
 
     #[test]
     fn test_integrated_memory_manager_creation() {
-        let manager = IntegratedMemoryManager::new();
+        let mut manager = IntegratedMemoryManager::new();
         let stats = manager.get_comprehensive_stats();
         
         assert_eq!(stats.memory.active_animations, 0);
@@ -485,7 +485,7 @@ mod tests {
 
     #[test]
     fn test_comprehensive_report() {
-        let manager = IntegratedMemoryManager::new();
+        let mut manager = IntegratedMemoryManager::new();
         let report = manager.get_comprehensive_report();
         
         assert!(report.contains("COMPREHENSIVE ANIMATION SYSTEM REPORT"));

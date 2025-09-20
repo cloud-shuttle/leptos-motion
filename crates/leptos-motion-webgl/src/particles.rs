@@ -246,7 +246,9 @@ impl ParticleSystem {
         });
 
         // Emit new particles
-        for emitter in self.emitters.values_mut() {
+        // Collect emitter data first to avoid borrowing conflicts
+        let mut emission_requests = Vec::new();
+        for (id, emitter) in &self.emitters {
             if !emitter.enabled {
                 continue;
             }
@@ -255,17 +257,28 @@ impl ParticleSystem {
                 // Emit burst of particles
                 for _ in 0..emitter.burst_count {
                     if self.particles.len() < self.max_particles {
-                        self.emit_particle(emitter);
+                        emission_requests.push((id.clone(), emitter.clone()));
                     }
                 }
-                emitter.disable_burst_mode();
             } else {
                 // Emit particles based on emission rate
                 let particles_to_emit = (emitter.emission_rate * delta_time) as u32;
                 for _ in 0..particles_to_emit {
                     if self.particles.len() < self.max_particles {
-                        self.emit_particle(emitter);
+                        emission_requests.push((id.clone(), emitter.clone()));
                     }
+                }
+            }
+        }
+
+        // Now emit particles without borrowing conflicts
+        for (id, emitter_data) in emission_requests {
+            self.emit_particle(&emitter_data);
+            
+            // Update emitter state if needed
+            if let Some(emitter) = self.emitters.get_mut(&id) {
+                if emitter.burst_mode {
+                    emitter.disable_burst_mode();
                 }
             }
         }

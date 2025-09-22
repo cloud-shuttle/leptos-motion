@@ -220,10 +220,7 @@ impl ShaderManager {
                 let uniform_name = format!("uAmbientLights[{}].color", i);
                 if let Some(location) = program.get_uniform_location(context, &uniform_name) {
                     let color = ambient_light.light.color.as_rgb_array();
-                    unsafe {
-                        let array = js_sys::Float32Array::view(&color);
-                        context.uniform3fv_with_f32_array(Some(location), &array);
-                    }
+                    context.uniform3fv_with_f32_array(Some(location), &color);
                 }
             }
             
@@ -233,18 +230,12 @@ impl ShaderManager {
                 
                 if let Some(location) = program.get_uniform_location(context, &color_uniform) {
                     let color = directional_light.light.color.as_rgb_array();
-                    unsafe {
-                        let array = js_sys::Float32Array::view(&color);
-                        context.uniform3fv_with_f32_array(Some(location), &array);
-                    }
+                    context.uniform3fv_with_f32_array(Some(location), &color);
                 }
                 
                 if let Some(location) = program.get_uniform_location(context, &direction_uniform) {
                     let direction = directional_light.direction;
-                    unsafe {
-                        let array = js_sys::Float32Array::view(&direction);
-                        context.uniform3fv_with_f32_array(Some(location), &array);
-                    }
+                    context.uniform3fv_with_f32_array(Some(location), &direction);
                 }
             }
         }

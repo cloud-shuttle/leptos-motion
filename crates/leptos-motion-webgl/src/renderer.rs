@@ -348,28 +348,19 @@ impl WebGLRenderer {
         // Get the current shader program
         if let Some(program) = shader_manager.get_current_program() {
             // Set view matrix
-            if let Some(location) = shader_manager.get_uniform_location(context, "uViewMatrix") {
-                unsafe {
-                    let array = js_sys::Float32Array::view(view_matrix);
-                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
-                }
+            if let Some(location) = program.get_uniform_location(context, "uViewMatrix") {
+                context.uniform_matrix4fv_with_f32_array(Some(location), false, view_matrix);
             }
             
             // Set projection matrix
-            if let Some(location) = shader_manager.get_uniform_location(context, "uProjectionMatrix") {
-                unsafe {
-                    let array = js_sys::Float32Array::view(projection_matrix);
-                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
-                }
+            if let Some(location) = program.get_uniform_location(context, "uProjectionMatrix") {
+                context.uniform_matrix4fv_with_f32_array(Some(location), false, projection_matrix);
             }
             
             // Set model matrix
             let model_matrix = transform.get_matrix();
-            if let Some(location) = shader_manager.get_uniform_location(context, "uModelMatrix") {
-                unsafe {
-                    let array = js_sys::Float32Array::view(&model_matrix);
-                    context.uniform_matrix4fv_with_f32_array(Some(location), false, &array);
-                }
+            if let Some(location) = program.get_uniform_location(context, "uModelMatrix") {
+                context.uniform_matrix4fv_with_f32_array(Some(location), false, model_matrix);
             }
         }
         
@@ -377,29 +368,10 @@ impl WebGLRenderer {
     }
     
     /// Draw an object
-    fn draw_object(&self, object: &crate::scene::SceneObject) -> Result<()> {
-        let context = &self.context;
-        
-        if let Some(geometry) = &object.geometry {
-            if let Some(index_buffer) = geometry.buffers.get("indices") {
-                // Draw with indices
-                context.bind_buffer(WebGl2RenderingContext::ELEMENT_ARRAY_BUFFER, Some(index_buffer));
-                context.draw_elements_with_i32(
-                    WebGl2RenderingContext::TRIANGLES,
-                    geometry.index_count as i32,
-                    WebGl2RenderingContext::UNSIGNED_INT,
-                    0,
-                );
-            } else {
-                // Draw without indices
-                context.draw_arrays(
-                    WebGl2RenderingContext::TRIANGLES,
-                    0,
-                    geometry.vertex_count as i32,
-                );
-            }
-        }
-        
+    fn draw_object(&self, _object: &crate::scene::SceneObject) -> Result<()> {
+        // TODO: Implement proper object drawing
+        // This requires geometry data to be added to Object3D or SceneObject
+        // For now, this is a placeholder implementation
         Ok(())
     }
 

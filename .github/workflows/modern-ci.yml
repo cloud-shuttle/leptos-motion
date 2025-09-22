@@ -29,7 +29,7 @@ jobs:
           submodules: recursive
       
       - name: Setup Rust ${{ matrix.rust }}
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt, clippy, llvm-tools-preview, rust-src
@@ -37,7 +37,7 @@ jobs:
           target: ${{ matrix.target }}
       
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v3
+        uses: Swatinem/rust-cache@v2.8.1
         with:
           workspaces: "."
           shared-key: "v1"
@@ -138,7 +138,7 @@ jobs:
           override: true
       
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v3
+        uses: Swatinem/rust-cache@v2.8.1
         with:
           workspaces: "."
           shared-key: "v1"
@@ -177,7 +177,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
       
       - name: Install Playwright
         run: |
@@ -225,7 +225,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
       
       - name: Install visual testing tools
         run: |
@@ -313,8 +313,8 @@ jobs:
       
       - name: Install documentation tools
         run: |
-          cargo install mdbook@latest
-          cargo install cargo-doc2readme@latest
+          cargo install mdbook --version latest
+          cargo install cargo-doc2readme --version latest
       
       - name: Generate API documentation
         run: |

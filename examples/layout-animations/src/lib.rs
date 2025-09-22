@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use rand::prelude::SliceRandom;
+use leptos_motion::MotionDiv;
 
 /// Layout Animation Examples
 /// Showcasing FLIP animations and layout transitions
@@ -93,7 +94,8 @@ pub fn LayoutAnimationsDemo() -> impl IntoView {
                             children=move |item| {
                                 let item_clone = item.clone();
                                 view! {
-                                    <div
+                                    <MotionDiv
+                                        node_ref=NodeRef::new()
                                         class=(move || {
                                             if layout_mode.get() == "grid" {
                                 "bg-gradient-to-r from-cyan-500 to-blue-500 p-6 rounded-xl text-white font-semibold shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 ease-out".to_string()

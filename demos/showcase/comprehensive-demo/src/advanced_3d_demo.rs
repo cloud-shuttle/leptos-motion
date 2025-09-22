@@ -197,7 +197,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"Smooth transitions between different 3D shapes"</p>
                     <ReactiveMotionDiv
                         class="demo-cube morphing-cube".to_string()
-                        animate_fn=Box::new(move || morphing_animation.get())
+                        animate=Box::new(move || morphing_animation.get())
                     >
                         <div class="cube-face front">"Morph"</div>
                         <div class="cube-face back">"Morph"</div>
@@ -213,7 +213,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"Dynamic particle effects with explosion-like behavior"</p>
                     <ReactiveMotionDiv
                         class="demo-cube particle-cube".to_string()
-                        animate_fn=Box::new(move || particle_animation.get())
+                        animate=Box::new(move || particle_animation.get())
                     >
                         <div class="cube-face front">"Particle"</div>
                         <div class="cube-face back">"Particle"</div>
@@ -229,7 +229,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"Combined rotation, translation, and scaling"</p>
                     <ReactiveMotionDiv
                         class="demo-cube complex-cube".to_string()
-                        animate_fn=Box::new(move || complex_transform_animation.get())
+                        animate=Box::new(move || complex_transform_animation.get())
                     >
                         <div class="cube-face front">"Complex"</div>
                         <div class="cube-face back">"Complex"</div>
@@ -245,7 +245,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"Advanced perspective manipulation for depth"</p>
                     <ReactiveMotionDiv
                         class="demo-cube perspective-cube".to_string()
-                        animate_fn=Box::new(move || perspective_animation.get())
+                        animate=Box::new(move || perspective_animation.get())
                     >
                         <div class="cube-face front">"Perspective"</div>
                         <div class="cube-face back">"Perspective"</div>
@@ -261,7 +261,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"3D path following with circular motion"</p>
                     <ReactiveMotionDiv
                         class="demo-cube path-cube".to_string()
-                        animate_fn=Box::new(move || path_animation.get())
+                        animate=Box::new(move || path_animation.get())
                     >
                         <div class="cube-face front">"Path"</div>
                         <div class="cube-face back">"Path"</div>
@@ -277,7 +277,7 @@ pub fn Advanced3DDemo() -> impl IntoView {
                     <p>"Dynamic lighting simulation with rotation"</p>
                     <ReactiveMotionDiv
                         class="demo-cube lighting-cube".to_string()
-                        animate_fn=Box::new(move || lighting_animation.get())
+                        animate=Box::new(move || lighting_animation.get())
                     >
                         <div class="cube-face front">"Light"</div>
                         <div class="cube-face back">"Light"</div>

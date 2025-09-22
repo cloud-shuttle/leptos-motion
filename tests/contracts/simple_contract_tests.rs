@@ -109,7 +109,7 @@ pub fn test_animation_engine_creation() -> SimpleContractTestResult {
     let start = Instant::now();
     
     let result = std::panic::catch_unwind(|| {
-        let _engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let _engine = leptos_motion_core::SimplifiedAnimationEngine::new();
     });
     
     let duration = start.elapsed();
@@ -135,7 +135,7 @@ pub fn test_animation_engine_animate_property() -> SimpleContractTestResult {
     let start = Instant::now();
     
     let result = std::panic::catch_unwind(|| {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         engine.animate_property(
             "scale".to_string(),
             1.0,
@@ -167,7 +167,7 @@ pub fn test_animation_engine_get_values() -> SimpleContractTestResult {
     let start = Instant::now();
     
     let result = std::panic::catch_unwind(|| {
-        let engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         let _values = engine.get_all_values();
     });
     
@@ -196,7 +196,7 @@ pub fn test_animation_engine_creation_performance() -> SimpleContractTestResult 
     let result = std::panic::catch_unwind(|| {
         let iterations = 1000;
         for _ in 0..iterations {
-            let _engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+            let _engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         }
     });
     
@@ -231,7 +231,7 @@ pub fn test_error_handling() -> SimpleContractTestResult {
     let start = Instant::now();
     
     let result = std::panic::catch_unwind(|| {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test with empty property name
         engine.animate_property(

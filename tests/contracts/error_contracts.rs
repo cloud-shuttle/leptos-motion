@@ -146,7 +146,7 @@ pub fn test_animation_engine_error_contracts() -> Vec<ContractTestResult> {
     
     // Test that AnimationEngine handles invalid inputs gracefully
     let (_, duration) = utils::measure_execution_time(|| {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test with empty property name
         engine.animate_property(
@@ -194,7 +194,7 @@ pub fn test_animation_engine_error_contracts() -> Vec<ContractTestResult> {
     
     // Test AnimationEngine property access error handling
     let (_, duration) = utils::measure_execution_time(|| {
-        let engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test getting value for non-existent property
         let value = engine.get_property_value("non_existent_property");
@@ -335,7 +335,7 @@ pub fn test_repeat_config_error_contracts() -> Vec<ContractTestResult> {
         
         // All transitions should be usable
         for transition in transitions {
-            let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+            let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
             engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
             // Should not panic
         }
@@ -369,7 +369,7 @@ pub fn test_cross_crate_error_propagation() -> Vec<ContractTestResult> {
         };
         
         // Use in DOM layer - should handle gracefully
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         engine.animate_property("scale".to_string(), 1.0, 2.0, invalid_transition);
         
         // Should not panic, error should be handled gracefully
@@ -393,7 +393,7 @@ pub fn test_error_recovery_contracts() -> Vec<ContractTestResult> {
     
     // Test that the system can recover from errors
     let (_, duration) = utils::measure_execution_time(|| {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // First, cause an error with invalid input
         engine.animate_property(
@@ -437,7 +437,7 @@ pub fn test_error_message_consistency() -> Vec<ContractTestResult> {
         // In a real implementation, this would test actual error messages
         // For now, we just verify that the system doesn't panic on invalid inputs
         
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test various invalid inputs
         let invalid_inputs = vec![

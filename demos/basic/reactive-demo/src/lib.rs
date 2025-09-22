@@ -3,7 +3,7 @@
 //! This library provides the WASM bindings for the Phase 2 reactive animation demo.
 
 use leptos::prelude::*;
-use leptos_motion_dom::reactive_motion_div::ReactiveMotionDiv;
+use leptos_motion_dom::ReactiveMotionDiv;
 use leptos_motion_dom::*;
 use std::collections::HashMap;
 

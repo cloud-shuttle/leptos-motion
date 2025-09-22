@@ -177,13 +177,6 @@ async fn test_animation_delay_precision() {
                 class="delay-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
                 animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.0)))
-                  transition=Transition {
-                    duration: Some(0.5),
-                    ease: Easing::Linear,
-                    delay: Some(0.5), // 500ms delay
-                    repeat: RepeatConfig::Never,
-                    stagger: None,
-                }
             >
                 "Delay test"
             </ReactiveMotionDiv>

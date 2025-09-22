@@ -67,7 +67,7 @@ pub fn test_animation_engine_memory_contract() -> Vec<ContractTestResult> {
     
     // Test memory usage of single engine creation
     let (_, duration) = utils::measure_execution_time(|| {
-        let engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         // In a real implementation, we would measure actual memory usage
         // For now, we just verify the operation completes without excessive memory usage
     });
@@ -218,7 +218,7 @@ pub fn test_multiple_animations_memory_contract() -> Vec<ContractTestResult> {
     let (_, duration) = utils::measure_execution_time(|| {
         let mut engines = Vec::new();
         for i in 0..num_animations {
-            let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+            let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
             engine.animate_property(
                 format!("property_{}", i),
                 0.0,
@@ -266,7 +266,7 @@ pub fn test_memory_cleanup_contract() -> Vec<ContractTestResult> {
         {
             let mut engines = Vec::new();
             for i in 0..1000 {
-                let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+                let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
                 engine.animate_property(
                     format!("property_{}", i),
                     0.0,
@@ -310,7 +310,7 @@ pub fn test_memory_growth_pattern_contract() -> Vec<ContractTestResult> {
         for (i, target_count) in growth_points.iter().enumerate() {
             // Add engines up to target count
             while engines.len() < *target_count {
-                let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+                let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
                 engine.animate_property(
                     format!("property_{}", engines.len()),
                     0.0,
@@ -353,7 +353,7 @@ pub fn test_wasm_memory_contract() -> Vec<ContractTestResult> {
         
         // Create many animations to test WASM memory management
         for i in 0..500 {
-            let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+            let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
             engine.animate_property(
                 format!("wasm_property_{}", i),
                 0.0,
@@ -396,7 +396,7 @@ pub fn test_memory_leak_prevention_contract() -> Vec<ContractTestResult> {
             // Create and immediately drop many objects
             let mut engines = Vec::new();
             for i in 0..100 {
-                let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+                let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
                 engine.animate_property(
                     format!("leak_test_property_{}", i),
                     0.0,

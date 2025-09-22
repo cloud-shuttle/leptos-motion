@@ -37,12 +37,12 @@ performance-metrics = ["leptos-motion-core/performance-metrics"]
 
 [dependencies]
 # All motion crates
-leptos-motion-core = { version = "1.1.0", path = "../leptos-motion-core" }
-leptos-motion-dom = { version = "1.1.0", path = "../leptos-motion-dom", optional = true }
-leptos-motion-gestures = { version = "1.1.0", path = "../leptos-motion-gestures", optional = true }
-leptos-motion-layout = { version = "1.1.0", path = "../leptos-motion-layout", optional = true }
-leptos-motion-scroll = { version = "1.1.0", path = "../leptos-motion-scroll", optional = true }
-leptos-motion-macros = { version = "1.1.0", path = "../leptos-motion-macros" }
+leptos-motion-core = { path = "../leptos-motion-core" }
+leptos-motion-dom = { path = "../leptos-motion-dom", optional = true }
+leptos-motion-gestures = { path = "../leptos-motion-gestures", optional = true }
+leptos-motion-layout = { path = "../leptos-motion-layout", optional = true }
+leptos-motion-scroll = { path = "../leptos-motion-scroll", optional = true }
+leptos-motion-macros = { path = "../leptos-motion-macros" }
 
 # Re-export core dependencies
 leptos.workspace = true

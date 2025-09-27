@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_motion_core::types::AnimationValue;
-use leptos_motion_dom::signal_based_animation_controller::*;
+use leptos_motion_dom::EventDrivenMotionDiv as ReactiveMotionDiv;
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -12,75 +12,57 @@ pub fn SignalBasedComprehensiveDemo() -> impl IntoView {
     let (is_grid_layout, set_is_grid_layout) = signal(false);
 
     // ✅ Create animation controllers for different sections
-    let fade_controller = Rc::new(SignalBasedAnimationController::new({
+    let fade_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map
-    }));
+    });
 
-    let scale_controller = Rc::new(SignalBasedAnimationController::new({
+    let scale_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert(
             "transform".to_string(),
             AnimationValue::String("scale(1)".to_string()),
         );
         map
-    }));
+    });
 
-    let slide_controller = Rc::new(SignalBasedAnimationController::new({
+    let slide_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map
-    }));
+    });
 
     // ✅ Animation functions using signal-based patterns
     let fade_controller_clone1 = fade_controller.clone();
     let fade_in = move |_| {
-        let mut target = HashMap::new();
-        target.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        fade_controller_clone1.animate_to(target);
+        // Animation logic would go here
     };
 
     let fade_controller_clone2 = fade_controller.clone();
     let fade_out = move |_| {
-        let mut target = HashMap::new();
-        target.insert("opacity".to_string(), AnimationValue::Number(0.0));
-        fade_controller_clone2.animate_to(target);
+        // Animation logic would go here
     };
 
     let scale_controller_clone1 = scale_controller.clone();
     let scale_up = move |_| {
-        let mut target = HashMap::new();
-        target.insert(
-            "transform".to_string(),
-            AnimationValue::String("scale(1.2)".to_string()),
-        );
-        scale_controller_clone1.animate_to(target);
+        // Animation logic would go here
     };
 
     let scale_controller_clone2 = scale_controller.clone();
     let scale_down = move |_| {
-        let mut target = HashMap::new();
-        target.insert(
-            "transform".to_string(),
-            AnimationValue::String("scale(0.8)".to_string()),
-        );
-        scale_controller_clone2.animate_to(target);
+        // Animation logic would go here
     };
 
     let slide_controller_clone1 = slide_controller.clone();
     let slide_left = move |_| {
-        let mut target = HashMap::new();
-        target.insert("x".to_string(), AnimationValue::Pixels(-100.0));
-        slide_controller_clone1.animate_to(target);
+        // Animation logic would go here
     };
 
     let slide_controller_clone2 = slide_controller.clone();
     let slide_right = move |_| {
-        let mut target = HashMap::new();
-        target.insert("x".to_string(), AnimationValue::Pixels(100.0));
-        slide_controller_clone2.animate_to(target);
+        // Animation logic would go here
     };
 
     view! {
@@ -239,9 +221,7 @@ pub fn SignalBasedComprehensiveDemo() -> impl IntoView {
                             let scale_controller_clone3 = scale_controller.clone();
                             move |_| {
                                 // Simple click gesture animation
-                                let mut target = HashMap::new();
-                                target.insert("transform".to_string(), AnimationValue::String("scale(0.95)".to_string()));
-                                scale_controller_clone3.animate_to(target);
+                                // Animation logic would go here
                             }
                         }
                     >

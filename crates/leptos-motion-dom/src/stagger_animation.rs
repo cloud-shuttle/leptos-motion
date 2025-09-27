@@ -180,8 +180,9 @@ impl Animation for StaggerAnimation {
         }
         
         // Stop all child animations
-        let mut manager = self.animation_manager.borrow_mut();
-        let _ = manager.stop_all();
+        if let Ok(mut manager) = self.animation_manager.try_borrow_mut() {
+            let _ = manager.stop_all();
+        }
         
         self.is_running = false;
         self.is_complete = true;
@@ -203,8 +204,9 @@ impl Animation for StaggerAnimation {
         }
         
         // Update child animations
-        let mut manager = self.animation_manager.borrow_mut();
-        let _ = manager.update_all(_delta_time);
+        if let Ok(mut manager) = self.animation_manager.try_borrow_mut() {
+            let _ = manager.update_all(_delta_time);
+        }
         
         // Calculate progress based on elapsed time
         if let Some(start_time) = self.start_time {

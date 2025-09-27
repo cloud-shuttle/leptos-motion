@@ -6,6 +6,23 @@
 use crate::*;
 use wasm_bindgen_test::*;
 
+/// Get current time in milliseconds (WASM-compatible)
+fn get_current_time_millis() -> u64 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Use js_sys::Date::now() for WASM (returns milliseconds)
+        js_sys::Date::now() as u64
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Use SystemTime for native targets
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis() as u64
+    }
+}
+
 wasm_bindgen_test_configure!(run_in_browser);
 
 /// Test fixture for creating a mock touch point
@@ -15,10 +32,7 @@ fn mock_touch_point(id: u64, x: f64, y: f64) -> TouchPoint {
         x,
         y,
         pressure: 1.0,
-        timestamp: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as u64,
+        timestamp: get_current_time_millis(),
     }
 }
 

@@ -167,7 +167,10 @@ impl DomAnimationHandle {
     /// Stop the animation
     pub fn stop(self) -> AnimationResult<()> {
         if let Some(manager) = self.manager.upgrade() {
-            manager.borrow_mut().unregister(self)
+            match manager.try_borrow_mut() {
+                Ok(mut manager) => manager.unregister(self),
+                Err(_) => Err(AnimationError::EngineUnavailable("Animation manager is busy".to_string()))
+            }
         } else {
             Err(AnimationError::EngineUnavailable("Animation manager dropped".to_string()))
         }
@@ -239,7 +242,9 @@ impl Drop for DomAnimationHandle {
     fn drop(&mut self) {
         // Automatically stop animation when handle is dropped
         if let Some(manager) = self.manager.upgrade() {
-            let _ = manager.borrow_mut().unregister(self.clone());
+            if let Ok(mut manager) = manager.try_borrow_mut() {
+                let _ = manager.unregister(self.clone());
+            }
         }
     }
 }

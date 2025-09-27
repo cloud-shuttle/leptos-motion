@@ -77,8 +77,9 @@ pub fn MemoizationTest() -> impl IntoView {
                     <h3>"Memoized Animation"</h3>
                     <p>"Counter: " {counter} " | Expensive: " {move || format!("{:.1}", expensive_value.get())}</p>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || memoized_animate.get())
-                        transition=memoized_transition.get()
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || memoized_animate.get())()
+                        _transition=memoized_transition.get()
                         style=memoized_style.get()
                     >
                         "Memoized"
@@ -89,13 +90,14 @@ pub fn MemoizationTest() -> impl IntoView {
                     <h3>"Non-Memoized (for comparison)"</h3>
                     <p>"This recalculates on every render"</p>
                     <ReactiveMotionDiv
+                        node_ref=NodeRef::new()
                         animate=Box::new(move || {
                             let base_value = counter.get() as f64 * 0.1;
                             let mut animate = HashMap::new();
                             animate.insert("opacity".to_string(), AnimationValue::Number(0.5 + base_value));
                             animate.insert("transform".to_string(), AnimationValue::String(format!("scale({})", 0.8 + base_value)));
                             animate
-                        })
+                        })()
                         style=(move || {
                             let hue = (counter.get() * 30) % 360;
                             format!(

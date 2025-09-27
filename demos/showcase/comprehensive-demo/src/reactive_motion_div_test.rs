@@ -11,7 +11,7 @@ pub fn ReactiveMotionDivTest() -> impl IntoView {
         <div>
             <h1>"ReactiveMotionDiv Test"</h1>
             <p>"Testing if ReactiveMotionDiv renders children"</p>
-            <ReactiveMotionDiv>
+            <ReactiveMotionDiv node_ref=NodeRef::new()>
                 <div>
                     <h2>"This should be inside ReactiveMotionDiv"</h2>
                     <p>"If you can see this, ReactiveMotionDiv is working!"</p>

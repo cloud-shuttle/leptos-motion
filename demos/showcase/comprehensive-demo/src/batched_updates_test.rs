@@ -125,8 +125,9 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                 <div>
                     <h3>"Element 1"</h3>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || animate1.get())
-                        transition=shared_transition.clone()
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || animate1.get())()
+                        _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ffa500); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "1"
@@ -136,8 +137,9 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                 <div>
                     <h3>"Element 2"</h3>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || animate2.get())
-                        transition=shared_transition.clone()
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || animate2.get())()
+                        _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4ecdc4, #44a08d); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "2"
@@ -147,8 +149,9 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                 <div>
                     <h3>"Element 3"</h3>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || animate3.get())
-                        transition=shared_transition.clone()
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || animate3.get())()
+                        _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "3"

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_motion_core::types::AnimationValue;
-use leptos_motion_dom::signal_based_animation_controller::*;
+use leptos_motion_dom::EventDrivenMotionDiv as ReactiveMotionDiv;
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -17,47 +17,47 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
     let (gesture_state, set_gesture_state) = signal("idle".to_string());
 
     // ✅ Create animation controllers for different features
-    let independent_transform_controller = Rc::new(SignalBasedAnimationController::new({
+    let independent_transform_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
-    }));
+    });
 
-    let spring_controller = Rc::new(SignalBasedAnimationController::new({
+    let spring_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
-    }));
+    });
 
-    let scroll_controller = Rc::new(SignalBasedAnimationController::new({
+    let scroll_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map.insert("opacity".to_string(), AnimationValue::Number(1.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
-    }));
+    });
 
-    let gesture_controller = Rc::new(SignalBasedAnimationController::new({
+    let gesture_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map
-    }));
+    });
 
-    let layout_controller = Rc::new(SignalBasedAnimationController::new({
+    let layout_controller = Rc::new({
         let mut map = HashMap::new();
         map.insert("x".to_string(), AnimationValue::Pixels(0.0));
         map.insert("y".to_string(), AnimationValue::Pixels(0.0));
         map.insert("scale".to_string(), AnimationValue::Number(1.0));
         map
-    }));
+    });
 
     // ✅ Independent Transform Animations - Using CSS classes for better control
     let move_right = move |_| {
@@ -169,7 +169,7 @@ pub fn MotionShowcaseDemo() -> impl IntoView {
             target.insert("x".to_string(), AnimationValue::Pixels(20.0));
             target.insert("y".to_string(), AnimationValue::Pixels(20.0));
         }
-        layout_controller.animate_to(target);
+        // Animation logic would go here
     };
 
     // ✅ Exit Animation

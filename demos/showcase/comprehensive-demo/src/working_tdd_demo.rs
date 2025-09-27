@@ -4,7 +4,7 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
-use leptos_motion_dom::signal_based_animation_controller::SignalBasedAnimationController;
+use leptos_motion_dom::EventDrivenMotionDiv as ReactiveMotionDiv;
 use std::collections::HashMap;
 
 #[component]
@@ -20,7 +20,7 @@ pub fn WorkingTddDemo() -> impl IntoView {
     let (opacity, set_opacity) = signal(1.0);
 
     // Create our TDD-implemented signal-based animation controller
-    let _controller = SignalBasedAnimationController::new(HashMap::new());
+    // Controller removed - using direct animation approach
 
     // Create reactive animation target using signals
     let animate_target = move || {

@@ -5,7 +5,7 @@
 use leptos::prelude::*;
 use leptos_motion_core::*;
 use leptos_motion_dom::{
-    signal_based_animation_controller::SignalBasedAnimationController, ReactiveMotionDiv,
+    EventDrivenMotionDiv as ReactiveMotionDiv,
 };
 use std::collections::HashMap;
 
@@ -22,7 +22,7 @@ pub fn FixedReactiveDemo() -> impl IntoView {
     let (opacity, set_opacity) = signal(1.0);
 
     // Create our TDD-implemented signal-based animation controller
-    let _controller = SignalBasedAnimationController::new(HashMap::new());
+    // Controller removed - using direct animation approach
 
     // Create reactive animation target using signals
     let animate_target = move || {
@@ -135,8 +135,9 @@ pub fn FixedReactiveDemo() -> impl IntoView {
                 <div style="margin: 20px 0; border: 2px solid #007bff; padding: 20px; border-radius: 8px; min-height: 200px; position: relative;">
                     <h3 style="margin: 0 0 20px 0;">"Fixed ReactiveMotionDiv Element:"</h3>
                     <ReactiveMotionDiv
+                        node_ref=NodeRef::new()
                         initial=initial_target.clone()
-                        animate=Box::new(move || animate_target())
+                        animate=Box::new(move || animate_target())()
                         style="position: absolute; top: 50px; left: 50px;".to_string()
                     >
                         <div style="

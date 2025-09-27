@@ -6,6 +6,23 @@
 use super::*;
 use std::time::Duration;
 
+/// Get current time in milliseconds (WASM-compatible)
+fn get_current_time_millis() -> u64 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Use js_sys::Date::now() for WASM (returns milliseconds)
+        js_sys::Date::now() as u64
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Use SystemTime for native targets
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis() as u64
+    }
+}
+
 // Modern fixture-based testing
 fn gesture_config_fixture() -> GestureConfig {
     GestureConfig {
@@ -26,10 +43,7 @@ fn touch_point_fixture(id: u64, x: f64, y: f64) -> TouchPoint {
         x,
         y,
         pressure: 1.0,
-        timestamp: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as u64,
+        timestamp: get_current_time_millis(),
     }
 }
 
@@ -459,10 +473,7 @@ fn test_gesture_error_handling() {
         x: f64::NAN,
         y: 100.0,
         pressure: 1.0,
-        timestamp: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as u64,
+        timestamp: get_current_time_millis(),
     }];
 
     let result = detector.handle_touch_start(invalid_touches);

@@ -6,7 +6,7 @@
 use leptos::prelude::*;
 use leptos_motion_core::*;
 use leptos_motion_dom::{
-    signal_based_animation_controller::SignalBasedAnimationController, ReactiveMotionDiv,
+    EventDrivenMotionDiv as ReactiveMotionDiv,
 };
 use std::collections::HashMap;
 
@@ -69,7 +69,7 @@ pub fn TddReactiveDemo() -> impl IntoView {
     };
 
     // ✅ Create signal-based animation controller
-    let controller = SignalBasedAnimationController::new(initial_target.clone());
+    // Controller removed - using direct animation approach
 
     // ✅ Button handlers that update signals
     let handle_animate = move |_| {
@@ -164,8 +164,9 @@ pub fn TddReactiveDemo() -> impl IntoView {
             <div style="margin: 20px 0; border: 2px solid #007bff; padding: 20px; border-radius: 8px; min-height: 200px; position: relative;">
                 <h3>"ReactiveMotionDiv Element:"</h3>
                 <ReactiveMotionDiv
+                    node_ref=NodeRef::new()
                     initial=initial_target.clone()
-                    animate=Box::new(move || animate_target())
+                    animate=Box::new(move || animate_target())()
                     style="position: absolute; top: 50px; left: 50px;".to_string()
                 >
                     <div style="
@@ -189,8 +190,9 @@ pub fn TddReactiveDemo() -> impl IntoView {
             <div style="margin: 20px 0; border: 2px solid #28a745; padding: 20px; border-radius: 8px; min-height: 200px; position: relative;">
                 <h3>"Multiple Reactive Elements:"</h3>
                 <ReactiveMotionDiv
+                    node_ref=NodeRef::new()
                     initial=initial_target.clone()
-                    animate=Box::new(move || animate_target())
+                    animate=Box::new(move || animate_target())()
                     style="position: absolute; top: 50px; left: 50px;".to_string()
                 >
                     <div style="
@@ -210,8 +212,9 @@ pub fn TddReactiveDemo() -> impl IntoView {
                     </div>
                 </ReactiveMotionDiv>
                 <ReactiveMotionDiv
+                    node_ref=NodeRef::new()
                     initial=initial_target.clone()
-                    animate=Box::new(move || animate_target())
+                    animate=Box::new(move || animate_target())()
                     style="position: absolute; top: 50px; left: 200px;".to_string()
                 >
                     <div style="
@@ -231,8 +234,9 @@ pub fn TddReactiveDemo() -> impl IntoView {
                     </div>
                 </ReactiveMotionDiv>
                 <ReactiveMotionDiv
+                    node_ref=NodeRef::new()
                     initial=initial_target.clone()
-                    animate=Box::new(move || animate_target())
+                    animate=Box::new(move || animate_target())()
                     style="position: absolute; top: 50px; left: 350px;".to_string()
                 >
                     <div style="

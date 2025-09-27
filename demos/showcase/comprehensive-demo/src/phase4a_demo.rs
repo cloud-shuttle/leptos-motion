@@ -127,7 +127,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Static Function Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function that returns a static animation target"</p>
                     <ReactiveMotionDiv
-                        animate_fn=function_target
+                        node_ref=NodeRef::new()
+                        animate=function_target()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Static"
@@ -139,7 +140,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Dynamic Time Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function that calculates animation based on current time"</p>
                     <ReactiveMotionDiv
-                        animate_fn=dynamic_target
+                        node_ref=NodeRef::new()
+                        animate=dynamic_target()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Time"
@@ -160,7 +162,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                         <span style="font-weight: bold;">"Counter: " {counter}</span>
                     </div>
                     <ReactiveMotionDiv
-                        animate_fn=counter_animation
+                        node_ref=NodeRef::new()
+                        animate=counter_animation()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Count"
@@ -172,7 +175,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Hover Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for hover state animation"</p>
                     <ReactiveMotionDiv
-                        _while_hover_fn=hover_animation
+                        node_ref=NodeRef::new()
+                        while_hover=hover_animation()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Hover"
@@ -184,7 +188,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Tap Animation"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for tap state animation"</p>
                     <ReactiveMotionDiv
-                        _while_tap_fn=tap_animation
+                        node_ref=NodeRef::new()
+                        while_tap=tap_animation()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Tap"
@@ -196,9 +201,10 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <h3 style="color: #333; margin-top: 0;">"Mixed Props"</h3>
                     <p style="color: #666; margin-bottom: 15px;">"Combines static initial with function-based animate"</p>
                     <ReactiveMotionDiv
+                        node_ref=NodeRef::new()
                         initial=create_animation_target("opacity", 0.3)
-                        animate_fn=function_target_clone
-                        _while_hover_fn=hover_animation_clone
+                        animate=function_target_clone()
+                        while_hover=hover_animation_clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Mixed"

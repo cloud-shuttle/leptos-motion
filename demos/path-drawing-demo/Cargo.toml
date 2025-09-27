@@ -1,0 +1,11 @@
+[package]
+name = "path-drawing-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.8.6", features = ["csr"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom" }
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = ["console"] }

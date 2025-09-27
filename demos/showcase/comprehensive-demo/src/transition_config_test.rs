@@ -50,8 +50,9 @@ pub fn TransitionConfigTest() -> impl IntoView {
                 <div>
                     <h3>"Fast Animation (100ms)"</h3>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || fast_animate.clone())
-                        transition=fast_transition
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || fast_animate.clone())()
+                        _transition=fast_transition
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ffa500); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Fast"
@@ -61,8 +62,9 @@ pub fn TransitionConfigTest() -> impl IntoView {
                 <div>
                     <h3>"Slow Animation (2000ms)"</h3>
                     <ReactiveMotionDiv
-                        animate=Box::new(move || slow_animate.clone())
-                        transition=slow_transition
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || slow_animate.clone())()
+                        _transition=slow_transition
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4ecdc4, #44a08d); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Slow"

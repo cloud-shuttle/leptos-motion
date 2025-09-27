@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
-use leptos_motion_dom::MinimalMotionDiv;
+use leptos_motion_dom::MotionDiv;
 use std::collections::HashMap;
 
 /// Minimal Motion Test Component
@@ -47,13 +47,14 @@ pub fn MinimalMotionTest() -> impl IntoView {
                 "Toggle Animation"
             </button>
 
-            <MinimalMotionDiv
-                animate_fn=Box::new(move || animation.get())
-                transition=transition_config
+            <MotionDiv
+                node_ref=NodeRef::new()
+                animate=Box::new(move || animation.get())()
+                _transition=transition_config
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >
                 "Animate!"
-            </MinimalMotionDiv>
+            </MotionDiv>
 
             <p style="color: #90EE90; margin-top: 2rem;">
                 "If you can see this and right-click works, the issue is with ReactiveMotionDiv's complex logic!"

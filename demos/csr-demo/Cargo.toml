@@ -1,0 +1,10 @@
+[package]
+name = "csr-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.8.6", features = ["csr"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom", features = ["csr"] }
+leptos-motion-core = { path = "../../crates/leptos-motion-core" }
+console_error_panic_hook = "0.1.7"

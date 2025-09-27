@@ -138,8 +138,9 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
                 <div style="margin: 20px 0; border: 2px solid #007bff; padding: 20px; border-radius: 8px; min-height: 200px; position: relative;">
                     <h3 style="margin: 0 0 20px 0;">"ReactiveMotionDiv Element:"</h3>
                     <ReactiveMotionDiv
+                        node_ref=NodeRef::new()
                         initial=initial_target.clone()
-                        animate=Box::new(move || animate_target())
+                        animate=Box::new(move || animate_target())()
                         style="position: absolute; top: 50px; left: 50px;".to_string()
                     >
                         <div style="

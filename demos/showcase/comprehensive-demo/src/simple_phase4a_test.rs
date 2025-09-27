@@ -39,8 +39,9 @@ pub fn SimplePhase4aTest() -> impl IntoView {
                 <div>
                     <h3>"Static Animation"</h3>
                     <ReactiveMotionDiv
+                        node_ref=NodeRef::new()
                         initial=create_animation_target("opacity", 0.5)
-                        animate=Box::new(|| create_animation_target("opacity", 1.0))
+                        animate=Box::new(|| create_animation_target("opacity", 1.0))()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Static"
@@ -50,7 +51,8 @@ pub fn SimplePhase4aTest() -> impl IntoView {
                 <div>
                     <h3>"Function Animation"</h3>
                     <ReactiveMotionDiv
-                        animate_fn=function_target
+                        node_ref=NodeRef::new()
+                        animate=function_target()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Function"

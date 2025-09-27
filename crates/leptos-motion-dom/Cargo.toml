@@ -29,6 +29,9 @@ motion-svg = []
 motion-input = []
 motion-textarea = []
 motion-select = []
+
+# Web platform features
+web-sys = []
 animate-presence = []
 drag-support = []
 hover-support = []

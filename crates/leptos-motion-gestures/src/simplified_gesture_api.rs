@@ -6,6 +6,23 @@
 use crate::*;
 use std::time::Instant;
 
+/// Get current time in milliseconds (WASM-compatible)
+fn get_current_time_millis() -> u64 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Use js_sys::Date::now() for WASM (returns milliseconds)
+        js_sys::Date::now() as u64
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Use SystemTime for native targets
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis() as u64
+    }
+}
+
 /// Simplified gesture types
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SimplifiedGestureType {
@@ -179,10 +196,7 @@ impl SimplifiedGestureDetector {
                 x: 0.0,
                 y: 0.0,
                 pressure: 0.0,
-                timestamp: std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_millis() as u64,
+                timestamp: get_current_time_millis(),
             })
             .collect();
 

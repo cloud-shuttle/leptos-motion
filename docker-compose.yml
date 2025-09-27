@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  leptos-motion-demos:
+    build: .
+    ports:
+      - "80:80"
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - RUST_LOG=info
+    volumes:
+      - ./demos:/app/demos
+      - ./tests:/app/tests
+      - ./scripts:/app/scripts
+    networks:
+      - leptos-motion-network
+
+  # Development service
+  leptos-motion-dev:
+    build: .
+    ports:
+      - "3000:80"
+      - "3001:9000"
+      - "3002:9001"
+    environment:
+      - RUST_LOG=debug
+    volumes:
+      - ./demos:/app/demos
+      - ./tests:/app/tests
+      - ./scripts:/app/scripts
+    networks:
+      - leptos-motion-network
+    command: ["sh", "-c", "nginx -g 'daemon off;' & /usr/local/bin/ssr-demo & wait"]
+
+networks:
+  leptos-motion-network:
+    driver: bridge

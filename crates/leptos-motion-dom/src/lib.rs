@@ -16,6 +16,9 @@ pub mod event_driven_motion_div;
 pub mod event_handlers;
 pub mod performance_monitor;
 
+// Reactive animation system
+pub mod animate_prop;
+
 // Simple animation system (WASM-compatible)
 pub mod simple_animation_engine;
 
@@ -89,6 +92,9 @@ pub use event_driven_motion_div::{
     create_animation_target as create_event_animation_target, 
     create_drag_constraints as create_event_drag_constraints
 };
+
+// Re-export reactive animation types
+pub use animate_prop::{AnimateProp, IntoAnimateProp, resolve_animate_prop};
 
 // Primary MotionDiv API - Single component for all use cases
 pub use event_driven_motion_div::EventDrivenMotionDiv as MotionDiv;

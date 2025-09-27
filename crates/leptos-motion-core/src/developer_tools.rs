@@ -11,6 +11,23 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
+/// Get current time in seconds (WASM-compatible)
+fn get_current_time_secs() -> u64 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Use js_sys::Date::now() for WASM (returns milliseconds)
+        (js_sys::Date::now() / 1000.0) as u64
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Use SystemTime for native targets
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs()
+    }
+}
+
 /// Animation Inspector for real-time debugging and state tracking
 pub struct AnimationInspector {
     tracked_animations: Arc<Mutex<HashMap<TDDAnimationHandle, TrackedAnimation>>>,
@@ -672,10 +689,7 @@ impl DeveloperTools {
             performance_metrics,
             active_animations: vec![TDDAnimationHandle(1)],
             memory_usage_mb: 0.15,
-            timestamp: std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_secs(),
+            timestamp: get_current_time_secs(),
         }
     }
 }

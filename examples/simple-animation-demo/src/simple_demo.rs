@@ -3,7 +3,7 @@
 //! This demo shows the SimpleMotionDiv with CSS transitions working
 
 use leptos::prelude::*;
-use leptos_motion_dom::{SimpleMotionDiv, AnimationValue, Transition, Easing};
+use leptos_motion_dom::{MotionDiv, AnimationValue, Transition, Easing};
 use std::collections::HashMap;
 
 #[component]
@@ -42,7 +42,7 @@ pub fn SimpleCssTransitionDemo() -> impl IntoView {
 
     view! {
         <div style="padding: 20px; font-family: Arial, sans-serif;">
-            <h1>"🎬 SimpleMotionDiv - CSS Transition Demo"</h1>
+            <h1>"🎬 MotionDiv - CSS Transition Demo"</h1>
             <p>"This demo shows CSS transition-based animations working!"</p>
             
             <div style="margin: 20px 0;">
@@ -56,7 +56,7 @@ pub fn SimpleCssTransitionDemo() -> impl IntoView {
             
             <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                 // Basic animated box with CSS transitions
-                <SimpleMotionDiv
+                <MotionDiv
                     class="css-animated-box".to_string()
                     style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); width: 100px; height: 100px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     initial=initial.clone()
@@ -66,10 +66,10 @@ pub fn SimpleCssTransitionDemo() -> impl IntoView {
                     transition=transition.clone()
                 >
                     "CSS Box 1"
-                </SimpleMotionDiv>
+                </MotionDiv>
                 
                 // Second animated box with different transition
-                <SimpleMotionDiv
+                <MotionDiv
                     class="css-animated-box-2".to_string()
                     style="background: linear-gradient(45deg, #a8e6cf, #ffd3a5); width: 100px; height: 100px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; font-weight: bold; cursor: pointer;".to_string()
                     initial=HashMap::from([
@@ -100,10 +100,10 @@ pub fn SimpleCssTransitionDemo() -> impl IntoView {
                     }
                 >
                     "CSS Box 2"
-                </SimpleMotionDiv>
+                </MotionDiv>
                 
                 // Third box with spring-like transition
-                <SimpleMotionDiv
+                <MotionDiv
                     class="css-animated-box-3".to_string()
                     style="background: linear-gradient(45deg, #ff9a9e, #fecfef); width: 100px; height: 100px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; font-weight: bold; cursor: pointer;".to_string()
                     initial=HashMap::from([
@@ -134,11 +134,11 @@ pub fn SimpleCssTransitionDemo() -> impl IntoView {
                     }
                 >
                     "CSS Box 3"
-                </SimpleMotionDiv>
+                </MotionDiv>
             </div>
             
             <div style="margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
-                <h3>"🎯 What's Working with SimpleMotionDiv:"</h3>
+                <h3>"🎯 What's Working with MotionDiv:"</h3>
                 <ul>
                     <li>"✅ CSS transition-based animations (no RAF loops)"</li>
                     <li>"✅ Basic property animations (x, y, opacity)"</li>

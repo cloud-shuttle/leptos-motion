@@ -1,0 +1,17 @@
+[package]
+name = "ssr-demo"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ssr-demo"
+path = "src/main.rs"
+
+[dependencies]
+leptos = { version = "0.8.6", features = ["ssr", "hydrate"] }
+leptos-motion-dom = { path = "../../crates/leptos-motion-dom" }
+leptos-motion-core = { path = "../../crates/leptos-motion-core" }
+leptos_axum = { version = "0.8.5" }
+axum = "0.7"
+tokio = { version = "1.0", features = ["full"] }
+console_error_panic_hook = "0.1.7"

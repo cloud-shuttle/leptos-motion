@@ -54,9 +54,10 @@ pub fn SimplifiedShowcase() -> impl IntoView {
             </button>
 
             <MotionDiv
+                node_ref=NodeRef::new()
                 initial=(move || initial())()
                 animate=(move || animate())()
-                transition=transition_config
+                _transition=transition_config
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >
                 "Animate!"

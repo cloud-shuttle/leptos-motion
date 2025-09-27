@@ -16,12 +16,31 @@ use crate::{
     EventSpringConfig,
     AnimationValue,
     Transition,
+    AnimateProp,
+    resolve_animate_prop,
 };
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 use wasm_bindgen::JsCast;
 use web_sys::Element;
+
+/// Get current time in nanoseconds (WASM-compatible)
+fn get_current_time_nanos() -> u128 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // Use js_sys::Date::now() for WASM
+        (js_sys::Date::now() * 1_000_000.0) as u128
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        // Use SystemTime for native targets
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    }
+}
 
 /// Event-driven MotionDiv component
 #[component]
@@ -30,9 +49,9 @@ pub fn EventDrivenMotionDiv(
     #[prop(optional)]
     initial: Option<HashMap<String, AnimationValue>>,
     
-    /// Target animation values
+    /// Target animation values (reactive support)
     #[prop(optional)]
-    animate: Option<HashMap<String, AnimationValue>>,
+    animate: Option<AnimateProp>,
     
     /// Animation while hovering
     #[prop(optional)]
@@ -169,18 +188,22 @@ pub fn EventDrivenMotionDiv(
             set_hovered.set(false);
             
             if let Some(element) = node_ref.get() {
-                if let Some(animate_values) = &animate {
-                    trigger_animation(
-                        &animation_manager,
-                        &element,
-                        animate_values,
-                        &transition,
-                        animation_type.clone(),
-                        &keyframes,
-                        &stagger_config,
-                        &spring_config,
-                        "animate",
-                    );
+                if let Some(animate_prop) = &animate {
+                    // Resolve reactive values
+                    let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
+                    if !animate_values.is_empty() {
+                        trigger_animation(
+                            &animation_manager,
+                            &element,
+                            &animate_values,
+                            &transition,
+                            animation_type.clone(),
+                            &keyframes,
+                            &stagger_config,
+                            &spring_config,
+                            "animate",
+                        );
+                    }
                 }
             }
         }
@@ -275,40 +298,39 @@ pub fn EventDrivenMotionDiv(
             set_dragging.set(false);
             
             if let Some(element) = node_ref.get() {
-                if let Some(animate_values) = &animate {
-                    trigger_animation(
-                        &animation_manager,
-                        &element,
-                        animate_values,
-                        &transition,
-                        animation_type.clone(),
-                        &keyframes,
-                        &stagger_config,
-                        &spring_config,
-                        "animate",
-                    );
+                if let Some(animate_prop) = &animate {
+                    // Resolve reactive values
+                    let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
+                    if !animate_values.is_empty() {
+                        trigger_animation(
+                            &animation_manager,
+                            &element,
+                            &animate_values,
+                            &transition,
+                            animation_type.clone(),
+                            &keyframes,
+                            &stagger_config,
+                            &spring_config,
+                            "animate",
+                        );
+                    }
                 }
             }
         }
     };
     
-    // Handle animate prop changes
+    // Handle animate prop changes (reactive support)
     let transition_for_effect = _transition.clone();
     Effect::new(move |_| {
         if let Some(element) = node_ref.get() {
-            if let Some(animate_values) = &animate {
+            if let Some(animate_prop) = &animate {
                 if !is_hovered.get() && !is_tapped.get() && !is_dragging.get() {
-                    trigger_animation(
-                        &animation_manager,
-                        &element,
-                        animate_values,
-                        &transition_for_effect,
-                        animation_type.clone(),
-                        &keyframes,
-                        &stagger_config,
-                        &spring_config,
-                        "animate",
-                    );
+                    // Resolve reactive values
+                    let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
+                    if !animate_values.is_empty() {
+                        // Apply CSS properties directly for reactive animations
+                        apply_animation_styles(&element, &animate_values);
+                    }
                 }
             }
         }
@@ -413,6 +435,12 @@ fn apply_initial_styles(element: &Element, styles: &HashMap<String, AnimationVal
                 ("rotate", AnimationValue::Number(n)) => {
                     let _ = style.set_property("transform", &format!("rotate({}deg)", n));
                 }
+                ("rotateZ", AnimationValue::Degrees(d)) => {
+                    let _ = style.set_property("transform", &format!("rotateZ({}deg)", d));
+                }
+                ("rotateZ", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("transform", &format!("rotateZ({}deg)", n));
+                }
                 ("width", AnimationValue::Number(n)) => {
                     let _ = style.set_property("width", &format!("{}px", n));
                 }
@@ -448,6 +476,79 @@ fn extract_numeric_value(value: &AnimationValue) -> Option<f64> {
     }
 }
 
+/// Apply animation styles directly to DOM element
+fn apply_animation_styles(element: &Element, styles: &HashMap<String, AnimationValue>) {
+    if let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
+        let style = html_element.style();
+        
+        // Debug: log when we're applying styles
+        web_sys::console::log_1(&format!("Applying styles to DOM: {:?}", styles).into());
+        
+        // Build combined transform string for all transform properties
+        let mut transform_parts = Vec::new();
+        let mut has_transform = false;
+        
+        for (property, value) in styles {
+            match (property.as_str(), value) {
+                ("opacity", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("opacity", &n.to_string());
+                }
+                ("scale", AnimationValue::Number(n)) => {
+                    transform_parts.push(format!("scale({})", n));
+                    has_transform = true;
+                }
+                ("x", AnimationValue::Number(n)) => {
+                    transform_parts.push(format!("translateX({}px)", n));
+                    has_transform = true;
+                }
+                ("y", AnimationValue::Number(n)) => {
+                    transform_parts.push(format!("translateY({}px)", n));
+                    has_transform = true;
+                }
+                ("rotate", AnimationValue::Number(n)) => {
+                    transform_parts.push(format!("rotate({}deg)", n));
+                    has_transform = true;
+                }
+                ("rotateZ", AnimationValue::Degrees(d)) => {
+                    transform_parts.push(format!("rotateZ({}deg)", d));
+                    has_transform = true;
+                }
+                ("rotateZ", AnimationValue::Number(n)) => {
+                    transform_parts.push(format!("rotateZ({}deg)", n));
+                    has_transform = true;
+                }
+                ("width", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("width", &format!("{}px", n));
+                }
+                ("height", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("height", &format!("{}px", n));
+                }
+                (_, AnimationValue::String(s)) => {
+                    let _ = style.set_property(property, s);
+                }
+                (_, AnimationValue::Color(c)) => {
+                    let _ = style.set_property(property, c);
+                }
+                _ => {
+                    // For other combinations, try to convert to string
+                    if let Some(numeric) = extract_numeric_value(value) {
+                        let _ = style.set_property(property, &numeric.to_string());
+                    }
+                }
+            }
+        }
+        
+        // Apply combined transform if we have any transform properties
+        if has_transform {
+            let transform_value = transform_parts.join(" ");
+            let _ = style.set_property("transform", &transform_value);
+            web_sys::console::log_1(&format!("Applied transform: {}", transform_value).into());
+        }
+    } else {
+        web_sys::console::log_1(&"Element is not an HtmlElement".into());
+    }
+}
+
 /// Trigger animation based on type
 fn trigger_animation(
     animation_manager: &Rc<RefCell<OptimizedAnimationManager>>,
@@ -461,9 +562,15 @@ fn trigger_animation(
     animation_name: &str,
 ) {
     let transition = _transition.clone().unwrap_or_default();
-    let id = format!("{}_{}", animation_name, std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos());
+    let id = format!("{}_{}", animation_name, get_current_time_nanos());
     
-    let mut manager = animation_manager.borrow_mut();
+    let mut manager = match animation_manager.try_borrow_mut() {
+        Ok(manager) => manager,
+        Err(_) => {
+            // If already borrowed, skip this animation to prevent panic
+            return;
+        }
+    };
     
     match animation_type {
         AnimationType::Css => {

@@ -10,7 +10,7 @@ leptos-motion = { path = "../../crates/leptos-motion", features = ["csr", "minim
 leptos = { workspace = true, features = ["csr"] }
 leptos_meta = { workspace = true }
 leptos_router = { workspace = true }
-log.workspace = true
+# log.workspace = true  # Commented out to prevent logger issues
 
 # CSS and styling
 tailwind-rs-core.workspace = true
@@ -19,7 +19,7 @@ tailwind-rs-wasm = "0.5.0"
 web-sys.workspace = true
 wasm-bindgen.workspace = true
 wasm-bindgen-futures.workspace = true
-console_log.workspace = true
+# console_log.workspace = true  # Commented out to prevent logger issues
 console_error_panic_hook.workspace = true
 
 [lib]

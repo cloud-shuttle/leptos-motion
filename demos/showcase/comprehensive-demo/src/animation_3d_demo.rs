@@ -151,7 +151,8 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <h3>"3D Rotation"</h3>
                     <ReactiveMotionDiv
                         class="demo-cube rotation-cube".to_string()
-                        animate_fn=Box::new(move || rotation_animation.get())
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || rotation_animation.get())()
                     >
                         <div class="cube-face front">"Front"</div>
                         <div class="cube-face back">"Back"</div>
@@ -166,7 +167,8 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <h3>"3D Scaling"</h3>
                     <ReactiveMotionDiv
                         class="demo-cube scale-cube".to_string()
-                        animate_fn=Box::new(move || scale_animation.get())
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || scale_animation.get())()
                     >
                         <div class="cube-face front">"Scale"</div>
                         <div class="cube-face back">"Scale"</div>
@@ -181,7 +183,8 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <h3>"3D Translation"</h3>
                     <ReactiveMotionDiv
                         class="demo-cube translation-cube".to_string()
-                        animate_fn=Box::new(move || translation_animation.get())
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || translation_animation.get())()
                     >
                         <div class="cube-face front">"Move"</div>
                         <div class="cube-face back">"Move"</div>
@@ -196,7 +199,8 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <h3>"3D Perspective"</h3>
                     <ReactiveMotionDiv
                         class="demo-cube perspective-cube".to_string()
-                        animate_fn=Box::new(move || perspective_animation.get())
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || perspective_animation.get())()
                     >
                         <div class="cube-face front">"Perspective"</div>
                         <div class="cube-face back">"Perspective"</div>
@@ -211,7 +215,8 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <h3>"Matrix3D Transform"</h3>
                     <ReactiveMotionDiv
                         class="demo-cube matrix3d-cube".to_string()
-                        animate_fn=Box::new(move || matrix3d_animation.get())
+                        node_ref=NodeRef::new()
+                        animate=Box::new(move || matrix3d_animation.get())()
                     >
                         <div class="cube-face front">"Matrix3D"</div>
                         <div class="cube-face back">"Matrix3D"</div>

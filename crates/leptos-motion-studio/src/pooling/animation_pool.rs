@@ -182,3 +182,15 @@ pub struct PoolStatus {
     /// Cache hit rate
     pub cache_hit_rate: f64,
 }
+
+impl Default for PoolStatus {
+    fn default() -> Self {
+        Self {
+            total_capacity: 100,
+            active_animations: 0,
+            available_animations: 100,
+            memory_usage: 0.0,
+            cache_hit_rate: 0.0,
+        }
+    }
+}

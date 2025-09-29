@@ -103,22 +103,22 @@ impl CodeGenerator {
 
 impl CodeGenerator {
     fn generate_react_component(&self, _timeline: &Timeline3D) -> Result<String> {
-        Err(StudioError::Export("React code generation not implemented".to_string()))
+        Err(StudioError::ExportError("React code generation not implemented".to_string()))
     }
 
     fn generate_vue_component(&self, _timeline: &Timeline3D) -> Result<String> {
-        Err(StudioError::Export("Vue code generation not implemented".to_string()))
+        Err(StudioError::ExportError("Vue code generation not implemented".to_string()))
     }
 
     fn generate_angular_component(&self, _timeline: &Timeline3D) -> Result<String> {
-        Err(StudioError::Export("Angular code generation not implemented".to_string()))
+        Err(StudioError::ExportError("Angular code generation not implemented".to_string()))
     }
 
     fn generate_svelte_component(&self, _timeline: &Timeline3D) -> Result<String> {
-        Err(StudioError::Export("Svelte code generation not implemented".to_string()))
+        Err(StudioError::ExportError("Svelte code generation not implemented".to_string()))
     }
 
     fn generate_leptos_component(&self, _timeline: &Timeline3D) -> Result<String> {
-        Err(StudioError::Export("Leptos code generation not implemented".to_string()))
+        Err(StudioError::ExportError("Leptos code generation not implemented".to_string()))
     }
 }

@@ -32,6 +32,8 @@ impl Clone for PooledAnimation {
             id: self.id,
             animation_type: self.animation_type.clone(),
             state: self.state.clone(),
+            values: self.values.clone(),
+            duration: self.duration,
             start_time: self.start_time,
             end_time: self.end_time,
             in_use: self.in_use,

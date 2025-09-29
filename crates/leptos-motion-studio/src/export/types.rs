@@ -177,3 +177,36 @@ pub struct CodeGenSettings {
     /// Include type annotations
     pub include_types: bool,
 }
+
+impl Default for CodeGenSettings {
+    fn default() -> Self {
+        Self {
+            include_comments: true,
+            pretty_print: true,
+            include_types: true,
+        }
+    }
+}
+
+impl Default for ExportConfig {
+    fn default() -> Self {
+        Self {
+            format: ExportFormat::CSS,
+            settings: ExportSettings::CSS(CSSSettings::default()),
+            optimization: OptimizationLevel::Basic,
+            include_comments: true,
+            minify: false,
+        }
+    }
+}
+
+impl Default for CSSSettings {
+    fn default() -> Self {
+        Self {
+            use_custom_properties: true,
+            css_version: CSSVersion::CSS3,
+            vendor_prefixes: true,
+            fill_mode: "forwards".to_string(),
+        }
+    }
+}

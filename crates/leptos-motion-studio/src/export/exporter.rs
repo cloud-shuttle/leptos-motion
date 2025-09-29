@@ -1,6 +1,6 @@
 //! Animation exporter implementation
 
-use super::types::*;
+use super::{types::*, results::ExportResult};
 use crate::{
     Result, StudioError, project::StudioProject, timeline::Timeline3D, transforms::Transform3D,
 };
@@ -67,41 +67,41 @@ impl<'a> AnimationExporter<'a> {
 impl<'a> AnimationExporter<'a> {
     fn export_css(&self) -> Result<ExportResult> {
         // TODO: Implement CSS export
-        Err(StudioError::Export("CSS export not implemented".to_string()))
+        Err(StudioError::ExportError("CSS export not implemented".to_string()))
     }
 
     fn export_waapi(&self) -> Result<ExportResult> {
         // TODO: Implement WAAPI export
-        Err(StudioError::Export("WAAPI export not implemented".to_string()))
+        Err(StudioError::ExportError("WAAPI export not implemented".to_string()))
     }
 
     fn export_leptos_motion(&self) -> Result<ExportResult> {
         // TODO: Implement Leptos Motion export
-        Err(StudioError::Export("Leptos Motion export not implemented".to_string()))
+        Err(StudioError::ExportError("Leptos Motion export not implemented".to_string()))
     }
 
     fn export_framer_motion(&self) -> Result<ExportResult> {
         // TODO: Implement Framer Motion export
-        Err(StudioError::Export("Framer Motion export not implemented".to_string()))
+        Err(StudioError::ExportError("Framer Motion export not implemented".to_string()))
     }
 
     fn export_gsap(&self) -> Result<ExportResult> {
         // TODO: Implement GSAP export
-        Err(StudioError::Export("GSAP export not implemented".to_string()))
+        Err(StudioError::ExportError("GSAP export not implemented".to_string()))
     }
 
     fn export_svg_animate(&self) -> Result<ExportResult> {
         // TODO: Implement SVG Animate export
-        Err(StudioError::Export("SVG Animate export not implemented".to_string()))
+        Err(StudioError::ExportError("SVG Animate export not implemented".to_string()))
     }
 
     fn export_lottie(&self) -> Result<ExportResult> {
         // TODO: Implement Lottie export
-        Err(StudioError::Export("Lottie export not implemented".to_string()))
+        Err(StudioError::ExportError("Lottie export not implemented".to_string()))
     }
 
     fn export_video(&self, _format: &VideoFormat) -> Result<ExportResult> {
         // TODO: Implement video export
-        Err(StudioError::Export("Video export not implemented".to_string()))
+        Err(StudioError::ExportError("Video export not implemented".to_string()))
     }
 }

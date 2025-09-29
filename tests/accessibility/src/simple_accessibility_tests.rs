@@ -3,13 +3,14 @@
 //! Basic accessibility tests that work with the current API
 
 use leptos::prelude::*;
-use leptos::task::spawn_local;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos::{task::spawn_local};
+use leptos_motion_dom::{ReactiveMotionDiv, AnimateProp};
 use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
 use wasm_bindgen_test::*;
 use web_sys::{window, Element};
 use wasm_bindgen::JsCast;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -17,14 +18,16 @@ wasm_bindgen_test_configure!(run_in_browser);
 #[wasm_bindgen_test]
 async fn test_aria_attributes_during_animation() {
     let document = web_sys::window().unwrap().document().unwrap();
-    
+    let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
     let app = view! {
         <div>
             <ReactiveMotionDiv
                 class="animated-element".to_string()
                 style="role: button; aria-label: 'Animated button'; aria-expanded: false; tabindex: 0;".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.5)))
+                animate=AnimateProp::Fn(Rc::new(|| create_animation_target("opacity", AnimationValue::Number(0.5))))
+                node_ref=node_ref
             >
                 "Accessible Button"
             </ReactiveMotionDiv>
@@ -49,7 +52,8 @@ async fn test_aria_attributes_during_animation() {
 #[wasm_bindgen_test]
 async fn test_focus_management_during_animation() {
     let document = web_sys::window().unwrap().document().unwrap();
-    
+    let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
     let app = view! {
         <div>
             <button class="before-button">"Before"</button>
@@ -57,7 +61,8 @@ async fn test_focus_management_during_animation() {
                 class="animated-focusable".to_string()
                 style="role: button; tabindex: 0;".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.8)))
+                animate=AnimateProp::Fn(Rc::new(|| create_animation_target("opacity", AnimationValue::Number(0.8))))
+                node_ref=node_ref
             >
                 "Animated Focusable"
             </ReactiveMotionDiv>
@@ -87,13 +92,15 @@ async fn test_focus_management_during_animation() {
 #[wasm_bindgen_test]
 async fn test_text_content_accessibility() {
     let document = web_sys::window().unwrap().document().unwrap();
-    
+    let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
     let app = view! {
         <div>
             <ReactiveMotionDiv
                 class="text-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(0.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(1.0)))
+                animate=AnimateProp::Fn(Rc::new(|| create_animation_target("opacity", AnimationValue::Number(1.0))))
+                node_ref=node_ref
             >
                 "Content loaded successfully"
             </ReactiveMotionDiv>
@@ -117,7 +124,8 @@ async fn test_text_content_accessibility() {
 #[wasm_bindgen_test]
 async fn test_screen_reader_navigation() {
     let document = web_sys::window().unwrap().document().unwrap();
-    
+    let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
     let app = view! {
         <div>
             <h1 class="heading-1">"Main Heading"</h1>
@@ -125,7 +133,8 @@ async fn test_screen_reader_navigation() {
                 class="animated-content".to_string()
                 style="role: region;".to_string()
                 initial=create_animation_target("transform", AnimationValue::String("translateY(0px)".to_string()))
-                animate=Box::new(|| create_animation_target("transform", AnimationValue::String("translateY(10px)".to_string())))
+                animate=AnimateProp::Fn(Rc::new(|| create_animation_target("transform", AnimationValue::String("translateY(10px)".to_string()))))
+                node_ref=node_ref
             >
                 "Animated content section"
             </ReactiveMotionDiv>
@@ -153,14 +162,16 @@ async fn test_screen_reader_navigation() {
 #[wasm_bindgen_test]
 async fn test_color_animation_accessibility() {
     let document = web_sys::window().unwrap().document().unwrap();
-    
+    let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
+
     let app = view! {
         <div>
             <ReactiveMotionDiv
                 class="color-animated".to_string()
                 style="color: black; background-color: white;".to_string()
                 initial=create_animation_target("color", AnimationValue::Color("black".to_string()))
-                animate=Box::new(|| create_animation_target("color", AnimationValue::Color("blue".to_string())))
+                animate=AnimateProp::Fn(Rc::new(|| create_animation_target("color", AnimationValue::Color("blue".to_string()))))
+                node_ref=node_ref
             >
                 "Color changing text"
             </ReactiveMotionDiv>

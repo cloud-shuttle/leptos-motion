@@ -27,6 +27,8 @@ pub struct StudioProject {
     pub created: chrono::DateTime<chrono::Utc>,
     /// Last modified timestamp
     pub modified: chrono::DateTime<chrono::Utc>,
+    /// Whether the project has scroll-triggered animations
+    pub has_scroll_trigger: bool,
 }
 
 impl StudioProject {
@@ -43,6 +45,7 @@ impl StudioProject {
             assets: HashMap::new(),
             created: now,
             modified: now,
+            has_scroll_trigger: false,
         }
     }
 
@@ -174,6 +177,12 @@ pub struct ProjectAnimation {
     pub enabled: bool,
     /// Animation tags
     pub tags: Vec<String>,
+    /// Easing function for the animation
+    pub easing: String,
+    /// Number of times to repeat the animation
+    pub repeat: i32,
+    /// Whether to reverse direction on each repeat
+    pub yoyo: bool,
 }
 
 impl ProjectAnimation {
@@ -188,6 +197,9 @@ impl ProjectAnimation {
             duration: 5.0,
             enabled: true,
             tags: Vec::new(),
+            easing: "ease-in-out".to_string(),
+            repeat: 0,
+            yoyo: false,
         }
     }
 }

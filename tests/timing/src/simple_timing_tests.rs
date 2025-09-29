@@ -3,12 +3,13 @@
 //! Basic timing tests that work with the current API
 
 use leptos::prelude::*;
-use leptos::task::spawn_local;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos::{task::spawn_local};
+use leptos_motion_dom::{ReactiveMotionDiv, AnimateProp};
 use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
 use wasm_bindgen_test::*;
 use web_sys::{window, Element, Performance};
 use std::collections::HashMap;
+use std::rc::Rc;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -253,23 +254,25 @@ async fn test_repeat_animation_timing() {
 async fn test_animation_performance_under_load() {
     let document = web_sys::window().unwrap().document().unwrap();
     let performance = window().unwrap().performance().unwrap();
-    
+
     // Create multiple animations to test performance
     let app = view! {
         <div>
             {(0..5).map(|i| {
+                let node_ref: NodeRef<leptos::html::Div> = NodeRef::new();
                 view! {
                     <ReactiveMotionDiv
                         class=format!("performance-test-{}", i)
                         initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                        animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.5)))
-                          transition=Transition {
+                        animate=AnimateProp::Fn(Rc::new(|| create_animation_target("opacity", AnimationValue::Number(0.5))))
+                        _transition=Transition {
                             duration: Some(1.0),
                             ease: Easing::EaseInOut,
                             delay: None,
                             repeat: RepeatConfig::Never,
                             stagger: None,
                         }
+                        node_ref=node_ref
                     >
                         {format!("Performance test {}", i)}
                     </ReactiveMotionDiv>

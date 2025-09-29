@@ -4,7 +4,7 @@ use super::animation_types::*;
 use crate::{Result, StudioError, timeline::AnimationValue};
 
 /// Pooled animation that can be reused
-#[derive(Clone)]
+#[derive(Debug)]
 pub struct PooledAnimation {
     /// Unique identifier
     pub id: u64,
@@ -22,8 +22,22 @@ pub struct PooledAnimation {
     pub end_time: Option<f64>,
     /// Whether this animation is currently in use
     pub in_use: bool,
-    /// Custom data
-    pub custom_data: Option<Box<dyn std::any::Any + Send + Sync>>,
+    /// Custom data (not cloneable)
+    pub custom_data: Option<std::rc::Rc<dyn std::any::Any + Send + Sync>>,
+}
+
+impl Clone for PooledAnimation {
+    fn clone(&self) -> Self {
+        Self {
+            id: self.id,
+            animation_type: self.animation_type.clone(),
+            state: self.state.clone(),
+            start_time: self.start_time,
+            end_time: self.end_time,
+            in_use: self.in_use,
+            custom_data: None, // Don't clone custom data
+        }
+    }
 }
 
 impl PooledAnimation {

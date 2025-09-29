@@ -1,7 +1,7 @@
 //! Core animation engine traits and types
 
 use std::collections::HashMap;
-use crate::{AnimationError, AnimationHandle, AnimationTarget, AnimationValue, Result, Transition};
+use crate::{AnimationHandle, AnimationValue, Result, Transition};
 use web_sys;
 
 /// Core animation engine trait

@@ -3,13 +3,13 @@
 //! This module provides RAF-based animations for broader browser support.
 
 use super::traits::*;
-use crate::{AnimationError, AnimationHandle, Result};
+use crate::{AnimationHandle, Result};
 use std::collections::HashMap;
 
 #[cfg(feature = "web-sys")]
 use web_sys::{Element, HtmlElement, window};
 #[cfg(feature = "web-sys")]
-use wasm_bindgen::{prelude::*, JsCast};
+use wasm_bindgen::JsCast;
 
 /// RAF-based animation engine
 pub struct RafEngine {

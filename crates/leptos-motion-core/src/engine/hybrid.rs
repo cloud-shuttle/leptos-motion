@@ -7,7 +7,7 @@ use super::traits::*;
 use super::waapi::WaapiEngine;
 use super::raf::RafEngine;
 use super::feature_detector::FeatureDetector;
-use crate::{AnimationError, AnimationHandle, Result};
+use crate::{AnimationHandle, Result};
 
 #[cfg(feature = "performance-metrics")]
 use crate::performance::{

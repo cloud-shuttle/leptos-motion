@@ -5,10 +5,9 @@
 use super::traits::*;
 use crate::{AnimationError, AnimationHandle, Result};
 use std::collections::HashMap;
-use wasm_bindgen::JsCast;
 
 #[cfg(feature = "web-sys")]
-use web_sys::{Element, HtmlElement, KeyframeEffect, Animation, AnimationEffect};
+use web_sys::{Element, Animation};
 
 /// WAAPI-based animation engine
 pub struct WaapiEngine {

@@ -1,15 +1,17 @@
 {
-  "name": "comprehensive-showcase-tests",
-  "version": "1.0.0",
-  "description": "Playwright tests for Leptos Motion Comprehensive Showcase",
-  "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:debug": "playwright test --debug",
-    "test:ui": "playwright test --ui",
-    "install": "playwright install"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.40.0"
-  }
+  "name": "comprehensive-showcase",
+  "type": "module",
+  "description": "Comprehensive showcase of Leptos Motion features",
+  "version": "1.1.0",
+  "license": "MIT",
+  "files": [
+    "comprehensive_showcase_bg.wasm",
+    "comprehensive_showcase.js",
+    "comprehensive_showcase.d.ts"
+  ],
+  "main": "comprehensive_showcase.js",
+  "types": "comprehensive_showcase.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
 }

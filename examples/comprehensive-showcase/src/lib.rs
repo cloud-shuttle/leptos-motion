@@ -5,6 +5,7 @@
 
 use leptos::prelude::*;
 use leptos_motion::*;
+use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
@@ -17,9 +18,9 @@ pub fn main() {
 }
 
 #[wasm_bindgen]
-pub fn comprehensive_showcase() {
+pub fn run_app() {
     // Mount to the app div specifically
-    let _ = leptos::mount::mount_to_body(|| view! { 
+    let _ = leptos::mount::mount_to_body(|| view! {
         <ShowcaseComponent />
     });
 }
@@ -55,24 +56,65 @@ fn ShowcaseComponent() -> impl IntoView {
                 "Professional Motion Library Showcase"
             </p>
             <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <div 
-                    style=move || format!("background: #4CAF50; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; transform: scale({})", button_scale.get())
+                <MotionDiv
+                    node_ref=NodeRef::new()
+                    class="button".to_string()
+                    style="background: #4CAF50; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer;".to_string()
+                    initial=HashMap::from([
+                        ("scale".to_string(), AnimationValue::Number(1.0))
+                    ])
+                    animate=AnimateProp::Static(HashMap::from([
+                        ("scale".to_string(), AnimationValue::Number(button_scale.get()))
+                    ]))
+                    _transition=Transition {
+                        duration: Some(0.3),
+                        ease: Easing::EaseOut,
+                        ..Default::default()
+                    }
                     on:click=handle_button_click
                 >
                     "Button Animation"
-                </div>
-                <div 
-                    style=move || format!("background: #2196F3; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; transform: translateX({}px)", card_x.get())
+                </MotionDiv>
+
+                <MotionDiv
+                    node_ref=NodeRef::new()
+                    class="card".to_string()
+                    style="background: #2196F3; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer;".to_string()
+                    initial=HashMap::from([
+                        ("x".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                    animate=AnimateProp::Static(HashMap::from([
+                        ("x".to_string(), AnimationValue::Pixels(card_x.get()))
+                    ]))
+                    _transition=Transition {
+                        duration: Some(0.3),
+                        ease: Easing::EaseOut,
+                        ..Default::default()
+                    }
                     on:click=handle_card_click
                 >
                     "Card Animation"
-                </div>
-                <div 
-                    style=move || format!("background: #FF9800; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; transform: rotate({}deg)", loading_rotation.get())
+                </MotionDiv>
+
+                <MotionDiv
+                    node_ref=NodeRef::new()
+                    class="loading".to_string()
+                    style="background: #FF9800; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer;".to_string()
+                    initial=HashMap::from([
+                        ("rotate".to_string(), AnimationValue::Number(0.0))
+                    ])
+                    animate=AnimateProp::Static(HashMap::from([
+                        ("rotate".to_string(), AnimationValue::Number(loading_rotation.get()))
+                    ]))
+                    _transition=Transition {
+                        duration: Some(0.3),
+                        ease: Easing::EaseOut,
+                        ..Default::default()
+                    }
                     on:click=handle_loading_click
                 >
                     "Loading Animation"
-                </div>
+                </MotionDiv>
             </div>
             <div style="margin-top: 40px; text-align: center;">
                 <p style="font-size: 18px; opacity: 0.8;">

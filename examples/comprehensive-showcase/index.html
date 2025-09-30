@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leptos Motion - Comprehensive Showcase</title>
-    <link data-trunk rel="css" href="src/style.css">
-    <link data-trunk rel="rust" href="src/lib.rs" data-wasm-opt="z"/>
+    <link rel="stylesheet" href="src/style.css">
+    <script type="module">
+        import init, { run_app } from './comprehensive_showcase.js';
+        init().then(() => {
+            run_app();
+        });
+    </script>
 </head>
 <body>
     <div id="app"></div>

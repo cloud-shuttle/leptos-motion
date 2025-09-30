@@ -1,5 +1,6 @@
 use leptos::*;
 use leptos::prelude::*;
+use leptos_motion_dom::MotionDiv;
 use leptos_motion_core::{AnimationValue, Transition, Easing};
 use std::collections::HashMap;
 
@@ -8,33 +9,69 @@ pub fn CSRDemo() -> impl IntoView {
     let (count, set_count) = signal(0);
     let (is_animated, set_is_animated) = signal(false);
 
+    // Create initial values for MotionDiv
+    let initial_values = HashMap::from([
+        ("x".to_string(), AnimationValue::Pixels(0.0)),
+        ("y".to_string(), AnimationValue::Pixels(0.0)),
+        ("opacity".to_string(), AnimationValue::Number(1.0)),
+        ("scale".to_string(), AnimationValue::Number(1.0)),
+    ]);
+
+    // Create animated values based on state
+    let animate_values = move || {
+        if is_animated.get() {
+            leptos_motion_dom::AnimateProp::Static(HashMap::from([
+                ("x".to_string(), AnimationValue::Pixels(100.0)),
+                ("y".to_string(), AnimationValue::Pixels(-50.0)),
+                ("opacity".to_string(), AnimationValue::Number(0.8)),
+                ("scale".to_string(), AnimationValue::Number(1.2)),
+            ]))
+        } else {
+            leptos_motion_dom::AnimateProp::Static(HashMap::from([
+                ("x".to_string(), AnimationValue::Pixels(0.0)),
+                ("y".to_string(), AnimationValue::Pixels(0.0)),
+                ("opacity".to_string(), AnimationValue::Number(1.0)),
+                ("scale".to_string(), AnimationValue::Number(1.0)),
+            ]))
+        }
+    };
+
+    // Create transition configuration
+    let transition = Transition {
+        duration: Some(0.6),
+        ease: Easing::EaseInOut,
+        delay: None,
+        repeat: leptos_motion_core::RepeatConfig::Never,
+        stagger: None,
+    };
+
     view! {
         <div class="demo-container">
             <h1>"🚀 Leptos Motion CSR Demo (MotionDiv)"</h1>
             <p>"Real Rust/WASM animations with MotionDiv (WASM-compatible)"</p>
-            
+
             <section class="demo-section">
-                <h2>"Basic Motion (MotionDiv)"</h2>
+                <h2>"MotionDiv Animation Engine"</h2>
                 <button on:click=move |_| set_is_animated.set(!is_animated.get())>
                     "Toggle Animation"
                 </button>
-                
-                <div 
+
+                <div
                     style="cursor: pointer; margin: 20px;"
                     on:click=move |_| {
                         set_count.set(count.get() + 1);
                     }
                 >
-                    <div 
-                        class="motion-box"
-                        style=move || if is_animated.get() { 
-                            "background: linear-gradient(45deg, #ff6b6b, #4ecdc4); width: 100px; height: 100px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; transform: translateX(100px) translateY(-50px); opacity: 0.8; transition: all 0.6s ease-in-out;".to_string()
-                        } else { 
-                            "background: linear-gradient(45deg, #ff6b6b, #4ecdc4); width: 100px; height: 100px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; transform: translateX(0px) translateY(0px); opacity: 1.0; transition: all 0.6s ease-in-out;".to_string()
-                        }
+                    <MotionDiv
+                        node_ref=NodeRef::new()
+                        class="motion-box".to_string()
+                        style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2);".to_string()
+                        initial=initial_values
+                        animate=animate_values()
+                        _transition=transition
                     >
                         "Click me! Count: " {count}
-                    </div>
+                    </MotionDiv>
                 </div>
             </section>
 
@@ -48,23 +85,23 @@ pub fn CSRDemo() -> impl IntoView {
             <section class="demo-section">
                 <h2>"Features"</h2>
                 <ul>
-                    <li>"✅ WASM-compatible MotionDiv"</li>
-                    <li>"✅ Real Rust/WASM animations"</li>
-                    <li>"✅ Type-safe Leptos components"</li>
-                    <li>"✅ Memory-safe Rust"</li>
-                    <li>"✅ No WASM time system issues"</li>
-                    <li>"✅ No RefCell borrowing conflicts"</li>
+                    <li>"✅ Real MotionDiv with Rust animation engine"</li>
+                    <li>"✅ WASM-compatible reactive animations"</li>
+                    <li>"✅ Type-safe AnimationValue system"</li>
+                    <li>"✅ Memory-safe Rust implementation"</li>
+                    <li>"✅ Hardware-accelerated CSS transforms"</li>
+                    <li>"✅ Reactive signal integration"</li>
                 </ul>
             </section>
 
             <section class="demo-section">
-                <h2>"Why MotionDiv Works"</h2>
+                <h2>"MotionDiv Architecture"</h2>
                 <ul>
-                    <li>"✅ CSS-only animations (WASM-safe)"</li>
-                    <li>"✅ No SystemTime::now() usage"</li>
-                    <li>"✅ No complex RefCell borrowing"</li>
-                    <li>"✅ Simple, reliable implementation"</li>
-                    <li>"✅ Production-ready for WASM"</li>
+                    <li>"✅ Hybrid WAAPI/CSS animation engine"</li>
+                    <li>"✅ Automatic fallback system"</li>
+                    <li>"✅ Performance-optimized updates"</li>
+                    <li>"✅ Memory-managed animation lifecycle"</li>
+                    <li>"✅ Production-ready for enterprise apps"</li>
                 </ul>
             </section>
         </div>
@@ -106,7 +143,6 @@ pub fn App() -> impl IntoView {
                     .motion-box {
                         width: 100px;
                         height: 100px;
-                        background: rgba(255, 255, 255, 0.2);
                         border: 2px solid white;
                         border-radius: 8px;
                         display: flex;

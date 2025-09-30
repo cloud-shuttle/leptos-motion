@@ -1,32 +1,58 @@
 use leptos::*;
 use leptos::prelude::*;
 use leptos::mount::mount_to;
+use leptos_motion_dom::MotionDiv;
+use leptos_motion_core::{AnimationValue, Transition, Easing};
 use wasm_bindgen::prelude::*;
 use web_sys::window;
+use std::collections::HashMap;
 
-// Simple animated box component - no complex props, just basic functionality
+// Simple animated box component using MotionDiv
 #[component]
 pub fn SimpleAnimatedBox() -> impl IntoView {
     let (is_hovered, set_hovered) = signal(false);
     let (is_tapped, set_tapped) = signal(false);
 
-    let box_style = move || {
-        let mut style = "width: 120px; height: 120px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;".to_string();
-        
+    // Create base initial values
+    let initial_values = HashMap::from([
+        ("scale".to_string(), AnimationValue::Number(1.0)),
+        ("rotate".to_string(), AnimationValue::Number(0.0)),
+    ]);
+
+    // Create animated values based on state
+    let animate_values = move || {
+        let mut animations = HashMap::from([
+            ("scale".to_string(), AnimationValue::Number(1.0)),
+            ("rotate".to_string(), AnimationValue::Number(0.0)),
+        ]);
+
         if is_hovered.get() {
-            style.push_str(" transform: scale(1.1) rotate(5deg);");
+            animations.insert("scale".to_string(), AnimationValue::Number(1.1));
+            animations.insert("rotate".to_string(), AnimationValue::Number(5.0));
         }
-        
+
         if is_tapped.get() {
-            style.push_str(" transform: scale(0.9);");
+            animations.insert("scale".to_string(), AnimationValue::Number(0.9));
         }
-        
-        style
+
+        leptos_motion_dom::AnimateProp::Static(animations)
+    };
+
+    // Create transition configuration
+    let transition = Transition {
+        duration: Some(0.3),
+        ease: Easing::EaseOut,
+        ..Default::default()
     };
 
     view! {
-        <div
-            style=box_style
+        <MotionDiv
+            node_ref=NodeRef::new()
+            class="animated-box".to_string()
+            style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);".to_string()
+            initial=initial_values
+            animate=animate_values()
+            _transition=transition
             on:mouseenter=move |_| set_hovered.set(true)
             on:mouseleave=move |_| {
                 set_hovered.set(false);
@@ -36,33 +62,59 @@ pub fn SimpleAnimatedBox() -> impl IntoView {
             on:mouseup=move |_| set_tapped.set(false)
         >
             "Animated Box"
-        </div>
+        </MotionDiv>
     }
 }
 
-// Simple animated button component - no complex props, just basic functionality
+// Simple animated button component using MotionDiv
 #[component]
 pub fn SimpleAnimatedButton(text: String) -> impl IntoView {
     let (is_hovered, set_hovered) = signal(false);
     let (is_tapped, set_tapped) = signal(false);
 
-    let button_style = move || {
-        let mut style = "padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease; background-color: #007bff; color: white;".to_string();
-        
+    // Create initial values for the button
+    let initial_values = HashMap::from([
+        ("scale".to_string(), AnimationValue::Number(1.0)),
+    ]);
+
+    // Create animated values based on state
+    let animate_values = move || {
+        let mut animations = HashMap::from([
+            ("scale".to_string(), AnimationValue::Number(1.0)),
+        ]);
+
         if is_hovered.get() {
-            style.push_str(" transform: scale(1.05); background-color: #0056b3;");
+            animations.insert("scale".to_string(), AnimationValue::Number(1.05));
         }
-        
+
         if is_tapped.get() {
-            style.push_str(" transform: scale(0.95);");
+            animations.insert("scale".to_string(), AnimationValue::Number(0.95));
         }
-        
-        style
+
+        leptos_motion_dom::AnimateProp::Static(animations)
+    };
+
+    // Create transition configuration
+    let transition = Transition {
+        duration: Some(0.2),
+        ease: Easing::EaseOut,
+        ..Default::default()
     };
 
     view! {
-        <div
-            style=button_style
+        <MotionDiv
+            node_ref=NodeRef::new()
+            class="animated-button".to_string()
+            style={
+                if is_hovered.get() {
+                    "padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background-color: #0056b3; color: white;".to_string()
+                } else {
+                    "padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background-color: #007bff; color: white;".to_string()
+                }
+            }
+            initial=initial_values
+            animate=animate_values()
+            _transition=transition
             on:mouseenter=move |_| set_hovered.set(true)
             on:mouseleave=move |_| {
                 set_hovered.set(false);
@@ -72,7 +124,7 @@ pub fn SimpleAnimatedButton(text: String) -> impl IntoView {
             on:mouseup=move |_| set_tapped.set(false)
         >
             {text}
-        </div>
+        </MotionDiv>
     }
 }
 

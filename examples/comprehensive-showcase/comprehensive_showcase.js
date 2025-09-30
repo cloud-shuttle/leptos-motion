@@ -255,19 +255,19 @@ export function run_app() {
 function __wbg_adapter_6(arg0, arg1, arg2) {
     _assertNum(arg0);
     _assertNum(arg1);
+    wasm.closure354_externref_shim(arg0, arg1, arg2);
+}
+
+function __wbg_adapter_9(arg0, arg1, arg2) {
+    _assertNum(arg0);
+    _assertNum(arg1);
     wasm.closure276_externref_shim(arg0, arg1, arg2);
 }
 
-function __wbg_adapter_9(arg0, arg1) {
+function __wbg_adapter_14(arg0, arg1) {
     _assertNum(arg0);
     _assertNum(arg1);
     wasm.wasm_bindgen__convert__closures_____invoke__h3bc4ae12e68674da(arg0, arg1);
-}
-
-function __wbg_adapter_12(arg0, arg1, arg2) {
-    _assertNum(arg0);
-    _assertNum(arg1);
-    wasm.closure354_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_147(arg0, arg1, arg2, arg3) {
@@ -882,7 +882,7 @@ function __wbg_get_imports() {
     };
     imports.wbg.__wbindgen_cast_199b1c6bf4ec40a6 = function() { return logError(function (arg0, arg1) {
         // Cast intrinsic for `Closure(Closure { dtor_idx: 273, function: Function { arguments: [], shim_idx: 274, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
-        const ret = makeMutClosure(arg0, arg1, 273, __wbg_adapter_9);
+        const ret = makeMutClosure(arg0, arg1, 273, __wbg_adapter_14);
         return ret;
     }, arguments) };
     imports.wbg.__wbindgen_cast_2241b6af4c4b2941 = function() { return logError(function (arg0, arg1) {
@@ -892,12 +892,12 @@ function __wbg_get_imports() {
     }, arguments) };
     imports.wbg.__wbindgen_cast_35422bf0483863ae = function() { return logError(function (arg0, arg1) {
         // Cast intrinsic for `Closure(Closure { dtor_idx: 353, function: Function { arguments: [Externref], shim_idx: 354, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
-        const ret = makeMutClosure(arg0, arg1, 353, __wbg_adapter_12);
+        const ret = makeMutClosure(arg0, arg1, 353, __wbg_adapter_6);
         return ret;
     }, arguments) };
     imports.wbg.__wbindgen_cast_8abae85ea203961e = function() { return logError(function (arg0, arg1) {
         // Cast intrinsic for `Closure(Closure { dtor_idx: 275, function: Function { arguments: [NamedExternref("Event")], shim_idx: 276, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
-        const ret = makeMutClosure(arg0, arg1, 275, __wbg_adapter_6);
+        const ret = makeMutClosure(arg0, arg1, 275, __wbg_adapter_9);
         return ret;
     }, arguments) };
     imports.wbg.__wbindgen_init_externref_table = function() {

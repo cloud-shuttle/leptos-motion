@@ -52,12 +52,12 @@ fn ShowcaseComponent() -> impl IntoView {
     });
 
     let handle_button_click = move |_| {
-        set_button_scale.update(|scale| *scale = if *scale == 1.0 { 1.2 } else { 1.0 });
+        set_button_scale.update(|scale| *scale = if *scale == 1.0 { 1.5 } else { 1.0 });
         set_message.set("Button Animation: Scale effect!".to_string());
     };
 
     let handle_card_click = move |_| {
-        set_card_x.update(|x| *x = if *x == 0.0 { 50.0 } else { 0.0 });
+        set_card_x.update(|x| *x = if *x == 0.0 { 100.0 } else { 0.0 });
         set_message.set("Card Animation: Slide effect!".to_string());
     };
 
@@ -74,7 +74,7 @@ fn ShowcaseComponent() -> impl IntoView {
             <p style="font-size: 24px; text-align: center; margin-bottom: 40px;">
                 "Professional Motion Library Showcase"
             </p>
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; min-height: 200px;">
                 <MotionDiv
                     node_ref=NodeRef::new()
                     class="button".to_string()
@@ -96,7 +96,7 @@ fn ShowcaseComponent() -> impl IntoView {
                 <MotionDiv
                     node_ref=NodeRef::new()
                     class="card".to_string()
-                    style="background: #2196F3; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer;".to_string()
+                    style="background: #2196F3; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; position: relative;".to_string()
                     initial=HashMap::from([
                         ("x".to_string(), AnimationValue::Pixels(0.0))
                     ])

@@ -96,13 +96,13 @@ pub fn App() -> impl IntoView {
                                     ("y".to_string(), AnimationValue::Pixels(0.0)),
                                     ("opacity".to_string(), AnimationValue::Number(1.0)),
                                 ])
-                                animate=if is_animated.get() { 
-                                    HashMap::from([
+                                animate=if is_animated.get() {
+                                    leptos_motion_dom::AnimateProp::Static(HashMap::from([
                                         ("x".to_string(), AnimationValue::Pixels(100.0)),
                                         ("y".to_string(), AnimationValue::Pixels(-50.0)),
                                         ("opacity".to_string(), AnimationValue::Number(0.8)),
-                                    ])
-                                } else { HashMap::new() }
+                                    ]))
+                                } else { leptos_motion_dom::AnimateProp::Static(HashMap::new()) }
                                 _transition=Transition {
                                     duration: Some(0.6),
                                     ease: Easing::EaseInOut,

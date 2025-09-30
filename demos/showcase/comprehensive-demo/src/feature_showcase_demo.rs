@@ -278,12 +278,12 @@ fn ScrollAnimationDemo() -> impl IntoView {
                                     target.insert("y".to_string(), AnimationValue::Pixels(50.0));
                                     target
                                 }
-                                animate={
+                                animate=AnimateProp::Static({
                                     let mut target = HashMap::new();
                                     target.insert("opacity".to_string(), AnimationValue::Number(1.0));
                                     target.insert("y".to_string(), AnimationValue::Pixels(0.0));
                                     target
-                                }
+                                })
                                 _transition=Transition {
                                     duration: Some(0.6),
                                     ease: Easing::EaseOut,
@@ -432,12 +432,12 @@ fn ExitAnimationDemo() -> impl IntoView {
                                     target.insert("scale".to_string(), AnimationValue::Number(0.8));
                                     target
                                 }
-                                animate={
+                                animate=AnimateProp::Static({
                                     let mut target = HashMap::new();
                                     target.insert("opacity".to_string(), AnimationValue::Number(1.0));
                                     target.insert("scale".to_string(), AnimationValue::Number(1.0));
                                     target
-                                }
+                                })
                                 _transition=Transition {
                                     duration: Some(0.3),
                                     ease: Easing::EaseInOut,
@@ -645,7 +645,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
                                 target.insert("scale".to_string(), AnimationValue::Number(0.8));
                                 target
                             }
-                            animate={
+                            animate=AnimateProp::Static({
                                 let mut target = HashMap::new();
                                 if is_playing.get() {
                                     target.insert("opacity".to_string(), AnimationValue::Number(1.0));
@@ -657,7 +657,7 @@ fn TimelineSequencesDemo() -> impl IntoView {
                                     target.insert("scale".to_string(), AnimationValue::Number(0.8));
                                 }
                                 target
-                            }
+                            })
                             _transition=Transition {
                                 duration: Some(0.6),
                                 ease: Easing::EaseOut,

@@ -4,7 +4,9 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue};
+use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 use leptos_motion_dom::ReactiveMotionDiv;
 
@@ -52,11 +54,31 @@ pub fn Phase4aDemo() -> impl IntoView {
     let (counter, set_counter) = signal(0);
 
     // Create function-based animation targets
-    let function_target = create_function_animation_target();
-    let dynamic_target = create_dynamic_animation_target();
+    let function_target = leptos_motion_dom::AnimateProp::Fn(Rc::new(|| {
+        let mut target = HashMap::new();
+        target.insert("opacity".to_string(), AnimationValue::Number(0.8));
+        target.insert(
+            "transform".to_string(),
+            AnimationValue::String("scale(1.2)".to_string()),
+        );
+        target
+    }));
+    let dynamic_target = leptos_motion_dom::AnimateProp::Fn(Rc::new(|| {
+        // Use a simple counter-based animation instead of time for WASM compatibility
+        let opacity = 0.7;
+        let scale = 1.1;
+
+        let mut target = HashMap::new();
+        target.insert("opacity".to_string(), AnimationValue::Number(opacity));
+        target.insert(
+            "transform".to_string(),
+            AnimationValue::String(format!("scale({})", scale)),
+        );
+        target
+    }));
 
     // Create a counter-based animation function
-    let counter_animation = Box::new(move || {
+    let counter_animation = leptos_motion_dom::AnimateProp::Fn(Rc::new(move || {
         let count = counter.get();
         let mut target = HashMap::new();
         target.insert(
@@ -68,10 +90,10 @@ pub fn Phase4aDemo() -> impl IntoView {
             AnimationValue::String(format!("hsl({}, 70%, 50%)", count * 20)),
         );
         target
-    });
+    }));
 
     // Create hover animation function
-    let hover_animation = Box::new(|| {
+    let hover_animation = AnimateProp::Fn(Rc::new(|| {
         let mut target = HashMap::new();
         target.insert(
             "background-color".to_string(),
@@ -82,10 +104,10 @@ pub fn Phase4aDemo() -> impl IntoView {
             AnimationValue::String("rotate(5deg)".to_string()),
         );
         target
-    });
+    }));
 
     // Create tap animation function
-    let tap_animation = Box::new(|| {
+    let tap_animation = AnimateProp::Fn(Rc::new(|| {
         let mut target = HashMap::new();
         target.insert(
             "transform".to_string(),
@@ -96,11 +118,19 @@ pub fn Phase4aDemo() -> impl IntoView {
             AnimationValue::String("0 4px 8px rgba(0,0,0,0.3)".to_string()),
         );
         target
-    });
+    }));
 
     // Clone functions for reuse
-    let function_target_clone = create_function_animation_target();
-    let hover_animation_clone = Box::new(|| {
+    let function_target_clone = AnimateProp::Fn(Rc::new(|| {
+        let mut target = HashMap::new();
+        target.insert("opacity".to_string(), AnimationValue::Number(0.8));
+        target.insert(
+            "transform".to_string(),
+            AnimationValue::String("scale(1.2)".to_string()),
+        );
+        target
+    }));
+    let hover_animation_clone = AnimateProp::Fn(Rc::new(|| {
         let mut target = HashMap::new();
         target.insert(
             "background-color".to_string(),
@@ -111,7 +141,7 @@ pub fn Phase4aDemo() -> impl IntoView {
             AnimationValue::String("rotate(5deg)".to_string()),
         );
         target
-    });
+    })));
 
     view! {
         <div style="padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; min-height: 100vh;">
@@ -128,7 +158,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function that returns a static animation target"</p>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=function_target()
+                        animate=function_target
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Static"
@@ -141,7 +171,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function that calculates animation based on current time"</p>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=dynamic_target()
+                        animate=dynamic_target
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Time"
@@ -163,7 +193,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     </div>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=counter_animation()
+                        animate=counter_animation
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Count"
@@ -203,8 +233,8 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
                         initial=create_animation_target("opacity", 0.3)
-                        animate=function_target_clone()
-                        while_hover=hover_animation_clone()
+                        animate=function_target_clone
+                        while_hover=hover_animation_clone
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Mixed"

@@ -10,8 +10,8 @@ use crate::{
 };
 use leptos::attr::global::ClassAttribute;
 use leptos::prelude::{
-    ElementChild, Get, NodeRefAttribute, OnAttribute, Set, StyleAttribute, create_effect,
-    create_node_ref, create_signal,
+    ElementChild, Get, NodeRefAttribute, OnAttribute, Set, StyleAttribute,
+    Effect, NodeRef, signal,
 };
 use leptos::*;
 use std::collections::HashMap;
@@ -553,13 +553,13 @@ pub fn LivePreviewComponent(
 ) -> impl IntoView {
     // Temporarily disable preview renderer signal due to thread safety issues
     // let (preview_renderer, set_preview_renderer) = create_signal(None::<PreviewRenderer>);
-    let (is_playing, set_is_playing) = create_signal(false);
-    let (metrics, set_metrics) = create_signal(PreviewMetrics::default());
+    let (is_playing, set_is_playing) = signal(false);
+    let (metrics, set_metrics) = signal(PreviewMetrics::default());
 
-    let preview_ref = create_node_ref::<leptos::html::Div>();
+    let preview_ref = NodeRef::<leptos::html::Div>::new();
 
     // Initialize preview when element mounts
-    create_effect(move |_| {
+    Effect::new(move |_| {
         if let Some(element) = preview_ref.get() {
             let mut renderer = PreviewRenderer::new();
             if renderer.set_target(element.unchecked_into()).is_ok()

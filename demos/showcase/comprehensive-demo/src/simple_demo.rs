@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_motion_core::AnimationValue;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion_dom::{AnimateProp, ReactiveMotionDiv};
 use std::collections::HashMap;
 
 /// Simple Demo Component
@@ -38,7 +38,7 @@ pub fn SimpleDemo() -> impl IntoView {
 
             <ReactiveMotionDiv
                 node_ref=NodeRef::new()
-                animate=Box::new(move || animation.get())()
+                animate=AnimateProp::Reactive(animation)
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >
                 "Hello!"

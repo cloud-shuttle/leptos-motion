@@ -174,7 +174,7 @@ pub fn test_get_all_values_performance() -> Vec<ContractTestResult> {
     };
     
     // Setup engine with multiple properties
-    let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+    let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
     for i in 0..100 {
         engine.animate_property(
             format!("property_{}", i),

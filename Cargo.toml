@@ -52,15 +52,15 @@ categories = ["gui", "wasm", "web-programming"]
 description = "A comprehensive animation library for Leptos with Motion-inspired API"
 
 [workspace.dependencies]
-# Core Leptos dependencies (Testing with published leptos to verify fixes)
-leptos = { version = "0.8.6", features = ["csr", "hydrate", "ssr"] }
+# Core Leptos dependencies (Latest versions for September 2025)
+leptos = { version = "0.8.10", features = ["csr", "hydrate", "ssr"] }
 
 # Test dependencies
 reqwest = { version = "0.12", features = ["json"] }
-leptos_macro = "0.8.6"  # Published version
-reactive_graph = "0.2.6"  # Published version
+leptos_macro = "0.8.9"  # Latest version
+reactive_graph = "0.2.8"  # Latest version
 leptos_meta = "0.8.5"
-leptos_router = "0.8.6"
+leptos_router = "0.8.7"
 
 # Leptos Motion dependencies
 leptos-motion-core = { path = "crates/leptos-motion-core" }
@@ -105,25 +105,26 @@ js-sys = "0.3"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 
-# Utility crates (Latest stable versions)
+# Utility crates (Latest stable versions for September 2025)
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 anyhow = "1.0"
 once_cell = "1.19"
 paste = "1.0"
 
 # CSS and styling
-tailwind-rs-core = "0.6.0"
+tailwind-rs-core = "0.15"
 
 
 # Math and interpolation
 num-traits = "0.2"
 approx = "0.5"
 
-# Async and futures (Latest stable versions)
+# Async and futures (Latest stable versions for September 2025)
 futures = "0.3"
 tokio = { version = "1.0", features = ["full"] }
+tachys = "0.2.9"
 
 # Logging and debugging
 log = "0.4"
@@ -135,8 +136,8 @@ wasm-bindgen-test = "0.3"
 pretty_assertions = "1.4"
 test-case = "3.1"
 
-# Modern TDD crates (Latest stable versions)
-rstest = "0.19"
+# Modern TDD crates (Latest stable versions for September 2025)
+rstest = "0.26"
 proptest = "1.4"
 quickcheck = "1.0"
 arbitrary = "1.4"

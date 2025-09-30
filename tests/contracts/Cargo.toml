@@ -33,3 +33,7 @@ tailwind-rs-core = "0.6.0"
 [lib]
 name = "leptos_motion_contracts"
 path = "lib.rs"
+
+[[bin]]
+name = "contract_test_runner"
+path = "../../src/bin/contract_test_runner.rs"

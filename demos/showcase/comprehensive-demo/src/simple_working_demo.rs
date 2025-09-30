@@ -4,8 +4,9 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion_dom::{AnimateProp, ReactiveMotionDiv};
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[component]
 pub fn SimpleWorkingDemo() -> impl IntoView {
@@ -20,7 +21,7 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
     let (opacity, set_opacity) = signal(1.0);
 
     // Create reactive animation target using signals
-    let animate_target = move || {
+    let animate_target = AnimateProp::Fn(Rc::new(move || {
         let mut target = HashMap::new();
         if is_animated.get() {
             target.insert("x".to_string(), AnimationValue::Pixels(x_pos.get()));
@@ -39,10 +40,10 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
             target.insert("opacity".to_string(), AnimationValue::Number(1.0));
         }
         target
-    };
+    }));
 
     // Create initial animation target
-    let initial_target = {
+    let initial_target = AnimateProp::Static({
         let mut initial = HashMap::new();
         initial.insert("x".to_string(), AnimationValue::Pixels(0.0));
         initial.insert("y".to_string(), AnimationValue::Pixels(0.0));
@@ -50,7 +51,7 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
         initial.insert("scale".to_string(), AnimationValue::Number(1.0));
         initial.insert("opacity".to_string(), AnimationValue::Number(1.0));
         initial
-    };
+    });
 
     // Button handlers that update signals
     let handle_animate = move |_| {
@@ -139,8 +140,8 @@ pub fn SimpleWorkingDemo() -> impl IntoView {
                     <h3 style="margin: 0 0 20px 0;">"ReactiveMotionDiv Element:"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        initial=initial_target.clone()
-                        animate=Box::new(move || animate_target())()
+                        initial=initial_target.resolve()
+                        animate=animate_target
                         style="position: absolute; top: 50px; left: 50px;".to_string()
                     >
                         <div style="

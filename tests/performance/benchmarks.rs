@@ -1,6 +1,8 @@
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use leptos_motion_core::*;
+use leptos_motion_dom::{MotionDiv, AnimateProp};
 use std::time::Instant;
+use std::collections::HashMap;
 
 fn benchmark_spring_physics(c: &mut Criterion) {
     c.bench_function("spring_physics_100_steps", |b| {
@@ -263,6 +265,37 @@ criterion_group!(
     benchmark_frame_rate_simulation,
     benchmark_transform_operations,
     benchmark_motion_values_collection,
+    benchmark_animation_performance,
 );
+
+/// Benchmark MotionDiv animation performance
+fn benchmark_animation_performance(c: &mut Criterion) {
+    c.bench_function("motion_div_animation_creation", |b| {
+        b.iter(|| {
+            // Create animation data structures similar to what demos use
+            let initial_values = HashMap::from([
+                ("x".to_string(), AnimationValue::Pixels(0.0)),
+                ("y".to_string(), AnimationValue::Pixels(0.0)),
+                ("opacity".to_string(), AnimationValue::Number(1.0)),
+                ("scale".to_string(), AnimationValue::Number(1.0)),
+            ]);
+
+            let animate_values = AnimateProp::Static(HashMap::from([
+                ("x".to_string(), AnimationValue::Pixels(100.0)),
+                ("y".to_string(), AnimationValue::Pixels(-50.0)),
+                ("opacity".to_string(), AnimationValue::Number(0.8)),
+                ("scale".to_string(), AnimationValue::Number(1.2)),
+            ]));
+
+            let transition = Transition {
+                duration: Some(0.3),
+                ease: Easing::EaseOut,
+                ..Default::default()
+            };
+
+            black_box((initial_values, animate_values, transition))
+        });
+    });
+}
 
 criterion_main!(benches);

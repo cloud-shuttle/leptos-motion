@@ -4,8 +4,9 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationValue, Easing, Transition};
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion_dom::{AnimateProp, ReactiveMotionDiv};
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[component]
 pub fn TransitionConfigTest() -> impl IntoView {
@@ -51,7 +52,7 @@ pub fn TransitionConfigTest() -> impl IntoView {
                     <h3>"Fast Animation (100ms)"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || fast_animate.clone())()
+                        animate=AnimateProp::Static(fast_animate.clone())
                         _transition=fast_transition
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ffa500); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
@@ -63,7 +64,7 @@ pub fn TransitionConfigTest() -> impl IntoView {
                     <h3>"Slow Animation (2000ms)"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || slow_animate.clone())()
+                        animate=AnimateProp::Static(slow_animate.clone())
                         _transition=slow_transition
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4ecdc4, #44a08d); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >

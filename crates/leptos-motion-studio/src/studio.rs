@@ -4,7 +4,7 @@ use crate::{Result, StudioError, project::*};
 use leptos::attr::global::ClassAttribute;
 use leptos::prelude::{
     Callback, ElementChild, Get, NodeRefAttribute, OnAttribute, ReadSignal, Set,
-    WriteSignal, create_effect, create_node_ref, create_signal, expect_context,
+    WriteSignal, Effect, NodeRef, signal, expect_context,
     provide_context,
 };
 use leptos::*;
@@ -30,12 +30,12 @@ pub fn MotionStudio(
     theme: StudioTheme,
 ) -> impl IntoView {
     let (current_project, set_current_project) =
-        create_signal(project.unwrap_or_else(|| StudioProject::new("Untitled Project")));
+        signal(project.unwrap_or_else(|| StudioProject::new("Untitled Project")));
 
-    let (selected_animation, set_selected_animation) = create_signal(None::<Uuid>);
-    let (timeline_state, set_timeline_state) = create_signal(TimelineState::default());
-    let (canvas_state, set_canvas_state) = create_signal(CanvasState::default());
-    let (studio_mode, set_studio_mode) = create_signal(StudioMode::Timeline);
+    let (selected_animation, set_selected_animation) = signal(None::<Uuid>);
+    let (timeline_state, set_timeline_state) = signal(TimelineState::default());
+    let (canvas_state, set_canvas_state) = signal(CanvasState::default());
+    let (studio_mode, set_studio_mode) = signal(StudioMode::Timeline);
 
     // Create studio context
     let studio_context = StudioContext::new(
@@ -55,7 +55,7 @@ pub fn MotionStudio(
     provide_context(studio_context);
 
     // Handle project changes
-    create_effect(move |_| {
+    Effect::new(move |_| {
         // Temporarily disabled until callback API is clarified
         // if let Some(callback) = on_project_change {
         //     callback(current_project.get());
@@ -325,10 +325,10 @@ fn StudioSidebar() -> impl IntoView {
 #[component]
 fn StudioCanvas() -> impl IntoView {
     let context = expect_context::<StudioContext>();
-    let canvas_ref = create_node_ref::<leptos::html::Canvas>();
+    let canvas_ref = NodeRef::<leptos::html::Canvas>::new();
 
     // Initialize WebGL context when canvas mounts
-    create_effect(move |_| {
+    Effect::new(move |_| {
         if let Some(canvas) = canvas_ref.get() {
             // Initialize WebGL renderer
             if context.config.webgl_enabled {

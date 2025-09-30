@@ -26,3 +26,5 @@ pub mod performance_tests {
 pub mod visual_tests {
     // Visual regression tests will go here
 }
+
+pub mod demo_validation_tests;

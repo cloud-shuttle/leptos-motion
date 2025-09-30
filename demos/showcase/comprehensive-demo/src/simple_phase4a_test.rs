@@ -4,7 +4,9 @@
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue};
+use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 use leptos_motion_dom::ReactiveMotionDiv;
 
@@ -20,7 +22,7 @@ pub fn SimplePhase4aTest() -> impl IntoView {
     web_sys::console::log_1(&"🎯 Simple Phase 4A Test: Component created".into());
 
     // Create a simple function-based animation
-    let function_target = Box::new(|| {
+    let function_target = AnimateProp::Fn(Rc::new(|| {
         let mut target = HashMap::new();
         target.insert("opacity".to_string(), AnimationValue::Number(0.8));
         target.insert(
@@ -28,7 +30,7 @@ pub fn SimplePhase4aTest() -> impl IntoView {
             AnimationValue::String("scale(1.2)".to_string()),
         );
         target
-    });
+    }));
 
     view! {
         <div style="padding: 20px; font-family: Arial, sans-serif;">
@@ -41,7 +43,7 @@ pub fn SimplePhase4aTest() -> impl IntoView {
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
                         initial=create_animation_target("opacity", 0.5)
-                        animate=Box::new(|| create_animation_target("opacity", 1.0))()
+                        animate=AnimateProp::Static(create_animation_target("opacity", 1.0))
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Static"
@@ -52,7 +54,7 @@ pub fn SimplePhase4aTest() -> impl IntoView {
                     <h3>"Function Animation"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=function_target()
+                        animate=function_target
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
                         "Function"

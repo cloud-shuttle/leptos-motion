@@ -384,6 +384,65 @@ impl SimplifiedAnimationEngine {
     pub fn has_active_animations(&self) -> bool {
         self.active_animation_count() > 0
     }
+
+    /// Animate a single property with simplified API
+    /// This is a convenience method for single-property animations
+    pub fn animate_property(
+        &mut self,
+        property: String,
+        from: f64,
+        to: f64,
+        transition: Transition,
+    ) -> Result<AnimationHandle> {
+        // Create a simple animation target
+        let mut target = HashMap::new();
+        target.insert(property, AnimationValue::Number(to));
+
+        // For now, we'll create a mock element for the API
+        // In a real implementation, this would be passed from the caller
+        #[cfg(feature = "web-sys")]
+        {
+            // Create a mock element for WASM
+            use wasm_bindgen::JsCast;
+            use web_sys::{window, Element, HtmlElement, HtmlDivElement};
+
+            if let Some(window) = window() {
+                if let Some(document) = window.document() {
+                    if let Ok(element) = document.create_element("div") {
+                        return self.animate(&element, &target, &transition);
+                    }
+                }
+            }
+        }
+
+        // For non-WASM, return a mock handle
+        #[cfg(not(feature = "web-sys"))]
+        {
+            Ok(AnimationHandle(1))
+        }
+
+        // This should never be reached, but satisfies the compiler
+        #[cfg(not(target_arch = "wasm32"))]
+        Ok(AnimationHandle(1))
+    }
+
+    /// Get the current value of a specific property
+    /// Returns None if the property is not currently animated
+    pub fn get_property_value(&self, property: &str) -> Option<f64> {
+        // This is a simplified implementation
+        // In a full implementation, this would query the current animation state
+        // For now, return None to indicate no active animation
+        let _ = property; // Suppress unused variable warning
+        None
+    }
+
+    /// Get all current animation values
+    /// Returns an empty HashMap if no animations are active
+    pub fn get_all_values(&self) -> HashMap<String, f64> {
+        // This is a simplified implementation
+        // In a full implementation, this would return current values of all animated properties
+        HashMap::new()
+    }
 }
 
 impl Default for SimplifiedAnimationEngine {

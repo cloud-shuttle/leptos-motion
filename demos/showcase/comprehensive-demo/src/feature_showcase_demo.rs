@@ -92,7 +92,7 @@ fn SimpleApiDemo() -> impl IntoView {
                         target.insert("scale".to_string(), AnimationValue::Number(0.8));
                         target
                     }
-                    animate=move || {
+                    animate=AnimateProp::Fn(Rc::new(move || {
                         let mut target = HashMap::new();
                         if is_animated.get() {
                             target.insert("opacity".to_string(), AnimationValue::Number(1.0));
@@ -104,7 +104,7 @@ fn SimpleApiDemo() -> impl IntoView {
                             target.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
                         }
                         target
-                    }()
+                    }))
                     _transition=Transition {
                         duration: Some(0.8),
                         ease: Easing::EaseInOut,
@@ -218,14 +218,14 @@ fn IndependentTransformsDemo() -> impl IntoView {
             <div style="display: flex; justify-content: center; align-items: center; min-height: 300px; position: relative;">
                 <MotionDiv
                     node_ref=NodeRef::new()
-                    animate=move || {
+                    animate=AnimateProp::Fn(Rc::new(move || {
                         let mut target = HashMap::new();
                         target.insert("x".to_string(), AnimationValue::Pixels(x_pos.get()));
                         target.insert("y".to_string(), AnimationValue::Pixels(y_pos.get()));
                         target.insert("rotateZ".to_string(), AnimationValue::Degrees(rotation.get()));
                         target.insert("scale".to_string(), AnimationValue::Number(scale.get()));
                         target
-                    }()
+                    }))
                     _transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,
@@ -341,7 +341,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                         target.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
                         target
                     }
-                    animate=move || {
+                    animate=AnimateProp::Fn(Rc::new(move || {
                         let mut target = HashMap::new();
                         if is_springing.get() {
                             target.insert("scale".to_string(), AnimationValue::Number(1.5));
@@ -351,7 +351,7 @@ fn SpringPhysicsDemo() -> impl IntoView {
                             target.insert("rotateZ".to_string(), AnimationValue::Degrees(0.0));
                         }
                         target
-                    }()
+                    }))
                     _transition=Transition {
                         duration: Some(1.0),
                         ease: Easing::Spring(SpringConfig {

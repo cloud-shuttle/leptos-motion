@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Leptos Motion Contract Tests - WASM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-results {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .passed {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .failed {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+            background: #f8f9fa;
+        }
+        .test-passed {
+            border-left: 4px solid #28a745;
+        }
+        .test-failed {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Leptos Motion Contract Tests - WASM Runtime</h1>
+    <p>This page runs the Leptos Motion contract tests in a WebAssembly environment with DOM access.</p>
+
+    <div id="status">Loading WASM module...</div>
+
+    <div id="results" style="display: none;">
+        <h2>Test Results</h2>
+        <div id="summary" class="test-results"></div>
+        <div id="details"></div>
+    </div>
+
+    <script type="module">
+        import init, { run_wasm_contract_tests } from './pkg/leptos_motion_contracts_wasm.js';
+
+        async function runTests() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Initializing WASM module...';
+
+                // Initialize the WASM module
+                await init();
+
+                status.textContent = 'Running contract tests...';
+
+                // Run the tests
+                const results = run_wasm_contract_tests();
+
+                status.textContent = 'Tests completed!';
+                document.getElementById('results').style.display = 'block';
+
+                // Display results
+                displayResults(results);
+
+            } catch (error) {
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                console.error('Test error:', error);
+            }
+        }
+
+        function displayResults(results) {
+            const summaryDiv = document.getElementById('summary');
+            const detailsDiv = document.getElementById('details');
+
+            const passed = results.filter(r => r.passed).length;
+            const failed = results.length - passed;
+
+            summaryDiv.className = `test-results ${failed === 0 ? 'passed' : 'failed'}`;
+            summaryDiv.innerHTML = `
+                <strong>Total Tests:</strong> ${results.length}<br>
+                <strong>Passed:</strong> ${passed}<br>
+                <strong>Failed:</strong> ${failed}<br>
+                <strong>Success Rate:</strong> ${results.length > 0 ? ((passed / results.length) * 100).toFixed(1) : 0}%
+            `;
+
+            if (failed > 0) {
+                summaryDiv.innerHTML += '<br><br><strong>Failed Tests:</strong><br>';
+                results.filter(r => !r.passed).forEach(result => {
+                    summaryDiv.innerHTML += `❌ ${result.test_name}: ${result.error_message || 'Unknown error'}<br>`;
+                });
+            }
+
+            detailsDiv.innerHTML = '<h3>Test Details</h3>';
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-item ${result.passed ? 'test-passed' : 'test-failed'}`;
+                div.innerHTML = `
+                    <strong>${result.test_name}</strong><br>
+                    Duration: ${result.duration}ms<br>
+                    ${result.metrics ? Object.entries(result.metrics).map(([k, v]) => `${k}: ${v}`).join('<br>') : ''}
+                    ${result.passed ? '✅ PASSED' : `❌ FAILED: ${result.error_message || 'Unknown error'}`}
+                `;
+                detailsDiv.appendChild(div);
+            });
+        }
+
+        // Run tests when page loads
+        runTests();
+    </script>
+</body>
+</html>

@@ -42,8 +42,19 @@ fn main() {
     let _ = engine.get_all_values();
     println!("✅ get_all_values method exists and callable");
     
-    println!("
-🎉 Contract Testing Framework Verification Complete!");
+    // Generate a report
+    let report = leptos_motion_contracts::run_contract_tests();
+    report.print_report();
+
+    // Save to file
+    match report.save_to_file("contract_test_report.md") {
+        Ok(_) => println!("\n📄 Report saved to: contract_test_report.md"),
+        Err(e) => println!("\n⚠️ Failed to save report: {}", e),
+    }
+
+    println!("\n🎉 Contract Testing Framework Verification Complete!");
     println!("All core functionality is working correctly.");
     println!("Note: Full contract tests require WASM runtime for DOM operations.");
+    println!("\n🚀 To run WASM contract tests:");
+    println!("./scripts/run-wasm-contract-tests.sh");
 }

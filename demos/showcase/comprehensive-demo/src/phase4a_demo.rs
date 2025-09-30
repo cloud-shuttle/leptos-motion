@@ -141,7 +141,7 @@ pub fn Phase4aDemo() -> impl IntoView {
             AnimationValue::String("rotate(5deg)".to_string()),
         );
         target
-    })));
+    }));
 
     view! {
         <div style="padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; min-height: 100vh;">
@@ -206,7 +206,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for hover state animation"</p>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        while_hover=hover_animation()
+                        while_hover=hover_animation
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Hover"
@@ -219,7 +219,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                     <p style="color: #666; margin-bottom: 15px;">"Uses a function for tap state animation"</p>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        while_tap=tap_animation()
+                        while_tap=tap_animation
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Tap"
@@ -234,7 +234,7 @@ pub fn Phase4aDemo() -> impl IntoView {
                         node_ref=NodeRef::new()
                         initial=create_animation_target("opacity", 0.3)
                         animate=function_target_clone
-                        while_hover=hover_animation_clone
+                        while_hover=Some(hover_animation_clone.resolve())
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer;".to_string()
                     >
                         "Mixed"

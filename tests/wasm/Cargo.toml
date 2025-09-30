@@ -1,0 +1,39 @@
+[package]
+name = "leptos-motion-contracts-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WASM-compatible contract tests for leptos-motion"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# WASM bindings
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+  "console",
+  "Window",
+  "Document",
+  "Element",
+  "HtmlElement",
+  "Node",
+] }
+
+# Panic hook for better error messages
+console_error_panic_hook = "0.1"
+
+# Local leptos-motion-contracts
+leptos-motion-contracts = { path = "../contracts" }
+
+[dependencies.leptos-motion-core]
+path = "../../crates/leptos-motion-core"
+
+[dependencies.leptos-motion-dom]
+path = "../../crates/leptos-motion-dom"
+
+[dependencies.leptos-motion-gestures]
+path = "../../crates/leptos-motion-gestures"
+
+[dependencies.leptos-motion-layout]
+path = "../../crates/leptos-motion-layout"

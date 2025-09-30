@@ -119,12 +119,11 @@ impl PooledAnimation {
             return Ok(());
         }
 
-        if let Some(end_time) = self.end_time {
-            if current_time >= end_time {
+        if let Some(end_time) = self.end_time
+            && current_time >= end_time {
                 self.state = AnimationState::Completed;
                 self.in_use = false;
             }
-        }
 
         Ok(())
     }

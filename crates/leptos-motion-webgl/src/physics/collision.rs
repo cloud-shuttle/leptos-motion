@@ -1,7 +1,7 @@
 //! Collision detection system
 
 use super::*;
-use crate::{Result, WebGLError};
+use crate::Result;
 
 /// Collision detection system
 #[derive(Debug)]
@@ -59,6 +59,12 @@ pub struct SphereSphereCollision;
 #[derive(Debug)]
 pub struct BoxSphereCollision;
 
+impl Default for CollisionDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CollisionDetector {
     /// Create a new collision detector
     pub fn new() -> Self {
@@ -110,6 +116,12 @@ impl CollisionDetector {
     }
 }
 
+impl Default for BroadPhaseDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BroadPhaseDetector {
     /// Create a new broad phase detector
     pub fn new() -> Self {
@@ -134,15 +146,20 @@ impl BroadPhaseDetector {
             let mut pairs = Vec::new();
             for i in 0..bodies.len() {
                 for j in (i + 1)..bodies.len() {
-                    if bodies[i].is_active && bodies[j].is_active {
-                        if bodies[i].bounding_box.intersects(&bodies[j].bounding_box) {
+                    if bodies[i].is_active && bodies[j].is_active
+                        && bodies[i].bounding_box.intersects(&bodies[j].bounding_box) {
                             pairs.push((bodies[i].id, bodies[j].id));
                         }
-                    }
                 }
             }
             Ok(pairs)
         }
+    }
+}
+
+impl Default for NarrowPhaseDetector {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -223,7 +240,7 @@ impl SpatialGrid {
         for x in min_cell.0..=max_cell.0 {
             for y in min_cell.1..=max_cell.1 {
                 for z in min_cell.2..=max_cell.2 {
-                    self.cells.entry((x, y, z)).or_insert_with(Vec::new).push(body_id);
+                    self.cells.entry((x, y, z)).or_default().push(body_id);
                 }
             }
         }

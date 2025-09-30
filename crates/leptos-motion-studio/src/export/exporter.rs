@@ -2,10 +2,8 @@
 
 use super::{types::*, results::ExportResult};
 use crate::{
-    Result, StudioError, project::StudioProject, timeline::Timeline3D, transforms::Transform3D,
+    Result, StudioError, project::StudioProject,
 };
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// Animation exporter
 #[derive(Debug)]

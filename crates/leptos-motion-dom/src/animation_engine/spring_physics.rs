@@ -1,6 +1,5 @@
 //! Spring physics implementation for natural animations
 
-use leptos_motion_core::*;
 
 /// Spring configuration for physics-based animations
 #[derive(Debug, Clone)]
@@ -378,11 +377,10 @@ impl SpringAnimationManager {
         }
 
         // Check if all animations are complete
-        if self.springs.is_empty() {
-            if let Some(ref on_complete) = self.on_complete {
+        if self.springs.is_empty()
+            && let Some(ref on_complete) = self.on_complete {
                 on_complete();
             }
-        }
     }
 
     /// Set update callback

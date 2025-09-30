@@ -1,6 +1,5 @@
 //! Ambient lighting implementation for WebGL rendering
 
-use crate::error::{Result, WebGLError};
 use super::light_types::{Light, LightType, Color};
 
 /// Ambient light (affects all objects uniformly)

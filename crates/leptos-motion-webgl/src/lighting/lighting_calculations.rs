@@ -3,7 +3,6 @@
 use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
 use super::{
-    light_types::{Light, LightType, Color},
     ambient_lighting::AmbientLight,
     directional_lighting::DirectionalLight,
     point_lighting::PointLight,
@@ -26,6 +25,12 @@ pub struct LightingManager {
     pub max_directional_lights: usize,
     pub max_point_lights: usize,
     pub max_spot_lights: usize,
+}
+
+impl Default for LightingManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl LightingManager {

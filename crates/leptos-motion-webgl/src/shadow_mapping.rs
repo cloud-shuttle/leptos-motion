@@ -1,10 +1,10 @@
 //! Shadow mapping system for WebGL rendering
 
 use crate::error::{Result, WebGLError};
-use crate::lighting::{DirectionalLight, PointLight, SpotLight};
+use crate::lighting::{DirectionalLight, PointLight};
 use gl_matrix::mat4;
 use std::collections::HashMap;
-use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlRenderbuffer, WebGlTexture};
+use web_sys::{WebGl2RenderingContext, WebGlFramebuffer, WebGlTexture};
 
 /// Shadow map resolution
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -634,6 +634,12 @@ pub struct LightCollection {
     pub directional_lights: HashMap<String, DirectionalLight>,
     /// Point lights
     pub point_lights: HashMap<String, PointLight>,
+}
+
+impl Default for LightCollection {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl LightCollection {

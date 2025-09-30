@@ -1,6 +1,5 @@
 //! 3D Transform utilities for WebGL rendering
 
-use crate::error::{Result, WebGLError};
 
 /// 3D transformation matrix and utilities
 #[derive(Debug, Clone, PartialEq)]
@@ -169,7 +168,7 @@ impl Default for Transform3D {
 
 /// Utility functions for matrix operations
 pub mod matrix_utils {
-    use super::Transform3D;
+    
 
     /// Multiply two 4x4 matrices
     pub fn multiply_matrices(a: &[f32; 16], b: &[f32; 16]) -> [f32; 16] {

@@ -1,9 +1,6 @@
 //! Geometry management system
 
-use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
-use std::rc::Rc;
-use wasm_bindgen::prelude::*;
 use web_sys::{WebGl2RenderingContext, WebGlBuffer, WebGlVertexArrayObject};
 
 /// Vertex data structure
@@ -21,6 +18,12 @@ pub struct Vertex {
     pub bitangent: [f32; 3],
     /// Color
     pub color: [f32; 4],
+}
+
+impl Default for Vertex {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Vertex {
@@ -169,6 +172,12 @@ pub struct BoundingBox {
     pub max: [f32; 3],
 }
 
+impl Default for BoundingBox {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BoundingBox {
     /// Create a new bounding box
     pub fn new() -> Self {
@@ -215,6 +224,12 @@ pub struct BoundingSphere {
     pub center: [f32; 3],
     /// Radius
     pub radius: f32,
+}
+
+impl Default for BoundingSphere {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl BoundingSphere {
@@ -407,10 +422,10 @@ impl Geometry {
 
         for y in 0..height_segments {
             for x in 0..width_segments {
-                let a = (y * (width_segments + 1) + x) as u32;
-                let b = (y * (width_segments + 1) + x + 1) as u32;
-                let c = ((y + 1) * (width_segments + 1) + x) as u32;
-                let d = ((y + 1) * (width_segments + 1) + x + 1) as u32;
+                let a = (y * (width_segments + 1) + x);
+                let b = (y * (width_segments + 1) + x + 1);
+                let c = ((y + 1) * (width_segments + 1) + x);
+                let d = ((y + 1) * (width_segments + 1) + x + 1);
 
                 indices.extend_from_slice(&[a, b, c]);
                 indices.extend_from_slice(&[b, d, c]);
@@ -464,10 +479,10 @@ impl Geometry {
 
         for y in 0..height_segments {
             for x in 0..width_segments {
-                let a = (y * (width_segments + 1) + x) as u32;
-                let b = (y * (width_segments + 1) + x + 1) as u32;
-                let c = ((y + 1) * (width_segments + 1) + x) as u32;
-                let d = ((y + 1) * (width_segments + 1) + x + 1) as u32;
+                let a = (y * (width_segments + 1) + x);
+                let b = (y * (width_segments + 1) + x + 1);
+                let c = ((y + 1) * (width_segments + 1) + x);
+                let d = ((y + 1) * (width_segments + 1) + x + 1);
 
                 indices.extend_from_slice(&[a, b, c]);
                 indices.extend_from_slice(&[b, d, c]);

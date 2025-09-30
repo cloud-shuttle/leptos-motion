@@ -3,12 +3,11 @@
 //! This module provides performance optimizations for the animation system,
 //! including object pooling, batching, and efficient update strategies.
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use crate::animation_trait::{Animation, AnimationResult};
 use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 use std::cell::RefCell;
 // Removed std::time imports - using WASM-compatible time functions
-use wasm_bindgen::prelude::*;
 #[cfg(feature = "web-sys")]
 use web_sys::window;
 
@@ -61,11 +60,10 @@ impl<T: Clone> AnimationPool<T> {
     
     /// Return an object to the pool
     pub fn return_object(&mut self, id: String, _obj: T) {
-        if let Some(returned_obj) = self.in_use.remove(&id) {
-            if self.available.len() < self.max_size {
+        if let Some(returned_obj) = self.in_use.remove(&id)
+            && self.available.len() < self.max_size {
                 self.available.push_back(returned_obj);
             }
-        }
     }
     
     /// Get pool statistics
@@ -86,6 +84,12 @@ pub struct BatchedAnimationManager {
     /// Performance monitoring
     frame_count: usize,
     last_fps_check: f64,
+}
+
+impl Default for BatchedAnimationManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl BatchedAnimationManager {

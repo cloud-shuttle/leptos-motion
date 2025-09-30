@@ -1,7 +1,7 @@
 //! Memory manager for pooling
 
 use super::*;
-use crate::{Result, StudioError};
+use crate::Result;
 
 /// Memory manager for the animation pool
 pub struct MemoryManager {

@@ -1,7 +1,7 @@
 //! Physics world implementation
 
 use super::*;
-use crate::{Result, WebGLError};
+use crate::Result;
 
 /// Physics world for managing rigid bodies and collisions
 pub struct PhysicsWorld {
@@ -167,8 +167,8 @@ impl PhysicsWorld {
     fn resolve_collisions(&mut self) -> Result<()> {
         for collision in &self.active_collisions {
             // Get body IDs
-            let body_a_id = collision.body_a_id.clone();
-            let body_b_id = collision.body_b_id.clone();
+            let body_a_id = collision.body_a_id;
+            let body_b_id = collision.body_b_id;
             
             // Process each body separately to avoid borrowing conflicts
             if let Some(body_a) = self.bodies.get_mut(&body_a_id) {

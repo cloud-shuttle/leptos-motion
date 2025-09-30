@@ -3,14 +3,11 @@
 //! This module provides an integrated memory management system that works
 //! seamlessly with the optimized animation manager and performance monitoring.
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use crate::animation_trait::{Animation, AnimationResult};
 use crate::memory_management::{
-    AnimationMemoryManager, AutoMemoryManager, MemoryStats, MemoryPressure, GCStrategy
+    AutoMemoryManager, MemoryStats, MemoryPressure, GCStrategy
 };
 use crate::optimized_animation_manager::OptimizedAnimationManager;
-use std::collections::HashMap;
-use std::rc::Rc;
-use std::cell::RefCell;
 use std::time::{Duration, Instant};
 
 /// Integrated memory and performance manager

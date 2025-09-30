@@ -77,7 +77,7 @@ pub fn test_animation_engine_creation_performance() -> Vec<ContractTestResult> {
     let start = Instant::now();
     
     for _ in 0..iterations {
-        let _engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let _engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
     }
     
     let total_duration = start.elapsed();
@@ -124,7 +124,7 @@ pub fn test_animate_property_performance() -> Vec<ContractTestResult> {
     let start = Instant::now();
     
     for i in 0..iterations {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         engine.animate_property(
             format!("property_{}", i),
             0.0,
@@ -336,7 +336,7 @@ pub fn test_animation_frame_rate_performance() -> Vec<ContractTestResult> {
         let frame_start = Instant::now();
         
         // Simulate animation update work
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         engine.animate_property("scale".to_string(), 1.0, 2.0, leptos_motion_core::Transition::default());
         let _values = engine.get_all_values();
         
@@ -395,7 +395,7 @@ pub fn test_memory_usage_performance() -> Vec<ContractTestResult> {
     let start = Instant::now();
     
     for i in 0..num_animations {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         engine.animate_property(
             format!("property_{}", i),
             0.0,

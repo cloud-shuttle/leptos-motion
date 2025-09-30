@@ -1,6 +1,5 @@
 //! Material system
 
-use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
 
 /// Material type

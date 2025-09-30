@@ -2,7 +2,6 @@
 
 use crate::error::{Result, WebGLError};
 use gl_matrix::mat4;
-use wasm_bindgen::prelude::*;
 use web_sys::{WebGl2RenderingContext, WebGlBuffer, WebGlVertexArrayObject};
 
 /// WebGL utility functions

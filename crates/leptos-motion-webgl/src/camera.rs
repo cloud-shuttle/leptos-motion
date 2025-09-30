@@ -1,6 +1,5 @@
 //! Camera system
 
-use crate::error::{Result, WebGLError};
 use gl_matrix::mat4;
 use std::f32::consts::PI;
 

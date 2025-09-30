@@ -256,12 +256,12 @@ impl KeyframeAnimation {
         }
         
         // Interpolate each property
-        for (property, _) in &all_properties {
+        for property in all_properties.keys() {
             let from_value = from_keyframe.properties.get(property);
             let to_value = to_keyframe.properties.get(property);
             
-            if let (Some(from), Some(to)) = (from_value, to_value) {
-                if let (Some(from_num), Some(to_num)) = (
+            if let (Some(from), Some(to)) = (from_value, to_value)
+                && let (Some(from_num), Some(to_num)) = (
                     Self::extract_numeric_value(from),
                     Self::extract_numeric_value(to)
                 ) {
@@ -269,7 +269,6 @@ impl KeyframeAnimation {
                     let interpolated_value = AnimationValue::Number(interpolated);
                     Self::apply_property_to_dom(html_element, property, &interpolated_value)?;
                 }
-            }
         }
         
         Ok(())

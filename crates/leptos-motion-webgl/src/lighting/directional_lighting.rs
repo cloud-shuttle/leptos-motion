@@ -1,6 +1,5 @@
 //! Directional lighting implementation for WebGL rendering
 
-use crate::error::{Result, WebGLError};
 use gl_matrix::vec3;
 use super::light_types::{Light, LightType, Color};
 

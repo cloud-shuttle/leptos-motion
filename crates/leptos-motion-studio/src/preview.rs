@@ -7,7 +7,6 @@ use crate::{
     pooling::{AnimationPool, PoolConfig},
     project::StudioProject,
     timeline::{AnimationProperty, AnimationValue, Timeline3D, KeyframeTrack},
-    transforms::Transform3D,
 };
 use leptos::attr::global::ClassAttribute;
 use leptos::prelude::{
@@ -66,8 +65,8 @@ impl LivePreview {
         self.target_element = Some(element);
 
         // Initialize WebGL renderer if enabled
-        if self.settings.webgl_enabled {
-            if let Some(canvas) = self
+        if self.settings.webgl_enabled
+            && let Some(canvas) = self
                 .target_element
                 .as_ref()
                 .and_then(|el| el.query_selector("canvas").ok().flatten())
@@ -75,7 +74,6 @@ impl LivePreview {
             {
                 // self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok(); // Temporarily disabled
             }
-        }
 
         Ok(())
     }
@@ -239,8 +237,8 @@ impl LivePreview {
 
                 // Apply CSS transforms and properties
                 for (property, value) in properties {
-                    let css_property = self.animation_property_to_css(&property);
-                    let css_value = value.to_css(&property);
+                    let css_property = self.animation_property_to_css(property);
+                    let css_value = value.to_css(property);
 
                     let style = target.style();
                     style.set_property(&css_property, &css_value).ok();
@@ -282,9 +280,9 @@ impl LivePreview {
         self.settings = settings;
 
         // Update WebGL renderer if needed
-        if self.settings.webgl_enabled {
-            if let Some(target) = &self.target_element {
-                if let Some(canvas) = target
+        if self.settings.webgl_enabled
+            && let Some(target) = &self.target_element
+                && let Some(canvas) = target
                     .query_selector("canvas")
                     .ok()
                     .flatten()
@@ -292,8 +290,6 @@ impl LivePreview {
                 {
                     // self.webgl_renderer = WebGLRenderer::initialize(&canvas).ok(); // Temporarily disabled
                 }
-            }
-        }
     }
 }
 
@@ -382,11 +378,10 @@ impl PreviewAnimation {
                 AnimationProperty::Scale,
                 AnimationProperty::Opacity,
             ] {
-                if let Some(track) = timeline.get_track(&property) {
-                    if let Ok(value) = track.value_at(current_time) {
+                if let Some(track) = timeline.get_track(&property)
+                    && let Ok(value) = track.value_at(current_time) {
                         self.current_properties.insert(property, value);
                     }
-                }
             }
         }
 
@@ -567,14 +562,13 @@ pub fn LivePreviewComponent(
     create_effect(move |_| {
         if let Some(element) = preview_ref.get() {
             let mut renderer = PreviewRenderer::new();
-            if renderer.set_target(element.unchecked_into()).is_ok() {
-                if let Some(proj) = project.clone() {
+            if renderer.set_target(element.unchecked_into()).is_ok()
+                && let Some(proj) = project.clone() {
                     renderer.preview.set_project(proj);
                 }
                 // Temporarily disabled until WebGL is re-enabled
                 // renderer.preview.set_settings(settings.clone());
                 // set_preview_renderer.set(Some(renderer));
-            }
         }
     });
 

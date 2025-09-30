@@ -50,7 +50,7 @@ fn test_core_types_in_dom() -> Vec<ContractTestResult> {
     
     // Test that DOM animation engine can accept core types
     let (_, duration) = utils::measure_execution_time(|| {
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         let transition = leptos_motion_core::Transition {
             duration: Some(1.0),
             ease: leptos_motion_core::Easing::EaseInOut,
@@ -82,7 +82,7 @@ fn test_core_performance_contracts_in_dom() -> Vec<ContractTestResult> {
     let max_duration = std::time::Duration::from_millis(10);
     let passed = utils::assert_duration_contract(
         || {
-            let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+            let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
             let transition = leptos_motion_core::Transition::default();
             engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
         },
@@ -109,7 +109,7 @@ fn test_core_error_handling_in_dom() -> Vec<ContractTestResult> {
     // Test error propagation from core to DOM
     let (_, duration) = utils::measure_execution_time(|| {
         // Test that invalid inputs are handled gracefully
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         
         // Test with invalid transition (negative duration)
         let invalid_transition = leptos_motion_core::Transition {
@@ -258,7 +258,7 @@ pub fn test_data_flow_contracts() -> Vec<ContractTestResult> {
         let transition = leptos_motion_core::Transition::default();
         
         // Use in DOM layer
-        let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+        let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
         engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
         
         // Verify data integrity is maintained

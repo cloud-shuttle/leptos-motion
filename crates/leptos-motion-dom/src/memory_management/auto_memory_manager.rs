@@ -1,6 +1,6 @@
 //! Automatic memory manager that runs cleanup in the background
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use crate::animation_trait::{Animation, AnimationResult};
 use super::{
     memory_stats::{MemoryStats, MemoryPressure},
     gc_strategy::GCStrategy,

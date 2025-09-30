@@ -13,7 +13,6 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 // Removed std::time imports - using WASM-compatible time functions
-use wasm_bindgen::prelude::*;
 #[cfg(feature = "web-sys")]
 use web_sys::window;
 
@@ -144,21 +143,19 @@ impl OptimizedAnimationManager {
         let mut completed_animations = Vec::new();
         
         for (id, animation_rc) in &self.animations {
-            if let Ok(animation) = animation_rc.try_borrow() {
-                if animation.is_complete() {
+            if let Ok(animation) = animation_rc.try_borrow()
+                && animation.is_complete() {
                     completed_animations.push(id.clone());
                 }
-            }
         }
         
         // Remove completed animations
         for id in completed_animations {
-            if let Some(animation_rc) = self.animations.remove(&id) {
-                if let Ok(animation) = animation_rc.try_borrow() {
+            if let Some(animation_rc) = self.animations.remove(&id)
+                && let Ok(animation) = animation_rc.try_borrow() {
                     let duration = animation.duration();
                     track_animation_end(duration);
                 }
-            }
         }
         
         Ok(())
@@ -260,11 +257,10 @@ impl OptimizedAnimationManager {
         let mut errors = Vec::new();
         
         for (id, animation_rc) in &self.animations {
-            if let Ok(mut animation) = animation_rc.try_borrow_mut() {
-                if let Err(e) = animation.stop() {
+            if let Ok(mut animation) = animation_rc.try_borrow_mut()
+                && let Err(e) = animation.stop() {
                     errors.push(format!("Failed to stop animation {}: {}", id, e));
                 }
-            }
         }
         
         self.animations.clear();

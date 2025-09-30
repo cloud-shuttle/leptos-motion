@@ -1,14 +1,13 @@
 //! Animation memory manager for tracking and cleaning up animations
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use crate::animation_trait::{Animation, AnimationResult};
 use super::{
     memory_stats::{MemoryStats, MemoryPressure, MemoryTracker},
     gc_strategy::{GCStrategy, GarbageCollector},
 };
-use std::collections::{HashMap, VecDeque};
-use std::rc::{Rc, Weak};
+use std::rc::Rc;
 use std::cell::RefCell;
-use std::time::{Duration, Instant};
+use std::time::Duration;
 use std::sync::{Arc, Mutex};
 
 /// Memory manager for animations
@@ -148,7 +147,7 @@ impl AnimationMemoryManager {
         self.gc.clear();
 
         // Reset memory tracker
-        if let Ok(mut tracker) = self.memory_tracker.lock() {
+        if let Ok(tracker) = self.memory_tracker.lock() {
             tracker.reset();
         }
 

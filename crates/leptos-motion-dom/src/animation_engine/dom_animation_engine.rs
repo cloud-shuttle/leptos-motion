@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use leptos_motion_core::engine::AnimationEngine;
 use leptos_motion_core::{AnimationHandle, AnimationValue, Result, Transition, AnimationConfig};
 use leptos_motion_core::engine::PlaybackState;
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
+use crate::animation_trait::{AnimationError, AnimationResult};
 
 /// DOM-specific implementation of AnimationEngine
 pub struct DomAnimationEngine {

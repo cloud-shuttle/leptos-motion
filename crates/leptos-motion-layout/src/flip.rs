@@ -634,4 +634,6 @@ mod tests {
 }
 
 // Type aliases for compatibility with contract tests
+
+/// Alias for FLIPAnimation for backwards compatibility
 pub type FlipAnimation = FLIPAnimation;

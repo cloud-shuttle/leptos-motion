@@ -3,7 +3,6 @@
 use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_bindgen::prelude::*;
 use web_sys::{WebGl2RenderingContext, WebGlProgram, WebGlShader, WebGlUniformLocation};
 
 /// Shader type

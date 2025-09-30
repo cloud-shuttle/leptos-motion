@@ -25,6 +25,12 @@ pub struct Particle {
     pub age: f32,
 }
 
+impl Default for Particle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Particle {
     /// Create a new particle
     pub fn new() -> Self {

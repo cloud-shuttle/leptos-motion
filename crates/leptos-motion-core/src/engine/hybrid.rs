@@ -41,6 +41,12 @@ pub struct OptimizedHybridEngine {
     frame_count: u64,
 }
 
+impl Default for OptimizedHybridEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl OptimizedHybridEngine {
     /// Create a new optimized hybrid engine instance
     pub fn new() -> Self {

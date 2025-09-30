@@ -4,7 +4,6 @@
 //! system, including FPS tracking, memory usage, and animation statistics.
 
 use std::collections::HashMap;
-use wasm_bindgen::prelude::*;
 use web_sys::window;
 
 /// Get current time in milliseconds (WASM-compatible)
@@ -46,6 +45,12 @@ pub struct FpsCounter {
     last_frame_time: Option<f64>,
     frame_count: usize,
     last_fps_update: f64,
+}
+
+impl Default for FpsCounter {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl FpsCounter {
@@ -120,6 +125,12 @@ pub struct MemoryTracker {
     current_memory: usize,
 }
 
+impl Default for MemoryTracker {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MemoryTracker {
     /// Create a new memory tracker
     pub fn new() -> Self {
@@ -138,13 +149,12 @@ impl MemoryTracker {
     
     /// Get current memory usage from browser
     fn get_browser_memory() -> usize {
-        if let Some(window) = window() {
-            if let Some(performance) = window.performance() {
+        if let Some(window) = window()
+            && let Some(performance) = window.performance() {
                 // Note: performance.memory() is not available in all browsers
                 // This is a simplified implementation
                 return 0;
             }
-        }
         0
     }
     
@@ -179,6 +189,12 @@ pub struct AnimationStats {
     total_animations: usize,
     animation_durations: Vec<f64>,
     animation_types: HashMap<String, usize>,
+}
+
+impl Default for AnimationStats {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AnimationStats {
@@ -445,38 +461,34 @@ pub fn reset_global_performance_monitor() {
 
 /// Record a frame for performance monitoring
 pub fn record_frame() {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(mut monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(mut monitor) = monitor.lock() {
             monitor.record_frame();
         }
-    }
 }
 
 /// Track animation start
 pub fn track_animation_start(animation_type: &str) {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(mut monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(mut monitor) = monitor.lock() {
             monitor.track_animation_start(animation_type);
         }
-    }
 }
 
 /// Track animation end
 pub fn track_animation_end(duration: f64) {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(mut monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(mut monitor) = monitor.lock() {
             monitor.track_animation_end(duration);
         }
-    }
 }
 
 /// Get current performance statistics
 pub fn get_performance_stats() -> PerformanceStats {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(monitor) = monitor.lock() {
             return monitor.get_stats();
         }
-    }
     
     PerformanceStats {
         fps: 0.0,
@@ -491,19 +503,17 @@ pub fn get_performance_stats() -> PerformanceStats {
 
 /// Get detailed performance report
 pub fn get_performance_report() -> String {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(monitor) = monitor.lock() {
             return monitor.get_detailed_report();
         }
-    }
     "Performance monitor unavailable".to_string()
 }
 
 /// Reset performance monitoring
 pub fn reset_performance_monitoring() {
-    if let Some(monitor) = get_performance_monitor_safe() {
-        if let Ok(mut monitor) = monitor.lock() {
+    if let Some(monitor) = get_performance_monitor_safe()
+        && let Ok(mut monitor) = monitor.lock() {
             monitor.reset();
         }
-    }
 }

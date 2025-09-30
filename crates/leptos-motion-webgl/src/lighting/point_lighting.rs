@@ -1,6 +1,5 @@
 //! Point lighting implementation for WebGL rendering
 
-use crate::error::{Result, WebGLError};
 use super::light_types::{Light, LightType, Color};
 
 /// Point light (like a light bulb)
@@ -142,7 +141,7 @@ impl PointLight {
             return ([0.0, 0.0, 0.0], [0.0, 0.0, 0.0]);
         }
 
-        let mut normalized_light_dir = [
+        let normalized_light_dir = [
             light_direction[0] / distance,
             light_direction[1] / distance,
             light_direction[2] / distance,

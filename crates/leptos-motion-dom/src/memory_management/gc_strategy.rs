@@ -1,7 +1,7 @@
 //! Garbage collection strategies and implementation
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult};
-use super::memory_stats::{MemoryStats, MemoryPressure};
+use crate::animation_trait::{Animation, AnimationResult};
+use super::memory_stats::MemoryPressure;
 use std::collections::{HashMap, VecDeque};
 use std::rc::{Rc, Weak};
 use std::cell::RefCell;

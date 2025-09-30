@@ -1,11 +1,10 @@
 //! 3D transforms and perspective support for Motion Studio
 
-use crate::{Result, StudioError};
-use glam::{Mat4, Quat, Vec3, Vec4};
+use glam::{Mat4, Quat, Vec3};
 use leptos::attr::global::ClassAttribute;
 use leptos::html::ElementChild;
 use leptos::prelude::*;
-use leptos::prelude::{NodeRefAttribute, OnAttribute, StyleAttribute};
+use leptos::prelude::StyleAttribute;
 use serde::{Deserialize, Serialize};
 
 /// 3D transform component with translation, rotation, and scale

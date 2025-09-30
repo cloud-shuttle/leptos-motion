@@ -37,6 +37,12 @@ pub struct RafAnimation {
     pub state: PlaybackState,
 }
 
+impl Default for RafEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RafEngine {
     /// Create a new RAF engine instance
     pub fn new() -> Self {
@@ -68,11 +74,10 @@ impl RafEngine {
     fn stop_raf_loop(&mut self) {
         #[cfg(feature = "web-sys")]
         {
-            if let Some(raf_id) = self.raf_id.take() {
-                if let Some(window) = window() {
-                    window.cancel_animation_frame(raf_id);
+            if let Some(raf_id) = self.raf_id.take()
+                && let Some(window) = window() {
+                    let _ = window.cancel_animation_frame(raf_id);
                 }
-            }
         }
     }
     
@@ -214,7 +219,7 @@ impl AnimationEngine for RafEngine {
             self.last_timestamp = timestamp;
         }
         
-        let delta_time = timestamp - self.last_timestamp;
+        let _delta_time = timestamp - self.last_timestamp;
         self.last_timestamp = timestamp;
         
         // Update all running animations

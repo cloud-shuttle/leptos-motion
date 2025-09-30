@@ -1,6 +1,5 @@
 //! Contact point and collision information
 
-use crate::{Result, WebGLError};
 
 /// Contact point between two rigid bodies
 #[derive(Debug, Clone)]

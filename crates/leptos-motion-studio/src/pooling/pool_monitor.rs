@@ -19,7 +19,7 @@ pub fn PoolMonitor(
     let (status, set_status) = signal(PoolStatus::default());
 
     // Update stats periodically - simplified approach
-    let _interval = set_interval(move || {
+    set_interval(move || {
         // For now, use default values until AnimationPool trait bounds are fixed
         set_stats.set(MemoryStats::default());
         set_metrics.set(PerformanceMetrics::default());

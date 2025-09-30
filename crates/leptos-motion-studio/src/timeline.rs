@@ -352,7 +352,7 @@ impl AnimationTimeline {
 
         self.properties
             .entry(property)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(keyframe);
 
         Ok(())

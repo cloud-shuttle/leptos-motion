@@ -3,7 +3,6 @@
 use crate::error::{Result, WebGLError};
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_bindgen::JsCast;
 use web_sys::{HtmlImageElement, ImageData, WebGl2RenderingContext, WebGlTexture};
 
 /// Texture format
@@ -237,8 +236,8 @@ impl Texture {
         config: Option<TextureConfig>,
     ) -> Result<Self> {
         let config = config.unwrap_or_default();
-        let width = image.width() as u32;
-        let height = image.height() as u32;
+        let width = image.width();
+        let height = image.height();
 
         let info = TextureInfo {
             width,
@@ -327,8 +326,8 @@ impl Texture {
         config: Option<TextureConfig>,
     ) -> Result<Self> {
         let config = config.unwrap_or_default();
-        let width = image_data.width() as u32;
-        let height = image_data.height() as u32;
+        let width = image_data.width();
+        let height = image_data.height();
 
         let info = TextureInfo {
             width,

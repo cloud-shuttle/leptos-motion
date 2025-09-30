@@ -183,9 +183,9 @@ fn test_animation_engine_contract() -> Vec<ContractTestResult> {
     
     // Test AnimationEngine construction
     let (_, duration) = utils::measure_execution_time(|| {
-        leptos_motion_dom::animation_engine::AnimationEngine::new()
+        leptos_motion_dom::animation_engine::DomAnimationEngine::new()
     });
-    
+
     let result = ContractTestResult {
         test_name: "AnimationEngine_construction".to_string(),
         passed: true,
@@ -194,9 +194,9 @@ fn test_animation_engine_contract() -> Vec<ContractTestResult> {
         error_message: None,
     };
     results.push(result);
-    
+
     // Test AnimationEngine methods exist and are callable
-    let mut engine = leptos_motion_dom::animation_engine::AnimationEngine::new();
+    let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
     
     // Test animate_property method
     let (_, duration) = utils::measure_execution_time(|| {

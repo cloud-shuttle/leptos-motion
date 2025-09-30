@@ -1,6 +1,5 @@
 //! Collision shapes
 
-use crate::{Result, WebGLError};
 
 /// Collision shape types
 #[derive(Debug, Clone, PartialEq)]

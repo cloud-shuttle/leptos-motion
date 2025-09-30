@@ -10,6 +10,12 @@ pub struct FeatureDetector {
     // Implementation details would go here
 }
 
+impl Default for FeatureDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FeatureDetector {
     /// Create a new feature detector instance
     pub fn new() -> Self {

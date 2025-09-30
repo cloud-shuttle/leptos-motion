@@ -1,6 +1,5 @@
 //! Code generator for different frameworks
 
-use super::types::*;
 use crate::{
     Result, StudioError, timeline::Timeline3D,
 };
@@ -72,7 +71,7 @@ impl CodeGenerator {
 
     /// Convert animation value to React format
     fn value_to_react(&self, value: &crate::timeline::AnimationValue, property: &crate::timeline::AnimationProperty) -> String {
-        use crate::timeline::{AnimationProperty, AnimationValue};
+        use crate::timeline::AnimationValue;
         match (value, property) {
             (AnimationValue::Number(n), _) => n.to_string(),
             (AnimationValue::String(s), _) => format!("'{}'", s),

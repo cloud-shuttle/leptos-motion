@@ -1,7 +1,7 @@
 //! Animation pool implementation
 
 use super::*;
-use crate::{Result, StudioError, timeline::AnimationValue};
+use crate::{Result, StudioError};
 use std::collections::HashMap;
 
 /// Pool of reusable animations
@@ -69,8 +69,8 @@ impl AnimationPool {
         let start_time = std::time::Instant::now();
 
         // Try to get from available pool
-        if let Some(animations) = self.available_animations.get_mut(&animation_type) {
-            if let Some(mut animation) = animations.pop() {
+        if let Some(animations) = self.available_animations.get_mut(&animation_type)
+            && let Some(mut animation) = animations.pop() {
                 animation.reset();
                 animation.id = self.next_id;
                 self.next_id += 1;
@@ -83,10 +83,9 @@ impl AnimationPool {
                 
                 return Ok(self.active_animations.get_mut(&animation_id).unwrap());
             }
-        }
 
         // Create new animation if pool is empty
-        let mut animation = PooledAnimation::new(self.next_id, animation_type);
+        let animation = PooledAnimation::new(self.next_id, animation_type);
         self.next_id += 1;
         let animation_id = animation.id;
         self.active_animations.insert(animation_id, animation);

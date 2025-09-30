@@ -1,6 +1,5 @@
 //! Scene graph system
 
-use crate::error::{Result, WebGLError};
 use gl_matrix::mat4;
 use std::collections::HashMap;
 use std::sync::Arc;

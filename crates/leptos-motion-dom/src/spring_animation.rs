@@ -3,7 +3,7 @@
 //! This module implements spring physics-based animations that provide
 //! natural, bouncy motion using spring physics simulation.
 
-use crate::animation_trait::{Animation, AnimationError, AnimationResult, animation_utils};
+use crate::animation_trait::{Animation, AnimationError, AnimationResult};
 use leptos_motion_core::*;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;

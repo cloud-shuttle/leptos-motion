@@ -27,6 +27,12 @@ pub struct WaapiAnimation {
     pub config: AnimationConfig,
 }
 
+impl Default for WaapiEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl WaapiEngine {
     /// Create a new WAAPI engine instance
     pub fn new() -> Self {
@@ -41,14 +47,12 @@ impl WaapiEngine {
         #[cfg(feature = "web-sys")]
         {
             // Check if Element.animate is available
-            if let Some(window) = web_sys::window() {
-                if let Some(document) = window.document() {
-                    if let Some(element) = document.create_element("div").ok() {
+            if let Some(window) = web_sys::window()
+                && let Some(document) = window.document()
+                    && let Ok(element) = document.create_element("div") {
                         // Check if element has animate method by trying to access it
                         return js_sys::Reflect::has(&element, &"animate".into()).unwrap_or(false);
                     }
-                }
-            }
             false
         }
         #[cfg(not(feature = "web-sys"))]
@@ -126,10 +130,10 @@ impl AnimationEngine for WaapiEngine {
             let element = &config.element;
             
             // Build keyframes
-            let keyframes = self.build_keyframes(config)?;
+            let _keyframes = self.build_keyframes(config)?;
             
             // Build timing options
-            let timing = self.build_timing_options(config)?;
+            let _timing = self.build_timing_options(config)?;
             
             // For now, create a placeholder animation
             // In a real implementation, we'd use the proper WAAPI bindings
@@ -162,14 +166,14 @@ impl AnimationEngine for WaapiEngine {
 
     fn pause(&mut self, handle: AnimationHandle) -> Result<()> {
         if let Some(waapi_animation) = self.animations.get(&handle) {
-            waapi_animation.animation.pause();
+            let _ = waapi_animation.animation.pause();
         }
         Ok(())
     }
 
     fn resume(&mut self, handle: AnimationHandle) -> Result<()> {
         if let Some(waapi_animation) = self.animations.get(&handle) {
-            waapi_animation.animation.play();
+            let _ = waapi_animation.animation.play();
         }
         Ok(())
     }

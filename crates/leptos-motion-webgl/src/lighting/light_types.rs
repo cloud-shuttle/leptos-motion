@@ -1,6 +1,5 @@
 //! Light types and color definitions for WebGL rendering
 
-use crate::error::{Result, WebGLError};
 
 /// Light type enumeration
 #[derive(Debug, Clone, Copy, PartialEq)]

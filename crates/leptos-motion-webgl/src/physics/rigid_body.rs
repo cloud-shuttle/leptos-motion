@@ -1,7 +1,6 @@
 //! Rigid body physics
 
 use super::*;
-use crate::{Result, WebGLError};
 
 /// Type of rigid body
 #[derive(Debug, Clone, PartialEq)]

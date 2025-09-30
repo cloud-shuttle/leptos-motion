@@ -1,6 +1,5 @@
 //! Bounding box implementation
 
-use crate::{Result, WebGLError};
 
 /// 3D bounding box
 #[derive(Debug, Clone, PartialEq)]

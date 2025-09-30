@@ -39,7 +39,7 @@ pub fn SvgMorphingEditor(
         
         // In a real implementation, this would start the actual morphing animation
         // For now, we'll just simulate progress
-        let _interval = set_interval(move || {
+        set_interval(move || {
             let current_progress = morphing_progress.get() + 0.01;
             if current_progress >= 1.0 {
                 set_is_morphing.set(false);

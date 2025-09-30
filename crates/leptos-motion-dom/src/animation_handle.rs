@@ -75,7 +75,7 @@ impl AnimationManager {
     
     /// Get animation by ID
     pub fn get_animation(&self, id: &str) -> Option<Weak<RefCell<Box<dyn Animation>>>> {
-        self.animations.get(id).map(|rc| Rc::downgrade(rc))
+        self.animations.get(id).map(Rc::downgrade)
     }
     
     /// Check if animation exists
@@ -113,11 +113,10 @@ impl AnimationManager {
         
         // Remove completed animations
         for id in completed_animations {
-            if let Some(animation_rc) = self.animations.remove(&id) {
-                if let Ok(mut animation) = animation_rc.try_borrow_mut() {
+            if let Some(animation_rc) = self.animations.remove(&id)
+                && let Ok(mut animation) = animation_rc.try_borrow_mut() {
                     let _ = animation.stop();
                 }
-            }
         }
         
         Ok(())
@@ -128,11 +127,10 @@ impl AnimationManager {
         let mut errors = Vec::new();
         
         for (id, animation_rc) in &self.animations {
-            if let Ok(mut animation) = animation_rc.try_borrow_mut() {
-                if let Err(e) = animation.stop() {
+            if let Ok(mut animation) = animation_rc.try_borrow_mut()
+                && let Err(e) = animation.stop() {
                     errors.push(format!("Failed to stop animation {}: {}", id, e));
                 }
-            }
         }
         
         self.animations.clear();
@@ -178,57 +176,45 @@ impl DomAnimationHandle {
     
     /// Check if animation is running
     pub fn is_running(&self) -> bool {
-        if let Some(manager) = self.manager.upgrade() {
-            if let Some(animation_weak) = manager.borrow().get_animation(&self.id) {
-                if let Some(animation_rc) = animation_weak.upgrade() {
-                    if let Ok(animation) = animation_rc.try_borrow() {
+        if let Some(manager) = self.manager.upgrade()
+            && let Some(animation_weak) = manager.borrow().get_animation(&self.id)
+                && let Some(animation_rc) = animation_weak.upgrade()
+                    && let Ok(animation) = animation_rc.try_borrow() {
                         return animation.is_running() && !animation.is_complete();
                     }
-                }
-            }
-        }
         false
     }
     
     /// Check if animation is complete
     pub fn is_complete(&self) -> bool {
-        if let Some(manager) = self.manager.upgrade() {
-            if let Some(animation_weak) = manager.borrow().get_animation(&self.id) {
-                if let Some(animation_rc) = animation_weak.upgrade() {
-                    if let Ok(animation) = animation_rc.try_borrow() {
+        if let Some(manager) = self.manager.upgrade()
+            && let Some(animation_weak) = manager.borrow().get_animation(&self.id)
+                && let Some(animation_rc) = animation_weak.upgrade()
+                    && let Ok(animation) = animation_rc.try_borrow() {
                         return animation.is_complete();
                     }
-                }
-            }
-        }
         false
     }
     
     /// Get animation progress (0.0 to 1.0)
     pub fn progress(&self) -> f64 {
-        if let Some(manager) = self.manager.upgrade() {
-            if let Some(animation_weak) = manager.borrow().get_animation(&self.id) {
-                if let Some(animation_rc) = animation_weak.upgrade() {
-                    if let Ok(animation) = animation_rc.try_borrow() {
+        if let Some(manager) = self.manager.upgrade()
+            && let Some(animation_weak) = manager.borrow().get_animation(&self.id)
+                && let Some(animation_rc) = animation_weak.upgrade()
+                    && let Ok(animation) = animation_rc.try_borrow() {
                         return animation.progress();
                     }
-                }
-            }
-        }
         0.0
     }
     
     /// Get animation duration
     pub fn duration(&self) -> f64 {
-        if let Some(manager) = self.manager.upgrade() {
-            if let Some(animation_weak) = manager.borrow().get_animation(&self.id) {
-                if let Some(animation_rc) = animation_weak.upgrade() {
-                    if let Ok(animation) = animation_rc.try_borrow() {
+        if let Some(manager) = self.manager.upgrade()
+            && let Some(animation_weak) = manager.borrow().get_animation(&self.id)
+                && let Some(animation_rc) = animation_weak.upgrade()
+                    && let Ok(animation) = animation_rc.try_borrow() {
                         return animation.duration();
                     }
-                }
-            }
-        }
         0.0
     }
     
@@ -241,11 +227,10 @@ impl DomAnimationHandle {
 impl Drop for DomAnimationHandle {
     fn drop(&mut self) {
         // Automatically stop animation when handle is dropped
-        if let Some(manager) = self.manager.upgrade() {
-            if let Ok(mut manager) = manager.try_borrow_mut() {
+        if let Some(manager) = self.manager.upgrade()
+            && let Ok(mut manager) = manager.try_borrow_mut() {
                 let _ = manager.unregister(self.clone());
             }
-        }
     }
 }
 

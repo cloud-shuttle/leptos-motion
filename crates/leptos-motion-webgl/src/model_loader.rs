@@ -1,7 +1,7 @@
 //! Model loading system for WebGL rendering
 
 use crate::error::{Result, WebGLError};
-use crate::geometry::{Geometry, Vertex, VertexAttribute};
+use crate::geometry::{Geometry, Vertex};
 use crate::material::Material;
 use std::collections::HashMap;
 use std::str::FromStr;
@@ -313,7 +313,7 @@ impl ObjLoader {
         let mut normals = Vec::new();
         let mut tex_coords = Vec::new();
         let mut faces = Vec::new();
-        let mut materials: HashMap<String, Material> = HashMap::new();
+        let materials: HashMap<String, Material> = HashMap::new();
         let mut current_material = None;
 
         for line in data.lines() {
@@ -409,7 +409,7 @@ impl ObjLoader {
                 // Triangulate face (simple fan triangulation)
                 for i in 1..face_vertices.len() - 1 {
                     let indices = [0, i, i + 1];
-                    let mut triangle_vertices: Vec<usize> = Vec::new();
+                    let triangle_vertices: Vec<usize> = Vec::new();
 
                     for &idx in &indices {
                         let (vertex_idx, tex_idx, normal_idx) = face_vertices[idx];
@@ -578,6 +578,12 @@ impl ObjLoader {
 pub struct ModelLoader {
     /// Supported formats
     supported_formats: Vec<ModelFormat>,
+}
+
+impl Default for ModelLoader {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ModelLoader {

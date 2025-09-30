@@ -123,24 +123,22 @@ pub fn EventDrivenMotionDiv(
     
     // Apply initial styles
     Effect::new(move |_| {
-        if let Some(element) = node_ref.get() {
-            if let Some(initial_values) = &initial {
+        if let Some(element) = node_ref.get()
+            && let Some(initial_values) = &initial {
                 apply_initial_styles(&element, initial_values);
             }
-        }
     });
     
     // Handle layout animation
     if _layout {
         Effect::new(move |_| {
-            if let Some(element) = node_ref.get() {
-                if let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
+            if let Some(element) = node_ref.get()
+                && let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
                     let style = html_element.style();
                     // Enable layout animations
                     let _ = style.set_property("will-change", "transform, opacity");
                     let _ = style.set_property("transform-origin", "center center");
                 }
-            }
         });
     }
     
@@ -157,8 +155,8 @@ pub fn EventDrivenMotionDiv(
         move |_| {
             set_hovered.set(true);
             
-            if let Some(element) = node_ref.get() {
-                if let Some(hover_values) = &while_hover {
+            if let Some(element) = node_ref.get()
+                && let Some(hover_values) = &while_hover {
                     trigger_animation(
                         &animation_manager,
                         &element,
@@ -171,7 +169,6 @@ pub fn EventDrivenMotionDiv(
                         "hover",
                     );
                 }
-            }
         }
     };
     
@@ -187,8 +184,8 @@ pub fn EventDrivenMotionDiv(
         move |_| {
             set_hovered.set(false);
             
-            if let Some(element) = node_ref.get() {
-                if let Some(animate_prop) = &animate {
+            if let Some(element) = node_ref.get()
+                && let Some(animate_prop) = &animate {
                     // Resolve reactive values
                     let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
                     if !animate_values.is_empty() {
@@ -205,7 +202,6 @@ pub fn EventDrivenMotionDiv(
                         );
                     }
                 }
-            }
         }
     };
     
@@ -222,8 +218,8 @@ pub fn EventDrivenMotionDiv(
         move |_| {
             set_tapped.set(true);
             
-            if let Some(element) = node_ref.get() {
-                if let Some(tap_values) = &while_tap {
+            if let Some(element) = node_ref.get()
+                && let Some(tap_values) = &while_tap {
                     trigger_animation(
                         &animation_manager,
                         &element,
@@ -236,7 +232,6 @@ pub fn EventDrivenMotionDiv(
                         "tap",
                     );
                 }
-            }
             
             // Reset tap state after animation
             set_timeout(move || {
@@ -297,8 +292,8 @@ pub fn EventDrivenMotionDiv(
         move |_| {
             set_dragging.set(false);
             
-            if let Some(element) = node_ref.get() {
-                if let Some(animate_prop) = &animate {
+            if let Some(element) = node_ref.get()
+                && let Some(animate_prop) = &animate {
                     // Resolve reactive values
                     let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
                     if !animate_values.is_empty() {
@@ -315,16 +310,15 @@ pub fn EventDrivenMotionDiv(
                         );
                     }
                 }
-            }
         }
     };
     
     // Handle animate prop changes (reactive support)
     let transition_for_effect = _transition.clone();
     Effect::new(move |_| {
-        if let Some(element) = node_ref.get() {
-            if let Some(animate_prop) = &animate {
-                if !is_hovered.get() && !is_tapped.get() && !is_dragging.get() {
+        if let Some(element) = node_ref.get()
+            && let Some(animate_prop) = &animate
+                && !is_hovered.get() && !is_tapped.get() && !is_dragging.get() {
                     // Resolve reactive values
                     let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
                     if !animate_values.is_empty() {
@@ -332,8 +326,6 @@ pub fn EventDrivenMotionDiv(
                         apply_animation_styles(&element, &animate_values);
                     }
                 }
-            }
-        }
     });
     
     // Build CSS classes

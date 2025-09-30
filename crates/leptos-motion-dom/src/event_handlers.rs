@@ -3,10 +3,7 @@
 //! This module provides event handling capabilities for the event-driven
 //! animation system, including drag, hover, tap, and gesture recognition.
 
-use leptos::prelude::*;
-use leptos_motion_core::*;
-use std::collections::HashMap;
-use web_sys::{Element, MouseEvent, TouchEvent, KeyboardEvent};
+use web_sys::{Element, MouseEvent, TouchEvent};
 
 /// Event handler configuration
 #[derive(Debug, Clone)]
@@ -45,6 +42,12 @@ pub struct DragEventHandler {
     pub on_drag_end: Option<Box<dyn Fn(f64, f64) + Send + Sync>>,
     /// Event configuration
     pub config: EventHandlerConfig,
+}
+
+impl Default for DragEventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DragEventHandler {
@@ -198,6 +201,12 @@ pub struct HoverEventHandler {
     pub config: EventHandlerConfig,
 }
 
+impl Default for HoverEventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HoverEventHandler {
     /// Create a new hover event handler
     pub fn new() -> Self {
@@ -253,6 +262,12 @@ pub struct TapEventHandler {
     pub long_press_duration: u32,
     /// Event configuration
     pub config: EventHandlerConfig,
+}
+
+impl Default for TapEventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl TapEventHandler {
@@ -325,6 +340,12 @@ pub struct GestureEventHandler {
     pub on_swipe: Option<Box<dyn Fn(SwipeDirection) + Send + Sync>>,
     /// Event configuration
     pub config: EventHandlerConfig,
+}
+
+impl Default for GestureEventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GestureEventHandler {

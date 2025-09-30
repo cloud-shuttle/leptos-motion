@@ -126,7 +126,6 @@ pub use performance_monitor::{
 
 // Re-export simple components - removed for now
 // pub use simple_components::*;
-pub use elements::*;
 pub use hooks::*;
 pub use utils::*;
 

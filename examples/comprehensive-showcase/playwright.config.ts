@@ -28,10 +28,5 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'cd /Users/peterhanssens/consulting/Leptos/leptos-motion/examples/comprehensive-showcase && python3 -m http.server 3000',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  // webServer disabled - we'll start it manually for debugging
 });

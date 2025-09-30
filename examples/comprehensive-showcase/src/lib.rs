@@ -8,6 +8,7 @@ use leptos_motion::*;
 use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
+use web_sys;
 
 // Initialize the panic hook for better error messages
 #[wasm_bindgen(start)]
@@ -20,13 +21,32 @@ pub fn main() {
 #[wasm_bindgen]
 pub fn run_app() {
     // Mount to the app div specifically
-    let _ = leptos::mount::mount_to_body(|| view! {
-        <ShowcaseComponent />
-    });
+    web_sys::console::log_1(&"Starting Leptos app mount...".into());
+
+    let document = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap();
+
+    let app_element = document.get_element_by_id("app");
+    match app_element {
+        Some(element) => {
+            web_sys::console::log_1(&"Found #app element, mounting...".into());
+            let _ = leptos::mount::mount_to(
+                element.dyn_into::<web_sys::HtmlElement>().unwrap(),
+                || view! { <ShowcaseComponent /> }
+            );
+            web_sys::console::log_1(&"Mount completed".into());
+        }
+        None => {
+            web_sys::console::log_1(&"ERROR: #app element not found!".into());
+        }
+    }
 }
 
 #[component]
 fn ShowcaseComponent() -> impl IntoView {
+    web_sys::console::log_1(&"ShowcaseComponent called!".into());
     let (button_scale, set_button_scale) = signal(1.0);
     let (card_x, set_card_x) = signal(0.0);
     let (loading_rotation, set_loading_rotation) = signal(0.0);

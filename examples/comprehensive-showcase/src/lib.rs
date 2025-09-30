@@ -32,6 +32,25 @@ fn ShowcaseComponent() -> impl IntoView {
     let (loading_rotation, set_loading_rotation) = signal(0.0);
     let (message, set_message) = signal("Click the buttons to see animations!".to_string());
 
+    // Create reactive animation states
+    let button_animation = Memo::new(move |_| {
+        HashMap::from([
+            ("scale".to_string(), AnimationValue::Number(button_scale.get()))
+        ])
+    });
+
+    let card_animation = Memo::new(move |_| {
+        HashMap::from([
+            ("x".to_string(), AnimationValue::Pixels(card_x.get()))
+        ])
+    });
+
+    let loading_animation = Memo::new(move |_| {
+        HashMap::from([
+            ("rotate".to_string(), AnimationValue::Number(loading_rotation.get()))
+        ])
+    });
+
     let handle_button_click = move |_| {
         set_button_scale.update(|scale| *scale = if *scale == 1.0 { 1.2 } else { 1.0 });
         set_message.set("Button Animation: Scale effect!".to_string());
@@ -63,9 +82,7 @@ fn ShowcaseComponent() -> impl IntoView {
                     initial=HashMap::from([
                         ("scale".to_string(), AnimationValue::Number(1.0))
                     ])
-                    animate=AnimateProp::Static(HashMap::from([
-                        ("scale".to_string(), AnimationValue::Number(button_scale.get()))
-                    ]))
+                    animate=AnimateProp::Derived(button_animation)
                     _transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,
@@ -83,9 +100,7 @@ fn ShowcaseComponent() -> impl IntoView {
                     initial=HashMap::from([
                         ("x".to_string(), AnimationValue::Pixels(0.0))
                     ])
-                    animate=AnimateProp::Static(HashMap::from([
-                        ("x".to_string(), AnimationValue::Pixels(card_x.get()))
-                    ]))
+                    animate=AnimateProp::Derived(card_animation)
                     _transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,
@@ -103,9 +118,7 @@ fn ShowcaseComponent() -> impl IntoView {
                     initial=HashMap::from([
                         ("rotate".to_string(), AnimationValue::Number(0.0))
                     ])
-                    animate=AnimateProp::Static(HashMap::from([
-                        ("rotate".to_string(), AnimationValue::Number(loading_rotation.get()))
-                    ]))
+                    animate=AnimateProp::Derived(loading_animation)
                     _transition=Transition {
                         duration: Some(0.3),
                         ease: Easing::EaseOut,

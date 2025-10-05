@@ -13,6 +13,7 @@ export default defineConfig({
     'memoization_test.spec.ts',
     'batched_updates_test.spec.ts',
     'comprehensive_e2e_test.spec.ts',
+    'tests/comprehensive-demo.spec.ts',
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

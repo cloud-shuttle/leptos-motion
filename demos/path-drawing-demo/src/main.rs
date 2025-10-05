@@ -1,4 +1,7 @@
 use leptos::prelude::*;
+use leptos_motion::{MotionPath, AnimationValue, Easing, Transition};
+use leptos_motion_dom::AnimateProp;
+use std::rc::Rc;
 
 fn main() {
     mount_to_body(App)
@@ -25,7 +28,7 @@ fn App() -> impl IntoView {
             Box::new(|| {}) as Box<dyn Fn()>
         }
     });
-    
+
     view! {
         <div style="
             min-height: 100vh;
@@ -49,7 +52,7 @@ fn App() -> impl IntoView {
             ">
                 "🎨 Path Drawing Animation"
             </h1>
-            
+
             <p style="
                 text-align: center;
                 font-size: 1.2rem;
@@ -57,9 +60,9 @@ fn App() -> impl IntoView {
                 opacity: 0.9;
                 font-weight: 300;
             ">
-                "SVG path drawing with Leptos Motion + WASM (Rust equivalent of Framer Motion)"
+                "Pure Rust/WASM path drawing with automatic length calculation using web_sys::SvgPathElement.getTotalLength()"
             </p>
-            
+
             // Control button
             <button
                 on:click=move |_| set_playing.update(|v| *v = !*v)
@@ -79,7 +82,7 @@ fn App() -> impl IntoView {
             >
                 {move || if is_playing.get() { "⏸️ Pause Drawing" } else { "▶️ Start Drawing" }}
             </button>
-            
+
             // SVG Canvas
             <div style="
                 background: rgba(255,255,255,0.05);
@@ -107,174 +110,344 @@ fn PathDrawingSVG(is_playing: ReadSignal<bool>) -> impl IntoView {
                 height: 100%;
             "
         >
-            // Row 1
-            <AnimatedCircle 
-                cx="100" cy="100" r="80" stroke="#ff0088" delay=0.5 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="30" x2="360" y2="170" stroke="#8df0cc" delay=1.0 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="170" x2="360" y2="30" stroke="#8df0cc" delay=1.25 is_playing=is_playing
-            />
-            <AnimatedRect 
-                x="410" y="30" width="140" height="140" rx="20" stroke="#0d63f8" delay=1.5 is_playing=is_playing
-            />
-            
-            // Row 2
-            <AnimatedCircle 
-                cx="100" cy="300" r="80" stroke="#0d63f8" delay=1.0 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="230" x2="360" y2="370" stroke="#ff0088" delay=1.5 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="370" x2="360" y2="230" stroke="#ff0088" delay=1.75 is_playing=is_playing
-            />
-            <AnimatedRect 
-                x="410" y="230" width="140" height="140" rx="20" stroke="#8df0cc" delay=2.0 is_playing=is_playing
-            />
-            
-            // Row 3
-            <AnimatedCircle 
-                cx="100" cy="500" r="80" stroke="#8df0cc" delay=1.5 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="430" x2="360" y2="570" stroke="#0d63f8" delay=2.0 is_playing=is_playing
-            />
-            <AnimatedLine 
-                x1="220" y1="570" x2="360" y2="430" stroke="#0d63f8" delay=2.25 is_playing=is_playing
-            />
-            <AnimatedRect 
-                x="410" y="430" width="140" height="140" rx="20" stroke="#ff0088" delay=2.5 is_playing=is_playing
-            />
+            // Row 1 - Circle
+            <MotionPath
+                d=String::from("M 20 100 A 80 80 0 1 1 180 100 A 80 80 0 1 1 20 100")
+                stroke=String::from("#ff0088")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(0.5),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 1 - Diagonal Lines (X)
+            <MotionPath
+                d=String::from("M 240 30 L 360 150")
+                stroke=String::from("#8df0cc")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(1.0),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            <MotionPath
+                d=String::from("M 240 150 L 360 30")
+                stroke=String::from("#8df0cc")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(1.25),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 1 - Rectangle
+            <MotionPath
+                d=String::from("M 430 30 L 550 30 L 550 150 L 430 150 Z")
+                stroke=String::from("#0d63f8")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(1.5),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 2 - Circle
+            <MotionPath
+                d=String::from("M 20 300 A 80 80 0 1 1 180 300 A 80 80 0 1 1 20 300")
+                stroke=String::from("#0d63f8")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(1.0),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 2 - Diagonal Lines (X)
+            <MotionPath
+                d=String::from("M 240 230 L 360 350")
+                stroke=String::from("#ff0088")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(1.5),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            <MotionPath
+                d=String::from("M 240 350 L 360 230")
+                stroke=String::from("#ff0088")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(1.75),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 2 - Rectangle
+            <MotionPath
+                d=String::from("M 430 230 L 550 230 L 550 350 L 430 350 Z")
+                stroke=String::from("#8df0cc")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(2.0),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 3 - Circle
+            <MotionPath
+                d=String::from("M 20 500 A 80 80 0 1 1 180 500 A 80 80 0 1 1 20 500")
+                stroke=String::from("#8df0cc")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(1.5),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 3 - Diagonal Lines (X)
+            <MotionPath
+                d=String::from("M 240 430 L 360 550")
+                stroke=String::from("#0d63f8")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(2.0),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            <MotionPath
+                d=String::from("M 240 550 L 360 430")
+                stroke=String::from("#0d63f8")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(1.5),
+                    delay: Some(2.25),
+                    ease: Easing::EaseOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
+
+            // Row 3 - Rectangle
+            <MotionPath
+                d=String::from("M 430 430 L 550 430 L 550 550 L 430 550 Z")
+                stroke=String::from("#ff0088")
+                stroke_width=String::from("10")
+                stroke_linecap=String::from("round")
+                fill=String::from("transparent")
+                initial=std::collections::HashMap::from([
+                    ("stroke-dashoffset".to_string(), AnimationValue::Pixels(2000.0)) // Start hidden - large offset to ensure paths are hidden
+                ])
+                animate=AnimateProp::Derived(Memo::new(move |_| if is_playing.get() {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(0.0))
+                    ])
+                } else {
+                    std::collections::HashMap::from([
+                        ("stroke-dashoffset".to_string(), AnimationValue::Pixels(500.0)) // Hide by offsetting
+                    ])
+                }))
+                _transition=Transition {
+                    duration: Some(2.0),
+                    delay: Some(2.5),
+                    ease: Easing::EaseInOut,
+                    ..Default::default()
+                }
+            >
+                {|| ()}
+            </MotionPath>
         </svg>
-    }
-}
-
-#[component]
-fn AnimatedCircle(
-    cx: &'static str,
-    cy: &'static str, 
-    r: &'static str,
-    stroke: &'static str,
-    delay: f64,
-    is_playing: ReadSignal<bool>
-) -> impl IntoView {
-    
-    view! {
-        <circle
-            cx=cx
-            cy=cy
-            r=r
-            stroke=stroke
-            stroke-width="10"
-            stroke-linecap="round"
-            fill="transparent"
-            style=move || {
-                let playing = is_playing.get_untracked();
-                if playing {
-                    let radius = r.parse::<f64>().unwrap_or(80.0);
-                    let path_length = 2.0 * std::f64::consts::PI * radius;
-                    let progress = ((js_sys::Date::now() / 1000.0 - delay).max(0.0) * 0.5).min(1.0);
-                    let spring_progress = 1.0 - (1.0 - progress).powi(3);
-                    let offset = path_length * (1.0 - spring_progress);
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 1;", path_length, offset)
-                } else {
-                    let radius = r.parse::<f64>().unwrap_or(80.0);
-                    let path_length = 2.0 * std::f64::consts::PI * radius;
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 0;", path_length, path_length)
-                }
-            }
-        />
-    }
-}
-
-#[component]
-fn AnimatedLine(
-    x1: &'static str,
-    y1: &'static str,
-    x2: &'static str,
-    y2: &'static str,
-    stroke: &'static str,
-    delay: f64,
-    is_playing: ReadSignal<bool>
-) -> impl IntoView {
-    
-    view! {
-        <line
-            x1=x1
-            y1=y1
-            x2=x2
-            y2=y2
-            stroke=stroke
-            stroke-width="10"
-            stroke-linecap="round"
-            style=move || {
-                let playing = is_playing.get_untracked();
-                if playing {
-                    let x1_val = x1.parse::<f64>().unwrap_or(0.0);
-                    let y1_val = y1.parse::<f64>().unwrap_or(0.0);
-                    let x2_val = x2.parse::<f64>().unwrap_or(0.0);
-                    let y2_val = y2.parse::<f64>().unwrap_or(0.0);
-                    let path_length = ((x2_val - x1_val).powi(2) + (y2_val - y1_val).powi(2)).sqrt();
-                    let progress = ((js_sys::Date::now() / 1000.0 - delay).max(0.0) * 0.5).min(1.0);
-                    let spring_progress = 1.0 - (1.0 - progress).powi(3);
-                    let offset = path_length * (1.0 - spring_progress);
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 1;", path_length, offset)
-                } else {
-                    let x1_val = x1.parse::<f64>().unwrap_or(0.0);
-                    let y1_val = y1.parse::<f64>().unwrap_or(0.0);
-                    let x2_val = x2.parse::<f64>().unwrap_or(0.0);
-                    let y2_val = y2.parse::<f64>().unwrap_or(0.0);
-                    let path_length = ((x2_val - x1_val).powi(2) + (y2_val - y1_val).powi(2)).sqrt();
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 0;", path_length, path_length)
-                }
-            }
-        />
-    }
-}
-
-#[component]
-fn AnimatedRect(
-    x: &'static str,
-    y: &'static str,
-    width: &'static str,
-    height: &'static str,
-    rx: &'static str,
-    stroke: &'static str,
-    delay: f64,
-    is_playing: ReadSignal<bool>
-) -> impl IntoView {
-    
-    view! {
-        <rect
-            x=x
-            y=y
-            width=width
-            height=height
-            rx=rx
-            stroke=stroke
-            stroke-width="10"
-            stroke-linecap="round"
-            fill="transparent"
-            style=move || {
-                let playing = is_playing.get_untracked();
-                if playing {
-                    let w = width.parse::<f64>().unwrap_or(140.0);
-                    let h = height.parse::<f64>().unwrap_or(140.0);
-                    let path_length = 2.0 * (w + h);
-                    let progress = ((js_sys::Date::now() / 1000.0 - delay).max(0.0) * 0.5).min(1.0);
-                    let spring_progress = 1.0 - (1.0 - progress).powi(3);
-                    let offset = path_length * (1.0 - spring_progress);
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 1;", path_length, offset)
-                } else {
-                    let w = width.parse::<f64>().unwrap_or(140.0);
-                    let h = height.parse::<f64>().unwrap_or(140.0);
-                    let path_length = 2.0 * (w + h);
-                    format!("stroke-dasharray: {}; stroke-dashoffset: {}; opacity: 0;", path_length, path_length)
-                }
-            }
-        />
     }
 }

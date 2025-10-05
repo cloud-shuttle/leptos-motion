@@ -46,7 +46,7 @@ fn ProductGallery() -> impl IntoView {
                         alt="Product image"
                         on:click=move |_| set_zoomed.set(!is_zoomed.get())
                     />
-                </MotionDiv>
+                </div>
 
                 <div class="image-controls">
                     <button

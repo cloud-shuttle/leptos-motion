@@ -141,14 +141,16 @@ async fn test_easing_function_accuracy() {
                 <ReactiveMotionDiv
                     class=format!("easing-test-{}", i)
                     initial=create_animation_target("opacity", AnimationValue::Number(0.0))
-                    animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(1.0)))
-                      transition=Transition {
+                    animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(1.0)))
+                    _transition=Transition {
                         duration: Some(1.0),
                         ease: easing.clone(),
                         delay: None,
                         repeat: RepeatConfig::Never,
                         stagger: None,
                     }
+                    node_ref=NodeRef::new()
+                    children=()
                 >
                     {format!("Easing test {}", i)}
                 </ReactiveMotionDiv>
@@ -177,7 +179,9 @@ async fn test_animation_delay_precision() {
             <ReactiveMotionDiv
                 class="delay-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.0)))
+                animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.0)))
+                node_ref=NodeRef::new()
+                children=()
             >
                 "Delay test"
             </ReactiveMotionDiv>
@@ -215,14 +219,16 @@ async fn test_repeat_animation_timing() {
             <ReactiveMotionDiv
                 class="repeat-test".to_string()
                 initial=create_animation_target("scale", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("scale", AnimationValue::Number(1.5)))
-                  transition=Transition {
+                animate=AnimateProp::Static(create_animation_target("scale", AnimationValue::Number(1.5)))
+                _transition=Transition {
                     duration: Some(0.5),
                     ease: Easing::EaseInOut,
                     delay: None,
                     repeat: RepeatConfig::Count(3), // Repeat 3 times
                     stagger: None,
                 }
+                node_ref=NodeRef::new()
+                children=()
             >
                 "Repeat test"
             </ReactiveMotionDiv>

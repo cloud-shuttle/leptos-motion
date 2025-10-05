@@ -4,12 +4,13 @@
 
 use leptos::prelude::*;
 use leptos::task::spawn_local;
-use leptos_motion_dom::ReactiveMotionDiv;
+use leptos_motion_dom::{ReactiveMotionDiv, AnimateProp};
 use leptos_motion_core::{AnimationTarget, AnimationValue, Transition, Easing, RepeatConfig};
 use wasm_bindgen_test::*;
 use web_sys::{window, Element, Performance};
 use wasm_bindgen::JsCast;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -105,7 +106,9 @@ async fn test_wasm_memory_management() {
                 <ReactiveMotionDiv
                     class=format!("memory-test-{}", i)
                     initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                    animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.0)))
+                    animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.0)))
+                    node_ref=NodeRef::new()
+                    children=()
                 >
                     {format!("Memory test {}", i)}
                 </ReactiveMotionDiv>
@@ -138,13 +141,15 @@ async fn test_browser_event_handling() {
                 class="event-test".to_string()
                 style="role: button; tabindex: 0;".to_string()
                 initial=create_animation_target("scale", AnimationValue::Number(1.0))
-                  animate=Box::new(move || {
+                animate=AnimateProp::Fn(Rc::new(move || {
                     if click_count.get() > 0 {
                         create_animation_target("scale", AnimationValue::Number(1.1))
                     } else {
                         create_animation_target("scale", AnimationValue::Number(1.0))
                     }
-                })
+                }))
+                node_ref=NodeRef::new()
+                children=|| {}
             >
                 "Click me"
             </ReactiveMotionDiv>
@@ -179,7 +184,9 @@ async fn test_wasm_error_handling() {
             <ReactiveMotionDiv
                 class="error-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.5)))
+                animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.5)))
+                node_ref=NodeRef::new()
+                children=|| {}
             >
                 "Error test"
             </ReactiveMotionDiv>

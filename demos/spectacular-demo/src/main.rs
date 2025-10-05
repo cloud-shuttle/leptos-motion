@@ -173,7 +173,7 @@ fn InteractiveGalleryDemo(is_playing: bool) -> impl IntoView {
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -275,7 +275,7 @@ fn FluidPhysicsDemo(is_playing: bool) -> impl IntoView {
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -330,14 +330,14 @@ fn MorphingShapesDemo(is_playing: bool) -> impl IntoView {
             let interval = set_interval_with_handle(move || {
                 set_morph_progress.update(|p| *p += 0.01);
             }, std::time::Duration::from_millis(16));
-            
+
             move || {
                 if let Ok(handle) = interval {
                     handle.clear();
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -419,7 +419,7 @@ fn ParticleExplosionDemo(is_playing: bool) -> impl IntoView {
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -447,6 +447,7 @@ fn ParticleExplosionDemo(is_playing: bool) -> impl IntoView {
                     <MotionDiv
                         animate=AnimateProp::Fn(std::rc::Rc::new(animate_values))
                         node_ref=node_ref
+                        children=()
                         style=format!("
                             position: absolute;
                             width: 4px;
@@ -481,7 +482,7 @@ fn Carousel3DDemo(is_playing: bool) -> impl IntoView {
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -552,7 +553,7 @@ fn ConstellationDemo(is_playing: bool) -> impl IntoView {
                 }
             }
         } else {
-            || {}
+            move || {}
         }
     });
     
@@ -580,6 +581,7 @@ fn ConstellationDemo(is_playing: bool) -> impl IntoView {
                     <MotionDiv
                         animate=AnimateProp::Fn(std::rc::Rc::new(animate_values))
                         node_ref=node_ref
+                        children=()
                         style=format!("
                             position: absolute;
                             width: {}px;

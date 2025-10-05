@@ -14,6 +14,7 @@ use leptos::prelude::*;
 use leptos_motion_core::*;
 use leptos_motion_dom::*;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[component]
 pub fn FeatureShowcaseDemo() -> impl IntoView {

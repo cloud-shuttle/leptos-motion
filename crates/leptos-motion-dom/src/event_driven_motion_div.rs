@@ -409,7 +409,7 @@ pub struct DragConstraints {
 fn apply_initial_styles(element: &Element, styles: &HashMap<String, AnimationValue>) {
     if let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
         let style = html_element.style();
-        
+
         for (property, value) in styles {
             match (property.as_str(), value) {
                 ("opacity", AnimationValue::Number(n)) => {
@@ -438,6 +438,12 @@ fn apply_initial_styles(element: &Element, styles: &HashMap<String, AnimationVal
                 }
                 ("height", AnimationValue::Number(n)) => {
                     let _ = style.set_property("height", &format!("{}px", n));
+                }
+                ("stroke-dashoffset", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("stroke-dashoffset", &n.to_string());
+                }
+                ("stroke-dashoffset", AnimationValue::Pixels(p)) => {
+                    let _ = style.set_property("stroke-dashoffset", &format!("{}px", p));
                 }
                 (_, AnimationValue::String(s)) => {
                     let _ = style.set_property(property, s);
@@ -514,6 +520,12 @@ fn apply_animation_styles(element: &Element, styles: &HashMap<String, AnimationV
                 }
                 ("height", AnimationValue::Number(n)) => {
                     let _ = style.set_property("height", &format!("{}px", n));
+                }
+                ("stroke-dashoffset", AnimationValue::Number(n)) => {
+                    let _ = style.set_property("stroke-dashoffset", &n.to_string());
+                }
+                ("stroke-dashoffset", AnimationValue::Pixels(p)) => {
+                    let _ = style.set_property("stroke-dashoffset", &format!("{}px", p));
                 }
                 (_, AnimationValue::String(s)) => {
                     let _ = style.set_property(property, s);

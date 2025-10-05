@@ -1,0 +1,21 @@
+[project]
+name = "ssr-demo"
+bin-package = "ssr-demo"
+features = ["ssr", "hydrate"]
+
+[site]
+root = "target/site"
+
+[site.pkg-dir]
+path = "pkg"
+
+[style]
+file = "style.css"
+
+[bundle]
+command = "cargo leptos build --release"
+
+[serve]
+command = "cargo leptos serve --release"
+
+

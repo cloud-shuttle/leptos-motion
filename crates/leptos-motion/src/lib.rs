@@ -134,7 +134,7 @@ pub use leptos_motion_core::performance;
 
 // Re-export DOM functionality
 pub use leptos_motion_dom::{
-    AnimatePresence, MotionDiv, PresenceMode,
+    AnimatePresence, MotionDiv, MotionPath, PresenceMode,
     // Re-export drag types with correct names
     event_driven_motion_div::{DragAxis as EventDragAxis, DragConstraints as EventDragConstraints},
     event_handlers::{DragAxis, DragConstraints},

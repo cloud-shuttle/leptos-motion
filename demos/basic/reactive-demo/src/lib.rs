@@ -24,34 +24,17 @@ fn App() -> impl IntoView {
     let (x_position, set_x_position) = signal(0.0);
     let (y_position, set_y_position) = signal(0.0);
 
-    // Create reactive animation signal using numeric values for the animation engine
-    let (animate_signal, _set_animate_signal) = signal({
+    // Create reactive animation memo using numeric values for the animation engine
+    let animate_signal = create_memo(move |_| {
         let mut animations = HashMap::new();
-        animations.insert("scale".to_string(), AnimationValue::Number(1.0));
-        animations.insert("opacity".to_string(), AnimationValue::Number(1.0));
-        animations.insert("x".to_string(), AnimationValue::Number(0.0));
-        animations.insert("y".to_string(), AnimationValue::Number(0.0));
-        animations.insert("rotation".to_string(), AnimationValue::Number(0.0));
+        animations.insert("scale".to_string(), AnimationValue::Number(scale_value.get()));
+        animations.insert("opacity".to_string(), AnimationValue::Number(opacity_value.get()));
+        animations.insert("x".to_string(), AnimationValue::Number(x_value.get()));
+        animations.insert("y".to_string(), AnimationValue::Number(y_value.get() + y_position.get()));
+        animations.insert("rotation".to_string(), AnimationValue::Number(rotation_value.get()));
         animations
     });
 
-    // Update animation signal when any control changes
-    Effect::new(move |_| {
-        let scale_val = scale.get();
-        let opacity_val = opacity.get();
-        let x_val = x_position.get();
-        let y_val = y_position.get();
-        let rotation_val = rotation.get();
-        
-        
-        let mut animations = HashMap::new();
-        animations.insert("scale".to_string(), AnimationValue::Number(scale_val));
-        animations.insert("opacity".to_string(), AnimationValue::Number(opacity_val));
-        animations.insert("x".to_string(), AnimationValue::Number(x_val));
-        animations.insert("y".to_string(), AnimationValue::Number(y_val));
-        animations.insert("rotation".to_string(), AnimationValue::Number(rotation_val));
-        _set_animate_signal.set(animations);
-    });
 
     // Create initial values
     let initial_values = {
@@ -177,8 +160,9 @@ fn App() -> impl IntoView {
                     <div style="border: 2px dashed #ccc; padding: 20px; min-height: 300px; display: flex; align-items: center; justify-content: center;">
                         <ReactiveMotionDiv
                             initial=initial_values
-                            animate=Box::new(move || animate_signal.get())
-                            transition=transition
+                            animate=AnimateProp::Derived(animate_signal)
+                            _transition=transition
+                            node_ref=NodeRef::new()
                         >
                             <div style="
                                 width: 100px;

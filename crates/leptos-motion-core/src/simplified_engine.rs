@@ -390,7 +390,7 @@ impl SimplifiedAnimationEngine {
     pub fn animate_property(
         &mut self,
         property: String,
-        from: f64,
+        _from: f64,
         to: f64,
         transition: Transition,
     ) -> Result<AnimationHandle> {
@@ -398,13 +398,10 @@ impl SimplifiedAnimationEngine {
         let mut target = HashMap::new();
         target.insert(property, AnimationValue::Number(to));
 
-        // For now, we'll create a mock element for the API
-        // In a real implementation, this would be passed from the caller
-        #[cfg(feature = "web-sys")]
+        // For WASM builds, try to create a mock element and animate it
+        #[cfg(target_arch = "wasm32")]
         {
-            // Create a mock element for WASM
-            use wasm_bindgen::JsCast;
-            use web_sys::{window, Element, HtmlElement, HtmlDivElement};
+            use web_sys::{window, Element};
 
             if let Some(window) = window() {
                 if let Some(document) = window.document() {
@@ -415,14 +412,7 @@ impl SimplifiedAnimationEngine {
             }
         }
 
-        // For non-WASM, return a mock handle
-        #[cfg(not(feature = "web-sys"))]
-        {
-            Ok(AnimationHandle(1))
-        }
-
-        // This should never be reached, but satisfies the compiler
-        #[cfg(not(target_arch = "wasm32"))]
+        // For non-WASM or fallback cases, return a mock handle
         Ok(AnimationHandle(1))
     }
 

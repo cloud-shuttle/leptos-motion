@@ -183,15 +183,9 @@ fn PathMorphingDemo() -> impl IntoView {
             let next_idx = (current_idx + 1) % paths.len();
             
             // Use the simple morph function - it handles everything automatically
-            match PathMorpher::morph(&paths[current_idx], &paths[next_idx], progress) {
-                Ok(interpolated_path) => {
-                    return interpolated_path.to_data();
-                }
-                Err(e) => {
-                    web_sys::console::log_1(&format!("❌ Path morphing failed: {:?}", e).into());
-                    // Fallback to simple switching
-                    return if progress < 0.5 { paths[current_idx].to_string() } else { paths[next_idx].to_string() };
-                }
+            let mut morpher = PathMorpher::new();
+            let interpolated_path = morpher.morph(&paths[current_idx], &paths[next_idx], progress);
+            return interpolated_path.to_data();
             }
         }
         

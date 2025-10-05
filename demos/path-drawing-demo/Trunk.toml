@@ -1,0 +1,13 @@
+[build]
+target = "index.html"
+dist = "dist"
+public_url = "/"
+
+[serve]
+address = "127.0.0.1"
+port = 8081
+mime_types = { ".wasm" = "application/wasm" }
+
+[watch]
+watch = ["src", "index.html"]
+

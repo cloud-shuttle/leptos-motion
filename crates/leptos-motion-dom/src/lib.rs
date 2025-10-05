@@ -26,6 +26,7 @@ pub mod simple_animation_engine;
 // pub mod simple_components;
 // SimpleMotionDiv removed - using single MotionDiv API
 pub mod elements;
+pub mod motion_path;
 pub mod hooks;
 pub mod utils;
 
@@ -100,6 +101,7 @@ pub use animate_prop::{AnimateProp, IntoAnimateProp, resolve_animate_prop};
 pub use event_driven_motion_div::EventDrivenMotionDiv as MotionDiv;
 pub use event_driven_motion_div::EventDrivenMotionDiv as ReactiveMotionDiv;
 pub use event_driven_motion_div::EventDrivenMotionDiv as DragMotionDiv;
+pub use motion_path::MotionPath;
 
 // Legacy compatibility - use MotionDiv instead
 // SimpleMotionDiv and CleanMotionDiv are now aliases for MotionDiv

@@ -2,11 +2,12 @@
 target = "index.html"
 dist = "dist"
 public_url = "/"
+filehash = false
 
 [serve]
 address = "127.0.0.1"
-port = 8080
-mime_types = { ".wasm" = "application/wasm" }
+port = 8083
+mime_types = { ".wasm" = "application/wasm", ".js" = "application/javascript" }
 
 [watch]
 watch = ["src", "src/style.css"]

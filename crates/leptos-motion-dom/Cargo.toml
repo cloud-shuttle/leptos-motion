@@ -65,6 +65,15 @@ web-sys = { workspace = true, features = [
     "MutationObserver",
     "MutationObserverInit",
     "Performance",
+    # SVG support for path drawing
+    "SvgsvgElement",
+    "SvgElement",
+    "SvgPathElement",
+    "SvgCircleElement",
+    "SvgLineElement",
+    "SvgRectElement",
+    "SvgAnimateElement",
+    "SvgAnimationElement",
 ] }
 wasm-bindgen.workspace = true
 js-sys.workspace = true

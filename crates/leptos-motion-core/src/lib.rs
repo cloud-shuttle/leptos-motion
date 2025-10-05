@@ -27,6 +27,8 @@ pub mod time;
 #[cfg(feature = "timeline-animations")]
 pub mod timeline;
 pub mod types;
+#[cfg(test)]
+mod types_tests;
 pub mod values;
 
 #[macro_use]

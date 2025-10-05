@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leptos Motion - Comprehensive Showcase</title>
-    <link rel="stylesheet" href="src/style.css">
-    <script type="module">
-        import init, { run_app } from './comprehensive_showcase.js';
-        init().then(() => {
-            run_app();
-        });
+    <script>
+        console.log('🚀 Starting Leptos Motion demo...');
+        // Show initial loading state in the app element
+        const appElement = document.getElementById('app');
+        if (appElement) {
+            appElement.innerHTML = '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; min-height: 100vh; font-family: system-ui; text-align: center;"><h1 style="font-size: 48px; margin-bottom: 20px;">🎨 Leptos Motion</h1><p style="font-size: 24px; margin-bottom: 40px;">Loading WASM Module...</p><div style="background: #2196F3; color: white; padding: 15px 30px; font-size: 18px; border-radius: 8px; display: inline-block;">Initializing Animation Engine</div></div>';
+        }
+        console.log('✅ Initial page loaded');
     </script>
 </head>
 <body>

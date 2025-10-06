@@ -112,7 +112,23 @@ pub fn EventDrivenMotionDiv(
     /// Shared layout configuration
     #[prop(optional)]
     shared_layout: Option<crate::SharedLayoutConfig>,
-    
+
+    /// Animation variants
+    #[prop(optional)]
+    variants: Option<crate::AnimationVariants>,
+
+    /// Initial variant name
+    #[prop(optional)]
+    initial_variant: Option<String>,
+
+    /// Animate variant name
+    #[prop(optional)]
+    animate_variant: Option<String>,
+
+    /// Exit variant name
+    #[prop(optional)]
+    exit_variant: Option<String>,
+
     /// CSS classes
     #[prop(optional, default = "".to_string())]
     class: String,
@@ -151,12 +167,27 @@ pub fn EventDrivenMotionDiv(
     let (is_dragging, set_dragging) = signal(false);
     let (drag_position, set_drag_position) = signal((0.0, 0.0));
     
-    // Apply initial styles
+    // Apply initial styles (from initial prop or initial_variant)
+    let variants_clone = variants.clone();
+    let initial_variant_clone = initial_variant.clone();
     Effect::new(move |_| {
-        if let Some(element) = node_ref.get()
-            && let Some(initial_values) = &initial {
-                apply_initial_styles(&element, initial_values);
+        if let Some(element) = node_ref.get() {
+            let initial_values = if let Some(variants) = &variants_clone {
+                // Use initial variant if specified
+                if let Some(variant_name) = &initial_variant_clone {
+                    variants.resolve_variant(variant_name, None).unwrap_or_default()
+                } else {
+                    HashMap::new()
+                }
+            } else {
+                // Use initial prop directly
+                initial.clone().unwrap_or_default()
+            };
+
+            if !initial_values.is_empty() {
+                apply_initial_styles(&element, &initial_values);
             }
+        }
     });
     
     // Handle layout animation and shared layout transitions
@@ -235,28 +266,42 @@ pub fn EventDrivenMotionDiv(
         let keyframes = keyframes.clone();
         let stagger_config = stagger_config.clone();
         let spring_config = spring_config.clone();
-        
+        let variants_clone = variants.clone();
+        let animate_variant_clone = animate_variant.clone();
+
         move |_| {
             set_hovered.set(false);
-            
-            if let Some(element) = node_ref.get()
-                && let Some(animate_prop) = &animate {
-                    // Resolve reactive values
-                    let animate_values = resolve_animate_prop(&Some(animate_prop.clone()));
-                    if !animate_values.is_empty() {
-                        trigger_animation(
-                            &animation_manager,
-                            &element,
-                            &animate_values,
-                            &transition,
-                            animation_type.clone(),
-                            &keyframes,
-                            &stagger_config,
-                            &spring_config,
-                            "animate",
-                        );
+
+            if let Some(element) = node_ref.get() {
+                // Resolve animation values (either from animate prop or variants)
+                let animate_values = if let Some(variants) = &variants_clone {
+                    // Use variants if specified
+                    if let Some(variant_name) = &animate_variant_clone {
+                        variants.resolve_variant(variant_name, None).unwrap_or_default()
+                    } else {
+                        HashMap::new()
                     }
+                } else if let Some(animate_prop) = &animate {
+                    // Use animate prop directly
+                    resolve_animate_prop(&Some(animate_prop.clone()))
+                } else {
+                    HashMap::new()
+                };
+
+                if !animate_values.is_empty() {
+                    trigger_animation(
+                        &animation_manager,
+                        &element,
+                        &animate_values,
+                        &transition,
+                        animation_type.clone(),
+                        &keyframes,
+                        &stagger_config,
+                        &spring_config,
+                        "animate",
+                    );
                 }
+            }
         }
     };
     

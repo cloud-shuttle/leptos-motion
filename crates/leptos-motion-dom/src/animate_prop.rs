@@ -11,6 +11,7 @@ pub enum AnimateProp {
     Reactive(Signal<HashMap<String, AnimationValue>>),
     Derived(Memo<HashMap<String, AnimationValue>>),
     Fn(Rc<dyn Fn() -> HashMap<String, AnimationValue>>),
+    Variants(crate::variants::Variants, String), // (variants, variant_name)
 }
 
 /// Extension trait for automatic conversion
@@ -59,13 +60,16 @@ impl AnimateProp {
             AnimateProp::Reactive(signal) => signal.get(),
             AnimateProp::Derived(memo) => memo.get(),
             AnimateProp::Fn(f) => f(),
+            AnimateProp::Variants(variants, variant_name) => {
+                variants.get(variant_name).cloned().unwrap_or_default()
+            },
         }
     }
     
     /// Check if this property is reactive (will change over time)
     pub fn is_reactive(&self) -> bool {
         match self {
-            AnimateProp::Static(_) => false,
+            AnimateProp::Static(_) | AnimateProp::Variants(_, _) => false,
             AnimateProp::Reactive(_) | AnimateProp::Derived(_) | AnimateProp::Fn(_) => true,
         }
     }

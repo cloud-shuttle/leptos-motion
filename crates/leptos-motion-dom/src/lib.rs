@@ -126,6 +126,10 @@ pub use shared_layout_transitions::{
     SharedElementManager,
     SharedLayoutMetrics,
 };
+
+// Variants system
+pub use variants::{Variants as AnimationVariants, IntoVariants, VariantsBuilder};
+
 pub use motion_path::MotionPath;
 
 // Legacy compatibility - use MotionDiv instead

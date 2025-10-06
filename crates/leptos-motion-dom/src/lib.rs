@@ -11,6 +11,7 @@ pub mod animation_handle;
 pub mod css_transition_animation;
 pub mod keyframe_animation;
 pub mod stagger_animation;
+pub mod stagger_animations;
 pub mod spring_animation;
 pub mod event_driven_motion_div;
 pub mod event_handlers;
@@ -133,6 +134,15 @@ pub use variants::{Variants as AnimationVariants, IntoVariants, VariantsBuilder}
 
 // Keyframes system
 pub use keyframes::{Keyframe as AnimationKeyframe, Keyframes, KeyframesBuilder};
+
+// Stagger animations system
+pub use stagger_animations::{
+    StaggerDirection, StaggerPattern, MotionStaggerConfig as AdvancedStaggerConfig,
+    MotionStaggerConfigBuilder as AdvancedStaggerConfigBuilder,
+    MotionStaggerAnimation as AdvancedStaggerAnimation,
+    ElementStaggerConfig,
+    create_motion_stagger_animation, create_uniform_motion_stagger,
+};
 
 // Helper macros are exported at crate root due to #[macro_export]
 

@@ -129,6 +129,10 @@ pub fn EventDrivenMotionDiv(
     #[prop(optional)]
     keyframes: Option<crate::Keyframes>,
 
+    /// Stagger animation configuration
+    #[prop(optional)]
+    stagger: Option<crate::ElementStaggerConfig>,
+
     /// CSS classes
     #[prop(optional, default = "".to_string())]
     class: String,

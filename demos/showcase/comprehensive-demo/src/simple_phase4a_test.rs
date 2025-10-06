@@ -1,10 +1,9 @@
-//! Simple Phase 4A Test
+use leptos_motion_dom::AnimateProp;//! Simple Phase 4A Test
 //!
 //! A minimal test to isolate the rendering issue
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue};
-use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
 use std::rc::Rc;
 

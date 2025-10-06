@@ -1,14 +1,14 @@
-//! Feature Showcase Demo - Comprehensive demonstration of all leptos-motion features
+use leptos_motion_dom::AnimateProp;//! Feature Showcase Demo - Comprehensive demonstration of all leptos-motion features
 //!
 //! This demo showcases:
 //! - Simple API with easy-to-use components
 //! - Independent transforms (x, y, rotateZ, etc.)
-//! - Scroll animations
-//! - Spring physics
-//! - Exit animations (AnimatePresence)
-//! - Gestures (hover, press, drag)
-//! - Layout animations
-//! - Timeline sequences and variants
+// - Scroll animations
+// - Spring physics
+// - Exit animations (AnimatePresence)
+// - Gestures (hover, press, drag)
+// - Layout animations
+// - Timeline sequences and variants
 
 use leptos::prelude::*;
 use leptos_motion_core::*;
@@ -584,7 +584,7 @@ fn LayoutAnimationDemo() -> impl IntoView {
                     view! {
                         <MotionDiv
                             node_ref=NodeRef::new()
-                            _layout=true
+                            layout=true
                             _transition=Transition {
                                 duration: Some(0.5),
                                 ease: Easing::EaseInOut,

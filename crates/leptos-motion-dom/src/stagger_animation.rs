@@ -7,6 +7,7 @@ use crate::animation_trait::{Animation, AnimationError, AnimationResult};
 use crate::animation_handle::AnimationManager;
 use crate::css_transition_animation::CssTransitionAnimation;
 use leptos_motion_core::*;
+use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 use web_sys::Element;

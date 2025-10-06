@@ -1,4 +1,4 @@
-//! Batched Updates Test
+use leptos_motion_dom::AnimateProp;//! Batched Updates Test
 //!
 //! TDD for Phase 5B: Add batched DOM updates with requestAnimationFrame
 
@@ -126,7 +126,7 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                     <h3>"Element 1"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || animate1.get())()
+                        animate=AnimateProp::Reactive(animate1)
                         _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ffa500); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
@@ -138,7 +138,7 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                     <h3>"Element 2"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || animate2.get())()
+                        animate=AnimateProp::Reactive(animate2)
                         _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #4ecdc4, #44a08d); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >
@@ -150,7 +150,7 @@ pub fn BatchedUpdatesTest() -> impl IntoView {
                     <h3>"Element 3"</h3>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || animate3.get())()
+                        animate=AnimateProp::Reactive(animate3)
                         _transition=shared_transition.clone()
                         style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
                     >

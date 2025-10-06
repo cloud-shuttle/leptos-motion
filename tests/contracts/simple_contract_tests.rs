@@ -136,7 +136,7 @@ pub fn test_animation_engine_animate_property() -> SimpleContractTestResult {
     
     let result = std::panic::catch_unwind(|| {
         let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             1.0,
             2.0,
@@ -234,7 +234,7 @@ pub fn test_error_handling() -> SimpleContractTestResult {
         let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test with empty property name
-        engine.animate_property(
+        let _ = engine.animate_property(
             "".to_string(),
             0.0,
             1.0,
@@ -242,7 +242,7 @@ pub fn test_error_handling() -> SimpleContractTestResult {
         );
         
         // Test with NaN values
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             f64::NAN,
             f64::INFINITY,
@@ -257,7 +257,7 @@ pub fn test_error_handling() -> SimpleContractTestResult {
             repeat: leptos_motion_core::RepeatConfig::Never,
             stagger: None,
         };
-        engine.animate_property(
+        let _ = engine.animate_property(
             "opacity".to_string(),
             0.0,
             1.0,

@@ -6,7 +6,7 @@
 //! - Interactive controls for testing
 
 use leptos::prelude::*;
-use leptos_motion_dom::reactive_motion_div::ReactiveMotionDiv;
+use leptos_motion_dom::ReactiveMotionDiv;
 use leptos_motion_dom::*;
 use std::collections::HashMap;
 
@@ -170,8 +170,9 @@ fn App() -> impl IntoView {
                     <div style="border: 2px dashed #ccc; padding: 20px; min-height: 300px; display: flex; align-items: center; justify-content: center;">
                         <ReactiveMotionDiv
                             initial=initial_values
-                            animate=Box::new(move || animate_signal.get())
-                            transition=transition
+                            animate=AnimateProp::Reactive(animate_signal.into())
+                            _transition=transition
+                            node_ref=NodeRef::new()
                         >
                             <div style="
                                 width: 100px;

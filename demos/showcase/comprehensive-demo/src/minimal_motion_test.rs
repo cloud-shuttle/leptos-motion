@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos_motion_dom::AnimateProp;use leptos::prelude::*;
 use leptos_motion_core::{AnimationValue, Easing, RepeatConfig, Transition};
 use leptos_motion_dom::MotionDiv;
 use std::collections::HashMap;
@@ -49,7 +49,7 @@ pub fn MinimalMotionTest() -> impl IntoView {
 
             <MotionDiv
                 node_ref=NodeRef::new()
-                animate=Box::new(move || animation.get())()
+                animate=AnimateProp::Reactive(animation)
                 _transition=transition_config
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >

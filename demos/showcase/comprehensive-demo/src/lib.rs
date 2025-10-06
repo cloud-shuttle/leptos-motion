@@ -1,4 +1,4 @@
-//! Simple Demo - One Leptos Motion Capability
+use leptos_motion_dom::AnimateProp;//! Simple Demo - One Leptos Motion Capability
 //!
 //! Demonstrating basic animation with MotionDiv
 

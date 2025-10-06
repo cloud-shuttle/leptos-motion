@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos_motion_dom::AnimateProp;use leptos::prelude::*;
 use leptos_motion_core::AnimationValue;
 use leptos_motion_dom::ReactiveMotionDiv;
 use std::collections::HashMap;
@@ -152,7 +152,7 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         class="demo-cube rotation-cube".to_string()
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || rotation_animation.get())()
+                        animate=AnimateProp::Reactive(rotation_animation)
                     >
                         <div class="cube-face front">"Front"</div>
                         <div class="cube-face back">"Back"</div>
@@ -168,7 +168,7 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         class="demo-cube scale-cube".to_string()
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || scale_animation.get())()
+                        animate=AnimateProp::Reactive(scale_animation)
                     >
                         <div class="cube-face front">"Scale"</div>
                         <div class="cube-face back">"Scale"</div>
@@ -184,7 +184,7 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         class="demo-cube translation-cube".to_string()
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || translation_animation.get())()
+                        animate=AnimateProp::Reactive(translation_animation)
                     >
                         <div class="cube-face front">"Move"</div>
                         <div class="cube-face back">"Move"</div>
@@ -200,7 +200,7 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         class="demo-cube perspective-cube".to_string()
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || perspective_animation.get())()
+                        animate=AnimateProp::Reactive(perspective_animation)
                     >
                         <div class="cube-face front">"Perspective"</div>
                         <div class="cube-face back">"Perspective"</div>
@@ -216,7 +216,7 @@ pub fn Animation3DDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         class="demo-cube matrix3d-cube".to_string()
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || matrix3d_animation.get())()
+                        animate=AnimateProp::Reactive(matrix3d_animation)
                     >
                         <div class="cube-face front">"Matrix3D"</div>
                         <div class="cube-face back">"Matrix3D"</div>

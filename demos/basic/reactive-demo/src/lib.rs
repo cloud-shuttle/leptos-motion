@@ -25,13 +25,13 @@ fn App() -> impl IntoView {
     let (y_position, set_y_position) = signal(0.0);
 
     // Create reactive animation memo using numeric values for the animation engine
-    let animate_signal = create_memo(move |_| {
+    let animate_signal = Memo::new(move |_| {
         let mut animations = HashMap::new();
-        animations.insert("scale".to_string(), AnimationValue::Number(scale_value.get()));
-        animations.insert("opacity".to_string(), AnimationValue::Number(opacity_value.get()));
-        animations.insert("x".to_string(), AnimationValue::Number(x_value.get()));
-        animations.insert("y".to_string(), AnimationValue::Number(y_value.get() + y_position.get()));
-        animations.insert("rotation".to_string(), AnimationValue::Number(rotation_value.get()));
+        animations.insert("scale".to_string(), AnimationValue::Number(scale.get()));
+        animations.insert("opacity".to_string(), AnimationValue::Number(opacity.get()));
+        animations.insert("x".to_string(), AnimationValue::Number(x_position.get()));
+        animations.insert("y".to_string(), AnimationValue::Number(y_position.get() + y_position.get()));
+        animations.insert("rotation".to_string(), AnimationValue::Number(rotation.get()));
         animations
     });
 

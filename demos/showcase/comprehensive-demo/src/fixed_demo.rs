@@ -1,4 +1,4 @@
-//! Fixed Demo using proven WASM + signals patterns
+use leptos_motion_dom::AnimateProp;//! Fixed Demo using proven WASM + signals patterns
 //!
 //! This demo uses the FixedMotionDiv component to test if the hanging issue is resolved
 

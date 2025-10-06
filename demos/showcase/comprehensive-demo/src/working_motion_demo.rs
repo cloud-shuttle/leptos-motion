@@ -1,4 +1,4 @@
-//! Working Motion Demo - Using the actual leptos-motion API correctly
+use leptos_motion_dom::AnimateProp;//! Working Motion Demo - Using the actual leptos-motion API correctly
 //!
 //! This demo showcases the real leptos-motion features:
 //! - Simple API with MotionDiv components

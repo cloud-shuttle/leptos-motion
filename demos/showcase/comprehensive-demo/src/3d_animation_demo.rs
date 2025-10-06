@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos_motion_dom::AnimateProp;use leptos::prelude::*;
 use leptos_motion_dom::animation_3d_implementation::{
     Animation3D, Perspective3D, Transform3D, utils,
 };

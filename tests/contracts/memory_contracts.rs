@@ -219,7 +219,7 @@ pub fn test_multiple_animations_memory_contract() -> Vec<ContractTestResult> {
         let mut engines = Vec::new();
         for i in 0..num_animations {
             let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-            engine.animate_property(
+            let _ = engine.animate_property(
                 format!("property_{}", i),
                 0.0,
                 1.0,
@@ -267,7 +267,7 @@ pub fn test_memory_cleanup_contract() -> Vec<ContractTestResult> {
             let mut engines = Vec::new();
             for i in 0..1000 {
                 let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-                engine.animate_property(
+                let _ = engine.animate_property(
                     format!("property_{}", i),
                     0.0,
                     1.0,
@@ -311,7 +311,7 @@ pub fn test_memory_growth_pattern_contract() -> Vec<ContractTestResult> {
             // Add engines up to target count
             while engines.len() < *target_count {
                 let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-                engine.animate_property(
+                let _ = engine.animate_property(
                     format!("property_{}", engines.len()),
                     0.0,
                     1.0,
@@ -354,7 +354,7 @@ pub fn test_wasm_memory_contract() -> Vec<ContractTestResult> {
         // Create many animations to test WASM memory management
         for i in 0..500 {
             let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-            engine.animate_property(
+            let _ = engine.animate_property(
                 format!("wasm_property_{}", i),
                 0.0,
                 1.0,
@@ -397,7 +397,7 @@ pub fn test_memory_leak_prevention_contract() -> Vec<ContractTestResult> {
             let mut engines = Vec::new();
             for i in 0..100 {
                 let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-                engine.animate_property(
+                let _ = engine.animate_property(
                     format!("leak_test_property_{}", i),
                     0.0,
                     1.0,

@@ -1,4 +1,4 @@
-//! TDD Test for reactive style application
+use leptos_motion_dom::AnimateProp;//! TDD Test for reactive style application
 //!
 //! This test demonstrates the expected behavior:
 //! 1. A signal controls the animation state

@@ -1,4 +1,4 @@
-//! Unit tests for the comprehensive demo components
+use leptos_motion_dom::AnimateProp;//! Unit tests for the comprehensive demo components
 //!
 //! These tests verify that the demo components render correctly and can be tested
 //! without requiring a full browser environment.

@@ -47,6 +47,12 @@ pub mod integrated_memory_manager;
 pub mod timeline;
 pub mod variants;
 
+// Phase 4: Layout Animations
+pub mod layout_animations;
+
+// Phase 5: Shared Layout Transitions
+pub mod shared_layout_transitions;
+
 #[cfg(feature = "css-animations")]
 pub mod css_animations;
 
@@ -101,6 +107,25 @@ pub use animate_prop::{AnimateProp, IntoAnimateProp, resolve_animate_prop};
 pub use event_driven_motion_div::EventDrivenMotionDiv as MotionDiv;
 pub use event_driven_motion_div::EventDrivenMotionDiv as ReactiveMotionDiv;
 pub use event_driven_motion_div::EventDrivenMotionDiv as DragMotionDiv;
+
+// Layout animation types
+pub use layout_animations::{
+    LayoutConfig,
+    LayoutType,
+    LayoutAnimationManager,
+    LayoutPerformanceMetrics,
+};
+
+// Shared layout transition types
+pub use shared_layout_transitions::{
+    SharedLayoutConfig,
+    SharedTransitionType,
+    LayoutAnimationConfig,
+    SharedElement,
+    ElementState,
+    SharedElementManager,
+    SharedLayoutMetrics,
+};
 pub use motion_path::MotionPath;
 
 // Legacy compatibility - use MotionDiv instead

@@ -149,7 +149,7 @@ pub fn test_animation_engine_error_contracts() -> Vec<ContractTestResult> {
         let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // Test with empty property name
-        engine.animate_property(
+        let _ = engine.animate_property(
             "".to_string(),
             0.0,
             1.0,
@@ -158,7 +158,7 @@ pub fn test_animation_engine_error_contracts() -> Vec<ContractTestResult> {
         // Should not panic, but handle gracefully
         
         // Test with invalid property values
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             f64::NAN,
             f64::INFINITY,
@@ -174,7 +174,7 @@ pub fn test_animation_engine_error_contracts() -> Vec<ContractTestResult> {
             repeat: leptos_motion_core::RepeatConfig::Never,
             stagger: None,
         };
-        engine.animate_property(
+        let _ = engine.animate_property(
             "opacity".to_string(),
             0.0,
             1.0,
@@ -336,7 +336,7 @@ pub fn test_repeat_config_error_contracts() -> Vec<ContractTestResult> {
         // All transitions should be usable
         for transition in transitions {
             let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-            engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
+            let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
             // Should not panic
         }
     });
@@ -370,7 +370,7 @@ pub fn test_cross_crate_error_propagation() -> Vec<ContractTestResult> {
         
         // Use in DOM layer - should handle gracefully
         let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
-        engine.animate_property("scale".to_string(), 1.0, 2.0, invalid_transition);
+        let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, invalid_transition);
         
         // Should not panic, error should be handled gracefully
     });
@@ -396,7 +396,7 @@ pub fn test_error_recovery_contracts() -> Vec<ContractTestResult> {
         let mut engine = leptos_motion_core::SimplifiedAnimationEngine::new();
         
         // First, cause an error with invalid input
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             f64::NAN,
             f64::INFINITY,
@@ -404,7 +404,7 @@ pub fn test_error_recovery_contracts() -> Vec<ContractTestResult> {
         );
         
         // Then, provide valid input - system should recover
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             1.0,
             2.0,
@@ -448,7 +448,7 @@ pub fn test_error_message_consistency() -> Vec<ContractTestResult> {
         ];
         
         for (prop, start, end) in invalid_inputs {
-            engine.animate_property(
+            let _ = engine.animate_property(
                 prop.to_string(),
                 start,
                 end,

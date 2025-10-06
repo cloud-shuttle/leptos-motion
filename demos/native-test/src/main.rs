@@ -42,25 +42,25 @@ pub fn NativeTestDemo() -> impl IntoView {
                         node_ref=NodeRef::new()
                         class="test-box".to_string()
                         style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); width: 150px; height: 150px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;".to_string()
-                        initial=HashMap::from([
+                        initial=AnimateProp::Static(HashMap::from([
                             ("x".to_string(), AnimationValue::Pixels(0.0)),
                             ("y".to_string(), AnimationValue::Pixels(0.0)),
                             ("opacity".to_string(), AnimationValue::Number(1.0)),
                             ("scale".to_string(), AnimationValue::Number(1.0)),
-                        ])
-                        animate=if is_animated.get() { 
+                        ]))
+                        animate=AnimateProp::Static(if is_animated.get() {
                             HashMap::from([
                                 ("x".to_string(), AnimationValue::Pixels(200.0)),
                                 ("y".to_string(), AnimationValue::Pixels(-100.0)),
                                 ("opacity".to_string(), AnimationValue::Number(0.8)),
                                 ("scale".to_string(), AnimationValue::Number(1.2)),
                             ])
-                        } else { HashMap::new() }
-                        while_hover=HashMap::from([
+                        } else { HashMap::new() })
+                        while_hover=AnimateProp::Static(HashMap::from([
                             ("scale".to_string(), AnimationValue::Number(1.1)),
                             ("rotate".to_string(), AnimationValue::Degrees(5.0)),
-                        ])
-                        while_tap=HashMap::from([
+                        ]))
+                        while_tap=AnimateProp::Static(HashMap::from([
                             ("scale".to_string(), AnimationValue::Number(0.95)),
                         ])
                         _transition=Transition {

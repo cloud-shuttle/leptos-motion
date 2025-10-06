@@ -24,14 +24,15 @@ async fn test_animation_duration_accuracy() {
             <ReactiveMotionDiv
                 class="duration-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.0)))
-                  transition=Transition {
+                animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.0)))
+                _transition=Transition {
                     duration: Some(1.0), // 1 second
                     ease: Easing::Linear,
                     delay: None,
                     repeat: RepeatConfig::Never,
                     stagger: None,
                 }
+                node_ref=NodeRef::new()
             >
                 "Duration test"
             </ReactiveMotionDiv>
@@ -70,14 +71,15 @@ async fn test_frame_rate_consistency() {
             <ReactiveMotionDiv
                 class="framerate-test".to_string()
                 initial=create_animation_target("transform", AnimationValue::String("translateX(0px)".to_string()))
-                animate=Box::new(|| create_animation_target("transform", AnimationValue::String("translateX(100px)".to_string())))
-                  transition=Transition {
+                animate=AnimateProp::Static(create_animation_target("transform", AnimationValue::String("translateX(100px)".to_string())))
+                _transition=Transition {
                     duration: Some(2.0), // 2 seconds for better measurement
                     ease: Easing::Linear,
                     delay: None,
                     repeat: RepeatConfig::Never,
                     stagger: None,
                 }
+                node_ref=NodeRef::new()
             >
                 "Frame rate test"
             </ReactiveMotionDiv>
@@ -150,7 +152,6 @@ async fn test_easing_function_accuracy() {
                         stagger: None,
                     }
                     node_ref=NodeRef::new()
-                    children=()
                 >
                     {format!("Easing test {}", i)}
                 </ReactiveMotionDiv>
@@ -181,7 +182,6 @@ async fn test_animation_delay_precision() {
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
                 animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.0)))
                 node_ref=NodeRef::new()
-                children=()
             >
                 "Delay test"
             </ReactiveMotionDiv>
@@ -228,7 +228,6 @@ async fn test_repeat_animation_timing() {
                     stagger: None,
                 }
                 node_ref=NodeRef::new()
-                children=()
             >
                 "Repeat test"
             </ReactiveMotionDiv>

@@ -1,4 +1,4 @@
-//! Fixed Reactive Demo
+use leptos_motion_dom::AnimateProp;//! Fixed Reactive Demo
 //!
 //! A demo that uses the fixed ReactiveMotionDiv component to showcase our TDD system
 
@@ -137,7 +137,7 @@ pub fn FixedReactiveDemo() -> impl IntoView {
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
                         initial=initial_target.clone()
-                        animate=Box::new(move || animate_target())()
+                        animate=AnimateProp::Static(Box::new(move || animate_target()))()
                         style="position: absolute; top: 50px; left: 50px;".to_string()
                     >
                         <div style="

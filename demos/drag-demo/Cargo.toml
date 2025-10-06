@@ -1,0 +1,14 @@
+[package]
+name = "drag-demo"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+leptos-motion = { path = "../../crates/leptos-motion" }
+wasm-bindgen = "0.2"
+web-sys = "0.3"
+console_error_panic_hook = "0.1"

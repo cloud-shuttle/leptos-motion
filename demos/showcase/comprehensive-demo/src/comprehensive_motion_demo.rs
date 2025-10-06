@@ -1,4 +1,4 @@
-//! Comprehensive Motion Demo - Showcasing all leptos-motion features
+use leptos_motion_dom::AnimateProp;//! Comprehensive Motion Demo - Showcasing all leptos-motion features
 //!
 //! This demo showcases:
 //! - Simple API with easy-to-use components

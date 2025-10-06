@@ -1,4 +1,4 @@
-//! Minimal Comprehensive Demo - Just the basic structure
+use leptos_motion_dom::AnimateProp;//! Minimal Comprehensive Demo - Just the basic structure
 //!
 //! This demo provides the absolute minimum structure that tests expect
 //! without any complex state management that might cause hanging.

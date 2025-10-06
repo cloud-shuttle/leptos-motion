@@ -1,4 +1,4 @@
-//! Test file to verify the animation reactivity fix
+use leptos_motion_dom::AnimateProp;//! Test file to verify the animation reactivity fix
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};

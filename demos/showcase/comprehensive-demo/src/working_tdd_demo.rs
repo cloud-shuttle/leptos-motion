@@ -1,4 +1,4 @@
-//! Working TDD Demo
+use leptos_motion_dom::AnimateProp;//! Working TDD Demo
 //!
 //! A demo that shows our TDD reactive animation system working with basic HTML elements
 

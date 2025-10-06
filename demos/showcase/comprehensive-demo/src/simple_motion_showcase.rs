@@ -1,4 +1,4 @@
-//! Simple Motion Showcase - Demonstrating working animations
+use leptos_motion_dom::AnimateProp;//! Simple Motion Showcase - Demonstrating working animations
 //!
 //! This demo showcases the working reactive animation approach we developed:
 //! - Simple API with reactive styles

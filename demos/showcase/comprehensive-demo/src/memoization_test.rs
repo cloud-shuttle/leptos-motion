@@ -1,4 +1,4 @@
-//! Memoization Test
+use leptos_motion_dom::AnimateProp;//! Memoization Test
 //!
 //! TDD for Phase 5A: Implement memoization with create_memo
 
@@ -78,7 +78,7 @@ pub fn MemoizationTest() -> impl IntoView {
                     <p>"Counter: " {counter} " | Expensive: " {move || format!("{:.1}", expensive_value.get())}</p>
                     <ReactiveMotionDiv
                         node_ref=NodeRef::new()
-                        animate=Box::new(move || memoized_animate.get())()
+                        animate=AnimateProp::Reactive(memoized_animate)
                         _transition=memoized_transition.get()
                         style=memoized_style.get()
                     >

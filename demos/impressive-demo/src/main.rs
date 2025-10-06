@@ -397,7 +397,7 @@ fn ParticleExplosionDemo(is_playing: bool) -> impl IntoView {
                 ));
             }
             set_particles.set(new_particles);
-            
+
             let interval = set_interval_with_handle(move || {
                 set_particles.update(|particles| {
                     for (x, y, vx, vy, hue) in particles.iter_mut() {
@@ -409,11 +409,15 @@ fn ParticleExplosionDemo(is_playing: bool) -> impl IntoView {
                     }
                 });
             }, std::time::Duration::from_millis(16));
-            
+
             move || {
                 if let Ok(handle) = interval {
                     handle.clear();
                 }
+            }
+        } else {
+            move || {
+                // No cleanup needed
             }
         }
     });

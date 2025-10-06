@@ -1,4 +1,4 @@
-//! Simple Div Test
+use leptos_motion_dom::AnimateProp;//! Simple Div Test
 //!
 //! A minimal test to see if regular divs work
 

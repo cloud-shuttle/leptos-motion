@@ -59,7 +59,7 @@ fn test_core_types_in_dom() -> Vec<ContractTestResult> {
             stagger: None,
         };
         
-        engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
+        let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
     });
     
     let result = ContractTestResult {
@@ -84,7 +84,7 @@ fn test_core_performance_contracts_in_dom() -> Vec<ContractTestResult> {
         || {
             let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
             let transition = leptos_motion_core::Transition::default();
-            engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
+            let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
         },
         max_duration,
         "DOM_animation_engine_creation",
@@ -121,7 +121,7 @@ fn test_core_error_handling_in_dom() -> Vec<ContractTestResult> {
         };
         
         // This should not panic, but handle the error gracefully
-        engine.animate_property("scale".to_string(), 1.0, 2.0, invalid_transition);
+        let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, invalid_transition);
     });
     
     let result = ContractTestResult {
@@ -259,7 +259,7 @@ pub fn test_data_flow_contracts() -> Vec<ContractTestResult> {
         
         // Use in DOM layer
         let mut engine = leptos_motion_dom::animation_engine::DomAnimationEngine::new();
-        engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
+        let _ = engine.animate_property("scale".to_string(), 1.0, 2.0, transition);
         
         // Verify data integrity is maintained
         let values = engine.get_all_values();

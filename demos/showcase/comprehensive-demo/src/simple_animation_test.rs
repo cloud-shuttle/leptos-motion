@@ -1,4 +1,4 @@
-//! Simple animation test to verify that animations work
+use leptos_motion_dom::AnimateProp;//! Simple animation test to verify that animations work
 
 use leptos::prelude::*;
 use leptos_motion_core::{AnimationTarget, AnimationValue, Easing, RepeatConfig, Transition};

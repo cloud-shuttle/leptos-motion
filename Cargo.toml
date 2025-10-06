@@ -19,6 +19,8 @@ members = [
     "demos/spectacular-demo",
     "demos/impressive-demo",
     "demos/path-drawing-demo",
+    "demos/drag-demo",
+    "demos/shared-layout-demo",
     "examples/e-commerce-gallery",
     "examples/wasm-performance-demo",
     "examples/advanced-gestures",

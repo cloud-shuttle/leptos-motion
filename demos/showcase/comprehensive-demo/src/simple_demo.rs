@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos_motion_dom::AnimateProp;use leptos::prelude::*;
 use leptos_motion_core::AnimationValue;
 use leptos_motion_dom::{AnimateProp, ReactiveMotionDiv};
 use std::collections::HashMap;

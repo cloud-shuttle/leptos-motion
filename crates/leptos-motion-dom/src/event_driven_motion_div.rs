@@ -18,6 +18,10 @@ use crate::{
     Transition,
     AnimateProp,
     resolve_animate_prop,
+    LayoutAnimationManager,
+    LayoutConfig,
+    SharedElementManager,
+    SharedLayoutConfig,
 };
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -93,9 +97,21 @@ pub fn EventDrivenMotionDiv(
     #[prop(optional)]
     drag: Option<DragConfig>,
     
-    /// Layout animation
+    /// Enable layout animations
     #[prop(optional, default = false)]
-    _layout: bool,
+    layout: bool,
+
+    /// Layout animation configuration
+    #[prop(optional)]
+    layout_config: Option<crate::LayoutConfig>,
+
+    /// Layout ID for shared element transitions
+    #[prop(optional)]
+    layout_id: Option<String>,
+
+    /// Shared layout configuration
+    #[prop(optional)]
+    shared_layout: Option<crate::SharedLayoutConfig>,
     
     /// CSS classes
     #[prop(optional, default = "".to_string())]
@@ -114,7 +130,21 @@ pub fn EventDrivenMotionDiv(
     // Get animation manager from context or create new one
     let animation_manager = use_context::<Rc<RefCell<OptimizedAnimationManager>>>()
         .unwrap_or_else(|| Rc::new(RefCell::new(OptimizedAnimationManager::new())));
-    
+
+    // Create layout animation manager if layout animations are enabled
+    let layout_manager = if layout {
+        Some(Rc::new(RefCell::new(crate::LayoutAnimationManager::new())))
+    } else {
+        None
+    };
+
+    // Create shared element manager for shared layout transitions
+    let shared_manager = if layout_id.is_some() || shared_layout.is_some() {
+        layout_manager.as_ref().map(|lm| Rc::new(RefCell::new(crate::SharedElementManager::new(lm.clone()))))
+    } else {
+        None
+    };
+
     // State management
     let (is_hovered, set_hovered) = signal(false);
     let (is_tapped, set_tapped) = signal(false);
@@ -129,8 +159,12 @@ pub fn EventDrivenMotionDiv(
             }
     });
     
-    // Handle layout animation
-    if _layout {
+    // Handle layout animation and shared layout transitions
+    if layout || layout_id.is_some() || shared_layout.is_some() {
+        let layout_config = layout_config.unwrap_or_default();
+        let shared_config = shared_layout.unwrap_or_default();
+        let layout_manager_clone = layout_manager.clone();
+        let shared_manager_clone = shared_manager.clone();
         Effect::new(move |_| {
             if let Some(element) = node_ref.get()
                 && let Some(html_element) = element.dyn_ref::<web_sys::HtmlElement>() {
@@ -138,6 +172,27 @@ pub fn EventDrivenMotionDiv(
                     // Enable layout animations
                     let _ = style.set_property("will-change", "transform, opacity");
                     let _ = style.set_property("transform-origin", "center center");
+
+                    // Register element for layout animations
+                    if let Some(layout_manager) = &layout_manager_clone {
+                        let element_id = format!("motion-div-{:p}", &*layout_manager.as_ref());
+                        let mut manager = layout_manager.borrow_mut();
+                        let _ = manager.register_element(
+                            element_id,
+                            &html_element,
+                            layout_config.clone(),
+                        );
+                    }
+
+                    // Register element for shared layout transitions
+                    if let (Some(shared_manager), Some(layout_id)) = (&shared_manager_clone, &layout_id) {
+                        let mut manager = shared_manager.borrow_mut();
+                        let _ = manager.register_element(
+                            layout_id.clone(),
+                            html_element.clone().dyn_into().unwrap(),
+                            shared_config.clone(),
+                        );
+                    }
                 }
         });
     }

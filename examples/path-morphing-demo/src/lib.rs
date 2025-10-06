@@ -181,12 +181,11 @@ fn PathMorphingDemo() -> impl IntoView {
         
         if animating && progress > 0.0 {
             let next_idx = (current_idx + 1) % paths.len();
-            
+
             // Use the simple morph function - it handles everything automatically
             let mut morpher = PathMorpher::new();
             let interpolated_path = morpher.morph(&paths[current_idx], &paths[next_idx], progress);
             return interpolated_path.to_data();
-            }
         }
         
         // Return current path when not animating

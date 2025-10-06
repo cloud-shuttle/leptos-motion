@@ -1,0 +1,9 @@
+[build]
+target = "index.html"
+dist = "dist"
+filehash = false
+
+[serve]
+address = "127.0.0.1"
+port = 8084
+mime_types = { ".wasm" = "application/wasm", ".js" = "application/javascript" }

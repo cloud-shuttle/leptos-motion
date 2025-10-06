@@ -200,7 +200,7 @@ fn test_animation_engine_contract() -> Vec<ContractTestResult> {
     
     // Test animate_property method
     let (_, duration) = utils::measure_execution_time(|| {
-        engine.animate_property(
+        let _ = engine.animate_property(
             "scale".to_string(),
             1.0,
             2.0,

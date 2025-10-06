@@ -1,4 +1,4 @@
-//! AnimateFn Test
+use leptos_motion_dom::AnimateProp;//! AnimateFn Test
 //!
 //! A minimal test to see if animate_fn works
 
@@ -23,7 +23,7 @@ pub fn AnimateFnTest() -> impl IntoView {
             <p>"Testing if animate prop works (using signal-based instead of function-based)"</p>
             <ReactiveMotionDiv
                 node_ref=NodeRef::new()
-                animate=Box::new(move || animate_target.clone())()
+                animate=AnimateProp::Static(Box::new(move || animate_target.clone()))()
                 style="width: 100px; height: 100px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;".to_string()
             >
                 "Function"

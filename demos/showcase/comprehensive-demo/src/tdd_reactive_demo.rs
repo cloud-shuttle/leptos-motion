@@ -1,4 +1,4 @@
-//! TDD Reactive Animation Demo
+use leptos_motion_dom::AnimateProp;//! TDD Reactive Animation Demo
 //!
 //! This demo showcases our TDD-implemented reactive animation system
 //! with proper signal tracking and effect dependencies.

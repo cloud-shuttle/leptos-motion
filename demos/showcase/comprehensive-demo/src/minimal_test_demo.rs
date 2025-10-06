@@ -1,4 +1,4 @@
-//! Minimal Test Demo
+use leptos_motion_dom::AnimateProp;//! Minimal Test Demo
 //!
 //! A minimal demo to test if basic Leptos rendering works
 

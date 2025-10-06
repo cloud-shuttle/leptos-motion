@@ -166,14 +166,16 @@ fn InteractiveGalleryDemo(is_playing: bool) -> impl IntoView {
             let interval = set_interval_with_handle(move || {
                 set_selected_item.update(|i| (*i + 1) % gallery_items.len());
             }, std::time::Duration::from_millis(2000));
-            
+
             move || {
                 if let Ok(handle) = interval {
                     handle.clear();
                 }
             }
         } else {
-            move || {}
+            move || {
+                // No cleanup needed
+            }
         }
     });
     
@@ -447,7 +449,7 @@ fn ParticleExplosionDemo(is_playing: bool) -> impl IntoView {
                     <MotionDiv
                         animate=AnimateProp::Fn(std::rc::Rc::new(animate_values))
                         node_ref=node_ref
-                        children=()
+                        children=Box::new(|| view! { "" })
                         style=format!("
                             position: absolute;
                             width: 4px;
@@ -581,7 +583,7 @@ fn ConstellationDemo(is_playing: bool) -> impl IntoView {
                     <MotionDiv
                         animate=AnimateProp::Fn(std::rc::Rc::new(animate_values))
                         node_ref=node_ref
-                        children=()
+                        children=Box::new(|| view! { "" })
                         style=format!("
                             position: absolute;
                             width: {}px;

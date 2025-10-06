@@ -1,4 +1,4 @@
-//! Signal-Based Demo using proven WASM + signals patterns
+use leptos_motion_dom::AnimateProp;//! Signal-Based Demo using proven WASM + signals patterns
 //!
 //! This demo follows the exact patterns from the user's guide to ensure
 //! no browser hanging issues occur.

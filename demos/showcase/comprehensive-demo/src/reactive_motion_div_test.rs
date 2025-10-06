@@ -1,4 +1,4 @@
-//! ReactiveMotionDiv Test
+use leptos_motion_dom::AnimateProp;//! ReactiveMotionDiv Test
 //!
 //! A minimal test to see if ReactiveMotionDiv works
 

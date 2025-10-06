@@ -30,6 +30,12 @@ impl IntoAnimateProp for Signal<HashMap<String, AnimationValue>> {
     }
 }
 
+impl IntoAnimateProp for leptos::prelude::ReadSignal<HashMap<String, AnimationValue>> {
+    fn into_animate_prop(self) -> AnimateProp {
+        AnimateProp::Reactive(self.into())
+    }
+}
+
 impl IntoAnimateProp for Memo<HashMap<String, AnimationValue>> {
     fn into_animate_prop(self) -> AnimateProp {
         AnimateProp::Derived(self)

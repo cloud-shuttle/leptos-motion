@@ -1,4 +1,4 @@
-//! TransitionConfig Test
+use leptos_motion_dom::AnimateProp;//! TransitionConfig Test
 //!
 //! TDD for Phase 4B: Add TransitionConfig for timing controls
 

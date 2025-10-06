@@ -1,4 +1,4 @@
-//! Simple Comprehensive Demo - Basic structure without complex animations
+use leptos_motion_dom::AnimateProp;//! Simple Comprehensive Demo - Basic structure without complex animations
 //!
 //! This demo provides the basic structure that tests expect without
 //! complex animations that might cause browser hanging.

@@ -25,10 +25,10 @@ async fn test_wasm_performance_characteristics() {
             <ReactiveMotionDiv
                 class="performance-test".to_string()
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
-                animate=Box::new(|| create_animation_target("opacity", AnimationValue::Number(0.5)))
-            >
-                "Performance test"
-            </ReactiveMotionDiv>
+                animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.5)))
+                node_ref=NodeRef::new()
+                children=Box::new(|| view! { "Performance test" })
+            />
         </div>
     };
 
@@ -62,10 +62,10 @@ async fn test_browser_context_compatibility() {
             <ReactiveMotionDiv
                 class="context-test".to_string()
                 initial=create_animation_target("transform", AnimationValue::String("translateX(0px)".to_string()))
-                animate=Box::new(|| create_animation_target("transform", AnimationValue::String("translateX(100px)".to_string())))
-            >
-                "Context test"
-            </ReactiveMotionDiv>
+                animate=AnimateProp::Static(create_animation_target("transform", AnimationValue::String("translateX(100px)".to_string())))
+                node_ref=NodeRef::new()
+                children=Box::new(|| view! { "Context test" })
+            />
         </div>
     };
 
@@ -108,10 +108,8 @@ async fn test_wasm_memory_management() {
                     initial=create_animation_target("opacity", AnimationValue::Number(1.0))
                     animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.0)))
                     node_ref=NodeRef::new()
-                    children=()
-                >
-                    {format!("Memory test {}", i)}
-                </ReactiveMotionDiv>
+                    children=Box::new(move || view! { format!("Memory test {}", i) })
+                />
             </div>
         };
 
@@ -149,10 +147,8 @@ async fn test_browser_event_handling() {
                     }
                 }))
                 node_ref=NodeRef::new()
-                children=|| {}
-            >
-                "Click me"
-            </ReactiveMotionDiv>
+                children=Box::new(|| view! { "Click me" })
+            />
         </div>
     };
 
@@ -186,10 +182,8 @@ async fn test_wasm_error_handling() {
                 initial=create_animation_target("opacity", AnimationValue::Number(1.0))
                 animate=AnimateProp::Static(create_animation_target("opacity", AnimationValue::Number(0.5)))
                 node_ref=NodeRef::new()
-                children=|| {}
-            >
-                "Error test"
-            </ReactiveMotionDiv>
+                children=Box::new(|| view! { "Error test" })
+            />
         </div>
     };
 

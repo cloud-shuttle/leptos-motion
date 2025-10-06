@@ -1,4 +1,4 @@
-//! Simple Working Demo
+use leptos_motion_dom::AnimateProp;//! Simple Working Demo
 //!
 //! A minimal working demo that actually renders content
 

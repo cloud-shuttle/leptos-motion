@@ -1,4 +1,4 @@
-//! Simplified Comprehensive Motion Demo - Showcasing leptos-motion features without problematic MotionDiv
+use leptos_motion_dom::AnimateProp;//! Simplified Comprehensive Motion Demo - Showcasing leptos-motion features without problematic MotionDiv
 //!
 //! This demo showcases the basic structure and layout without the problematic MotionDiv components
 //! that cause browser hanging issues.

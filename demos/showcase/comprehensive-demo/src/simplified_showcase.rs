@@ -1,6 +1,5 @@
-use leptos::prelude::*;
+use leptos_motion_dom::AnimateProp;use leptos::prelude::*;
 use leptos_motion::*;
-use leptos_motion_dom::AnimateProp;
 use std::collections::HashMap;
 
 /// Simplified Motion Showcase Demo

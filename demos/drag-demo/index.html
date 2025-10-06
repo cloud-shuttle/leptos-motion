@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>🎯 Drag Demo - Leptos Motion</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+<script type="module">
+import init, * as bindings from '/drag-demo.js';
+const wasm = await init({ module_or_path: '/drag-demo_bg.wasm' });
+
+window.wasmBindings = bindings;
+
+console.log('🎯 Checking for run_app function...');
+if (typeof bindings.run_app === 'function') {
+    console.log('✅ run_app function found, calling it...');
+    bindings.run_app();
+    console.log('✅ Leptos drag demo started successfully!');
+} else {
+    console.error('❌ run_app function not found in bindings');
+    console.log('Available bindings:', Object.keys(bindings));
+}
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+</script>

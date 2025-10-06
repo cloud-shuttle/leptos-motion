@@ -46,6 +46,7 @@ pub mod memory_management;
 pub mod integrated_memory_manager;
 pub mod timeline;
 pub mod variants;
+pub mod keyframes;
 
 // Phase 4: Layout Animations
 pub mod layout_animations;
@@ -129,6 +130,11 @@ pub use shared_layout_transitions::{
 
 // Variants system
 pub use variants::{Variants as AnimationVariants, IntoVariants, VariantsBuilder};
+
+// Keyframes system
+pub use keyframes::{Keyframe as AnimationKeyframe, Keyframes, KeyframesBuilder};
+
+// Helper macros are exported at crate root due to #[macro_export]
 
 pub use motion_path::MotionPath;
 

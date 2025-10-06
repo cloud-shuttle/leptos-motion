@@ -12,6 +12,7 @@ pub enum AnimateProp {
     Derived(Memo<HashMap<String, AnimationValue>>),
     Fn(Rc<dyn Fn() -> HashMap<String, AnimationValue>>),
     Variants(crate::variants::Variants, String), // (variants, variant_name)
+    Keyframes(crate::keyframes::Keyframes), // keyframes sequence
 }
 
 /// Extension trait for automatic conversion
@@ -43,12 +44,18 @@ impl IntoAnimateProp for Memo<HashMap<String, AnimationValue>> {
     }
 }
 
-impl<F> IntoAnimateProp for F 
-where 
+impl<F> IntoAnimateProp for F
+where
     F: Fn() -> HashMap<String, AnimationValue> + 'static
 {
     fn into_animate_prop(self) -> AnimateProp {
         AnimateProp::Fn(Rc::new(self))
+    }
+}
+
+impl IntoAnimateProp for crate::keyframes::Keyframes {
+    fn into_animate_prop(self) -> AnimateProp {
+        AnimateProp::Keyframes(self)
     }
 }
 
@@ -63,14 +70,27 @@ impl AnimateProp {
             AnimateProp::Variants(variants, variant_name) => {
                 variants.get(variant_name).cloned().unwrap_or_default()
             },
+            AnimateProp::Keyframes(_) => {
+                // Keyframes are handled specially by the animation engine
+                // This returns empty as keyframes are processed differently
+                HashMap::new()
+            },
         }
     }
     
     /// Check if this property is reactive (will change over time)
     pub fn is_reactive(&self) -> bool {
         match self {
-            AnimateProp::Static(_) | AnimateProp::Variants(_, _) => false,
+            AnimateProp::Static(_) | AnimateProp::Variants(_, _) | AnimateProp::Keyframes(_) => false,
             AnimateProp::Reactive(_) | AnimateProp::Derived(_) | AnimateProp::Fn(_) => true,
+        }
+    }
+
+    /// Get keyframes if this is a keyframes animation
+    pub fn keyframes(&self) -> Option<&crate::keyframes::Keyframes> {
+        match self {
+            AnimateProp::Keyframes(keyframes) => Some(keyframes),
+            _ => None,
         }
     }
 }

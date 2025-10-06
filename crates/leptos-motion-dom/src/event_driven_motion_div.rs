@@ -77,10 +77,6 @@ pub fn EventDrivenMotionDiv(
     #[prop(optional, default = AnimationType::Css)]
     animation_type: AnimationType,
     
-    /// Keyframes for keyframe animations
-    #[prop(optional)]
-    keyframes: Option<Vec<Keyframe>>,
-    
     /// Stagger configuration
     #[prop(optional)]
     stagger_config: Option<EventStaggerConfig>,
@@ -128,6 +124,10 @@ pub fn EventDrivenMotionDiv(
     /// Exit variant name
     #[prop(optional)]
     exit_variant: Option<String>,
+
+    /// Keyframes animation sequence
+    #[prop(optional)]
+    keyframes: Option<crate::Keyframes>,
 
     /// CSS classes
     #[prop(optional, default = "".to_string())]
@@ -249,7 +249,7 @@ pub fn EventDrivenMotionDiv(
                         hover_values,
                         &transition,
                         animation_type.clone(),
-                        &keyframes,
+                        &None, // keyframes handled separately
                         &stagger_config,
                         &spring_config,
                         "hover",
@@ -295,7 +295,7 @@ pub fn EventDrivenMotionDiv(
                         &animate_values,
                         &transition,
                         animation_type.clone(),
-                        &keyframes,
+                        &None, // keyframes handled separately
                         &stagger_config,
                         &spring_config,
                         "animate",
@@ -326,7 +326,7 @@ pub fn EventDrivenMotionDiv(
                         tap_values,
                         &transition,
                         animation_type.clone(),
-                        &keyframes,
+                        &None, // keyframes handled separately
                         &stagger_config,
                         &spring_config,
                         "tap",
@@ -369,7 +369,7 @@ pub fn EventDrivenMotionDiv(
                             drag_values,
                             &transition,
                             animation_type.clone(),
-                            &keyframes,
+                            &None, // keyframes handled separately
                             &stagger_config,
                             &spring_config,
                             "drag",
@@ -403,7 +403,7 @@ pub fn EventDrivenMotionDiv(
                             &animate_values,
                             &transition,
                             animation_type.clone(),
-                            &keyframes,
+                            &None, // keyframes handled separately
                             &stagger_config,
                             &spring_config,
                             "animate",

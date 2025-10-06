@@ -12,6 +12,7 @@ pub mod css_transition_animation;
 pub mod keyframe_animation;
 pub mod stagger_animation;
 pub mod stagger_animations;
+pub mod timeline_animations;
 pub mod spring_animation;
 pub mod event_driven_motion_div;
 pub mod event_handlers;
@@ -142,6 +143,12 @@ pub use stagger_animations::{
     MotionStaggerAnimation as AdvancedStaggerAnimation,
     ElementStaggerConfig,
     create_motion_stagger_animation, create_uniform_motion_stagger,
+};
+
+// Timeline animations system
+pub use timeline_animations::{
+    Timeline, TimelineTrack, TimelineEvent, TimelineEventType, TimelineState,
+    TimelineBuilder, TimelineManager, create_timeline_manager,
 };
 
 // Helper macros are exported at crate root due to #[macro_export]

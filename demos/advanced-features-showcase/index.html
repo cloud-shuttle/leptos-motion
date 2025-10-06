@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Leptos Motion Advanced Features Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .showcase-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .showcase-header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .demo-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .demo-section {
+            text-align: center;
+        }
+
+        .demo-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .demo-section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .demo-controls button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .demo-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .demo-visualization {
+            margin: 40px 0;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Variants Demo */
+        .variant-button {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Keyframes Demo */
+        .keyframes-track {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .keyframe-ball {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Stagger Demo */
+        .stagger-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .stagger-item {
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Timeline Demo */
+        .timeline-track {
+            width: 100%;
+            height: 150px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-progress {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .timeline-object {
+            font-size: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Combined Demo */
+        .combined-showcase {
+            width: 100%;
+        }
+
+        .combined-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .combined-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.6s ease;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .code-example {
+            margin-top: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .code-example pre {
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        .code-example code {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .showcase-header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-controls button {
+                width: 200px;
+            }
+
+            .combined-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <script type="module">
+        import init, { run_app } from './pkg/advanced_features_showcase.js';
+        await init();
+        run_app();
+    </script>
+</body>
+</html>

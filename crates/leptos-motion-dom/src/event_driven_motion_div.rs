@@ -133,6 +133,10 @@ pub fn EventDrivenMotionDiv(
     #[prop(optional)]
     stagger: Option<crate::ElementStaggerConfig>,
 
+    /// Timeline configuration for complex orchestration
+    #[prop(optional)]
+    timeline: Option<crate::Timeline>,
+
     /// CSS classes
     #[prop(optional, default = "".to_string())]
     class: String,
@@ -431,7 +435,64 @@ pub fn EventDrivenMotionDiv(
                     }
                 }
     });
-    
+
+    // Handle timeline animations
+    if let Some(timeline) = timeline {
+        let timeline_clone = Rc::new(timeline);
+        let animation_manager = animation_manager.clone();
+        let transition = _transition.clone();
+        let animation_type = animation_type.clone();
+        let stagger_config = stagger_config.clone();
+        let spring_config = spring_config.clone();
+
+        Effect::new(move |_| {
+            let timeline = (*timeline_clone).clone();
+
+            if timeline.state == crate::TimelineState::Playing {
+                if let Some(element) = node_ref.get() {
+                    // Get active tracks at current timeline time
+                    let active_tracks: Vec<_> = timeline.get_active_tracks();
+
+                    for track in active_tracks {
+                        // Apply track properties with progress
+                        let progress = track.get_progress_at(timeline.current_time);
+                        let mut animated_properties = track.properties.clone();
+
+                        // Apply progress-based interpolation for numeric values
+                        for (property, value) in &mut animated_properties {
+                            match value {
+                                crate::AnimationValue::Number(num) => {
+                                    // Simple linear interpolation based on progress
+                                    // In a real implementation, this would use easing functions
+                                    *num = *num * progress;
+                                }
+                                crate::AnimationValue::Pixels(px) => {
+                                    *px = *px * progress;
+                                }
+                                // Other value types would need similar handling
+                                _ => {}
+                            }
+                        }
+
+                        if !animated_properties.is_empty() {
+                            trigger_animation(
+                                &animation_manager,
+                                &element,
+                                &animated_properties,
+                                &transition,
+                                animation_type.clone(),
+                                &None, // keyframes handled separately
+                                &stagger_config,
+                                &spring_config,
+                                &format!("timeline_{}", track.id),
+                            );
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     // Build CSS classes
     let css_classes = {
         let drag = drag.clone();

@@ -1,0 +1,19 @@
+[build]
+target = "index.html"
+dist = "dist"
+filehash = false
+
+[watch]
+ignore = []
+
+[serve]
+address = "127.0.0.1"
+port = 8084
+open = false
+
+[[proxy]]
+rewrite = "/api/(.*)"
+backend = { address = "http://localhost:8081" }
+
+[mime_types]
+".js" = "application/javascript"
